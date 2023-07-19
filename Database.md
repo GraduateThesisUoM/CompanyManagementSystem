@@ -49,9 +49,9 @@
 - Rating
 - Date
 ## Transaction
--id
--client id
--accountant id
--date
--comment
+- id
+- client id
+- accountant id
+- date
+- comment
   
