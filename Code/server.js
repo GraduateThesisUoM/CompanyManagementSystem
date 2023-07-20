@@ -18,13 +18,12 @@ app.get('/sing_up', (req, res) => {
 })
 
 app.post('/sing_up', async (req, res) => {
-  console.log(req.body.firstname)
-  /*try {
+  try {
     console.log(req.body.firstname)
     res.redirect('/log_in')
   } catch {
     res.redirect('/sing_up?error')
-  }*/
+  }
 })
 
 app.listen(3000)
