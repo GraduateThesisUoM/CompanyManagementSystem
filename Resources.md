@@ -3,3 +3,4 @@
     1. npm init (press "Enter" for default values)
     2. npm i express ejs
     3. npm i -- save-dev nodemon dotenv
+    4. npm install mongodbs
