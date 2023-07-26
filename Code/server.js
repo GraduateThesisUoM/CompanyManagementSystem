@@ -32,12 +32,11 @@ app.get('/sing_up', (req, res) => {
 
 app.post('/sing_up', async (req, res) => {
   try {
-
     // Connect to MongoDB Atlas
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     await client.connect();
 
-    // Access the 'hhh' collection within your database (replace 'your_db_name' with your actual database name)
+    // Access the 'Users' collection within your database (replace 'your_db_name' with your actual database name)
     const db = client.db('CompanyManagementSystem');
     const collection = db.collection('Users');
 
@@ -57,6 +56,7 @@ app.post('/sing_up', async (req, res) => {
     res.redirect('/sing_up?error');
   }
 });
+
 
 app.listen(3000, () => {
   console.log('App listening on port 3000');

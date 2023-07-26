@@ -4,3 +4,5 @@
     2. npm i express ejs
     3. npm i -- save-dev nodemon dotenv
     4. npm install mongodbs
+    5. npm install dotenv
+    6. npm install mongoose
