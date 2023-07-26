@@ -2,10 +2,9 @@ const mongoose = require('mongoose');
 
 // Define the admin schema
 const AdminSchema = new mongoose.Schema({
-  id: { type: Number, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  registrationDate: { type: Date, required: true }
+  registrationDate: { type: Date, default: Date.now }
 });
 
 // Create the admin model

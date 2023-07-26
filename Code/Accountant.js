@@ -2,8 +2,7 @@ const mongoose = require('mongoose');
 
 // Define the accountant schema
 const AccountantSchema = new mongoose.Schema({
-  id: { type: Number, required: true },
-  registrationDate: { type: Date, required: true },
+  registrationDate: { type: Date, default: Date.now },
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   mydataId: { type: Number, required: true },
