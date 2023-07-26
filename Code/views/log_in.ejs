@@ -2,6 +2,10 @@
 <html>
     <head>
         <title>Σύνδεση</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
     </head>
     <body>
         <div>
@@ -11,7 +15,14 @@
             <label for="password">Κωδικός</label>
             <input type="password" id="password" placeholder="Κωδικός">
             <button>Σύνδεση</button>
-            <button>Εγγραφή</button>
+            <button id="sing_up_btn">Εγγραφή</button>
         </div>
     </body>
+    <script>
+        $(document).ready(function(){
+          $("#sing_up_btn").click(function(){
+            window.location ="sing_up"
+          });
+        });
+    </script>
 </html>

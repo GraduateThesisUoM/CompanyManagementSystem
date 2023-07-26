@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>Εγγραφή</title>
-</head>
+  <head>
+    <title>Εγγραφή</title>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css">
+  </head>
 <body>
   <h1>Εγγραφή</h1>
   <form action="/sing_up" method="POST">
@@ -22,6 +26,13 @@
     <input type="number" id="price" name="price" placeholder="Τιμή (αν είναι Λογιστής)">
     <button type="submit">Εγγραφή</button>
   </form>
-  <a href="/log_in">Σύνδεση</a>
+  <button id="log_in_btn">Σύνδεση</button>
 </body>
+<script>
+  $(document).ready(function(){
+    $("#log_in_btn").click(function(){
+      window.location ="log_in"
+    });
+  });
+</script>
 </html>

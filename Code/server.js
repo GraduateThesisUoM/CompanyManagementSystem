@@ -1,10 +1,19 @@
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const express = require('express');
 const app = express();
 const { MongoClient } = require('mongodb');
 
-const uri = 'mongodb+srv://testuser:testuser@companymanagementsystem.setgwnn.mongodb.net/?retryWrites=true&w=majority';
+//Models
+const User = require("./User");
+
+const uri = 'mongodb+srv://'+process.env.DB_USER_NAME+':'+process.env.DB_USER_PASSWORD+'@companymanagementsystem.setgwnn.mongodb.net/?retryWrites=true&w=majority';
 
 app.use(express.urlencoded({ extended: false }));
+
+app.use(express.static('./public/css'));
 
 /*--------   INDEX */
 app.get('/', (req, res) => {
@@ -23,7 +32,6 @@ app.get('/sing_up', (req, res) => {
 
 app.post('/sing_up', async (req, res) => {
   try {
-    console.log(req.body.firstname);
 
     // Connect to MongoDB Atlas
     const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -31,13 +39,14 @@ app.post('/sing_up', async (req, res) => {
 
     // Access the 'hhh' collection within your database (replace 'your_db_name' with your actual database name)
     const db = client.db('CompanyManagementSystem');
-    const collection = db.collection('hhh');
+    const collection = db.collection('Users');
 
-    // Ensure the 'hhh' collection exists; create it if it doesn't
-    await collection.createIndex({ someField: 1 }); // You can use any field you like for indexing, or leave it empty
-    console.log("Connected successfully to server and accessed 'hhh' collection.");
+    const newUser = new User({
+      firstName: "ff"
+    });
 
-    // You can perform additional operations with the 'collection' object here if needed
+    // Save the new user to the database
+    await newUser.save();
 
     // Close the MongoDB connection when finished
     client.close();
