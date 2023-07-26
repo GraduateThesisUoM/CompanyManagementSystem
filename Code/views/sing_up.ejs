@@ -9,21 +9,32 @@
   </head>
 <body>
   <h1>Εγγραφή</h1>
-  <form action="/sing_up" method="POST">
-    <label for="firstname">Όνομα</label>
-    <input type="text" id="firstname" name="firstname" placeholder="Όνομα">
-    <label for="lastname">Επίθετο</label>
-    <input type="text" id="lastname" name="lastname" placeholder="Επίθετο">
-    <label for="email">Email</label>
-    <input type="email" id="email" name="email" placeholder="email">
-    <label for="afm">Α.Φ.Μ.</label>
-    <input type="text" id="afm" name="afm" placeholder="Α.Φ.Μ.">
-    <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
-    <input type="text" id="mydatakey" name="mydatakey" placeholder="Κλειδί MyData (προαιρετικό)">
-    <label for="privileges">Λογιστής</label>
-    <input type="checkbox" id="privileges" name="privileges" value="accountant">
-    <label for="price">Τιμή (αν είναι Λογιστής)</label>
-    <input type="number" id="price" name="price" placeholder="Τιμή (αν είναι Λογιστής)">
+   <input type="text" id="accounttype" name="accounttype" value="">
+    <button id ="user_btn">Χρήστης</button>
+    <button id ="accountant_btn">Λογιστής</button>
+  <form class="display_block" action="/sing_up" method="POST" >
+    <!--User-->
+    <div id="user_sing_up">
+      <h2>Χρήστης</h2>
+      <label for="firstName">Όνομα</label>
+      <input type="text" id="firstName" name="firstName" placeholder="Όνομα">
+      <label for="lastName">Επίθετο</label>
+      <input type="text" id="lastName" name="lastName" placeholder="Επίθετο">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" placeholder="email">
+      <label for="afm">Α.Φ.Μ.</label>
+      <input type="text" id="afm" name="afm" placeholder="Α.Φ.Μ.">
+      <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
+      <input type="text" id="mydatakey" name="mydatakey" placeholder="Κλειδί MyData (προαιρετικό)">
+      <label for="companyName">'Ονομα εταιρείας:</label>
+      <input type="text" id="companyName" name="companyName" required>
+      <label for="companyLogo">Λογότυπο εταιρείας :</label>
+      <input type="text" id="companyLogo" name="companyLogo" required>
+    </div>
+    <!--Acountant-->
+    <div id="acountant_sing_up">
+      <h2>Λογιστής</h2>
+    </div>
     <button type="submit">Εγγραφή</button>
   </form>
   <button id="log_in_btn">Σύνδεση</button>
@@ -32,6 +43,16 @@
   $(document).ready(function(){
     $("#log_in_btn").click(function(){
       window.location ="log_in"
+    });
+    $("#user_btn").click(function(){
+      $("#accounttype").val("user");
+      $("#user_sing_up").show();
+      $("#acountant_sing_up").hide();
+    });
+    $("#accountant_btn").click(function(){
+      $("#accounttype").val("accountant")
+      $("#user_sing_up").hide();
+      $("#acountant_sing_up").show();
     });
   });
 </script>

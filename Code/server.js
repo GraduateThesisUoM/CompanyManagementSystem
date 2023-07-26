@@ -4,12 +4,14 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const app = express();
+const mongoose = require('mongoose');
+mongoose.set('strictQuery',false)
 const { MongoClient } = require('mongodb');
 
 //Models
 const User = require("./User");
 
-const uri = 'mongodb+srv://'+process.env.DB_USER_NAME+':'+process.env.DB_USER_PASSWORD+'@companymanagementsystem.setgwnn.mongodb.net/?retryWrites=true&w=majority';
+const uri = 'mongodb+srv://'+process.env.DB_USER_NAME+':'+process.env.DB_USER_PASSWORD+'@companymanagementsystem.setgwnn.mongodb.net/CompanyManagementSystem?retryWrites=true&w=majority';
 
 app.use(express.urlencoded({ extended: false }));
 
@@ -33,22 +35,23 @@ app.get('/sing_up', (req, res) => {
 app.post('/sing_up', async (req, res) => {
   try {
     // Connect to MongoDB Atlas
-    const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
-    await client.connect();
-
-    // Access the 'Users' collection within your database (replace 'your_db_name' with your actual database name)
-    const db = client.db('CompanyManagementSystem');
-    const collection = db.collection('Users');
-
+    await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    // Create a new user instance with the provided data
     const newUser = new User({
-      firstName: "ff"
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      email: req.body.email,
+      afm: req.body.afm,
+      mydatakey: req.body.mydatakey,
+      companyName: req.body.companyName,
+      companyLogo: req.body.companyLogo
     });
 
     // Save the new user to the database
     await newUser.save();
 
     // Close the MongoDB connection when finished
-    client.close();
+    await mongoose.disconnect();
 
     res.redirect('/log_in');
   } catch (err) {

@@ -1,3 +1,6 @@
 button{
     cursor: pointer;
 }
+.display_block * {
+    display: block;
+}
