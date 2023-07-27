@@ -32,6 +32,26 @@ app.get('/sing-up', (req, res) => {
   res.render('sing_up.ejs');
 });
 
+/*--------    ACCOUNTANT MAIN */
+app.get('/ac-main', (req, res) => {
+  res.render('accountant_pages/accountant_main.ejs');
+});
+
+/*--------   WORKING */
+app.get('/working', (req, res) => {
+  res.render('accountant_pages/working_page.ejs');
+});
+
+/*--------   ASSIGNMENT HISTORY */
+app.get('/assignment-history', (req, res) => {
+  res.render('accountant_pages/assignment_history.ejs');
+});
+
+/*--------   CLIENTS */
+app.get('/clients', (req, res) => {
+  res.render('accountant_pages/clients_page.ejs');
+});
+
 app.post('/sing-up', async (req, res) => {
   try {
     // Connect to MongoDB Atlas
