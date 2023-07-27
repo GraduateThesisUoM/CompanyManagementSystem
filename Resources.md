@@ -6,3 +6,4 @@
     4. npm install mongodbs
     5. npm install dotenv
     6. npm install mongoose
+    7. npm i passport passport-local express-session express-flash
