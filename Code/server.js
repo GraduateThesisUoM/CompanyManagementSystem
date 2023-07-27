@@ -32,7 +32,7 @@ app.get('/sing-up', (req, res) => {
   res.render('sing_up.ejs');
 });
 
-app.post('/sing_up', async (req, res) => {
+app.post('/sing-up', async (req, res) => {
   try {
     // Connect to MongoDB Atlas
     await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -53,10 +53,10 @@ app.post('/sing_up', async (req, res) => {
     // Close the MongoDB connection when finished
     await mongoose.disconnect();
 
-    res.redirect('/log_in');
+    res.redirect('/log-in');
   } catch (err) {
     console.error('Error connecting to MongoDB:', err);
-    res.redirect('/sing_up?error');
+    res.redirect('/sing-up?error');
   }
 });
 
