@@ -23,12 +23,12 @@ app.get('/', (req, res) => {
 });
 
 /*--------   LOG IN */
-app.get('/log_in', (req, res) => {
+app.get('/log-in', (req, res) => {
   res.render('log_in.ejs');
 });
 
 /*--------   SING UP */
-app.get('/sing_up', (req, res) => {
+app.get('/sing-up', (req, res) => {
   res.render('sing_up.ejs');
 });
 
