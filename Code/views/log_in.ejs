@@ -8,15 +8,16 @@
         <link rel="stylesheet" href="general_css.css">
     </head>
     <body>
-        <div class="display_block">
+         <form class="display_block" action="/log-in" method="POST" >
             <h1>Σύνδεση</h1>
             <label for="email">Email</label>
             <input type="text" id="email" placeholder="email">
             <label for="password">Κωδικός</label>
             <input type="password" id="password" placeholder="Κωδικός">
-            <button>Σύνδεση</button>
-            <button id="sing_up_btn">Εγγραφή</button>
-        </div>
+            <button type="submit">Σύνδεση</button>
+            
+        </form>
+        <button id="sing_up_btn">Εγγραφή</button>
     </body>
     <script>
         $(document).ready(function(){
