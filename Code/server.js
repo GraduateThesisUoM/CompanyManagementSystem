@@ -52,6 +52,21 @@ app.get('/clients', (req, res) => {
   res.render('accountant_pages/clients_page.ejs');
 });
 
+/*--------   CLIENT PROFILE */
+app.get('/client-profile', (req, res) => {
+  res.render('accountant_pages/client_profile.ejs');
+});
+
+/*--------   REPORT CLIENT */
+app.get('/report-client', (req, res) => {
+  res.render('accountant_pages/report_client.ejs');
+});
+
+/*--------   SETTINGS */
+app.get('/settings', (req, res) => {
+  res.render('general/settings.ejs');
+});
+
 app.post('/sing-up', async (req, res) => {
   try {
     // Connect to MongoDB Atlas

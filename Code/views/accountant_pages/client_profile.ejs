@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <%- include('../partials/header'); %>
+    <%- include('../partials/footer'); %>
+</head>
+<body>
+
+    <div id="general-client-info" name="general-client-info">
+        <h2>Client Name</h2>
+        <h3>Client Description?</h3>
+    </div>
+
+    <div id="client-transactions-div" name="client-transactions-div">
+        <h2>Client Transactions</h2>
+        <ul>
+            <li>Transaction 1</li>
+            <li>Transaction 2</li>
+        </ul>
+    </div>
+
+    <div id="client-assignments-div" name="client-assignments-div">
+        <h2>Client Assignments</h2>
+        <ul>
+            <li>Assignment 1</li>
+            <li>Assignment 2</li>
+        </ul>
+        <hr>
+        <a href="">Client Assignment History</a>
+    </div>
+
+    <div id="client-messaging-div" name="client-messaging-div">
+        <h2>Client Messaging</h2>
+        <h3>Messaging will happen here</h3>
+    </div>
+
+    <button id="remove-client-button" name="remove-client-button">Remove Client</button>
+    <a href="report-client">Report Client</a>
+    
+</body>
+</html>
