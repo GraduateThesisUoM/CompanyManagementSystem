@@ -4,6 +4,10 @@
         <title>Αρχική</title>
     </head>
     <body>
+        <h1>Hi <%= name %></h1>
+        <form action="/logout?_method=DELETE" method="POST">
+            <button type="submit">Log Out</button>
+        </form>
         <a href="log-in">Σύνδεση</a>
         <a href="sing-up">Εγγραφή</a>
         </div>

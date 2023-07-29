@@ -4,35 +4,65 @@ if (process.env.NODE_ENV !== 'production') {
 
 const express = require('express');
 const app = express();
+const bcrypt = require('bcrypt');
+const passport = require('passport');
+const flash = require('express-flash');
+const session = require('express-session');
+const methodOverride = require('method-override');
 const mongoose = require('mongoose');
-mongoose.set('strictQuery',false)
-const { MongoClient } = require('mongodb');
+const connectDB = require('./db');
+const getUserByEmail = require('./getUserByEmail');
+const getUserById = require('./getUserById');
+
+connectDB();
+
+const initializePassport = require('./passport-config')
+initializePassport(
+  passport,
+  getUserByEmail,
+  getUserById
+)
+
+app.set('view-engine', 'ejs')
+app.use(express.urlencoded({ extended: false }))
+app.use(flash())
+app.use(session({
+    secret: "secret",
+    resave: false,
+    saveUninitialized: false
+  }))
+app.use(passport.initialize())
+app.use(passport.session())
+app.use(methodOverride('_method'))
 
 //Models
 const User = require("./User");
 
 const uri = 'mongodb+srv://'+process.env.DB_USER_NAME+':'+process.env.DB_USER_PASSWORD+'@companymanagementsystem.setgwnn.mongodb.net/CompanyManagementSystem?retryWrites=true&w=majority';
 
-app.use(express.urlencoded({ extended: false }));
-
 app.use(express.static('./public/css'));
 
 /*--------   INDEX */
-app.get('/', (req, res) => {
-  res.render('index.ejs');
-});
+app.get('/', checkAuthenticated, (req, res) => {
+  res.render('index.ejs', { name: req.user.name })
+})
 
 /*--------   LOG IN */
-app.get('/log-in', (req, res) => {
-  res.render('log_in.ejs');
-});
+app.get('/log-in', checkNotAuthenticated, (req, res) => {
+  res.render('log_in.ejs')
+})
+app.post('/log-in', checkNotAuthenticated, passport.authenticate('local', {
+  successRedirect: '/',
+  failureRedirect: '/log-in',
+  failureFlash: true
+}))
 
 /*--------   SING UP */
-app.get('/sing-up', (req, res) => {
+app.get('/sing-up', checkNotAuthenticated, (req, res) => {
   res.render('sing_up.ejs');
 });
 
-app.post('/sing-up', async (req, res) => {
+app.post('/sing-up', checkNotAuthenticated, async (req, res) => {
   try {
     // Connect to MongoDB Atlas
     await mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -61,6 +91,25 @@ app.post('/sing-up', async (req, res) => {
 });
 
 
-app.listen(3000, () => {
-  console.log('App listening on port 3000');
+app.delete('/logout', (req, res) => {
+  req.logout(() => {
+    res.redirect('/log-in');
+  });
 });
+
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+
+  res.redirect('/log-in')
+}
+
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) {
+    return res.redirect('/')
+  }
+  next()
+}
+
+app.listen(3000)
