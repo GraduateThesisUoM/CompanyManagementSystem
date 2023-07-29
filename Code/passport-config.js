@@ -1,5 +1,7 @@
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+const connectDB = require('./db');
+connectDB();
 
 function initialize(passport, getUserByEmail, getUserById) {
   const authenticateUser = (email, password, done) => {
