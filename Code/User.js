@@ -8,7 +8,7 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   afm: { type: String, required: true },
-  mydatakey: { type: Number, required: true },
+  mydatakey: { type: String, required: true },
   companyName: { type: String, required: true },
   companyLogo: { type: String, required: true },
   banned: { type: Boolean, default: false }

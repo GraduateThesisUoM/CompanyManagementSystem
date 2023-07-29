@@ -83,8 +83,9 @@ app.post('/sing-up', checkNotAuthenticated, async (req, res) => {
 });
 
 app.delete('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/log-in');
+  req.logout(() => {
+    res.redirect('/log-in');
+  });
 });
 
 function checkAuthenticated(req, res, next) {

@@ -16,7 +16,8 @@
             <label for="email">Email</label>
             <input type="text" id="email" placeholder="email" name="email" required>
             <label for="password">Κωδικός</label>
-            <input type="password" id="password" name="password" placeholder="Κωδικός">
+            <input type="password" id="password" name="password" placeholder="Κωδικός" required>
+            <label for="confirmPassword">Εμφάνηση Κωδικού</label><input type="checkbox" id="showpasswordcheckbox">
             <button type="submit">Σύνδεση</button>
             
         </form>
@@ -26,6 +27,11 @@
         $(document).ready(function(){
           $("#sing_up_btn").click(function(){
             window.location ="sing-up"
+          });
+          $("#showpasswordcheckbox").click(function(){
+            const passwordInput = $("#password");
+            const isChecked = $(this).prop("checked");
+            passwordInput.prop("type", isChecked ? "text" : "password");
           });
         });
     </script>
