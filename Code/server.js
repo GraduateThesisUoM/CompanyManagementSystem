@@ -10,6 +10,7 @@ const flash = require('express-flash');
 const session = require('express-session');
 const methodOverride = require('method-override');
 const mongoose = require('mongoose');
+const crypto = require('crypto');
 const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
@@ -86,11 +87,61 @@ app.post('/sing-up', checkNotAuthenticated, async (req, res) => {
 app.get('/forgot-password', checkNotAuthenticated, (req, res) => {
   res.render('forgot_password.ejs');
 });
-app.post('/forgot-password', checkNotAuthenticated, async (req, res) => {
+/*app.post('/forgot-password', checkNotAuthenticated, async (req, res) => {
   console.log(req.body.email);
-  sendEmail()
+  //sendEmail()
+  console.log(getUserByEmail(req.body.email))
   res.redirect('/log-in');
+});*/
+app.post('/forgot-password', checkNotAuthenticated, async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      console.log('User not found');
+    }
+
+    // Generate a unique token using crypto
+    const token = crypto.randomBytes(20).toString('hex');
+
+    // Save the token and its expiration time in the user's document
+    user.resetPasswordToken = token;
+    user.resetPasswordExpires = Date.now() + 3600000; // Token expires in 1 hour
+    await user.save();
+
+    // Send the password reset email to the user
+    await sendEmail(email, token);
+
+    res.redirect('/log-in');
+  } catch (err) {
+    console.error('Error processing forgot password:', err);
+    res.redirect('/forgot-password?error');
+  }
 });
+/*--------   RESET PASSWORD */
+app.get('/reset-password', async (req, res) => {
+  console.log("in1")
+  const { token } = req.query;
+  console.log("in2")
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }, // Check if the token is still valid
+    });
+    console.log("in3")
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+    console.log("in4")
+    // Render the password reset form with the token
+    res.render('reset_password.ejs', { token });
+  } catch (err) {
+    console.error('Error processing password reset link:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 
 app.delete('/logout', (req, res) => {

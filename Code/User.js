@@ -11,7 +11,10 @@ const UserSchema = new mongoose.Schema({
   mydatakey: { type: String, required: true },
   companyName: { type: String, required: true },
   companyLogo: { type: String, required: true },
-  banned: { type: Boolean, default: false }
+  banned: { type: Boolean, default: false },
+
+  resetPasswordToken: { type: String},
+  resetPasswordExpires: { type: Date},
 });
 
 module.exports = mongoose.model("users", UserSchema)

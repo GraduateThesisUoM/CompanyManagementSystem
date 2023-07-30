@@ -1,29 +1,27 @@
-//https://www.youtube.com/watch?v=klDTBiW6iiM
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
-   service: "gmail",
-   auth: {
-      user: process.env.DEMO_EMAIL,
-      pass: process.env.DEMO_EMAIL_KEY
+  service: 'gmail',
+  auth: {
+   user: process.env.DEMO_EMAIL,
+   pass: process.env.DEMO_EMAIL_KEY
    }
 });
 
-const mailOptions = {
-   from: process.env.DEMO_EMAIL,
-   to: "nektarios00007@gmail.com",
-   subject: "Nodemailer Test",
-   html: "Test <button>sending</button> Gmail using Node JS"
-};
+async function sendEmail(email, token) {
+  const resetLink = `http://${process.env.DOMAIN}/reset-password?token=${token}`;
 
-const sendMail = async () => {
-    transporter.sendMail(mailOptions, function(error, info){
-        if(error){
-           console.log(error);
-        }else{
-           console.log("Email sent: " + info.response);
-        }
-     });
-  };
+  try {
+    await transporter.sendMail({
+      from: 'process.env.DEMO_EMAIL',
+      to: email,
+      subject: 'Password Reset Link',
+      text: `Click on the following link to reset your password: ${resetLink}`,
+    });
+  } catch (err) {
+    console.error('Error sending email:', err);
+    // Handle the error appropriately (e.g., show an error message to the user)
+  }
+}
 
-module.exports = sendMail;
+module.exports = sendEmail;
