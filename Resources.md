@@ -7,4 +7,5 @@
     5. npm i passport passport-local express-session express-flash
     6. npm i method-override
     7. npm install mongoose
+    8. npm i nodemailer for sending emails 
 
