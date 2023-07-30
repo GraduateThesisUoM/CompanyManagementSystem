@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
 const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
+const sendEmail = require('./email_sender');
 
 // Connect to MongoDB
 connectDB();
@@ -25,7 +26,7 @@ app.set('view-engine', 'ejs');
 app.use(express.urlencoded({ extended: false }));
 app.use(flash());
 app.use(session({
-  secret: "secret",
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false
 }));
@@ -81,6 +82,16 @@ app.post('/sing-up', checkNotAuthenticated, async (req, res) => {
     res.redirect('/sing-up?error');
   }
 });
+/*--------   FORGOT PASSWORD */
+app.get('/forgot-password', checkNotAuthenticated, (req, res) => {
+  res.render('forgot_password.ejs');
+});
+app.post('/forgot-password', checkNotAuthenticated, async (req, res) => {
+  console.log(req.body.email);
+  sendEmail()
+  res.redirect('/log-in');
+});
+
 
 app.delete('/logout', (req, res) => {
   req.logout(() => {

@@ -22,11 +22,15 @@
             
         </form>
         <button id="sing_up_btn">Εγγραφή</button>
+        <button id="forgot_passsword_btn">Ξέχασα τον Κωδικό μου</button>
     </body>
     <script>
         $(document).ready(function(){
           $("#sing_up_btn").click(function(){
             window.location ="sing-up"
+          });
+          $("#forgot_passsword_btn").click(function(){
+            window.location ="forgot-password"
           });
           $("#showpasswordcheckbox").click(function(){
             const passwordInput = $("#password");
