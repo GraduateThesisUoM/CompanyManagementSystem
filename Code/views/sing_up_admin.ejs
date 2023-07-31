@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Εγγραφή Διαχειριστή</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+    </head>
+    <body>
+      <% if (messages.error) { %>
+        <%= messages.error %>
+      <% } %>
+         <form class="display_block" action="/sing-up-admin" method="POST" >
+            <h1>Εγγραφή Διαχειριστή</h1>
+            <label for="email">Email</label>
+            <input type="text" id="email" placeholder="email" name="email" required>
+            <label for="password">Κωδικός</label>
+            <input type="password" id="password" name="password" placeholder="Κωδικός" required>
+            <label for="confirmPassword">Εμφάνηση Κωδικού</label><input type="checkbox" id="showpasswordcheckbox">
+            <button type="submit">Εγγραφή</button>
+            
+        </form>
+        <button id="log_in_btn">Σύνδεση</button>
+        <button id="user_accountant_sign_up_btn">Χρήστης/ Λογιστής</button>
+    </body>
+    <script>
+        $(document).ready(function(){
+          $("#log_in_btn").click(function(){
+            window.location ="log-in"
+          });
+          $("#user_accountant_sign_up_btn").click(function(){
+            window.location ="sing-up"
+          });
+          $("#showpasswordcheckbox").click(function(){
+            const passwordInput = $("#password");
+            const isChecked = $(this).prop("checked");
+            passwordInput.prop("type", isChecked ? "text" : "password");
+          });
+        });
+    </script>
+</html>

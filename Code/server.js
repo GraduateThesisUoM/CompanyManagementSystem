@@ -37,6 +37,7 @@ app.use(methodOverride('_method'));
 
 //Models
 const User = require("./User");
+const Admin = require("./Admin");
 
 app.use(express.static('./public/css'));
 
@@ -76,23 +77,39 @@ app.post('/sing-up', checkNotAuthenticated, async (req, res) => {
 
     // Save the new user to the database
     await newUser.save();
-
+    console.log("User created successfully");
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error saving user:', err);
     res.redirect('/sing-up?error');
   }
 });
+/*--------   SING UP ADMIN*/
+app.get('/sing-up-admin', checkNotAuthenticated, (req, res) => {
+  res.render('sing_up_admin.ejs');
+});
+app.post('/sing-up-admin', checkNotAuthenticated, async (req, res) => {
+  try {
+    // Create a new user instance with the provided data
+    const newAdmin = new Admin({
+      email: req.body.email,
+      password: req.body.password,
+    });
+
+    // Save the new user to the database
+    await newAdmin.save();
+    console.log("Admin created successfully");
+    res.redirect('/log-in');
+  } catch (err) {
+    console.error('Error saving Admin:', err);
+    res.redirect('/sing-up-admin?error');
+  }
+});
+
 /*--------   FORGOT PASSWORD */
 app.get('/forgot-password', checkNotAuthenticated, (req, res) => {
   res.render('forgot_password.ejs');
 });
-/*app.post('/forgot-password', checkNotAuthenticated, async (req, res) => {
-  console.log(req.body.email);
-  //sendEmail()
-  console.log(getUserByEmail(req.body.email))
-  res.redirect('/log-in');
-});*/
 app.post('/forgot-password', checkNotAuthenticated, async (req, res) => {
   const { email } = req.body;
 
@@ -112,7 +129,7 @@ app.post('/forgot-password', checkNotAuthenticated, async (req, res) => {
 
     // Send the password reset email to the user
     await sendEmail(email, token);
-
+    console.log("Token created successfully and email is send");
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error processing forgot password:', err);
@@ -161,7 +178,8 @@ app.post('/reset-password', checkNotAuthenticated,  async (req, res) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
     await user.save();
-    console.log(user.password)
+    console.log(user.password);
+    console.log("Password reseted successfully");
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error resetting password:', err);

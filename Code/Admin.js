@@ -7,5 +7,4 @@ const AdminSchema = new mongoose.Schema({
   registrationDate: { type: Date, default: Date.now }
 });
 
-// Create the admin model
-const Admin = mongoose.model('Admin', AdminSchema);
+module.exports = mongoose.model("admins", AdminSchema)
