@@ -67,6 +67,11 @@ app.get('/settings', (req, res) => {
   res.render('general/settings.ejs');
 });
 
+/*--------   PROFILE */
+app.get('/profile-page', (req, res) => {
+  res.render('general/profile.ejs');
+});
+
 app.post('/sing-up', async (req, res) => {
   try {
     // Connect to MongoDB Atlas
