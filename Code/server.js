@@ -120,7 +120,7 @@ app.post('/forgot-password', checkNotAuthenticated, async (req, res) => {
   }
 });
 /*--------   RESET PASSWORD */
-app.get('/reset-password', async (req, res) => {
+app.get('/reset-password',checkNotAuthenticated, async (req, res) => {
   console.log("in1")
   const { token } = req.query;
   console.log("in2")
@@ -141,6 +141,34 @@ app.get('/reset-password', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+app.post('/reset-password', checkNotAuthenticated,  async (req, res) => {
+  const { token, password } = req.body;
+
+  try {
+    const user = await User.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() }, // Check if the token is still valid
+    });
+
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid or expired token' });
+    }
+
+    // Update the user's password and remove the token and expiration fields
+    //user.password = await bcrypt.hash(password, 10);
+    user.password = password;
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+    console.log(user.password)
+    res.redirect('/log-in');
+  } catch (err) {
+    console.error('Error resetting password:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 
 
