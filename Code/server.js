@@ -55,6 +55,7 @@ app.post('/log-in', checkNotAuthenticated, passport.authenticate('local', {
   failureFlash: true
 }));
 
+
 /*--------   SING UP */
 app.get('/sing-up', checkNotAuthenticated, (req, res) => {
   res.render('sing_up.ejs');
