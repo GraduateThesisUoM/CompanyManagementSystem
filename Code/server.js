@@ -60,7 +60,6 @@ app.get('/sing-up', checkNotAuthenticated, (req, res) => {
   res.render('sing_up.ejs');
 });
 
-<<<<<<< HEAD
 /*--------    ACCOUNTANT MAIN */
 app.get('/ac-main', (req, res) => {
   res.render('accountant_pages/accountant_main.ejs');
@@ -100,11 +99,8 @@ app.get('/settings', (req, res) => {
 app.get('/profile-page', (req, res) => {
   res.render('general/profile.ejs');
 });
-
+/*--------   SING UP */
 app.post('/sing-up', async (req, res) => {
-=======
-app.post('/sing-up', checkNotAuthenticated, async (req, res) => {
->>>>>>> Nektarios
   try {
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
