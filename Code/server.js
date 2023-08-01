@@ -207,7 +207,6 @@ app.get('/reset-password',checkNotAuthenticated, async (req, res) => {
 
 app.post('/reset-password', checkNotAuthenticated,  async (req, res) => {
   const { token, password } = req.body;
-
   try {
     const user = await User.findOne({
       resetPasswordToken: token,
