@@ -60,53 +60,12 @@ app.post('/log-in', checkNotAuthenticated, passport.authenticate('local', {
 app.get('/sing-up', checkNotAuthenticated, (req, res) => {
   res.render('sing_up.ejs');
 });
-
-/*--------    ACCOUNTANT MAIN */
-app.get('/ac-main', (req, res) => {
-  res.render('accountant_pages/accountant_main.ejs');
-});
-
-/*--------   WORKING */
-app.get('/working', (req, res) => {
-  res.render('accountant_pages/working_page.ejs');
-});
-
-/*--------   ASSIGNMENT HISTORY */
-app.get('/assignment-history', (req, res) => {
-  res.render('accountant_pages/assignment_history.ejs');
-});
-
-/*--------   CLIENTS */
-app.get('/clients', (req, res) => {
-  res.render('accountant_pages/clients_page.ejs');
-});
-
-/*--------   CLIENT PROFILE */
-app.get('/client-profile', (req, res) => {
-  res.render('accountant_pages/client_profile.ejs');
-});
-
-/*--------   REPORT CLIENT */
-app.get('/report-client', (req, res) => {
-  res.render('accountant_pages/report_client.ejs');
-});
-
-/*--------   SETTINGS */
-app.get('/settings', (req, res) => {
-  res.render('general/settings.ejs');
-});
-
-/*--------   PROFILE */
-app.get('/profile-page', (req, res) => {
-  res.render('general/profile.ejs');
-});
-/*--------   SING UP */
 app.post('/sing-up', async (req, res) => {
   try {
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
       const newUser = new User({
-        type: req.body.account_type,
+        type: req.body.account_type2,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: req.body.password,
@@ -148,8 +107,53 @@ app.post('/sing-up', async (req, res) => {
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error saving user:', err);
-    res.redirect('/sing-up?error');
+    res.redirect('/error?origin_page=sing-up&error='+err);
   }
+});
+
+/*--------    ACCOUNTANT MAIN */
+app.get('/ac-main', (req, res) => {
+  res.render('accountant_pages/accountant_main.ejs');
+});
+
+/*--------   WORKING */
+app.get('/working', (req, res) => {
+  res.render('accountant_pages/working_page.ejs');
+});
+
+/*--------   ASSIGNMENT HISTORY */
+app.get('/assignment-history', (req, res) => {
+  res.render('accountant_pages/assignment_history.ejs');
+});
+
+/*--------   CLIENTS */
+app.get('/clients', (req, res) => {
+  res.render('accountant_pages/clients_page.ejs');
+});
+
+/*--------   CLIENT PROFILE */
+app.get('/client-profile', (req, res) => {
+  res.render('accountant_pages/client_profile.ejs');
+});
+
+/*--------   REPORT CLIENT */
+app.get('/report-client', (req, res) => {
+  res.render('accountant_pages/report_client.ejs');
+});
+
+/*--------   SETTINGS */
+app.get('/settings', (req, res) => {
+  res.render('general/settings.ejs');
+});
+
+/*--------   PROFILE */
+app.get('/profile-page', (req, res) => {
+  res.render('general/profile.ejs');
+});
+
+/*--------    USER MAIN */
+app.get('/user-main', (req, res) => {
+  res.render('user_pages/user_main.ejs');
 });
 
 /*--------   FORGOT PASSWORD */
@@ -179,24 +183,20 @@ app.post('/forgot-password', checkNotAuthenticated, async (req, res) => {
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error processing forgot password:', err);
-    res.redirect('/forgot-password?error');
+    res.redirect('/error?origin_page=forgot-password&error='+err);
   }
 });
 /*--------   RESET PASSWORD */
 app.get('/reset-password',checkNotAuthenticated, async (req, res) => {
-  console.log("in1")
   const { token } = req.query;
-  console.log("in2")
   try {
     const user = await User.findOne({
       resetPasswordToken: token,
       resetPasswordExpires: { $gt: Date.now() }, // Check if the token is still valid
     });
-    console.log("in3")
     if (!user) {
       return res.status(400).json({ message: 'Invalid or expired token' });
     }
-    console.log("in4")
     // Render the password reset form with the token
     res.render('reset_password.ejs', { token });
   } catch (err) {
@@ -204,7 +204,6 @@ app.get('/reset-password',checkNotAuthenticated, async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
-
 app.post('/reset-password', checkNotAuthenticated,  async (req, res) => {
   const { token, password } = req.body;
   try {
@@ -230,6 +229,10 @@ app.post('/reset-password', checkNotAuthenticated,  async (req, res) => {
     console.error('Error resetting password:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
+});
+/*--------   ERROR */
+app.get('/error', checkNotAuthenticated, (req, res) => {
+  res.render('general/error_page.ejs');
 });
 
 

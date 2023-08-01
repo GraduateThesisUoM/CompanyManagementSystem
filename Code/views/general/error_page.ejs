@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Σφάλμα</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+    </head>
+    <body>
+        <h1>Σφάλμα</h1>
+         <div id="error"></div>
+        <button id="ok_button">OK</button>
+    </body>
+    <script>
+        $(document).ready(function(){
+            const urlParams = new URLSearchParams(window.location.search);
+            const origin_page = urlParams.get("origin_page");
+            const error = urlParams.get("error");
+            $("#error").text(error);
+
+            $("#ok_button").click(function(){
+                window.location =origin_page
+            });
+        });
+      </script>
+</html>

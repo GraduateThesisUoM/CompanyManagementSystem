@@ -29,7 +29,6 @@
 - email
 - password
 - Banned(bool)
-- List Of Invoices
 ## Admin
 - id
 - email
