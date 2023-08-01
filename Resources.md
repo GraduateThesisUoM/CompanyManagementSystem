@@ -1,9 +1,11 @@
 1. [Miro](https://miro.com/app/board/uXjVMaqjBmw=/)
 2. Dependances
-    1. npm init (press "Enter" for default values)
+    1. npm init -y
     2. npm i express ejs
     3. npm i -- save-dev nodemon dotenv
-    4. npm install mongodbs
-    5. npm install dotenv
-    6. npm install mongoose
-    7. npm i passport passport-local express-session express-flash
+    4. npm i bcrypt
+    5. npm i passport passport-local express-session express-flash
+    6. npm i method-override
+    7. npm install mongoose
+    8. npm i nodemailer for sending emails 
+

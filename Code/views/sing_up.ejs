@@ -9,51 +9,91 @@
   </head>
 <body>
   <h1>Εγγραφή</h1>
-   <input type="text" id="accounttype" name="accounttype" value="">
     <button id ="user_btn">Χρήστης</button>
     <button id ="accountant_btn">Λογιστής</button>
-  <form class="display_block" action="/sing_up" method="POST" >
+  <form class="display_block" action="/sing-up" method="POST" >
     <!--User-->
-    <div id="user_sing_up">
-      <h2>Χρήστης</h2>
-      <label for="firstName">Όνομα</label>
-      <input type="text" id="firstName" name="firstName" placeholder="Όνομα">
-      <label for="lastName">Επίθετο</label>
-      <input type="text" id="lastName" name="lastName" placeholder="Επίθετο">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" placeholder="email">
+    <h2 id="h2">Χρήστης</h2>
+    <input type="text" id="account_type" name="account_type" value="user" required>
+    <label for="firstName">Όνομα</label>
+    <input type="text" name="firstName" placeholder="Όνομα" required>
+    <label for="lastName">Επίθετο</label>
+    <input type="text" name="lastName" placeholder="Επίθετο" required>
+    <label for="email">Email</label>
+    <input type="email" name="email" placeholder="email" required>
+    <label for="password">Κωδικός</label>
+    <input type="password" id="password" name="password" placeholder="Κωδικός" required>
+    <label for="password_confirm">Επιβεβαίωση Κωδικού</label>
+    <input type="password" id="password_confirm" name="password_confirm" placeholder="Κωδικός" required>
+    <label for="confirmPassword">Εμφάνηση Κωδικού</label><input type="checkbox" id="showpasswordcheckbox">
+    <span id="admin_hide">
       <label for="afm">Α.Φ.Μ.</label>
-      <input type="text" id="afm" name="afm" placeholder="Α.Φ.Μ.">
+      <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ.">
+
       <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
-      <input type="text" id="mydatakey" name="mydatakey" placeholder="Κλειδί MyData (προαιρετικό)">
+      <input type="text" name="mydatakey" placeholder="Κλειδί MyData (προαιρετικό)">
+    <span id="accountant_hide">
       <label for="companyName">'Ονομα εταιρείας:</label>
-      <input type="text" id="companyName" name="companyName" required>
+      <input type="text" name="companyName">
       <label for="companyLogo">Λογότυπο εταιρείας :</label>
-      <input type="text" id="companyLogo" name="companyLogo" required>
-    </div>
-    <!--Acountant-->
-    <div id="acountant_sing_up">
-      <h2>Λογιστής</h2>
-    </div>
-    <button type="submit">Εγγραφή</button>
+      <input type="text" name="companyLogo">
+    </span>
+  </span>
+    <button style="display: none;" id="submit_btn" type="submit">Εγγραφή</button>
   </form>
+  <button id="sing_up_btn">Εγγραφή</button>
   <button id="log_in_btn">Σύνδεση</button>
 </body>
 <script>
   $(document).ready(function(){
+    const urlParams = new URLSearchParams(window.location.search);
+    const isAdmin = urlParams.get("admin") === "true";
+    if(isAdmin){
+      alert(isAdmin);
+      $("#companyName").prop("required", false);
+      $("#user_btn").hide();
+      $("#accountant_btn").hide();
+      $("#h2").text("Διαχειριστής");
+      $("#account_type").val("admin");
+      
+      $("#admin_hide").hide();
+    }
+
+    $("#acountant_sing_up").hide();
     $("#log_in_btn").click(function(){
       window.location ="log-in"
     });
     $("#user_btn").click(function(){
-      $("#accounttype").val("user");
-      $("#user_sing_up").show();
-      $("#acountant_sing_up").hide();
+      $("#h2").text("Χρήστης");
+      $("#account_type").val("user");
+      $("#accountant_hide").show();
     });
     $("#accountant_btn").click(function(){
-      $("#accounttype").val("accountant")
-      $("#user_sing_up").hide();
-      $("#acountant_sing_up").show();
+      $("#h2").text("Λογιστής");
+      $("#account_type").val("accountant");
+      $("#accountant_hide").hide();
     });
+    $("#showpasswordcheckbox").click(function(){
+      const passwordInput = $("#password");
+      const passwordConfirmInput = $("#password_confirm");
+      const isChecked = $(this).prop("checked");
+      passwordInput.prop("type", isChecked ? "text" : "password");
+      passwordConfirmInput.prop("type", isChecked ? "text" : "password");
+    });
+    $("#sing_up_btn").click(function(){
+      const passwordInput = $("#password").val();
+      const passwordConfirmInput = $("#password_confirm").val();
+
+      if (passwordInput !== passwordConfirmInput) {
+        // Passwords do not match, show an error message or take appropriate action
+        alert("Οι κωδικοί δεν ταιριάζουν. Παρακαλούμε ελέγξτε ξανά.");
+        return false; // Prevent form submission
+      }
+
+      // If passwords match, submit the form
+      $("#submit_btn").click();
+    });
+
   });
 </script>
 </html>

@@ -21,3 +21,10 @@
 πρακτική μιας και το μέγεθος του φακέλου μπορεί να μεγαλώσει πολυ με πολλά modules)
 - Όχι '_' στα routes, κακή πρακτική. 
 - Ισως χρήσιμο το nodemon module => Επιταχύνει το development καθώς επανεκκινεί τον server αυτόματα με κάθε save.
+
+# Email 
+- link : https://www.youtube.com/watch?v=klDTBiW6iiM
+- email : democms90@gmail.com
+- password : 45hey0demo@
+- key : wsznjxzusyjzjtbv
+
