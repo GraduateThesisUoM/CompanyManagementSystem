@@ -36,8 +36,7 @@ app.use(passport.session());
 app.use(methodOverride('_method'));
 
 //Models
-const User = require("./User");
-const Admin = require("./Admin");
+const User = require("./Schemas/User");
 
 app.use(express.static('./public/css'));
 
@@ -64,45 +63,51 @@ app.get('/sing-up', checkNotAuthenticated, (req, res) => {
 app.post('/sing-up', checkNotAuthenticated, async (req, res) => {
   try {
     // Create a new user instance with the provided data
-    const newUser = new User({
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      password: req.body.password,
-      email: req.body.email,
-      afm: req.body.afm,
-      mydatakey: req.body.mydatakey,
-      companyName: req.body.companyName,
-      companyLogo: req.body.companyLogo
-    });
-
-    // Save the new user to the database
+    if (req.body.account_type == 'user'){
+      const newUser = new User({
+        type: req.body.account_type,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        password: req.body.password,
+        email: req.body.email,
+        afm: req.body.afm,
+        mydatakey: req.body.mydatakey,
+        companyName: req.body.companyName,
+        companyLogo: req.body.companyLogo,
+      });
+      // Save the new user to the database
     await newUser.save();
+    }
+    else if (req.body.account_type == 'accountant'){
+      const newUser = new User({
+        type: req.body.account_type,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        password: req.body.password,
+        email: req.body.email,
+        afm: req.body.afm,
+        mydatakey: req.body.mydatakey
+      });
+      // Save the new user to the database
+    await newUser.save();
+    }
+    else if (req.body.account_type == 'admin'){
+      const newUser = new User({
+        type: req.body.account_type,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        password: req.body.password,
+        email: req.body.email
+      });
+      // Save the new user to the database
+    await newUser.save();
+    }
+
     console.log("User created successfully");
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error saving user:', err);
     res.redirect('/sing-up?error');
-  }
-});
-/*--------   SING UP ADMIN*/
-app.get('/sing-up-admin', checkNotAuthenticated, (req, res) => {
-  res.render('sing_up_admin.ejs');
-});
-app.post('/sing-up-admin', checkNotAuthenticated, async (req, res) => {
-  try {
-    // Create a new user instance with the provided data
-    const newAdmin = new Admin({
-      email: req.body.email,
-      password: req.body.password,
-    });
-
-    // Save the new user to the database
-    await newAdmin.save();
-    console.log("Admin created successfully");
-    res.redirect('/log-in');
-  } catch (err) {
-    console.error('Error saving Admin:', err);
-    res.redirect('/sing-up-admin?error');
   }
 });
 

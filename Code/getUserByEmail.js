@@ -1,5 +1,5 @@
 // getUserByEmail.js
-const User = require('./User');
+const User = require('./Schemas/User');
 
 
 const getUserByEmail = async (email) => {

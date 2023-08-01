@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const User = require('./User');
+const User = require('./Schemas/User');
 
 const getUserById = async (id) => {
   try {
