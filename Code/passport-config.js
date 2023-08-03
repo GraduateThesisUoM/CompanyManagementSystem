@@ -6,21 +6,21 @@ connectDB();
 function initialize(passport, getUserByEmail, getUserById) {
   const authenticateUser = (email, password, done) => {
     getUserByEmail(email)
-      .then((user) => {
+      .then(async (user) => {
         console.log(user)
         if (!user) {
           return done(null, false, { message: 'No user with that email' });
+        }        
+        try {
+          //if (await bcrypt.compare(password, user.password)) {
+          if (password == user.password) {
+            return done(null, user)
+          } else {
+            return done(null, false, { message: 'Password incorrect' })
+          }
+        } catch (e) {
+          return done(e)
         }
-        return done(null, user);
-        /*bcrypt.compare(password, password)
-          .then((isMatch) => {
-            if (isMatch) {
-              return done(null, user);
-            } else {
-              return done(null, false, { message: 'Password incorrect' });
-            }
-          })
-          .catch((error) => done(error));*/
       })
       .catch((error) => done(error));
   };
