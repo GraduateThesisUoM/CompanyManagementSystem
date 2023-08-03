@@ -42,7 +42,12 @@ app.use(express.static('./public/css'));
 
 /*--------   INDEX */
 app.get('/', checkAuthenticated, (req, res) => {
-  res.render('index.ejs', { name: req.user.firstName });
+  if(req.user.type == 'accountant'){
+    res.render('accountant_pages/accountant_main.ejs');
+  };
+  if(req.user.type == 'user'){
+    res.render('user_pages/user_main.ejs');
+  };
 });
 
 /*--------   LOG IN */
@@ -65,7 +70,7 @@ app.post('/sing-up', async (req, res) => {
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
       const newUser = new User({
-        type: req.body.account_type2,
+        type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: req.body.password,
@@ -111,11 +116,6 @@ app.post('/sing-up', async (req, res) => {
   }
 });
 
-/*--------    ACCOUNTANT MAIN */
-app.get('/ac-main', (req, res) => {
-  res.render('accountant_pages/accountant_main.ejs');
-});
-
 /*--------   WORKING */
 app.get('/working', (req, res) => {
   res.render('accountant_pages/working_page.ejs');
@@ -149,11 +149,6 @@ app.get('/settings', (req, res) => {
 /*--------   PROFILE */
 app.get('/profile-page', (req, res) => {
   res.render('general/profile.ejs');
-});
-
-/*--------    USER MAIN */
-app.get('/user-main', (req, res) => {
-  res.render('user_pages/user_main.ejs');
 });
 
 /*--------   FORGOT PASSWORD */
