@@ -117,37 +117,37 @@ app.post('/sing-up', async (req, res) => {
 });
 
 /*--------   WORKING */
-app.get('/working', (req, res) => {
+app.get('/working', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/working_page.ejs');
 });
 
 /*--------   ASSIGNMENT HISTORY */
-app.get('/assignment-history', (req, res) => {
+app.get('/assignment-history', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/assignment_history.ejs');
 });
 
 /*--------   CLIENTS */
-app.get('/clients', (req, res) => {
+app.get('/clients', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/clients_page.ejs');
 });
 
 /*--------   CLIENT PROFILE */
-app.get('/client-profile', (req, res) => {
+app.get('/client-profile', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/client_profile.ejs');
 });
 
 /*--------   REPORT CLIENT */
-app.get('/report-client', (req, res) => {
+app.get('/report-client', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/report_client.ejs');
 });
 
 /*--------   SETTINGS */
-app.get('/settings', (req, res) => {
+app.get('/settings', checkAuthenticated, (req, res) => {
   res.render('general/settings.ejs');
 });
 
 /*--------   PROFILE */
-app.get('/profile-page', (req, res) => {
+app.get('/profile-page', checkAuthenticated, (req, res) => {
   res.render('general/profile.ejs');
 });
 
