@@ -148,13 +148,8 @@ app.get('/settings', checkAuthenticated, (req, res) => {
 });
 
 /*--------   PROFILE */
-<<<<<<< HEAD
-app.get('/profile-page',checkAuthenticated, (req, res) => {
-  res.render('general/profile.ejs', { user: req.user });
-=======
 app.get('/profile-page', checkAuthenticated, (req, res) => {
   res.render('general/profile.ejs');
->>>>>>> 5a3b2d03e6c17a6d4bdf6e8e439fbf801e00132c
 });
 app.post('/profile-page', checkAuthenticated, async (req, res) => {
   try {
