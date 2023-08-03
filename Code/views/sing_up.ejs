@@ -49,7 +49,6 @@
     const urlParams = new URLSearchParams(window.location.search);
     const isAdmin = urlParams.get("admin") === "true";
     if(isAdmin){
-      alert(isAdmin);
       $("#companyName").prop("required", false);
       $("#user_btn").hide();
       $("#accountant_btn").hide();

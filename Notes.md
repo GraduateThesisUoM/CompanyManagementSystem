@@ -28,3 +28,8 @@
 - password : 45hey0demo@
 - key : wsznjxzusyjzjtbv
 
+# Σημειώσεις Νεκτάριος
+- Κρυπτογράφηση κωδικόυ και χρήση bcrypt
+
+
+

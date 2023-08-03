@@ -37,6 +37,7 @@ app.use(methodOverride('_method'));
 
 //Models
 const User = require("./Schemas/User");
+const { cache } = require('ejs');
 
 app.use(express.static('./public/css'));
 
@@ -147,9 +148,27 @@ app.get('/settings', (req, res) => {
 });
 
 /*--------   PROFILE */
-app.get('/profile-page', (req, res) => {
-  res.render('general/profile.ejs');
+app.get('/profile-page',checkAuthenticated, (req, res) => {
+  res.render('general/profile.ejs', { user: req.user });
 });
+app.post('/profile-page', checkAuthenticated, async (req, res) => {
+  try {
+    req.user.firstName = req.body.firstName;
+    req.user.lastName = req.body.lastName;
+    req.user.email = req.body.email;
+    req.user.afm = req.body.afm;
+    req.user.mydatakey = req.body.mydatakey;
+    req.user.companyName = req.body.companyName;
+    req.user.companyLogo = req.body.companyLogo;
+    await req.user.save();
+    res.redirect('/profile-page?message=updatedatacopmlete');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=profile-page&error='+err);
+  }
+});
+
 
 /*--------   FORGOT PASSWORD */
 app.get('/forgot-password', checkNotAuthenticated, (req, res) => {
@@ -217,7 +236,6 @@ app.post('/reset-password', checkNotAuthenticated,  async (req, res) => {
     user.resetPasswordToken = undefined;
     user.resetPasswordExpires = undefined;
     await user.save();
-    console.log(user.password);
     console.log("Password reseted successfully");
     res.redirect('/log-in');
   } catch (err) {
