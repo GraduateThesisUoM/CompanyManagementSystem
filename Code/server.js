@@ -44,10 +44,10 @@ app.use(express.static('./public/css'));
 /*--------   INDEX */
 app.get('/', checkAuthenticated, (req, res) => {
   if(req.user.type == 'accountant'){
-    res.render('accountant_pages/accountant_main.ejs');
+    res.render('accountant_pages/accountant_main.ejs',{user : req.user});
   };
   if(req.user.type == 'user'){
-    res.render('user_pages/user_main.ejs');
+    res.render('user_pages/user_main.ejs',{user : req.user});
   };
 });
 
@@ -149,7 +149,7 @@ app.get('/settings', checkAuthenticated, (req, res) => {
 
 /*--------   PROFILE */
 app.get('/profile-page', checkAuthenticated, (req, res) => {
-  res.render('general/profile.ejs');
+  res.render('general/profile.ejs', { user: req.user });
 });
 app.post('/profile-page', checkAuthenticated, async (req, res) => {
   try {
