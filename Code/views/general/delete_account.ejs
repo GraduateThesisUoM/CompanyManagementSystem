@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Διαγραφή Λογαριασμού</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <%- include('../partials/header'); %>
+        <%- include('../partials/footer'); %>
+    </head>
+    <body>
+        <h1>Διαγραφή Λογαριασμού</h1>
+        <form class="display_block" action="/delete-account" method="POST" >
+            <label for="password">Κωδικός</label>
+            <input type="password" id="password" name="password" placeholder="Κωδικός" required>
+            <label for="confirmPassword">Εμφάνηση Κωδικού</label><input type="checkbox" id="showpasswordcheckbox">
+            <button style="display: none;" id="submit_btn" type="submit"></button>
+        </form>
+        <button id="delete_btn">Διαγραφή</button>
+    </body>
+    <script>
+        $(document).ready(function(){
+            $("#delete_btn").click(function(){
+                var response = window.confirm("Θέλετε να διαγράψετε τον λογαριασμό σας ?");
+                if (response) {
+                    $("#submit_btn").click();
+                }
+            });
+        });
+      </script>
+</html>

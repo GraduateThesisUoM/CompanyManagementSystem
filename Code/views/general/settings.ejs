@@ -1,15 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Settings</title>
-    <%- include('../partials/header'); %>
-    <%- include('../partials/footer'); %>
-</head>
-<body>
-    <h1>Settings</h1>
-    <h2>Settings exist here</h2>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Settings</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <%- include('../partials/header'); %>
+        <%- include('../partials/footer'); %>
+    </head>
+    <body>
+        <h1>Settings</h1>
+        <h2>Settings exist here</h2>
+        <button id="delete_account_btn">Διαγραφή Λογαριασμού</button>
+        
+    </body>
+    <script>
+    $(document).ready(function(){
+        $("#delete_account_btn").click(function(){
+            window.location ="delete-account"
+        });
+    });
     
-</body>
+    </script>
 </html>

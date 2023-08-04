@@ -144,7 +144,7 @@ app.get('/report-client', checkAuthenticated, (req, res) => {
 
 /*--------   SETTINGS */
 app.get('/settings', checkAuthenticated, (req, res) => {
-  res.render('general/settings.ejs');
+  res.render('general/settings.ejs', { user: req.user });
 });
 
 /*--------   PROFILE */
@@ -238,16 +238,36 @@ app.post('/reset-password', checkNotAuthenticated,  async (req, res) => {
     await user.save();
     console.log("Password reseted successfully");
     res.redirect('/log-in');
-  } catch (err) {
+  }
+  catch (err) {
     console.error('Error resetting password:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
 /*--------   ERROR */
-app.get('/error', checkNotAuthenticated, (req, res) => {
+app.get('/error', (req, res) => {
   res.render('general/error_page.ejs');
 });
+/*--------   DELETE ACCOUNT */
+app.get('/delete-account', checkAuthenticated, (req, res) => {
+  res.render('general/delete_account.ejs');
+});
+/*app.post('/delete-account', checkAuthenticated, async (req, res) => {
+  try{
+    const deleteResult = await usersCollection.deleteOne({ username });
 
+    if (deleteResult.deletedCount === 1) {
+      console.log(`User with email '${username}' successfully deleted.`);
+    } else {
+      console.log(`User with email '${username}' not found.`);
+    }
+
+  }
+  catch (err) {
+    console.error('Error deleting account:', err);
+    res.redirect('/error?origin_page=delete-account&error='+err);
+  }
+});*/
 
 
 
