@@ -250,25 +250,27 @@ app.get('/error', (req, res) => {
 });
 /*--------   DELETE ACCOUNT */
 app.get('/delete-account', checkAuthenticated, (req, res) => {
-  res.render('general/delete_account.ejs');
+  res.render('general/delete_account.ejs', { user: req.user });
 });
-/*app.post('/delete-account', checkAuthenticated, async (req, res) => {
+app.post('/delete-account', checkAuthenticated, async (req, res) => {
   try{
-    const deleteResult = await usersCollection.deleteOne({ username });
-
-    if (deleteResult.deletedCount === 1) {
-      console.log(`User with email '${username}' successfully deleted.`);
-    } else {
-      console.log(`User with email '${username}' not found.`);
+    if(req.user.password == req.body.password){
+      await User.deleteOne({ _id: req.user._id });
     }
-
+    else{
+      res.redirect('/delete-account?error=wrong_password');
+    }
+    res.redirect('/log-in?message=deletecomplete');
   }
   catch (err) {
     console.error('Error deleting account:', err);
     res.redirect('/error?origin_page=delete-account&error='+err);
   }
-});*/
-
+});
+/*--------   ΜΥ ACCOUNTΑΝΤ */
+app.get('/my-accountant', checkAuthenticated, (req, res) => {
+  res.render('user_pages/my_accountant.ejs', { user: req.user });
+});
 
 
 app.delete('/logout', (req, res) => {

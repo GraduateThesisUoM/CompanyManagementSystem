@@ -4,18 +4,30 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>U Main Page</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
         <%- include('../partials/header'); %>
         <%- include('../partials/footer'); %>
     </head>
-    <!--body id="jjjj" name="jjjj"-->
     <body>
         <h1>User main page</h1>
         <h2>Welcome Username</h2>
+
+        <button id='my_accountant'>Ο Λογιστής Μου</button>
 
         <form action="/logout?_method=DELETE" method="POST">
             <button type="submit">Log Out</button>
         </form>
         
     </body>
+    <script>
+        $(document).ready(function(){
+            $("#my_accountant").click(function(){
+                window.location ="my-accountant"
+            });
+        });
+      </script>
 
 </html>
