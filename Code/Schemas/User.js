@@ -7,22 +7,29 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
+  banned: { type: Boolean, required: true, default: false },
+
 
   afm: { type: String, required: false },
   mydatakey: { type: String, required: false },
   companyName: { type: String, required: false },
   companyLogo: { type: String, required: false },
-  banned: { type: Boolean, default: false },
 
-  resetPasswordToken: { type: String},
-  resetPasswordExpires: { type: Date},
+  resetPasswordToken: { type: String, required: false},
+  resetPasswordExpires: { type: Date, required: false},
+
+  myaccountant: { type: String, required: false},
+  
 
   type: {
     type: String,
     enum: ['user', 'accountant', 'self-accountant', 'admin'],
     required: true,
   }
+
 });
+
+
 
 module.exports = mongoose.model("users", UserSchema)
 

@@ -37,6 +37,7 @@ app.use(methodOverride('_method'));
 
 //Models
 const User = require("./Schemas/User");
+const Accountant  = require("./Schemas/Accountant");
 const { cache } = require('ejs');
 
 app.use(express.static('./public/css'));
@@ -78,24 +79,28 @@ app.post('/sing-up', async (req, res) => {
         email: req.body.email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakey,
+        myaccountant: "not assigned",
         companyName: req.body.companyName,
         companyLogo: req.body.companyLogo,
       });
       // Save the new user to the database
     await newUser.save();
+    console.log("User created successfully");
     }
     else if (req.body.account_type == 'accountant'){
-      const newUser = new User({
+      const newAccountant = new Accountant({
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: req.body.password,
         email: req.body.email,
         afm: req.body.afm,
-        mydatakey: req.body.mydatakey
+        mydatakey: req.body.mydatakey,
+        clients:[]
       });
       // Save the new user to the database
-    await newUser.save();
+    await newAccountant.save();
+    console.log("Accountant created successfully");
     }
     else if (req.body.account_type == 'admin'){
       const newUser = new User({
@@ -107,9 +112,8 @@ app.post('/sing-up', async (req, res) => {
       });
       // Save the new user to the database
     await newUser.save();
+    console.log("Admin created successfully");
     }
-
-    console.log("User created successfully");
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error saving user:', err);
