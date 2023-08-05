@@ -7,6 +7,7 @@
 </head>
 <body>
     <h1>Admin Main</h1>
+<<<<<<< HEAD
     <h2>Welcome <%- user.firstName %></h2>
     <div id="user-list-div" name="user-list-div">
         <% for (var i =0; i < userList.length;  i++ ) { %> 
@@ -43,6 +44,13 @@
         Total : <%= accountants + users + admins %>
 
     </div>
+=======
+    <h2>Welcome <%= firstName %></h2>
+    <div>
+        
+    </div>
+
+>>>>>>> 92731eaf407074701edd93ba3d94946198284df2
     <form action="/logout?_method=DELETE" method="POST">
         <button type="submit">Log Out</button>
     </form>

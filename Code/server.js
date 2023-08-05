@@ -47,13 +47,20 @@ app.use(express.static('./public/css'));
 /*--------   INDEX */
 app.get('/', checkAuthenticated, async (req, res) => {
   if(req.user.type == 'accountant'){
+<<<<<<< HEAD
     res.render('accountant_pages/accountant_main.ejs',{user : req.user});
+=======
+    res.render('accountant_pages/accountant_main.ejs', { firstName: req.user.firstName });
+>>>>>>> 92731eaf407074701edd93ba3d94946198284df2
   };
   if(req.user.type == 'user'){
     res.render('user_pages/user_main.ejs',{user : req.user});
   };
   if(req.user.type == 'admin'){
     res.render('admin_pages/admin_main.ejs',{user : req.user, userList : await getUsersByType()});
+  };
+  if(req.user.type == 'admin'){
+    res.render('admin_pages/admin_main.ejs', { firstName: req.user.firstName });
   };
 });
 
@@ -153,12 +160,20 @@ app.get('/report-client', checkAuthenticated, (req, res) => {
 
 /*--------   SETTINGS */
 app.get('/settings', checkAuthenticated, (req, res) => {
+<<<<<<< HEAD
   res.render('general/settings.ejs', { user: req.user });
+=======
+  res.render('general/settings.ejs');
+>>>>>>> 92731eaf407074701edd93ba3d94946198284df2
 });
 
 /*--------   PROFILE */
 app.get('/profile-page', checkAuthenticated, (req, res) => {
+<<<<<<< HEAD
   res.render('general/profile.ejs', { user: req.user });
+=======
+  res.render('general/profile.ejs');
+>>>>>>> 92731eaf407074701edd93ba3d94946198284df2
 });
 app.post('/profile-page', checkAuthenticated, async (req, res) => {
   try {
