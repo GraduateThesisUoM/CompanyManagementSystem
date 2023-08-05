@@ -1,4 +1,4 @@
-// getUserByEmail.js
+// getUsersByEmail.js
 const User = require('./Schemas/User');
 
 
@@ -13,5 +13,4 @@ const getUserByEmail = async (email) => {
 };
 
 module.exports = getUserByEmail;
-
 

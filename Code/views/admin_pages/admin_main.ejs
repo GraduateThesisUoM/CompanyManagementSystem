@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Main</title>
+</head>
+<body>
+    <h1>Admin Main</h1>
+    <h2>Welcome <%- user.firstName %></h2>
+    <div id="user-list-div" name="user-list-div">
+        <% for (var i =0; i < userList.length;  i++ ) { %> 
+            <br>
+            <% if(userList[i].type != 'admin'){ %>
+                <a href=""><%= userList[i].firstName %> <%= userList[i].type %></a>
+           <% }
+        } %>
+    </div>
+    <div id="stats-div" name="stats-div">
+        <h2>Site Stats</h2>
+        <%  var admins = 0;
+            var users = 0;
+            var accountants = 0;
+            for (var i =0;i < userList.length; i++){
+                if(userList[i].type == 'admin'){
+                    admins++;
+                }
+                if(userList[i].type == 'user'){
+                    users++;
+                }
+                if(userList[i].type == 'accountant'){
+                    accountants++;
+                }
+                
+            } 
+        %>
+        Number of Accountants : <%= accountants %>
+        <br>
+        Number of Users : <%= users %>
+        <br>
+        Number of Admins : <%= admins %>
+        <br>
+        Total : <%= accountants + users + admins %>
+
+    </div>
+    <form action="/logout?_method=DELETE" method="POST">
+        <button type="submit">Log Out</button>
+    </form>
+</body>
+</html>

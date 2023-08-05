@@ -16,6 +16,8 @@ const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
 const sendEmail = require('./email_sender');
 
+const getUsersByType = require('./getUsersByType');
+
 // Connect to MongoDB
 connectDB();
 
@@ -43,12 +45,15 @@ const { cache } = require('ejs');
 app.use(express.static('./public/css'));
 
 /*--------   INDEX */
-app.get('/', checkAuthenticated, (req, res) => {
+app.get('/', checkAuthenticated, async (req, res) => {
   if(req.user.type == 'accountant'){
     res.render('accountant_pages/accountant_main.ejs',{user : req.user});
   };
   if(req.user.type == 'user'){
     res.render('user_pages/user_main.ejs',{user : req.user});
+  };
+  if(req.user.type == 'admin'){
+    res.render('admin_pages/admin_main.ejs',{user : req.user, userList : await getUsersByType()});
   };
 });
 
