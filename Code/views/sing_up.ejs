@@ -37,6 +37,9 @@
         <input type="text" name="companyName">
         <label for="companyLogo">Λογότυπο εταιρείας :</label>
         <input type="text" name="companyLogo">
+        <label for="self_accountant">Αυτοδιαχείριση λογιστικών :</label>
+        <input type="checkbox" id="self_accountant_check_box">
+        <input type="text" name="self_accountant" id="self_accountant" value="false">
       </span>
     </span>
     <button style="display: none;" id="submit_btn" type="submit">Εγγραφή</button>
@@ -77,6 +80,10 @@
       const isChecked = $(this).prop("checked");
       passwordInput.prop("type", isChecked ? "text" : "password");
       passwordConfirmInput.prop("type", isChecked ? "text" : "password");
+    });
+    $("#self_accountant_check_box").change(function() {
+        const isChecked = $(this).prop("checked");
+        $("#self_accountant").val(isChecked ? "true" : "false");
     });
     $("#sing_up_btn").click(function(){
       const passwordInput = $("#password").val();

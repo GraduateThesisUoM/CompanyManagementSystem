@@ -84,7 +84,11 @@ app.post('/sing-up', async (req, res) => {
         companyLogo: req.body.companyLogo,
       });
       // Save the new user to the database
-    await newUser.save();
+    
+    if(req.body.self_accountant == "true"){
+      newUser.myaccountant = newUser._id
+      await newUser.save();
+    }
     console.log("User created successfully");
     }
     else if (req.body.account_type == 'accountant'){
@@ -98,7 +102,7 @@ app.post('/sing-up', async (req, res) => {
         mydatakey: req.body.mydatakey,
         clients:[]
       });
-      // Save the new user to the database
+    // Save the new user to the database
     await newAccountant.save();
     console.log("Accountant created successfully");
     }
