@@ -38,6 +38,7 @@ app.use(methodOverride('_method'));
 //Models
 const User = require("./Schemas/User");
 const Accountant  = require("./Schemas/Accountant");
+const Client  = require("./Schemas/Client");
 const { cache } = require('ejs');
 
 app.use(express.static('./public/css'));
@@ -71,7 +72,7 @@ app.post('/sing-up', async (req, res) => {
   try {
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
-      const newUser = new User({
+      const newUser = new Client({
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -79,17 +80,17 @@ app.post('/sing-up', async (req, res) => {
         email: req.body.email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakey,
-        myaccountant: "not assigned",
         companyName: req.body.companyName,
         companyLogo: req.body.companyLogo,
       });
       // Save the new user to the database
-    
-    if(req.body.self_accountant == "true"){
-      newUser.myaccountant = newUser._id
       await newUser.save();
-    }
-    console.log("User created successfully");
+      if(req.body.self_accountant == "true"){
+        newUser.myaccountant.id = newUser._id
+        newUser.myaccountant.status = "self_accountant"
+        await newUser.save();
+      }
+      console.log("User created successfully");
     }
     else if (req.body.account_type == 'accountant'){
       const newAccountant = new Accountant({

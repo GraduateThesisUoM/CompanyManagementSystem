@@ -16,17 +16,7 @@ const UserSchema = new mongoose.Schema({
   companyLogo: { type: String, required: false },
 
   resetPasswordToken: { type: String, required: false},
-  resetPasswordExpires: { type: Date, required: false},
-
-  myaccountant: {
-    id: { type: mongoose.Schema.Types.ObjectId, required: false },
-    status: {
-      type: String,
-      enum: ['assigned', 'pending', 'not_assigned'],
-      default: 'not_assigned',
-      required: true,
-    },
-  },  
+  resetPasswordExpires: { type: Date, required: false}, 
 
   type: {
     type: String,
