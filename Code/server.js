@@ -126,6 +126,71 @@ app.post('/sing-up', async (req, res) => {
   }
 });
 
+/*--------   USER MAIN */
+app.get('/my-accountant', checkAuthenticated, async (req, res) => {
+  try {
+    if (req.user.myaccountant.id == "not_assigned"){
+      res.redirect('pick-accountant');
+    }
+    else{
+      res.render('user_pages/my_accountant.ejs');
+    }
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=my-accountant&error='+err);
+  }
+});
+
+/*--------   PICK ACCOUNTANT */
+app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
+  try {
+    const accountants = await Accountant.find({}); // Fetch all accountants from the database
+    accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
+
+    res.render('user_pages/pick_accountant.ejs', { accountants: accountants });
+  } catch (err) {
+    console.error('Error fetching accountants:', err);
+    res.redirect('/error?origin_page=pick-accountant&error=' + err);
+  }
+});
+app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
+  try {
+    const accountant = await Accountant.find({_id:req.body.accountant_id});
+    req.session.accountant = accountant[0];
+    res.redirect('/preview-accountant');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=pick-accountant&error='+err);
+  }
+});
+
+/*--------   ACCOUNTANT PREVIEW */
+app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
+  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant });
+});
+app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
+  try {
+    if(req.session.accountant.clients.some(client => client.id === req.user._id)){
+      console.log("exists");
+    }
+    else{
+      console.log("new");
+      const accountant = await Accountant.findOne({_id:req.session.accountant._id});
+     
+      accountant.clients.push({id: req.user._id});
+      await accountant.save();
+    }
+    res.redirect('/preview-accountant');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=pick-accountant&error='+err);
+  }
+});
+
+
 /*--------   WORKING */
 app.get('/working', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/working_page.ejs');

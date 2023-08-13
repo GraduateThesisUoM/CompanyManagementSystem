@@ -34,11 +34,16 @@
                         <input type="text" name="companyName" id="companyName">
                         <label for="companyLogo">Λογότυπο εταιρείας :</label>
                         <input type="text" name="companyLogo" id="companyLogo">
+
+                        <span id="users_accountant">
+                            <label for="my_accountant">Λογιστής:</label>
+                            <input type="text" name="my_accountant" id="my_accountant">
+                        </span>
                     </span>
                 </span>
                 <button type="submit" id="edit-info-button" name="edit-info-button">Αποθήκευση αλλαγών</button>
             </form>
-
+            <button id="back_btn">Πίσω</button>
         </div>
         <hr>
         <div id="rating-div" name="rating-div">
@@ -59,6 +64,7 @@
     var userData = {}
     if('<%= user.type %>'=='user'){
         userData = {
+            id: '<%= user._id %>',
             type: '<%= user.type %>',
             firstName: '<%= user.firstName %>',
             lastName: '<%= user.lastName %>',
@@ -66,7 +72,8 @@
             afm: '<%= user.afm %>',
             mydatakey: '<%= user.mydatakey %>',
             companyName: '<%= user.companyName %>',
-            companyLogo: '<%= user.companyLogo %>'
+            companyLogo: '<%= user.companyLogo %>',
+            my_accountant: { id:'<%= user.myaccountant.id %>', status :"<%= user.myaccountant.status %>"}
         };
     }
     $(document).ready(function(){
@@ -76,10 +83,20 @@
             $("#mydatakey").val(userData.mydatakey);
             $("#companyName").val(userData.companyName);
             $("#companyLogo").val(userData.companyLogo);
+            if(userData.my_accountant.id == "not_assigned"){
+                $("#my_accountant").val("Δεν έχει οριστεί");
+            }
+            else if(userData.my_accountant.id == userData.id){
+                $("#my_accountant").val("Αυτοδιαχείριση Λογιστικών");
+            }
+            
         }
         else{
             document.title = "Προφίλ Λογιστή";
         }
+         $("#back_btn").click(function(){
+                window.location ="/"
+        });
     });
     
     </script>

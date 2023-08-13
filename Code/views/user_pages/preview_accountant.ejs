@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Προεπισκόπηση Λογιστή</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <%- include('../partials/header'); %>
+        <%- include('../partials/footer'); %>
+    </head>
+    <body>
+        <h1>Προεπισκόπηση Λογιστή</h1>
+        <div id="accountant-info-div" name="accountant-info-div">
+            <h2>Info</h2>
+
+            <form class="display_block" action="/preview-accountant" method="POST" >
+                <label for="firstName">Όνομα : <%= accountant.firstName %> <%= accountant.lastName %></label>
+                <label for="email">Email : <%= accountant.email %></label>
+                <button type="submit" id="submit_preview_accountant">submit</button>
+            </form>
+            <button id="request_bnt">Αποστολή Αιτίματος</button>
+            <button id="back_btn">Πίσω</button>
+        </div>
+        <hr>
+        <div id="rating-div" name="rating-div">
+            <h2>Reviews and Comments</h2>
+        </div>
+    </body>
+    <script>
+        $(document).ready(function(){
+            $("#back_btn").click(function(){
+                    window.location ="/pick-accountant"
+            });
+             $("#request_bnt").click(function(){
+                    $("#submit_preview_accountant").click()
+            });
+        });
+        
+    </script>
+
+</html>
