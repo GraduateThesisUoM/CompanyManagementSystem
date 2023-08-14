@@ -64,11 +64,11 @@ app.post('/log-in', checkNotAuthenticated, passport.authenticate('local', {
 }));
 
 
-/*--------   SING UP */
-app.get('/sing-up', checkNotAuthenticated, (req, res) => {
-  res.render('sing_up.ejs');
+/*--------   SIGN UP */
+app.get('/sign-up', checkNotAuthenticated, (req, res) => {
+  res.render('sign_up.ejs');
 });
-app.post('/sing-up', async (req, res) => {
+app.post('/sign-up', async (req, res) => {
   try {
     const existingUser = await User.findOne({ email: req.body.email });
 
@@ -128,7 +128,7 @@ app.post('/sing-up', async (req, res) => {
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error saving user:', err);
-    res.redirect('/error?origin_page=sing-up&error='+err);
+    res.redirect('/error?origin_page=sign-up&error='+err);
   }
 });
 
