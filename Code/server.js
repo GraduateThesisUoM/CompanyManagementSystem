@@ -70,6 +70,12 @@ app.get('/sing-up', checkNotAuthenticated, (req, res) => {
 });
 app.post('/sing-up', async (req, res) => {
   try {
+    const existingUser = await User.findOne({ email: req.body.email });
+
+    if (existingUser) {
+      // User with the same email already exists
+      return res.redirect('/error?origin_page=sign-up&error=Email already in use');
+    }
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
       const newUser = new Client({
