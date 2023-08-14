@@ -1,0 +1,4 @@
+.clients_page_ul > li {
+    display: grid;
+    grid-template-columns: 50% 25% 25%;
+}

@@ -208,8 +208,36 @@ app.get('/assignment-history', checkAuthenticated, (req, res) => {
 });
 
 /*--------   CLIENTS */
-app.get('/clients', checkAuthenticated, (req, res) => {
-  res.render('accountant_pages/clients_page.ejs');
+app.get('/clients', checkAuthenticated, async (req, res) => {
+  const clients_pending = [];
+  const clients_active = [];
+  const clients_expired = [];
+  if (req.user.clients.length === 0) {
+    console.log('no clients');
+  } else {
+    console.log(req.user.clients.length);
+    for (const client of req.user.clients) {
+      const user = await User.findById(client.id);
+      const clientInfo = {
+        user: user,
+        status: client.status
+      };
+      if(client.status == "pending"){
+        clients_pending.push(clientInfo);
+      }
+      else if(client.status == "active"){
+        clients_active.push(clientInfo);
+      }
+      else{
+        clients_expired.push(clientInfo);
+      }
+    }
+    console.log(clients_pending);
+    console.log(clients_active);
+    console.log(clients_expired);
+  }
+  res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired });
+
 });
 
 /*--------   CLIENT PROFILE */

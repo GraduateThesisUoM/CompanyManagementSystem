@@ -1,25 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Clients Page</title>
-    <%- include('../partials/header'); %>
-    <%- include('../partials/footer'); %>
-</head>
-<body>
-    <h1>List Of Current Clients</h1>
-    <ul>
-        <li><a href="client-profile">Client 1</a></li>
-        <li><a href="client-profile">Client 2</a></li>
-        <li><a href="client-profile">Client 3</a></li>
-    </ul>
-    <h1>List Of Hiring Requests</h1>
-    <ul>
-        <!-- Maybe different pages maybe not-->
-        <li>Req 1</li>
-        <li>Req 2</li>
-        <li>Req 3</li>
-    </ul>
-</body>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Clients Page</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="clients_page_css.css">
+        <%- include('../partials/header'); %>
+        <%- include('../partials/footer'); %>
+    </head>
+    <body>
+        <h1>List Of Current Clients</h1>
+        <ul class ="clients_page_ul" id ="active_client_requests_container">
+            <li><a href="client-profile">Client 1</a></li>
+            <li><a href="client-profile">Client 2</a></li>
+            <li><a href="client-profile">Client 3</a></li>
+        </ul>
+        <h1>List Of Hiring Requests</h1>
+        <ul class ="clients_page_ul" id ="pending_client_requests_container">
+            <!-- Maybe different pages maybe not-->
+            <!--li>Req 1</li>
+            <li>Req 2</li>
+            <li>Req 3</li-->
+        </ul>
+        <h1>List Of expired Requests</h1>
+        <ul class ="clients_page_ul" id ="expired_client_requests_container">
+            <li><a href="client-profile">Client 1</a></li>
+            <li><a href="client-profile">Client 2</a></li>
+            <li><a href="client-profile">Client 3</a></li>
+        </ul>
+        <button id="back_btn">Πίσω</button>
+    </body>
+    <script>
+        $(document).ready(function(){
+            const clients_pending = JSON.parse(`<%- JSON.stringify(clients_pending) %>`);
+            const clients_active = JSON.parse(`<%- JSON.stringify(clients_active) %>`);
+            const clients_expired = JSON.parse(`<%- JSON.stringify(clients_expired) %>`);
+            console.log(clients_pending[0].user)
+
+            const pending_client_requests_container = $("#pending_client_requests_container");
+
+            clients_pending.forEach(client => {
+                const liElement = $("<li>")
+                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
+                const button1Element = $("<button>").text("Accept").addClass("xx").click(function() {
+                        alert("xx")
+                        });
+                const button2Element = $("<button>").text("reject").addClass("yy").click(function() {
+                    alert("xx")
+                });
+                liElement.append(clientElement);
+                liElement.append(button1Element);
+                liElement.append(button2Element);
+                pending_client_requests_container.append(liElement);
+            });
+            clients_active.forEach(client => {
+                const clientElement = $("<div>").text(client.user.firstName+" "+client.user.lastName);
+                pending_client_requests_container.append(clientElement, "<br>");
+            });
+            clients_expired.forEach(client => {
+                const clientElement = $("<div>").text(client.user.firstName+" "+client.user.lastName);
+                pending_client_requests_container.append(clientElement, "<br>");
+            });
+
+        
+            $("#back_btn").click(function(){
+                    window.location ="/"
+            });
+        });
+    </script>
 </html>
