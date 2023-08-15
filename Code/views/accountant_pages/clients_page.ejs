@@ -20,6 +20,11 @@
             <li><a href="client-profile">Client 3</a></li>
         </ul>
         <h1>List Of Hiring Requests</h1>
+        <form action="/clients" method="POST">
+            <input id="clients_id" name="clients_id">
+            <input id="accountant_action" name="accountant_action">
+            <button  id="accountant_action_submit" type="submit">submit</button>
+        </form>
         <ul class ="clients_page_ul" id ="pending_client_requests_container">
             <!-- Maybe different pages maybe not-->
             <!--li>Req 1</li>
@@ -39,18 +44,19 @@
             const clients_pending = JSON.parse(`<%- JSON.stringify(clients_pending) %>`);
             const clients_active = JSON.parse(`<%- JSON.stringify(clients_active) %>`);
             const clients_expired = JSON.parse(`<%- JSON.stringify(clients_expired) %>`);
-            console.log(clients_pending[0].user)
 
             const pending_client_requests_container = $("#pending_client_requests_container");
+            const active_client_requests_container = $("#active_client_requests_container");
+            const expired_client_requests_container = $("#expired_client_requests_container");
 
             clients_pending.forEach(client => {
                 const liElement = $("<li>")
                 const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
                 const button1Element = $("<button>").text("Accept").addClass("xx").click(function() {
-                        alert("xx")
+                        accountant_action(client.user._id, "assigned")
                         });
                 const button2Element = $("<button>").text("reject").addClass("yy").click(function() {
-                    alert("xx")
+                    accountant_action(client.user._id, "expired")
                 });
                 liElement.append(clientElement);
                 liElement.append(button1Element);
@@ -58,18 +64,39 @@
                 pending_client_requests_container.append(liElement);
             });
             clients_active.forEach(client => {
-                const clientElement = $("<div>").text(client.user.firstName+" "+client.user.lastName);
-                pending_client_requests_container.append(clientElement, "<br>");
+                const liElement = $("<li>")
+                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
+                const button1Element = $("<button>").text("reject").attr('style', 'visibility: hidden;');
+                const button2Element = $("<button>").text("reject").click(function() {
+                    accountant_action(client.user._id, "expired")
+                });
+                liElement.append(clientElement);
+                liElement.append(button1Element);
+                liElement.append(button2Element);
+                active_client_requests_container.append(liElement);
             });
             clients_expired.forEach(client => {
-                const clientElement = $("<div>").text(client.user.firstName+" "+client.user.lastName);
-                pending_client_requests_container.append(clientElement, "<br>");
+                const liElement = $("<li>")
+                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
+                const button1Element = $("<button>").text("reject").attr('style', 'visibility: hidden;');
+                const button2Element = $("<button>").text("reject").click(function() {
+                    accountant_action(client.user._id, "expired")
+                });
+                liElement.append(clientElement);
+                liElement.append(button1Element);
+                liElement.append(button2Element);
+                expired_client_requests_container.append(liElement);
             });
 
         
             $("#back_btn").click(function(){
                     window.location ="/"
             });
+            function accountant_action(clients_id,action){
+                $("#clients_id").val(clients_id)
+                $("#accountant_action").val(action)
+                $("#accountant_action_submit").click()
+            }
         });
     </script>
 </html>

@@ -182,11 +182,14 @@ app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
       console.log("exists");
     }
     else{
+
       console.log("new");
       const accountant = await Accountant.findOne({_id:req.session.accountant._id});
-     
       accountant.clients.push({id: req.user._id});
+      req.user.myaccountant.id = accountant._id
+      req.user.myaccountant.status = "pending"
       await accountant.save();
+      await req.user.save();
     }
     res.redirect('/preview-accountant');
   }
@@ -215,7 +218,6 @@ app.get('/clients', checkAuthenticated, async (req, res) => {
   if (req.user.clients.length === 0) {
     console.log('no clients');
   } else {
-    console.log(req.user.clients.length);
     for (const client of req.user.clients) {
       const user = await User.findById(client.id);
       const clientInfo = {
@@ -225,19 +227,47 @@ app.get('/clients', checkAuthenticated, async (req, res) => {
       if(client.status == "pending"){
         clients_pending.push(clientInfo);
       }
-      else if(client.status == "active"){
+      else if(client.status == "assigned"){
         clients_active.push(clientInfo);
       }
       else{
         clients_expired.push(clientInfo);
       }
     }
-    console.log(clients_pending);
-    console.log(clients_active);
-    console.log(clients_expired);
   }
+  console.log(clients_active)
   res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired });
 
+});
+app.post('/clients', checkAuthenticated, async (req, res) => {
+  try {
+    console.log(req.body.clients_id)
+    for (let i = 0; i < req.user.clients.length; i++) {
+      console.log(req.user.clients[i].id)
+      if(req.user.clients[i].id == req.body.clients_id){
+        console.log("ff");
+        req.user.clients[i].status =  req.body.accountant_action
+        await req.user.save();
+        const client = await User.findById(req.body.clients_id);
+        if(req.body.accountant_action == "active"){
+          client.myaccountant.status = "assigned"
+        }
+        else if(req.body.accountant_action == "expired"){
+          client.myaccountant.status = "rejected"
+        }
+        else{
+          client.myaccountant.status = req.body.accountant_action
+        }
+        await client.save();
+        break
+      }
+    }
+    res.redirect('/clients');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=clients&error='+err);
+  }
 });
 
 /*--------   CLIENT PROFILE */
