@@ -157,7 +157,7 @@ app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
     const accountants = await Accountant.find({}); // Fetch all accountants from the database
     accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
 
-    res.render('user_pages/pick_accountant.ejs', { accountants: accountants });
+    res.render('user_pages/pick_accountant.ejs', { accountants: accountants});
   } catch (err) {
     console.error('Error fetching accountants:', err);
     res.redirect('/error?origin_page=pick-accountant&error=' + err);
@@ -177,7 +177,7 @@ app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
 
 /*--------   ACCOUNTANT PREVIEW */
 app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
-  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant });
+  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user });
 });
 app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
   try {
@@ -263,8 +263,20 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
         const client = await User.findById(req.body.clients_id);
         client.myaccountant.status = req.user._id;
         if(req.body.accountant_action == "assigned"){
-          console.log("dd");
           client.myaccountant.status = "assigned";
+          const accountants = await Accountant.find({ _id: { $ne: req.user._id } });
+          
+          for (const accountant of accountants) {
+            if(accountant.clients.length > 0){
+              for (let j = 0; j < req.user.clients.length; j++){
+                if(accountant.clients[j].id.equals(client._id)){
+                  console.log("ff")
+                }
+              }
+            }
+          }
+          
+
         }
         client.myaccountant.status = req.body.accountant_action
         await client.save();

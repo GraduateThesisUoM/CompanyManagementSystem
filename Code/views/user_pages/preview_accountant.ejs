@@ -34,7 +34,10 @@
             $("#back_btn").click(function(){
                     window.location ="/pick-accountant"
             });
-             $("#request_bnt").click(function(){
+            if ("<%= accountant._id %>" == "<%= user.myaccountant.id %>"){
+                $("#request_bnt").prop("disabled", true);
+            }
+            $("#request_bnt").click(function(){
                     $("#submit_preview_accountant").click()
             });
         });
