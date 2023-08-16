@@ -135,11 +135,14 @@ app.post('/sign-up', async (req, res) => {
 /*--------   USER MAIN */
 app.get('/my-accountant', checkAuthenticated, async (req, res) => {
   try {
-    if (req.user.myaccountant.id == "not_assigned"){
-      res.redirect('pick-accountant');
+    if (req.user.myaccountant.status == "self_accountant"){
+      res.render('user_pages/self_accountant.ejs');
+    }
+    else if (req.user.myaccountant.status == "assigned"){
+      res.render('user_pages/my_accountant.ejs');
     }
     else{
-      res.render('user_pages/my_accountant.ejs');
+      res.redirect('pick-accountant');
     }
   }
   catch (err) {
@@ -178,20 +181,32 @@ app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
 });
 app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
   try {
-    if(req.session.accountant.clients.some(client => client.id === req.user._id)){
+    const accountant = await Accountant.findOne({_id:req.session.accountant._id});
+    if(accountant.clients.some(client => client.id.equals(req.user._id))){
       console.log("exists");
+      for (const client of accountant.clients) {
+      for (let i = 0; i < accountant.clients.length; i++)
+        if( accountant.clients[i].id.equals(req.user._id)){
+          console.log(client.id);
+          console.log(client.status);
+          accountant.clients[i].status = "pending"
+          req.user.myaccountant.status = "pending"
+          await accountant.save();
+          await req.user.save();
+          break;
+        }
+        
+      }
     }
     else{
-
       console.log("new");
-      const accountant = await Accountant.findOne({_id:req.session.accountant._id});
       accountant.clients.push({id: req.user._id});
       req.user.myaccountant.id = accountant._id
       req.user.myaccountant.status = "pending"
       await accountant.save();
       await req.user.save();
     }
-    res.redirect('/preview-accountant');
+    res.redirect('/pick-accountant');
   }
   catch (err) {
     console.error('Error updating user data:', err);
@@ -235,29 +250,23 @@ app.get('/clients', checkAuthenticated, async (req, res) => {
       }
     }
   }
-  console.log(clients_active)
   res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired });
 
 });
 app.post('/clients', checkAuthenticated, async (req, res) => {
   try {
-    console.log(req.body.clients_id)
     for (let i = 0; i < req.user.clients.length; i++) {
-      console.log(req.user.clients[i].id)
-      if(req.user.clients[i].id == req.body.clients_id){
-        console.log("ff");
+      if(req.user.clients[i].id.equals(req.body.clients_id)){
         req.user.clients[i].status =  req.body.accountant_action
         await req.user.save();
+
         const client = await User.findById(req.body.clients_id);
-        if(req.body.accountant_action == "active"){
-          client.myaccountant.status = "assigned"
+        client.myaccountant.status = req.user._id;
+        if(req.body.accountant_action == "assigned"){
+          console.log("dd");
+          client.myaccountant.status = "assigned";
         }
-        else if(req.body.accountant_action == "expired"){
-          client.myaccountant.status = "rejected"
-        }
-        else{
-          client.myaccountant.status = req.body.accountant_action
-        }
+        client.myaccountant.status = req.body.accountant_action
         await client.save();
         break
       }

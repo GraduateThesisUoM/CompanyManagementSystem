@@ -31,8 +31,8 @@
             <li>Req 2</li>
             <li>Req 3</li-->
         </ul>
-        <h1>List Of expired Requests</h1>
-        <ul class ="clients_page_ul" id ="expired_client_requests_container">
+        <h1>List Of rejected Requests</h1>
+        <ul class ="clients_page_ul" id ="rejected_client_requests_container">
             <li><a href="client-profile">Client 1</a></li>
             <li><a href="client-profile">Client 2</a></li>
             <li><a href="client-profile">Client 3</a></li>
@@ -47,16 +47,16 @@
 
             const pending_client_requests_container = $("#pending_client_requests_container");
             const active_client_requests_container = $("#active_client_requests_container");
-            const expired_client_requests_container = $("#expired_client_requests_container");
+            const rejected_client_requests_container = $("#rejected_client_requests_container");
 
             clients_pending.forEach(client => {
                 const liElement = $("<li>")
                 const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
-                const button1Element = $("<button>").text("Accept").addClass("xx").click(function() {
+                const button1Element = $("<button>").text("Accept").click(function() {
                         accountant_action(client.user._id, "assigned")
                         });
-                const button2Element = $("<button>").text("reject").addClass("yy").click(function() {
-                    accountant_action(client.user._id, "expired")
+                const button2Element = $("<button>").text("reject").click(function() {
+                    accountant_action(client.user._id, "rejected")
                 });
                 liElement.append(clientElement);
                 liElement.append(button1Element);
@@ -66,9 +66,9 @@
             clients_active.forEach(client => {
                 const liElement = $("<li>")
                 const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
-                const button1Element = $("<button>").text("reject").attr('style', 'visibility: hidden;');
+                const button1Element = $("<button>").text("Accept").attr('style', 'visibility: hidden;');
                 const button2Element = $("<button>").text("reject").click(function() {
-                    accountant_action(client.user._id, "expired")
+                    accountant_action(client.user._id, "rejected")
                 });
                 liElement.append(clientElement);
                 liElement.append(button1Element);
@@ -78,14 +78,14 @@
             clients_expired.forEach(client => {
                 const liElement = $("<li>")
                 const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
-                const button1Element = $("<button>").text("reject").attr('style', 'visibility: hidden;');
-                const button2Element = $("<button>").text("reject").click(function() {
-                    accountant_action(client.user._id, "expired")
+                const button1Element = $("<button>").text("Accept").click(function() {
+                    accountant_action(client.user._id, "assigned")
                 });
+                const button2Element = $("<button>").text("reject").attr('style', 'visibility: hidden;');
                 liElement.append(clientElement);
                 liElement.append(button1Element);
                 liElement.append(button2Element);
-                expired_client_requests_container.append(liElement);
+                rejected_client_requests_container.append(liElement);
             });
 
         
