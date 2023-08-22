@@ -10,17 +10,12 @@
     <h1>Admin Main</h1>
     <h2>Welcome <%- user.firstName %></h2>
     <div id="user-search-div" name="user-search-div">
-        <form action="/" method="POST">
-            <label for="adminQuery">Search Query</label>
-            <input type="search" name="adminQuery" id="adminQuery">
-            <label for="search_by_selector">Search By</label>
-            <select name="search_by_selector" id="search_by_selector">
-                <option value="id">Id</option>
-                <option value="email">Email</option>
-                <option value="Name">Name</option>
-            </select>
-            <button type="submit" id="search-button" name="search-button">Search</button>
-        </form>
+        <label for="adminQuery">Search</label>
+        <input type="text" name="adminQuery" id="adminQuery" onkeyup="sendData(this)">
+        <button type="submit" id="search-button" name="search-button">Search</button>
+        <div id="search-results">
+            
+        </div>
         <h3>Recent Searches</h3>
         <table>
             <tr>
@@ -78,11 +73,24 @@
         <button type="submit">Log Out</button>
     </form>
 
-    <% if (typeof result !== 'undefined' || result !== null){ %>
-        <div id="search-result" name="search-result">
-            <%= result %>
-        </div>
-   <% } %>
+    <script>
+        function sendData(e){
+            fetch('getNames', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: {payload: JSON.stringify(e.value)}
+            }).then(res => res.json()).then(data => {
+                let payload = data.payload;
+                console.log(payload);
+            })
+        }
+    </script>
     
 </body>
+
+<style>
+    
+</style>
+
+
 </html>

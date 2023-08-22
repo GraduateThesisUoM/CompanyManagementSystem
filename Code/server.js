@@ -40,8 +40,8 @@ app.use(methodOverride('_method'));
 //Models
 const User = require("./Schemas/User");
 const Accountant  = require("./Schemas/Accountant");
-const Client  = require("./Schemas/Client");
 const { cache } = require('ejs');
+const bodyParser = require('body-parser');
 
 app.use(express.static('./public/css'));
 
@@ -58,10 +58,12 @@ app.get('/', checkAuthenticated, async (req, res) => {
   };
 });
 
-app.post('/', checkAuthenticated, async (req, res) => {
-  console.log(req.body.adminQuery);
-  const searchResult = await getUserById(req.body.adminQuery);
-  res.redirect('/');
+app.post('/getNames', (req, res) => {
+  let payload = req.body.payload;
+  console.log(payload);
+  //let search = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
+  //search = search.slice(0, 10);
+  //res.send({payload: search});
 });
 
 /*--------   LOG IN */
@@ -75,21 +77,15 @@ app.post('/log-in', checkNotAuthenticated, passport.authenticate('local', {
 }));
 
 
-/*--------   SIGN UP */
-app.get('/sign-up', checkNotAuthenticated, (req, res) => {
-  res.render('sign_up.ejs');
+/*--------   SING UP */
+app.get('/sing-up', checkNotAuthenticated, (req, res) => {
+  res.render('sing_up.ejs');
 });
-app.post('/sign-up', async (req, res) => {
+app.post('/sing-up', async (req, res) => {
   try {
-    const existingUser = await User.findOne({ email: req.body.email });
-
-    if (existingUser) {
-      // User with the same email already exists
-      return res.redirect('/error?origin_page=sign-up&error=Email already in use');
-    }
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
-      const newUser = new Client({
+      const newUser = new User({
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -97,17 +93,13 @@ app.post('/sign-up', async (req, res) => {
         email: req.body.email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakey,
+        myaccountant: "not assigned",
         companyName: req.body.companyName,
         companyLogo: req.body.companyLogo,
       });
       // Save the new user to the database
-      await newUser.save();
-      if(req.body.self_accountant == "true"){
-        newUser.myaccountant.id = newUser._id
-        newUser.myaccountant.status = "self_accountant"
-        await newUser.save();
-      }
-      console.log("User created successfully");
+    await newUser.save();
+    console.log("User created successfully");
     }
     else if (req.body.account_type == 'accountant'){
       const newAccountant = new Accountant({
@@ -120,7 +112,7 @@ app.post('/sign-up', async (req, res) => {
         mydatakey: req.body.mydatakey,
         clients:[]
       });
-    // Save the new user to the database
+      // Save the new user to the database
     await newAccountant.save();
     console.log("Accountant created successfully");
     }
@@ -139,92 +131,9 @@ app.post('/sign-up', async (req, res) => {
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error saving user:', err);
-    res.redirect('/error?origin_page=sign-up&error='+err);
+    res.redirect('/error?origin_page=sing-up&error='+err);
   }
 });
-
-/*--------   USER MAIN */
-app.get('/my-accountant', checkAuthenticated, async (req, res) => {
-  try {
-    if (req.user.myaccountant.status == "self_accountant"){
-      res.render('user_pages/self_accountant.ejs');
-    }
-    else if (req.user.myaccountant.status == "assigned"){
-      res.render('user_pages/my_accountant.ejs');
-    }
-    else{
-      res.redirect('pick-accountant');
-    }
-  }
-  catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=my-accountant&error='+err);
-  }
-});
-
-/*--------   PICK ACCOUNTANT */
-app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
-  try {
-    const accountants = await Accountant.find({}); // Fetch all accountants from the database
-    accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
-
-    res.render('user_pages/pick_accountant.ejs', { accountants: accountants});
-  } catch (err) {
-    console.error('Error fetching accountants:', err);
-    res.redirect('/error?origin_page=pick-accountant&error=' + err);
-  }
-});
-app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
-  try {
-    const accountant = await Accountant.find({_id:req.body.accountant_id});
-    req.session.accountant = accountant[0];
-    res.redirect('/preview-accountant');
-  }
-  catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=pick-accountant&error='+err);
-  }
-});
-
-/*--------   ACCOUNTANT PREVIEW */
-app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
-  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user });
-});
-app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
-  try {
-    const accountant = await Accountant.findOne({_id:req.session.accountant._id});
-    if(accountant.clients.some(client => client.id.equals(req.user._id))){
-      console.log("exists");
-      for (const client of accountant.clients) {
-      for (let i = 0; i < accountant.clients.length; i++)
-        if( accountant.clients[i].id.equals(req.user._id)){
-          console.log(client.id);
-          console.log(client.status);
-          accountant.clients[i].status = "pending"
-          req.user.myaccountant.status = "pending"
-          await accountant.save();
-          await req.user.save();
-          break;
-        }
-        
-      }
-    }
-    else{
-      console.log("new");
-      accountant.clients.push({id: req.user._id});
-      req.user.myaccountant.id = accountant._id
-      req.user.myaccountant.status = "pending"
-      await accountant.save();
-      await req.user.save();
-    }
-    res.redirect('/pick-accountant');
-  }
-  catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=pick-accountant&error='+err);
-  }
-});
-
 
 /*--------   WORKING */
 app.get('/working', checkAuthenticated, (req, res) => {
@@ -237,69 +146,8 @@ app.get('/assignment-history', checkAuthenticated, (req, res) => {
 });
 
 /*--------   CLIENTS */
-app.get('/clients', checkAuthenticated, async (req, res) => {
-  const clients_pending = [];
-  const clients_active = [];
-  const clients_expired = [];
-  if (req.user.clients.length === 0) {
-    console.log('no clients');
-  } else {
-    for (const client of req.user.clients) {
-      const user = await User.findById(client.id);
-      const clientInfo = {
-        user: user,
-        status: client.status
-      };
-      if(client.status == "pending"){
-        clients_pending.push(clientInfo);
-      }
-      else if(client.status == "assigned"){
-        clients_active.push(clientInfo);
-      }
-      else{
-        clients_expired.push(clientInfo);
-      }
-    }
-  }
-  res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired });
-
-});
-app.post('/clients', checkAuthenticated, async (req, res) => {
-  try {
-    for (let i = 0; i < req.user.clients.length; i++) {
-      if(req.user.clients[i].id.equals(req.body.clients_id)){
-        req.user.clients[i].status =  req.body.accountant_action
-        await req.user.save();
-
-        const client = await User.findById(req.body.clients_id);
-        client.myaccountant.status = req.user._id;
-        if(req.body.accountant_action == "assigned"){
-          client.myaccountant.status = "assigned";
-          const accountants = await Accountant.find({ _id: { $ne: req.user._id } });
-          
-          for (const accountant of accountants) {
-            if(accountant.clients.length > 0){
-              for (let j = 0; j < req.user.clients.length; j++){
-                if(accountant.clients[j].id.equals(client._id)){
-                  console.log("ff")
-                }
-              }
-            }
-          }
-          
-
-        }
-        client.myaccountant.status = req.body.accountant_action
-        await client.save();
-        break
-      }
-    }
-    res.redirect('/clients');
-  }
-  catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=clients&error='+err);
-  }
+app.get('/clients', checkAuthenticated, (req, res) => {
+  res.render('accountant_pages/clients_page.ejs');
 });
 
 /*--------   CLIENT PROFILE */
