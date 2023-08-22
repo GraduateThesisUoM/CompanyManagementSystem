@@ -5,7 +5,17 @@ const User = require('./User');
 
 // Define the additional properties for the accountant schema
 const AccountantSchema = new mongoose.Schema({
-  clients: [{ type: String}]
+  clients: [{
+    id: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true
+    },
+    status: {
+      type: String,
+      enum: ['pending', 'assigned', 'rejected'],
+      default: 'pending'
+    }
+  }]
 });
 
 // Merge the Accountant schema with the User schema

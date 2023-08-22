@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Επιλογή Λογιστή</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="pick_accountant_css.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <%- include('../partials/header'); %>
+        <%- include('../partials/footer'); %>
+    </head>
+    <body>
+        <h1>Επιλογή Λογιστή</h1>
+        <form action="/pick-accountant" method="POST">
+        <input name="accountant_id" id="accountant_id">
+
+        <button type="submit" id="accountant_id_submit_btn">Submit</button>
+        </form>
+
+        <div id="accountan_table">
+        </div>
+
+        <button id="back_btn">Πίσω</button>
+    </body>
+    <script>
+        $(document).ready(function(){
+            $("#back_btn").click(function(){
+                    window.location ="/"
+            });
+            
+            if(<%= accountants.length%> == 0){
+                alert("Δεν υπάρχουν διαθέσιμοι Λογιστές")
+            }
+            else{
+                const accountantsJSON = `<%- JSON.stringify(accountants) %>`;
+                const accountantsArray = JSON.parse(accountantsJSON);
+
+                const accountantListDiv = $("#accountan_table");
+
+                accountantsArray.forEach(accountant => {
+                    const accountantElement = $("<div>").addClass("accountant_element").text(accountant.firstName + " " + accountant.lastName);
+                    const buttonElement = $("<button>").text("Προφίλ").addClass("accountant_button").click(function() {
+                        $("#accountant_id").val(accountant._id);
+                        $("#accountant_id_submit_btn").click();
+                    });
+                    // Append the button element as a child of the accountantElement
+                    accountantElement.append(buttonElement);
+                    
+                    accountantListDiv.append(accountantElement, "<br>");
+                });
+            }
+        });
+        
+    </script>
+</html>

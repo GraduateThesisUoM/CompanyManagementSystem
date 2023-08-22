@@ -16,10 +16,7 @@ const UserSchema = new mongoose.Schema({
   companyLogo: { type: String, required: false },
 
   resetPasswordToken: { type: String, required: false},
-  resetPasswordExpires: { type: Date, required: false},
-
-  myaccountant: { type: String, required: false},
-  
+  resetPasswordExpires: { type: Date, required: false}, 
 
   type: {
     type: String,
