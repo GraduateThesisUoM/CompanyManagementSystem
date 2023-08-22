@@ -1,8 +1,8 @@
-// getUsersByType.js
+// getAllUsers.js
 const User = require('./Schemas/User');
 
 
-const getUsersByType = async () => {
+const getAllUsers = async () => {
   try {
     const users = await User.find();
     return users;
@@ -12,4 +12,4 @@ const getUsersByType = async () => {
   }
 };
 
-module.exports = getUsersByType;
+module.exports = getAllUsers;

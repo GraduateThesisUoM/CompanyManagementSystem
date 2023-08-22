@@ -4,18 +4,48 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Main</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <body>
     <h1>Admin Main</h1>
-<<<<<<< HEAD
     <h2>Welcome <%- user.firstName %></h2>
-    <div id="user-list-div" name="user-list-div">
-        <% for (var i =0; i < userList.length;  i++ ) { %> 
-            <br>
-            <% if(userList[i].type != 'admin'){ %>
-                <a href=""><%= userList[i].firstName %> <%= userList[i].type %></a>
-           <% }
-        } %>
+    <div id="user-search-div" name="user-search-div">
+        <form action="/" method="POST">
+            <label for="adminQuery">Search Query</label>
+            <input type="search" name="adminQuery" id="adminQuery">
+            <label for="search_by_selector">Search By</label>
+            <select name="search_by_selector" id="search_by_selector">
+                <option value="id">Id</option>
+                <option value="email">Email</option>
+                <option value="Name">Name</option>
+            </select>
+            <button type="submit" id="search-button" name="search-button">Search</button>
+        </form>
+        <h3>Recent Searches</h3>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Ban Status</th>
+                <th>Profile</th>
+            </tr>
+            <% for (var i =0; i < userList.length;  i++ ) { %>
+                <% if(userList[i].type != 'admin'){ %>
+                <tr>
+                    <td><%= userList[i].id %></td>
+                    <td><%= userList[i].firstName %></td>
+                    <td><%= userList[i].lastName %></td>
+                    <td><%= userList[i].email %></td>
+                    <td><%= userList[i].type %></td>
+                    <td><%= userList[i].banned %></td>
+                    <td><a href="">visit</a></td>
+                </tr>
+                <% }
+            } %>
+        </table>
     </div>
     <div id="stats-div" name="stats-div">
         <h2>Site Stats</h2>
@@ -47,5 +77,12 @@
     <form action="/logout?_method=DELETE" method="POST">
         <button type="submit">Log Out</button>
     </form>
+
+    <% if (typeof result !== 'undefined' || result !== null){ %>
+        <div id="search-result" name="search-result">
+            <%= result %>
+        </div>
+   <% } %>
+    
 </body>
 </html>
