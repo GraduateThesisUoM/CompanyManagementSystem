@@ -26,7 +26,8 @@ const initializePassport = require('./passport-config');
 initializePassport(passport, getUserByEmail, getUserById);
 
 app.set('view-engine', 'ejs');
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(flash());
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -41,7 +42,6 @@ app.use(methodOverride('_method'));
 const User = require("./Schemas/User");
 const Accountant  = require("./Schemas/Accountant");
 const { cache } = require('ejs');
-const bodyParser = require('body-parser');
 
 app.use(express.static('./public/css'));
 
@@ -58,12 +58,15 @@ app.get('/', checkAuthenticated, async (req, res) => {
   };
 });
 
-app.post('/getNames', (req, res) => {
-  let payload = req.body.payload;
-  console.log(payload);
-  //let search = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
-  //search = search.slice(0, 10);
-  //res.send({payload: search});
+app.post('/getData', async (req, res) => {
+  let payload = req.body.payload.trim();
+  let resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
+  let resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
+  let resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
+  var search = resultByFname.concat(resultByLname, resultByEmail);  
+
+  search = search.slice(0, 10);
+  res.send({payload: search});
 });
 
 /*--------   LOG IN */
