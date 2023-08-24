@@ -13,10 +13,10 @@
         <label for="adminQuery">Search</label>
         <input type="text" name="adminQuery" id="adminQuery" onkeyup="sendData(this)">
         <br>
-        <input type="checkbox" name="isBannedCheckbox" id="isBannedCheckbox">
-        <label for="isBannedCheckbox">Is Banned</label>
+        <input type="checkbox" name="isBannedCheckbox" id="isBannedCheckbox" onchange="sendData($('#adminQuery').value)">
+        <label for="isBannedCheckbox">Search For Banned Users</label>
         <br>
-        <input type="radio" id="everyone" name="userTypeSelection" value="everyone">
+        <input type="radio" id="everyone" name="userTypeSelection" value="everyone" checked="checked">
         <label for="everyone">Search For Everyone</label><br>
         <input type="radio" id="accountant" name="userTypeSelection" value="accountant">
         <label for="accountant">Search For Accountants</label><br>
@@ -88,6 +88,14 @@
             const searchResults = document.getElementById('search-results');
             let match = e.value.match(/^[a-zA-Z1-9 ]*/);
             let match2 = e.value.match(/\s*/);
+            var isBanned = false;
+
+            if($('#isBannedCheckbox').is(':checked')){
+                isBanned = true;
+            }
+            var userType = $("input[type=radio][name=userTypeSelection]:checked").val();
+            
+
             if(match2[0] === e.value){
                 searchResults.innerHTML = '';
                 return;
@@ -96,7 +104,7 @@
                 fetch('getData', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({payload: e.value}),
+                    body: JSON.stringify({payload: e.value, isBanned: isBanned, type: userType}),
                 }).then(res => res.json()).then(data => {
                     let payload = data.payload;
                     searchResults.innerHTML = '';

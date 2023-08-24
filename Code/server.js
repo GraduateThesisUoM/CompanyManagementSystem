@@ -60,12 +60,34 @@ app.get('/', checkAuthenticated, async (req, res) => {
 
 app.post('/getData', async (req, res) => {
   let payload = req.body.payload.trim();
-  let resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
-  let resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
-  let resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}}).exec();
-  var search = resultByFname.concat(resultByLname, resultByEmail);  
+  var banflag = false;
+  var userType;
+  if(req.body.isBanned === true){
+    banflag = true;
+  }
+  if(req.body.type === 'everyone'){
+    //userType = {$regex: new RegExp({$and:[{type:{$ne: null}}, {type:{$ne: 'admin'}}]})};
+  }
+  else{
+    userType = req.body.type;
+  }
+  let resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, userType, banned: banflag}).exec();
+  let resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, userType, banned: banflag}).exec();
+  let resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, userType, banned: banflag}).exec();
+  
 
-  search = search.slice(0, 10);
+
+  var search = resultByFname.concat(resultByLname, resultByEmail); 
+  
+  for(var i=0;i<search.length;i++){
+    for(var j=i+1;j<search.length;j++){
+      if(search[i]._id.equals(search[j]._id)){
+        search.splice(j, j);
+        j--;
+      }
+    }
+  }
+  
   res.send({payload: search});
 });
 
