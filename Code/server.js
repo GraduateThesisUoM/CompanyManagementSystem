@@ -58,25 +58,26 @@ app.get('/', checkAuthenticated, async (req, res) => {
   };
 });
 
+/*--------   SEARCH FOR USER IN ADMIN PAGE */
+/*--------   to be optimized */
 app.post('/getData', async (req, res) => {
   let payload = req.body.payload.trim();
   var banflag = false;
-  var userType;
   if(req.body.isBanned === true){
     banflag = true;
   }
   if(req.body.type === 'everyone'){
-    //userType = {$regex: new RegExp({$and:[{type:{$ne: null}}, {type:{$ne: 'admin'}}]})};
+    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, banned: banflag}).exec();
+    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, banned: banflag}).exec();
+    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, banned: banflag}).exec();
   }
   else{
-    userType = req.body.type;
+    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, banned: banflag}).exec();
+    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, banned: banflag}).exec();
+    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, banned: banflag}).exec();
   }
-  let resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, userType, banned: banflag}).exec();
-  let resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, userType, banned: banflag}).exec();
-  let resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, userType, banned: banflag}).exec();
   
-
-
+  
   var search = resultByFname.concat(resultByLname, resultByEmail); 
   
   for(var i=0;i<search.length;i++){
