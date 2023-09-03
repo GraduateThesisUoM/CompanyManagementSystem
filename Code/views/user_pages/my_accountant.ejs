@@ -2,10 +2,13 @@
 <html lang="en">
     <head>
         <title>Ο Λογιστής Μου</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="my_accountant_css.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <%- include('../partials/header'); %>
@@ -13,6 +16,39 @@
     </head>
     <body>
         <h1>Ο Λογιστής Μου</h1>
+        <p>id : <%= accountant._id %></p>
+        <p>First Name : <%= accountant.firstName %></p>
+        <p>Last Name : <%= accountant.lastName %></p>
+        <p>Email : <%= accountant.email %></p>
+
+        <form class="messaging_form">
+            <p>You : hello</p>
+            <p><%= accountant.firstName %> : hi</p>
+            <textarea></textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+
+        <form class="rating_form">
+            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <br>
+            <textarea></textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+
+        <button id="back_btn">Πίσω</button>
     </body>
+    <script>
+        $(document).ready(function(){
+            $("#back_btn").click(function(){
+                window.location ="/"
+            });
+        });
+    </script>
 
 </html>

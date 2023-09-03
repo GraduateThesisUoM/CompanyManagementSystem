@@ -1,0 +1,15 @@
+.rating_form >  .star_btn{
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    background-color: transparent;
+    font-size: 50px;
+}
+
+.messaging_form{
+    border-style: solid;
+    border-width: 2px;
+}
+.messaging_form > p{
+    background-color: rgb(136, 136, 136);
+}

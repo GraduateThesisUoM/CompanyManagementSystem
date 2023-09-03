@@ -132,14 +132,15 @@ app.post('/sign-up', async (req, res) => {
   }
 });
 
-/*--------   USER MAIN */
+/*--------    ΜΥ ACCOUNTΑΝΤ */
 app.get('/my-accountant', checkAuthenticated, async (req, res) => {
   try {
     if (req.user.myaccountant.status == "self_accountant"){
       res.render('user_pages/self_accountant.ejs');
     }
     else if (req.user.myaccountant.status == "assigned"){
-      res.render('user_pages/my_accountant.ejs');
+      const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
+      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant});
     }
     else{
       res.redirect('pick-accountant');
@@ -182,14 +183,9 @@ app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
 app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
   try {
     if(req.user.myaccountant.id!="not_assigned"){
-      console.log("not first")
       const last_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
-      console.log(last_accountant)
-      console.log("---")
       for (let i = 0; i < last_accountant.clients.length; i++){
         if( last_accountant.clients[i].id.equals(req.user._id)){
-          console.log(last_accountant.clients[i].id);
-          console.log(last_accountant.clients[i].status);
           last_accountant.clients.splice(i, 1);
           await last_accountant.save();
           break;
@@ -260,19 +256,6 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
         client.myaccountant.status = req.user._id;
         if(req.body.accountant_action == "assigned"){
           client.myaccountant.status = "assigned";
-          const accountants = await Accountant.find({ _id: { $ne: req.user._id } });
-          
-          for (const accountant of accountants) {
-            if(accountant.clients.length > 0){
-              for (let j = 0; j < req.user.clients.length; j++){
-                if(accountant.clients[j].id.equals(client._id)){
-                  console.log("ff")
-                }
-              }
-            }
-          }
-          
-
         }
         client.myaccountant.status = req.body.accountant_action
         await client.save();
@@ -421,10 +404,6 @@ app.post('/delete-account', checkAuthenticated, async (req, res) => {
     console.error('Error deleting account:', err);
     res.redirect('/error?origin_page=delete-account&error='+err);
   }
-});
-/*--------   ΜΥ ACCOUNTΑΝΤ */
-app.get('/my-accountant', checkAuthenticated, (req, res) => {
-  res.render('user_pages/my_accountant.ejs', { user: req.user });
 });
 
 
