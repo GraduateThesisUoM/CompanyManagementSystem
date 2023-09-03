@@ -181,31 +181,27 @@ app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
 });
 app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
   try {
-    const accountant = await Accountant.findOne({_id:req.session.accountant._id});
-    if(accountant.clients.some(client => client.id.equals(req.user._id))){
-      console.log("exists");
-      for (const client of accountant.clients) {
-      for (let i = 0; i < accountant.clients.length; i++)
-        if( accountant.clients[i].id.equals(req.user._id)){
-          console.log(client.id);
-          console.log(client.status);
-          accountant.clients[i].status = "pending"
-          req.user.myaccountant.status = "pending"
-          await accountant.save();
-          await req.user.save();
+    if(req.user.myaccountant.id!="not_assigned"){
+      console.log("not first")
+      const last_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
+      console.log(last_accountant)
+      console.log("---")
+      for (let i = 0; i < last_accountant.clients.length; i++){
+        if( last_accountant.clients[i].id.equals(req.user._id)){
+          console.log(last_accountant.clients[i].id);
+          console.log(last_accountant.clients[i].status);
+          last_accountant.clients.splice(i, 1);
+          await last_accountant.save();
           break;
         }
-        
       }
     }
-    else{
-      console.log("new");
-      accountant.clients.push({id: req.user._id});
+    const accountant = await Accountant.findOne({_id:req.session.accountant._id});
+      accountant.clients.push({id: req.user._id, status:"pending"});
       req.user.myaccountant.id = accountant._id
       req.user.myaccountant.status = "pending"
       await accountant.save();
       await req.user.save();
-    }
     res.redirect('/pick-accountant');
   }
   catch (err) {
