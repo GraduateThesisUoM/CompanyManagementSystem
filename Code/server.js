@@ -141,7 +141,8 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
     }
     else if (req.user.myaccountant.status == "assigned"){
       const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
-      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant});
+      const accountant_review = await Review.findOne({client_id: req.user._id, accountant_id: req.user.myaccountant.id});
+      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review});
     }
     else{
       res.redirect('pick-accountant');
@@ -156,8 +157,8 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
 app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
   try {
     const newReview = new Review({
-      senderID: req.user._id,
-      receiverID: req.user.myaccountant.id,
+      client_id: req.user._id,
+      accountant_id: req.user.myaccountant.id,
       text: req.body.rating_textarea,
       rating: req.body.rating_input
     });
