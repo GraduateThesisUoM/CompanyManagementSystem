@@ -39,6 +39,7 @@ app.use(methodOverride('_method'));
 const User = require("./Schemas/User");
 const Accountant  = require("./Schemas/Accountant");
 const Client  = require("./Schemas/Client");
+const Review  = require("./Schemas/Review");
 const { cache } = require('ejs');
 
 app.use(express.static('./public/css'));
@@ -145,6 +146,24 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
     else{
       res.redirect('pick-accountant');
     }
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=my-accountant&error='+err);
+  }
+});
+
+app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
+  try {
+    const newReview = new Review({
+      senderID: req.user._id,
+      receiverID: req.user.myaccountant.id,
+      text: req.body.rating_textarea,
+      rating: req.body.rating_input
+    });
+    await newReview.save();
+    console.log("Review created successfully");
+    res.redirect('/my-accountant');
   }
   catch (err) {
     console.error('Error updating user data:', err);

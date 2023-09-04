@@ -13,3 +13,7 @@
 .messaging_form > p{
     background-color: rgb(136, 136, 136);
 }
+
+.star_selected{
+    color: gold;
+}

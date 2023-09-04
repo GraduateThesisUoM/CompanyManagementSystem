@@ -29,14 +29,16 @@
             <button type="submit">Submit</button>
         </form>
 
-        <form class="rating_form">
-            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button class="star_btn"><i class="fa-solid fa-star"></i></button>
+        <form class="rating_form" action="/my-accountant-rate" method="POST">
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <br>
-            <textarea></textarea>
+            <input type="text" id='rating_input' name='rating_input'>
+            <br>
+            <textarea name='rating_textarea'></textarea>
             <br>
             <button type="submit">Submit</button>
         </form>
@@ -44,11 +46,36 @@
         <button id="back_btn">Πίσω</button>
     </body>
     <script>
-        $(document).ready(function(){
+       $(document).ready(function(){
             $("#back_btn").click(function(){
-                window.location ="/"
+                window.location = "/"
             });
+
+            var starButtons = $(".star_btn");
+            for (var i = 0; i < starButtons.length; i++) {
+                (function(index) {
+                    $(starButtons[i]).click(function() {
+                        if($("#rating_input").val() == index+1){
+                            index = -1
+                        }
+
+                        $("#rating_input").val(index+1);
+                        for (var j = 0; j < starButtons.length; j++) {
+                            if(j <= index){
+                                starButtons[j].classList.add("star_selected");
+                            }
+                            else{
+                                if (starButtons[j].classList.contains("star_selected")) {
+                                    starButtons[j].classList.remove("star_selected");
+                                }
+                            }
+                        }
+
+                    });
+                })(i);
+            }
         });
+
     </script>
 
 </html>
