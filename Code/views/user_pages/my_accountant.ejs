@@ -38,7 +38,7 @@
             <br>
             <input type="text" id='rating_input' name='rating_input'>
             <br>
-            <textarea name='rating_textarea'></textarea>
+            <textarea id='rating_textarea' name='rating_textarea'></textarea>
             <br>
             <button type="submit">Submit</button>
         </form>
@@ -74,7 +74,10 @@
                     });
                 })(i);
             }
-            var review = { client_id: '<%= review.client_id %>', accountant_id: '<%= review.accountant_id %>' } 
+            if('<%= has_review %>' == 'true'){
+                $("#rating_textarea").val("<%= review.text %>");
+                $("#rating_input").val("<%= review.rating %>");
+            }
         });
 
     </script>
