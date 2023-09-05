@@ -55,13 +55,13 @@
             for (var i = 0; i < starButtons.length; i++) {
                 (function(index) {
                     $(starButtons[i]).click(function() {
+                        var rating_value = index+1
                         if($("#rating_input").val() == index+1){
-                            index = -1
+                            rating_value = 0;
                         }
-
-                        $("#rating_input").val(index+1);
+                        $("#rating_input").val(rating_value);
                         for (var j = 0; j < starButtons.length; j++) {
-                            if(j <= index){
+                            if(j < rating_value){
                                 starButtons[j].classList.add("star_selected");
                             }
                             else{
@@ -74,10 +74,11 @@
                     });
                 })(i);
             }
-            if('<%= has_review %>' == 'true'){
-                $("#rating_textarea").val("<%= review.text %>");
-                $("#rating_input").val("<%= review.rating %>");
+            if('<%= review.rating%>'!='-1'){
+                $("#rating_textarea").val('<%= review.text%>');
+                starButtons[parseInt('<%= review.rating%>')-1].click()
             }
+            
         });
 
     </script>
