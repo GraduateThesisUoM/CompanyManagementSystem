@@ -171,6 +171,13 @@ app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
       text: req.body.rating_textarea,
       rating: req.body.rating_input
     });
+    var review = await Review.findOne({client_id: req.user._id, accountant_id: req.user.myaccountant.id});
+    if(review == null){
+      //----
+    }
+    else{
+      //----
+    }
     await newReview.save();
     console.log("Review created successfully");
     res.redirect('/my-accountant');
