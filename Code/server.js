@@ -165,26 +165,32 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
 
 app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
   try {
-    const newReview = new Review({
+    let newReview;
+    const review = await Review.findOne({
       client_id: req.user._id,
       accountant_id: req.user.myaccountant.id,
-      text: req.body.rating_textarea,
-      rating: req.body.rating_input
     });
-    var review = await Review.findOne({client_id: req.user._id, accountant_id: req.user.myaccountant.id});
-    if(review == null){
-      //----
+
+    if (review == null) {
+      newReview = new Review({
+        client_id: req.user._id,
+        accountant_id: req.user.myaccountant.id,
+        text: req.body.rating_textarea,
+        rating: req.body.rating_input,
+      });
+    } else {
+      // Update the existing review's text and rating
+      review.text = req.body.rating_textarea;
+      review.rating = req.body.rating_input;
+      newReview = review;
     }
-    else{
-      //----
-    }
+
     await newReview.save();
-    console.log("Review created successfully");
+    console.log('Review created or updated successfully');
     res.redirect('/my-accountant');
-  }
-  catch (err) {
+  } catch (err) {
     console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=my-accountant&error='+err);
+    res.redirect('/error?origin_page=my-accountant&error=' + err);
   }
 });
 
