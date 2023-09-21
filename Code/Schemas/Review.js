@@ -2,13 +2,12 @@ const mongoose = require('mongoose');
 
 // Define the review schema
 const ReviewSchema = new mongoose.Schema({
-  id: { type: Number, required: true },
-  senderID: { type: Number, required: true },
-  receiverID: { type: Number, required: true },
-  text: { type: String, required: true },
+  client_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  accountant_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  text: { type: String, required: false },
   rating: { type: Number, required: true },
-  date: { type: Date, required: true }
+  registrationDate: { type: Date, default: Date.now , required: true}
 });
 
-// Export the review schema
-module.exports = ReviewSchema;
+
+module.exports = mongoose.model("Reviews", ReviewSchema)

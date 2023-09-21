@@ -2,10 +2,13 @@
 <html lang="en">
     <head>
         <title>Ο Λογιστής Μου</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="my_accountant_css.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <%- include('../partials/header'); %>
@@ -13,6 +16,71 @@
     </head>
     <body>
         <h1>Ο Λογιστής Μου</h1>
+        <p>id : <%= accountant._id %></p>
+        <p>First Name : <%= accountant.firstName %></p>
+        <p>Last Name : <%= accountant.lastName %></p>
+        <p>Email : <%= accountant.email %></p>
+
+        <form class="messaging_form">
+            <p>You : hello</p>
+            <p><%= accountant.firstName %> : hi</p>
+            <textarea></textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+
+        <form class="rating_form" action="/my-accountant-rate" method="POST">
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+            <br>
+            <input type="text" id='rating_input' name='rating_input'>
+            <br>
+            <textarea id='rating_textarea' name='rating_textarea'></textarea>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+
+        <button id="back_btn">Πίσω</button>
     </body>
+    <script>
+       $(document).ready(function(){
+            $("#back_btn").click(function(){
+                window.location = "/"
+            });
+
+            var starButtons = $(".star_btn");
+            for (var i = 0; i < starButtons.length; i++) {
+                (function(index) {
+                    $(starButtons[i]).click(function() {
+                        var rating_value = index+1
+                        if($("#rating_input").val() == index+1){
+                            rating_value = 0;
+                        }
+                        $("#rating_input").val(rating_value);
+                        for (var j = 0; j < starButtons.length; j++) {
+                            if(j < rating_value){
+                                starButtons[j].classList.add("star_selected");
+                            }
+                            else{
+                                if (starButtons[j].classList.contains("star_selected")) {
+                                    starButtons[j].classList.remove("star_selected");
+                                }
+                            }
+                        }
+
+                    });
+                })(i);
+            }
+            if('<%= review.rating%>'!='-1'){
+                $("#rating_textarea").val('<%= review.text%>');
+                starButtons[parseInt('<%= review.rating%>')-1].click()
+            }
+            
+        });
+
+    </script>
 
 </html>

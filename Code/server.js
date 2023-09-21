@@ -41,6 +41,11 @@ app.use(methodOverride('_method'));
 //Models
 const User = require("./Schemas/User");
 const Accountant  = require("./Schemas/Accountant");
+<<<<<<< HEAD
+=======
+const Client  = require("./Schemas/Client");
+const Review  = require("./Schemas/Review");
+>>>>>>> 037382d2970aec5eca6faa1b0715d92d67ad9842
 const { cache } = require('ejs');
 
 app.use(express.static('./public/css'));
@@ -161,6 +166,119 @@ app.post('/sing-up', async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+=======
+/*--------    ΜΥ ACCOUNTΑΝΤ */
+app.get('/my-accountant', checkAuthenticated, async (req, res) => {
+  try {
+    if (req.user.myaccountant.status == "self_accountant"){
+      res.render('user_pages/self_accountant.ejs');
+    }
+    else if (req.user.myaccountant.status == "assigned"){
+      const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
+      var accountant_review = await Review.findOne({client_id: req.user._id, accountant_id: req.user.myaccountant.id});
+      if (accountant_review == null){
+        accountant_review = new Review({
+          client_id: req.user._id,
+          accountant_id: req.user.myaccountant.id,
+          rating: -1,
+          registrationDate: ''
+        });
+      }
+
+      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review});
+    }
+    else{
+      res.redirect('pick-accountant');
+    }
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=my-accountant&error='+err);
+  }
+});
+
+app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
+  try {
+    const newReview = new Review({
+      client_id: req.user._id,
+      accountant_id: req.user.myaccountant.id,
+      text: req.body.rating_textarea,
+      rating: req.body.rating_input
+    });
+    var review = await Review.findOne({client_id: req.user._id, accountant_id: req.user.myaccountant.id});
+    if(review == null){
+      //----
+    }
+    else{
+      //----
+    }
+    await newReview.save();
+    console.log("Review created successfully");
+    res.redirect('/my-accountant');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=my-accountant&error='+err);
+  }
+});
+
+/*--------   PICK ACCOUNTANT */
+app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
+  try {
+    const accountants = await Accountant.find({}); // Fetch all accountants from the database
+    accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
+
+    res.render('user_pages/pick_accountant.ejs', { accountants: accountants});
+  } catch (err) {
+    console.error('Error fetching accountants:', err);
+    res.redirect('/error?origin_page=pick-accountant&error=' + err);
+  }
+});
+app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
+  try {
+    const accountant = await Accountant.find({_id:req.body.accountant_id});
+    req.session.accountant = accountant[0];
+    res.redirect('/preview-accountant');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=pick-accountant&error='+err);
+  }
+});
+
+/*--------   ACCOUNTANT PREVIEW */
+app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
+  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user });
+});
+app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
+  try {
+    if(req.user.myaccountant.id!="not_assigned"){
+      const last_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
+      for (let i = 0; i < last_accountant.clients.length; i++){
+        if( last_accountant.clients[i].id.equals(req.user._id)){
+          last_accountant.clients.splice(i, 1);
+          await last_accountant.save();
+          break;
+        }
+      }
+    }
+    const accountant = await Accountant.findOne({_id:req.session.accountant._id});
+      accountant.clients.push({id: req.user._id, status:"pending"});
+      req.user.myaccountant.id = accountant._id
+      req.user.myaccountant.status = "pending"
+      await accountant.save();
+      await req.user.save();
+    res.redirect('/pick-accountant');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=pick-accountant&error='+err);
+  }
+});
+
+
+>>>>>>> 037382d2970aec5eca6faa1b0715d92d67ad9842
 /*--------   WORKING */
 app.get('/working', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/working_page.ejs');
@@ -172,8 +290,61 @@ app.get('/assignment-history', checkAuthenticated, (req, res) => {
 });
 
 /*--------   CLIENTS */
+<<<<<<< HEAD
 app.get('/clients', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/clients_page.ejs');
+=======
+app.get('/clients', checkAuthenticated, async (req, res) => {
+  const clients_pending = [];
+  const clients_active = [];
+  const clients_expired = [];
+  if (req.user.clients.length === 0) {
+    console.log('no clients');
+  } else {
+    for (const client of req.user.clients) {
+      const user = await User.findById(client.id);
+      const clientInfo = {
+        user: user,
+        status: client.status
+      };
+      if(client.status == "pending"){
+        clients_pending.push(clientInfo);
+      }
+      else if(client.status == "assigned"){
+        clients_active.push(clientInfo);
+      }
+      else{
+        clients_expired.push(clientInfo);
+      }
+    }
+  }
+  res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired });
+
+});
+app.post('/clients', checkAuthenticated, async (req, res) => {
+  try {
+    for (let i = 0; i < req.user.clients.length; i++) {
+      if(req.user.clients[i].id.equals(req.body.clients_id)){
+        req.user.clients[i].status =  req.body.accountant_action
+        await req.user.save();
+
+        const client = await User.findById(req.body.clients_id);
+        client.myaccountant.status = req.user._id;
+        if(req.body.accountant_action == "assigned"){
+          client.myaccountant.status = "assigned";
+        }
+        client.myaccountant.status = req.body.accountant_action
+        await client.save();
+        break
+      }
+    }
+    res.redirect('/clients');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=clients&error='+err);
+  }
+>>>>>>> 037382d2970aec5eca6faa1b0715d92d67ad9842
 });
 
 /*--------   CLIENT PROFILE */
@@ -310,10 +481,6 @@ app.post('/delete-account', checkAuthenticated, async (req, res) => {
     console.error('Error deleting account:', err);
     res.redirect('/error?origin_page=delete-account&error='+err);
   }
-});
-/*--------   ΜΥ ACCOUNTΑΝΤ */
-app.get('/my-accountant', checkAuthenticated, (req, res) => {
-  res.render('user_pages/my_accountant.ejs', { user: req.user });
 });
 
 
