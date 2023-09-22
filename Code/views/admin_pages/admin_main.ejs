@@ -114,7 +114,7 @@
                     }
                     payload.forEach((user, index) => {
                     if(index > 0) searchResults.innerHTML += '<hr>';
-                        searchResults.innerHTML += `<a href='#'>${user.firstName} ${user.lastName} ${user.email} ${user.type}</a>`;
+                        searchResults.innerHTML += `<a href='/userProfile?id=${user._id}'>${user.firstName} ${user.lastName} ${user.email} ${user.type}</a>`;
                     });
                     return;
                 });

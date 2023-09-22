@@ -41,12 +41,10 @@ app.use(methodOverride('_method'));
 //Models
 const User = require("./Schemas/User");
 const Accountant  = require("./Schemas/Accountant");
-<<<<<<< HEAD
-=======
 const Client  = require("./Schemas/Client");
 const Review  = require("./Schemas/Review");
->>>>>>> 037382d2970aec5eca6faa1b0715d92d67ad9842
 const { cache } = require('ejs');
+const { isSet } = require('util/types');
 
 app.use(express.static('./public/css'));
 
@@ -59,7 +57,7 @@ app.get('/', checkAuthenticated, async (req, res) => {
     res.render('user_pages/user_main.ejs',{user : req.user});
   };
   if(req.user.type == 'admin'){
-    res.render('admin_pages/admin_main.ejs',{user : req.user, userList : await getAllUsers(), getUserById : getUserById, getUserByEmail : getUserByEmail});
+    res.render('admin_pages/admin_main.ejs',{user : req.user, userList : await getAllUsers()});
   };
 });
 
@@ -96,6 +94,16 @@ app.post('/getData', async (req, res) => {
   
   res.send({payload: search});
 });
+
+app.get('/userProfile', checkAuthenticated, async (req,res)=>{
+  res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id)});
+});
+
+//app.post('/userProfile', checkAuthenticated, async (req,res)=>{
+//  console.log(req.query.id);
+//  await User.updateOne({_id: req.query.id}, {banned: true});
+//  res.redirect('/');
+//});
 
 /*--------   LOG IN */
 app.get('/log-in', checkNotAuthenticated, (req, res) => {
@@ -166,8 +174,6 @@ app.post('/sing-up', async (req, res) => {
   }
 });
 
-<<<<<<< HEAD
-=======
 /*--------    ΜΥ ACCOUNTΑΝΤ */
 app.get('/my-accountant', checkAuthenticated, async (req, res) => {
   try {
@@ -277,8 +283,6 @@ app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
   }
 });
 
-
->>>>>>> 037382d2970aec5eca6faa1b0715d92d67ad9842
 /*--------   WORKING */
 app.get('/working', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/working_page.ejs');
@@ -290,10 +294,6 @@ app.get('/assignment-history', checkAuthenticated, (req, res) => {
 });
 
 /*--------   CLIENTS */
-<<<<<<< HEAD
-app.get('/clients', checkAuthenticated, (req, res) => {
-  res.render('accountant_pages/clients_page.ejs');
-=======
 app.get('/clients', checkAuthenticated, async (req, res) => {
   const clients_pending = [];
   const clients_active = [];
@@ -344,7 +344,7 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
     console.error('Error updating user data:', err);
     res.redirect('/error?origin_page=clients&error='+err);
   }
->>>>>>> 037382d2970aec5eca6faa1b0715d92d67ad9842
+
 });
 
 /*--------   CLIENT PROFILE */
