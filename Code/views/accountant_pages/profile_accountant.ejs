@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title></title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <%- include('../partials/header'); %>
+        <%- include('../partials/footer'); %>
+    </head>
+    <body>
+        <h1>Profile</h1>
+        <div id="accountant-info-div" name="accountant-info-div">
+            <h2>Info</h2>
+
+            <form class="display_block" action="/profile-page" method="POST" >
+                <label for="firstName">Όνομα</label>
+                <input type="text" name="firstName" required value="<%= user.firstName %>">
+                <label for="lastName">Επίθετο</label>
+                <input type="text" name="lastName" required value="<%= user.lastName %>">
+                <label for="email">Email</label>
+                <input type="email" name="email" required value="<%= user.email %>">
+                <span id="admin_hide">
+                    <label for="afm">Α.Φ.Μ.</label>
+                    <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ.">
+
+                    <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
+                    <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData">
+                    <span id="accountant_hide">
+                        <label for="companyName">'Ονομα εταιρείας:</label>
+                        <input type="text" name="companyName" id="companyName">
+                        <label for="companyLogo">Λογότυπο εταιρείας :</label>
+                        <input type="text" name="companyLogo" id="companyLogo">
+
+                        <span id="users_accountant">
+                            <label for="my_accountant">Λογιστής:</label>
+                            <input type="text" name="my_accountant" id="my_accountant">
+                        </span>
+                    </span>
+                </span>
+                <button type="submit" id="edit-info-button" name="edit-info-button">Αποθήκευση αλλαγών</button>
+            </form>
+            <button id="back_btn">Πίσω</button>
+        </div>
+        <hr>
+        <div id="rating-div" name="rating-div">
+            <h2>Reviews and Comments</h2>
+        </div>
+    </body>
+    <script>
+     // Get the 'message' query parameter from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const message = urlParams.get('message');
+
+        // Check if the 'message' parameter is 'updatedatacopmlete'
+        if (message === 'updatedatacopmlete') {
+            // Show an alert with the specified message
+            alert('Data update complete!');
+        }
+        
+    var userData = {}
+    if('<%= user.type %>'=='user'){
+        userData = {
+            id: '<%= user._id %>',
+            type: '<%= user.type %>',
+            firstName: '<%= user.firstName %>',
+            lastName: '<%= user.lastName %>',
+            email: '<%= user.email %>',
+            afm: '<%= user.afm %>',
+            mydatakey: '<%= user.mydatakey %>',
+            companyName: '<%= user.companyName %>',
+            companyLogo: '<%= user.companyLogo %>',
+        };
+    }
+    $(document).ready(function(){
+        if(userData.type == "user"){
+            document.title = "Προφίλ Χρήστη";
+            $("#afm").val(userData.afm);
+            $("#mydatakey").val(userData.mydatakey);
+            $("#companyName").val(userData.companyName);
+            $("#companyLogo").val(userData.companyLogo);
+            if(userData.my_accountant.id == "not_assigned"){
+                $("#my_accountant").val("Δεν έχει οριστεί");
+            }
+            else if(userData.my_accountant.id == userData.id){
+                $("#my_accountant").val("Αυτοδιαχείριση Λογιστικών");
+            }
+            
+        }
+        else{
+            document.title = "Προφίλ Λογιστή";
+        }
+         $("#back_btn").click(function(){
+                window.location ="/"
+        });
+    });
+    
+    </script>
+
+</html>

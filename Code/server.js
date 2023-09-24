@@ -329,7 +329,12 @@ app.get('/settings', checkAuthenticated, (req, res) => {
 
 /*--------   PROFILE */
 app.get('/profile-page', checkAuthenticated, (req, res) => {
-  res.render('general/profile.ejs', { user: req.user });
+  if(req.user.type == 'accountant'){
+    res.render('accountant_pages/profile_accountant.ejs',{user : req.user});
+  };
+  if(req.user.type == 'user'){
+    res.render('user_pages/profile_user.ejs',{user : req.user});
+  };
 });
 app.post('/profile-page', checkAuthenticated, async (req, res) => {
   try {
