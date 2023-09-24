@@ -61,20 +61,15 @@
             alert('Data update complete!');
         }
         
-    var userData = {}
-    if('<%= user.type %>'=='user'){
-        userData = {
-            id: '<%= user._id %>',
-            type: '<%= user.type %>',
-            firstName: '<%= user.firstName %>',
-            lastName: '<%= user.lastName %>',
-            email: '<%= user.email %>',
-            afm: '<%= user.afm %>',
-            mydatakey: '<%= user.mydatakey %>',
-            companyName: '<%= user.companyName %>',
-            companyLogo: '<%= user.companyLogo %>',
-        };
-    }
+    var userData = {
+        id: '<%= user._id %>',
+        type: '<%= user.type %>',
+        firstName: '<%= user.firstName %>',
+        lastName: '<%= user.lastName %>',
+        email: '<%= user.email %>',
+        afm: '<%= user.afm %>',
+        mydatakey: '<%= user.mydatakey %>'
+    };
     $(document).ready(function(){
         if(userData.type == "user"){
             document.title = "Προφίλ Χρήστη";
