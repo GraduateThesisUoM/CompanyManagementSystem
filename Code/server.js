@@ -328,9 +328,11 @@ app.get('/settings', checkAuthenticated, (req, res) => {
 });
 
 /*--------   PROFILE */
-app.get('/profile-page', checkAuthenticated, (req, res) => {
+app.get('/profile-page', checkAuthenticated, async (req, res) => {
   if(req.user.type == 'accountant'){
-    res.render('accountant_pages/profile_accountant.ejs',{user : req.user});
+    const reviews = await Review.find({accountant_id:req.user._id});
+    console.log(reviews)
+    res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviews});
   };
   if(req.user.type == 'user'){
     res.render('user_pages/profile_user.ejs',{user : req.user});
@@ -343,8 +345,10 @@ app.post('/profile-page', checkAuthenticated, async (req, res) => {
     req.user.email = req.body.email;
     req.user.afm = req.body.afm;
     req.user.mydatakey = req.body.mydatakey;
-    req.user.companyName = req.body.companyName;
-    req.user.companyLogo = req.body.companyLogo;
+    if(req.user.type == 'user'){
+      req.user.companyName = req.body.companyName;
+      req.user.companyLogo = req.body.companyLogo;
+    };
     await req.user.save();
     res.redirect('/profile-page?message=updatedatacopmlete');
   }

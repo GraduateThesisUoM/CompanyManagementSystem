@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title></title>
+        <title>Προφίλ Χρήστη</title>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
@@ -25,15 +25,15 @@
                 <input type="email" name="email" required value="<%= user.email %>">
                 <span id="admin_hide">
                     <label for="afm">Α.Φ.Μ.</label>
-                    <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ.">
+                    <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ." value="<%= user.afm%>">
 
                     <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
-                    <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData">
+                    <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData" value="<%= user.mydatakey%>">
                     <span id="accountant_hide">
                         <label for="companyName">'Ονομα εταιρείας:</label>
-                        <input type="text" name="companyName" id="companyName">
+                        <input type="text" name="companyName" id="companyName" value="<%= user.companyName%>">
                         <label for="companyLogo">Λογότυπο εταιρείας :</label>
-                        <input type="text" name="companyLogo" id="companyLogo">
+                        <input type="text" name="companyLogo" id="companyLogo"  value="<%= user.companyLogo%>">
 
                         <span id="users_accountant">
                             <label for="my_accountant">Λογιστής:</label>
@@ -61,38 +61,16 @@
             alert('Data update complete!');
         }
         
-    var userData = {}
-    if('<%= user.type %>'=='user'){
-        userData = {
-            id: '<%= user._id %>',
-            type: '<%= user.type %>',
-            firstName: '<%= user.firstName %>',
-            lastName: '<%= user.lastName %>',
-            email: '<%= user.email %>',
-            afm: '<%= user.afm %>',
-            mydatakey: '<%= user.mydatakey %>',
-            companyName: '<%= user.companyName %>',
-            companyLogo: '<%= user.companyLogo %>',
-            my_accountant: { id:'<%= user.myaccountant.id %>', status :"<%= user.myaccountant.status %>"}
-        };
-    }
+    var my_accountant = {
+        id:'<%= user.myaccountant.id %>',
+        status :"<%= user.myaccountant.status %>"
+    };
     $(document).ready(function(){
-        if(userData.type == "user"){
-            document.title = "Προφίλ Χρήστη";
-            $("#afm").val(userData.afm);
-            $("#mydatakey").val(userData.mydatakey);
-            $("#companyName").val(userData.companyName);
-            $("#companyLogo").val(userData.companyLogo);
-            if(userData.my_accountant.id == "not_assigned"){
-                $("#my_accountant").val("Δεν έχει οριστεί");
-            }
-            else if(userData.my_accountant.id == userData.id){
-                $("#my_accountant").val("Αυτοδιαχείριση Λογιστικών");
-            }
-            
+        if(my_accountant.id == "not_assigned"){
+            $("#my_accountant").val("Δεν έχει οριστεί");
         }
-        else{
-            document.title = "Προφίλ Λογιστή";
+        else if(my_accountant.id == userData.id){
+            $("#my_accountant").val("Αυτοδιαχείριση Λογιστικών");
         }
          $("#back_btn").click(function(){
                 window.location ="/"
