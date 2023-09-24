@@ -331,8 +331,10 @@ app.get('/settings', checkAuthenticated, (req, res) => {
 app.get('/profile-page', checkAuthenticated, async (req, res) => {
   if(req.user.type == 'accountant'){
     const reviews = await Review.find({accountant_id:req.user._id});
-    console.log(reviews)
-    res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviews});
+    const users = await User.find({type:"user"});
+    console.log(users.length);
+    console.log(users);
+    res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviews, users : users});
   };
   if(req.user.type == 'user'){
     res.render('user_pages/profile_user.ejs',{user : req.user});
@@ -357,7 +359,6 @@ app.post('/profile-page', checkAuthenticated, async (req, res) => {
     res.redirect('/error?origin_page=profile-page&error='+err);
   }
 });
-
 
 /*--------   FORGOT PASSWORD */
 app.get('/forgot-password', checkNotAuthenticated, (req, res) => {
@@ -456,7 +457,6 @@ app.post('/delete-account', checkAuthenticated, async (req, res) => {
     res.redirect('/error?origin_page=delete-account&error='+err);
   }
 });
-
 
 app.delete('/logout', (req, res) => {
   req.logout(() => {
