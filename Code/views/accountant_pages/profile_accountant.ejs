@@ -54,11 +54,13 @@
         $("#back_btn").click(function(){
                 window.location ="/"
         });
+
         const reviews = JSON.parse(`<%- JSON.stringify(reviews)%>`);
+
         const reviews_section_div = $("#reviews_div");
         reviews.forEach(review => {
             const review_div = $("<div>");
-            const review_div_client = $("<div>").text(review.client_id);
+            const review_div_client = $("<div>").text(review[1].user.first_name);
             const review_div_text = $("<div>").text(review.text);
             const review_div_review = $("<div>").text(review.rating);
             review_div.append(review_div_client);

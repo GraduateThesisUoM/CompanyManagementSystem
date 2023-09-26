@@ -393,9 +393,13 @@ app.get('/profile-page', checkAuthenticated, async (req, res) => {
   if(req.user.type == 'accountant'){
     const reviews = await Review.find({reviewed_id:req.user._id, type:"client"});
     const users = await User.find({type:"user"});
-    console.log(users.length);
-    console.log(users);
-    res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviews, users : users});
+    
+    const reviewUserArray = reviews.map(review => {
+      const matchingUser = users.find(user => user._id.toString() === review.reviewer_id.toString());
+      return { review, user: matchingUser };
+    });
+
+    res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviewUserArray});
   };
   if(req.user.type == 'user'){
     res.render('user_pages/profile_user.ejs',{user : req.user});
