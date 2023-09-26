@@ -15,9 +15,7 @@
     <body>
         <h1>List Of Current Clients</h1>
         <ul class ="clients_page_ul" id ="active_client_requests_container">
-            <li><a href="client-profile">Client 1</a></li>
-            <li><a href="client-profile">Client 2</a></li>
-            <li><a href="client-profile">Client 3</a></li>
+            
         </ul>
         <h1>List Of Hiring Requests</h1>
         <form action="/clients" method="POST">
@@ -26,10 +24,7 @@
             <button  id="accountant_action_submit" type="submit">submit</button>
         </form>
         <ul class ="clients_page_ul" id ="pending_client_requests_container">
-            <!-- Maybe different pages maybe not-->
-            <!--li>Req 1</li>
-            <li>Req 2</li>
-            <li>Req 3</li-->
+            
         </ul>
         <h1>List Of rejected Requests</h1>
         <ul class ="clients_page_ul" id ="rejected_client_requests_container">
@@ -51,7 +46,7 @@
 
             clients_pending.forEach(client => {
                 const liElement = $("<li>")
-                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
+                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', `client-profile?id=${client.user._id}`);
                 const button1Element = $("<button>").text("Accept").click(function() {
                         accountant_action(client.user._id, "assigned")
                         });
@@ -65,7 +60,7 @@
             });
             clients_active.forEach(client => {
                 const liElement = $("<li>")
-                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
+                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', `client-profile?id=${client.user._id}`);
                 const button1Element = $("<button>").text("Accept").attr('style', 'visibility: hidden;');
                 const button2Element = $("<button>").text("reject").click(function() {
                     accountant_action(client.user._id, "rejected")
@@ -77,7 +72,7 @@
             });
             clients_expired.forEach(client => {
                 const liElement = $("<li>")
-                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', 'wwww');
+                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', `client-profile?id=${client.user._id}`);
                 const button1Element = $("<button>").text("Accept").click(function() {
                     accountant_action(client.user._id, "assigned")
                 });

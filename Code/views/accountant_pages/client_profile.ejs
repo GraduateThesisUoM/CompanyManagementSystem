@@ -10,8 +10,8 @@
 <body>
 
     <div id="general-client-info" name="general-client-info">
-        <h2>Client Name</h2>
-        <h3>Client Description?</h3>
+        <h2><%= user.firstName %> <%= user.lastName %></h2>
+        <h3><%= user.companyLogo %> <%= user.companyName %></h3>
     </div>
 
     <div id="client-transactions-div" name="client-transactions-div">
@@ -38,7 +38,7 @@
     </div>
 
     <button id="remove-client-button" name="remove-client-button">Remove Client</button>
-    <a href="report-client">Report Client</a>
+    <a href="report-user?id=<%=user._id%>">Report Client</a>
     
 </body>
 </html>

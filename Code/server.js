@@ -43,6 +43,7 @@ const User = require("./Schemas/User");
 const Accountant  = require("./Schemas/Accountant");
 const Client  = require("./Schemas/Client");
 const Review  = require("./Schemas/Review");
+const Report = require("./Schemas/Report");
 const { cache } = require('ejs');
 const { isSet } = require('util/types');
 
@@ -96,7 +97,7 @@ app.post('/getData', async (req, res) => {
 });
 
 app.get('/userProfile', checkAuthenticated, async (req,res)=>{
-  res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id)});
+  res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id), reports: await Report.find({reported_id: req.query.id})});
 });
 
 app.post('/userProfile', checkAuthenticated, async (req,res)=>{
@@ -353,14 +354,32 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
 });
 
 /*--------   CLIENT PROFILE */
-app.get('/client-profile', checkAuthenticated, (req, res) => {
-  res.render('accountant_pages/client_profile.ejs');
+app.get('/client-profile', checkAuthenticated, async (req, res) => {
+  res.render('accountant_pages/client_profile.ejs', {user: await getUserById(req.query.id)});
 });
 
-/*--------   REPORT CLIENT */
-app.get('/report-client', checkAuthenticated, (req, res) => {
-  res.render('accountant_pages/report_client.ejs');
+/*--------   REPORT USER */
+app.get('/report-user', checkAuthenticated, (req, res) => {
+  res.render('general/report_user.ejs');
 });
+
+app.post('/report-user', checkAuthenticated, async (req,res)=> {
+  const newReport = new Report({
+    reporter_id: req.user._id,
+    reported_id: req.query.id,
+    reason: req.body.report_user_radio,
+    status: "pending",
+    text: req.body.report_textarea
+  });
+  await newReport.save();
+  res.redirect("/clients");
+});
+
+/*--------   REPORT DETAILS PAGE */
+app.get('/report-page', checkAuthenticated, async (req, res) => {
+  res.render('general/report_page.ejs', {report: await Report.find({_id: req.query.id})});
+});
+
 
 /*--------   SETTINGS */
 app.get('/settings', checkAuthenticated, (req, res) => {

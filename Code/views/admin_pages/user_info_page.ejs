@@ -27,6 +27,17 @@
     <hr>
     <h1>Relationships</h1>
     <hr>
-    <h1>Reports</h1>
+    <div id="user-reports-admin-div" name="user-reports-admin-div">
+        <h1>Reports</h1>
+        <% for(var i=0; i<reports.length ;i++){ %>
+             <a href="report-page?id=<%=reports[i]._id%>"><span><%= reports[i].reason %></span>
+             <br>
+             <span><%= reports[i].registrationDate %></span></a>
+             <br>
+             <br>
+        <%}%>
+
+    </div>
+
 </body>
 </html>
