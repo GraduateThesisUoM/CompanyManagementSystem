@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Main</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Admin Main</h1>
+    <h2>Welcome <%- user.firstName %></h2>
+    <div id="user-search-div" name="user-search-div">
+        <label for="adminQuery">Search</label>
+        <input type="text" name="adminQuery" id="adminQuery" onkeyup="sendData(this)">
+        <br>
+        <input type="checkbox" name="isBannedCheckbox" id="isBannedCheckbox" onchange="sendData($('#adminQuery').value)">
+        <label for="isBannedCheckbox">Search For Banned Users</label>
+        <br>
+        <input type="radio" id="everyone" name="userTypeSelection" value="everyone" checked="checked">
+        <label for="everyone">Search For Everyone</label><br>
+        <input type="radio" id="accountant" name="userTypeSelection" value="accountant">
+        <label for="accountant">Search For Accountants</label><br>
+        <input type="radio" id="user" name="userTypeSelection" value="user">
+        <label for="user">Search For Users</label>
+
+        <div id="search-results">
+            
+        </div>
+        <h3>Recent Searches</h3>
+        <table>
+            <tr>
+                <th>Id</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Type</th>
+                <th>Ban Status</th>
+                <th>Profile</th>
+            </tr>
+            <% for (var i =0; i < userList.length;  i++ ) { %>
+                <% if(userList[i].type != 'admin'){ %>
+                <tr>
+                    <td><%= userList[i].id %></td>
+                    <td><%= userList[i].firstName %></td>
+                    <td><%= userList[i].lastName %></td>
+                    <td><%= userList[i].email %></td>
+                    <td><%= userList[i].type %></td>
+                    <td><%= userList[i].banned %></td>
+                    <td><a href="">visit</a></td>
+                </tr>
+                <% }
+            } %>
+        </table>
+    </div>
+    <div id="stats-div" name="stats-div">
+        <h2>Site Stats</h2>
+        <%  var admins = 0;
+            var users = 0;
+            var accountants = 0;
+            for (var i =0;i < userList.length; i++){
+                if(userList[i].type == 'admin'){
+                    admins++;
+                }
+                if(userList[i].type == 'user'){
+                    users++;
+                }
+                if(userList[i].type == 'accountant'){
+                    accountants++;
+                }
+                
+            } 
+        %>
+        Number of Accountants : <%= accountants %>
+        <br>
+        Number of Users : <%= users %>
+        <br>
+        Number of Admins : <%= admins %>
+        <br>
+        Total : <%= accountants + users + admins %>
+
+    </div>
+    <form action="/logout?_method=DELETE" method="POST">
+        <button type="submit">Log Out</button>
+    </form>
+
+    <script>
+        function sendData(e){
+            const searchResults = document.getElementById('search-results');
+            let match = e.value.match(/^[a-zA-Z1-9 ]*/);
+            let match2 = e.value.match(/\s*/);
+            var isBanned = false;
+
+            if($('#isBannedCheckbox').is(':checked')){
+                isBanned = true;
+            }
+            var userType = $("input[type=radio][name=userTypeSelection]:checked").val();
+            
+
+            if(match2[0] === e.value){
+                searchResults.innerHTML = '';
+                return;
+            }
+            if(match[0] === e.value){
+                fetch('getData', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({payload: e.value, isBanned: isBanned, type: userType}),
+                }).then(res => res.json()).then(data => {
+                    let payload = data.payload;
+                    searchResults.innerHTML = '';
+                    if(payload.length < 1){
+                        searchResults.innerHTML = '<p> No results </p>'
+                        return;
+                    }
+                    payload.forEach((user, index) => {
+                    if(index > 0) searchResults.innerHTML += '<hr>';
+                        searchResults.innerHTML += `<a href='/userProfile?id=${user._id}'>${user.firstName} ${user.lastName} ${user.email} ${user.type}</a>`;
+                    });
+                    return;
+                });
+            }
+        }
+    </script>
+    
+</body>
+
+<style>
+    
+</style>
+
+
+</html>

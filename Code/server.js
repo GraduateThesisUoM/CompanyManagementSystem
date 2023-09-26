@@ -16,6 +16,8 @@ const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
 const sendEmail = require('./email_sender');
 
+const getAllUsers = require('./getAllUsers');
+
 // Connect to MongoDB
 connectDB();
 
@@ -24,7 +26,8 @@ const initializePassport = require('./passport-config');
 initializePassport(passport, getUserByEmail, getUserById);
 
 app.set('view-engine', 'ejs');
-app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(flash());
 app.use(session({
   secret: process.env.SESSION_SECRET,
@@ -41,17 +44,64 @@ const Accountant  = require("./Schemas/Accountant");
 const Client  = require("./Schemas/Client");
 const Review  = require("./Schemas/Review");
 const { cache } = require('ejs');
+const { isSet } = require('util/types');
 
 app.use(express.static('./public/css'));
 
 /*--------   INDEX */
-app.get('/', checkAuthenticated, (req, res) => {
+app.get('/', checkAuthenticated, async (req, res) => {
   if(req.user.type == 'accountant'){
     res.render('accountant_pages/accountant_main.ejs',{user : req.user});
   };
   if(req.user.type == 'user'){
     res.render('user_pages/user_main.ejs',{user : req.user});
   };
+  if(req.user.type == 'admin'){
+    res.render('admin_pages/admin_main.ejs',{user : req.user, userList : await getAllUsers()});
+  };
+});
+
+/*--------   SEARCH FOR USER IN ADMIN PAGE */
+/*--------   to be optimized */
+app.post('/getData', async (req, res) => {
+  let payload = req.body.payload.trim();
+  var banflag = false;
+  if(req.body.isBanned === true){
+    banflag = true;
+  }
+  if(req.body.type === 'everyone'){
+    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, banned: banflag}).exec();
+    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, banned: banflag}).exec();
+    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, banned: banflag}).exec();
+  }
+  else{
+    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, banned: banflag}).exec();
+    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, banned: banflag}).exec();
+    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, banned: banflag}).exec();
+  }
+  
+  
+  var search = resultByFname.concat(resultByLname, resultByEmail); 
+  
+  for(var i=0;i<search.length;i++){
+    for(var j=i+1;j<search.length;j++){
+      if(search[i]._id.equals(search[j]._id)){
+        search.splice(j, j);
+        j--;
+      }
+    }
+  }
+  
+  res.send({payload: search});
+});
+
+app.get('/userProfile', checkAuthenticated, async (req,res)=>{
+  res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id)});
+});
+
+app.post('/userProfile', checkAuthenticated, async (req,res)=>{
+  await User.updateOne({_id: req.query.id}, [{$set:{banned:{$eq:[false,"$banned"]}}}]);
+  res.redirect('#');
 });
 
 /*--------   LOG IN */
@@ -65,21 +115,15 @@ app.post('/log-in', checkNotAuthenticated, passport.authenticate('local', {
 }));
 
 
-/*--------   SIGN UP */
-app.get('/sign-up', checkNotAuthenticated, (req, res) => {
-  res.render('sign_up.ejs');
+/*--------   SING UP */
+app.get('/sing-up', checkNotAuthenticated, (req, res) => {
+  res.render('sing_up.ejs');
 });
-app.post('/sign-up', async (req, res) => {
+app.post('/sing-up', async (req, res) => {
   try {
-    const existingUser = await User.findOne({ email: req.body.email });
-
-    if (existingUser) {
-      // User with the same email already exists
-      return res.redirect('/error?origin_page=sign-up&error=Email already in use');
-    }
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
-      const newUser = new Client({
+      const newUser = new User({
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -87,17 +131,13 @@ app.post('/sign-up', async (req, res) => {
         email: req.body.email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakey,
+        myaccountant: "not assigned",
         companyName: req.body.companyName,
         companyLogo: req.body.companyLogo,
       });
       // Save the new user to the database
-      await newUser.save();
-      if(req.body.self_accountant == "true"){
-        newUser.myaccountant.id = newUser._id
-        newUser.myaccountant.status = "self_accountant"
-        await newUser.save();
-      }
-      console.log("User created successfully");
+    await newUser.save();
+    console.log("User created successfully");
     }
     else if (req.body.account_type == 'accountant'){
       const newAccountant = new Accountant({
@@ -110,7 +150,7 @@ app.post('/sign-up', async (req, res) => {
         mydatakey: req.body.mydatakey,
         clients:[]
       });
-    // Save the new user to the database
+      // Save the new user to the database
     await newAccountant.save();
     console.log("Accountant created successfully");
     }
@@ -129,7 +169,7 @@ app.post('/sign-up', async (req, res) => {
     res.redirect('/log-in');
   } catch (err) {
     console.error('Error saving user:', err);
-    res.redirect('/error?origin_page=sign-up&error='+err);
+    res.redirect('/error?origin_page=sing-up&error='+err);
   }
 });
 
@@ -248,7 +288,6 @@ app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
   }
 });
 
-
 /*--------   WORKING */
 app.get('/working', checkAuthenticated, (req, res) => {
   res.render('accountant_pages/working_page.ejs');
@@ -310,6 +349,7 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
     console.error('Error updating user data:', err);
     res.redirect('/error?origin_page=clients&error='+err);
   }
+
 });
 
 /*--------   CLIENT PROFILE */
