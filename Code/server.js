@@ -99,11 +99,10 @@ app.get('/userProfile', checkAuthenticated, async (req,res)=>{
   res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id)});
 });
 
-//app.post('/userProfile', checkAuthenticated, async (req,res)=>{
-//  console.log(req.query.id);
-//  await User.updateOne({_id: req.query.id}, {banned: true});
-//  res.redirect('/');
-//});
+app.post('/userProfile', checkAuthenticated, async (req,res)=>{
+  await User.updateOne({_id: req.query.id}, [{$set:{banned:{$eq:[false,"$banned"]}}}]);
+  res.redirect('#');
+});
 
 /*--------   LOG IN */
 app.get('/log-in', checkNotAuthenticated, (req, res) => {

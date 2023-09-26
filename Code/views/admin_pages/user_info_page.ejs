@@ -6,13 +6,13 @@
     <title>User Profile</title>
 </head>
 <body>
-    <div id="user-info-admin" name="user-info-admin">
+    <div id="user-info-admin-div" name="user-info-admin-div">
         <h1><%= user.firstName; %> <%= user.lastName; %></h1>
         <h2>Email: <%= user.email; %></h2>
         <h2>User type: <%= user.type; %></h2>
         <h2>Ban status: <%= user.banned; %></h2>
 
-        <form action="?"  method="POST">
+        <form action=""  method="POST">
             <% if(user.banned === true){ %>
                 <input type="submit" id="unban-button" name="unban-button" value="Unban User">
             <% }else{ %>
@@ -21,10 +21,12 @@
         </form>
         
     </div>
-    <h1>Reports</h1>
-    <hr>
-    <h1>Ratings and comments</h1>
+    <div id="user-reviews-admin-div" name="user-reviews-admin-div">
+        
+    </div>
     <hr>
     <h1>Relationships</h1>
+    <hr>
+    <h1>Reports</h1>
 </body>
 </html>
