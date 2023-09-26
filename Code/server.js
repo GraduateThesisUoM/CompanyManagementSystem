@@ -217,6 +217,7 @@ app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
         client_id: req.user._id,
         accountant_id: req.user.myaccountant.id,
         text: req.body.rating_textarea,
+        type: "client",
         rating: req.body.rating_input,
       });
     } else {
