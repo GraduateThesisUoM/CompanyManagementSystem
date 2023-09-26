@@ -182,7 +182,7 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
     }
     else if (req.user.myaccountant.status == "assigned"){
       const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
-      var accountant_review = await Review.findOne({client_id: req.user._id, accountant_id: req.user.myaccountant.id});
+      var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: req.user.myaccountant.id, type:"client"});
       if (accountant_review == null){
         accountant_review = new Review({
           client_id: req.user._id,
@@ -208,14 +208,15 @@ app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
   try {
     let newReview;
     const review = await Review.findOne({
-      client_id: req.user._id,
-      accountant_id: req.user.myaccountant.id,
+      reviewer_id: req.user._id,
+      reviewed_id: req.user.myaccountant.id,
+      type: "client",
     });
 
     if (review == null) {
       newReview = new Review({
-        client_id: req.user._id,
-        accountant_id: req.user.myaccountant.id,
+        reviewer_id: req.user._id,
+        reviewed_id: req.user.myaccountant.id,
         text: req.body.rating_textarea,
         type: "client",
         rating: req.body.rating_input,
@@ -390,7 +391,7 @@ app.get('/settings', checkAuthenticated, (req, res) => {
 /*--------   PROFILE */
 app.get('/profile-page', checkAuthenticated, async (req, res) => {
   if(req.user.type == 'accountant'){
-    const reviews = await Review.find({accountant_id:req.user._id});
+    const reviews = await Review.find({reviewed_id:req.user._id, type:"client"});
     const users = await User.find({type:"user"});
     console.log(users.length);
     console.log(users);

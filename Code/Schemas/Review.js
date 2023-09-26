@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 // Define the review schema
 const ReviewSchema = new mongoose.Schema({
-  client_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-  accountant_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  reviewer_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  reviewed_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   text: { type: String, required: false },
   rating: { type: Number, required: true },
   type: {
