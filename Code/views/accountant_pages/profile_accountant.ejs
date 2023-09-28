@@ -4,6 +4,8 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Προφίλ Λογιστή</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
@@ -64,11 +66,18 @@
             const date = new Date(review.review.registrationDate);
             const review_div_date = $("<div>").text(date.getHours() +":"+date.getMinutes()+ "   " +date.getDate() + "/" + date.getMonth()+ "/" + date.getFullYear());
             const review_div_text = $("<div>").text(review.review.text);
-            const review_div_review = $("<div>").text(review.review.rating);
+            const review_div_review = $("<div>");
+                for (let i = 0; i < review.review.rating; i++) {
+                    const review_div_star = $("<i>").addClass("fa-solid fa-star");
+                    review_div_review.append(review_div_star);
+                }
+            //const review_div_star = $("<i>").addClass("fa-solid fa-star");
+            
             review_div.append(review_div_client);
             review_div.append(review_div_date);
             review_div.append(review_div_text);
             review_div.append(review_div_review);
+            //review_div_review.append(review_div_star);
             reviews_section_div.append(review_div);
         });
     });
