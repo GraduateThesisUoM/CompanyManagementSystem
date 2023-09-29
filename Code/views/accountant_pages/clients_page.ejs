@@ -10,7 +10,6 @@
         <link rel="stylesheet" href="general_css.css">
         <link rel="stylesheet" href="clients_page_css.css">
         <%- include('../partials/header'); %>
-        <%- include('../partials/footer'); %>
     </head>
     <body>
         <h1>List Of Current Clients</h1>
@@ -34,6 +33,7 @@
         </ul>
         <button id="back_btn">Πίσω</button>
     </body>
+    <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
             const clients_pending = JSON.parse(`<%- JSON.stringify(clients_pending) %>`);

@@ -7,7 +7,6 @@
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
         <%- include('../partials/header'); %>
-        <%- include('../partials/footer'); %>
     </head>
     <body>
         <h1>Διαγραφή Λογαριασμού</h1>
@@ -19,6 +18,7 @@
         </form>
         <button id="delete_btn">Διαγραφή</button>
     </body>
+    <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
             $("#delete_btn").click(function(){

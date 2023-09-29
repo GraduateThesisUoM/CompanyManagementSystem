@@ -4,3 +4,38 @@ button{
 .display_block * {
     display: block;
 }
+
+/*Δοκίμαζα κάτι αν δημιουργεί προβλημα μπορεί να φύγει*/
+body{
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+
+#header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: greenyellow;
+    width: 100%;
+    top: 0;
+    left: 0;
+    
+}
+
+
+#footer{
+    margin-top: auto;
+    position: relative;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: green;
+    color: white;
+    text-align: center;
+}
+
+#footer_text{
+    padding: 15px;
+}

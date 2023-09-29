@@ -9,7 +9,6 @@
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
         <%- include('../partials/header'); %>
-        <%- include('../partials/footer'); %>
     </head>
     <body>
         <h1>Settings</h1>
@@ -17,6 +16,7 @@
         <button id="delete_account_btn">Διαγραφή Λογαριασμού</button>
         
     </body>
+    <%- include('../partials/footer'); %>
     <script>
     $(document).ready(function(){
         $("#delete_account_btn").click(function(){
