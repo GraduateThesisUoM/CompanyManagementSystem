@@ -1,0 +1,25 @@
+.modal{
+    background-color: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.4s;
+}
+
+.modal.open{
+    opacity: 1;
+}
+
+.modal .content{
+    background-color: azure;
+    border-radius: 6px;
+    text-align: center;
+    padding: 4rem;
+
+}
