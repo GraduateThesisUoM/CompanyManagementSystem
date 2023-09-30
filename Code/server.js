@@ -359,6 +359,32 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
 app.get('/client-profile', checkAuthenticated, async (req, res) => {
   res.render('accountant_pages/client_profile.ejs', {user: await getUserById(req.query.id)});
 });
+app.post('/client-profile', checkAuthenticated, async (req, res) => {
+  try {
+    /*if(req.user.myaccountant.id!="not_assigned"){
+      const last_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
+      for (let i = 0; i < last_accountant.clients.length; i++){
+        if( last_accountant.clients[i].id.equals(req.user._id)){
+          last_accountant.clients.splice(i, 1);
+          await last_accountant.save();
+          break;
+        }
+      }
+    }
+    const accountant = await Accountant.findOne({_id:req.session.accountant._id});
+      accountant.clients.push({id: req.user._id, status:"pending"});
+      req.user.myaccountant.id = accountant._id
+      req.user.myaccountant.status = "pending"
+      await accountant.save();
+      await req.user.save();*/
+    console.log("xxx");
+    res.redirect('/client-profile');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=client-profile&error='+err);
+  }
+});
 
 /*--------   REPORT USER */
 app.get('/report-user', checkAuthenticated, (req, res) => {
