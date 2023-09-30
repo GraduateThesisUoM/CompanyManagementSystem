@@ -4,15 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    <!-- fontawesome for icons -->
-    <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
-    <!--ajax-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <!--CSS-->
-    <link rel="stylesheet" href="general_css.css">
-    <link rel="stylesheet" href="my_accountant_css.css">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%- include('../partials/header'); %>
 </head>
 <body>
@@ -43,22 +34,6 @@
     <div id="client-messaging-div" name="client-messaging-div">
         <h2>Client Messaging</h2>
         <h3>Messaging will happen here</h3>
-    </div>
-    <div id="client-review-div" name="client-review-div">
-        <form class="rating_form" action="/client-profile" method="POST">
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <br>
-            <input type="text" id='rating_input' name='rating_input'>
-            <br>
-            <textarea id='rating_textarea' name='rating_textarea'></textarea>
-            <br>
-            <button type="submit">Submit</button>
-            <button type="submit">Submit</button>
-        </form>
     </div>
 
     <button id="remove-client-button" name="remove-client-button">Remove Client</button>

@@ -46,7 +46,7 @@
 
             clients_pending.forEach(client => {
                 const liElement = $("<li>")
-                const clientElement = $("<a>").text(client.user.firstName+" "+client.user.lastName).attr('href', `client-profile?id=${client.user._id}`);
+                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', `client-profile?id=${client.user._id}`);
                 const button1Element = $("<button>").text("Accept").click(function() {
                         accountant_action(client.user._id, "assigned")
                         });
