@@ -377,6 +377,38 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
 app.get('/client-profile', checkAuthenticated, async (req, res) => {
   res.render('accountant_pages/client_profile.ejs', {user: await getUserById(req.query.id)});
 });
+app.post('/client-profile', checkAuthenticated, async (req, res) => {
+  try {
+    /*let newReview;
+    const review = await Review.findOne({
+      reviewer_id: req.user._id,
+      reviewed_id: req.user.myaccountant.id,
+      type: "client",
+    });
+
+    if (review == null) {
+      newReview = new Review({
+        reviewer_id: req.user._id,
+        reviewed_id: req.user.myaccountant.id,
+        text: req.body.rating_textarea,
+        type: "client",
+        rating: req.body.rating_input,
+      });
+    } else {
+      // Update the existing review's text and rating
+      review.text = req.body.rating_textarea;
+      review.rating = req.body.rating_input;
+      newReview = review;
+    }
+
+    await newReview.save();*/
+    console.log('Review created or updated successfully');
+    res.redirect('/client-profile');
+  } catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=client-profile&error=' + err);
+  }
+});
 
 /*--------   REPORT USER */
 app.get('/report-user', checkAuthenticated, (req, res) => {
