@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="modal.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <title>User Profile</title>
 </head>
 <body>
@@ -13,7 +14,7 @@
         <h2>User type: <%= user.type; %></h2>
         <h2>Ban status: <%= user.banned; %></h2>
 
-        <form action=""  method="POST">
+        <form action="/changeBanStatus?id=<%=user._id%>"  method="POST">
             <% if(user.banned === true){ %>
                 <input type="submit" id="unban-button" name="unban-button" value="Unban User">
             <% }else{ %>
@@ -28,17 +29,41 @@
     <hr>
     <h1>Relationships</h1>
     <hr>
-    <div id="user-reports-admin-div" name="user-reports-admin-div">
-        <h1>Reports</h1>
-        <% for(var i=0; i<reports.length ;i++){ %>
-             <a href="report-page?id=<%=reports[i]._id%>"><span><%= reports[i].reason %></span>
-             <br>
-             <span><%= reports[i].registrationDate %></span></a>
-             <br>
-             <button class="reportButtons" id="visitReport" name="visitReport" value="<%=reports[i]%>" onclick="modal.createAndOpen(this.value)">Details</button>
-             <br>
-        <%}%>
+    <h1>Reports</h1>
+    <span>Show Reports By User</span>
+    <label class="switch">
+        <input type="checkbox" id="reports-toggle" name="reports-toggle" onclick="modal.showCorrectReports()">
+        <span class="slider round"></span>
+    </label>
+    <span>Show Reports For User</span>
+    <br>
 
+    <div id="reports-for-user-admin-div" name="reports-for-user-admin-div"></div>
+        <% for(var i=0; i<reports_for.length ;i++){ %>
+            <span>Report Reason:<%= reports_for[i].reason %></span>
+            <br>
+            <span>Reported on:<%= reports_for[i].registrationDate %></span>
+            <br>
+            <a href="/userProfile?id=<%=reports_for[i].reporter_id%>">Reporter</a>
+            <br>
+            <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_for[i]._id %>','<%- reports_for[i].reason %>', '<%- reports_for[i].text %>', '<%- reports_for[i].registrationDate %>')">Details</button>
+            <br>
+            <br>
+        <%}%>
+    </div>
+
+    <div id="reports-by-user-admin-div" name="reports-by-user-admin-div"></div>
+        <% for(var i=0; i<reports_by.length ;i++){ %>
+            <span>Report Reason:<%= reports_by[i].reason %></span>
+            <br>
+            <span>Reported on:<%= reports_by[i].registrationDate %></span>
+            <br>
+            <a href="/userProfile?id=<%=reports_bys[i].reporter_id%>">Reporter</a>
+            <br>
+            <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_by[i]._id %>','<%- reports_by[i].reason %>', '<%- reports_by[i].text %>', '<%- reports_by[i].registrationDate %>')">Details</button>
+            <br>
+            <br>
+        <%}%>
     </div>
 
 </body>
@@ -64,12 +89,15 @@
         this.cancel = 'X'
     }
 
-    createAndOpen(val, resolve, reject){
+    
+
+    createAndOpen(id, reason, text, date, resolve, reject){
         this.modalElem = document.createElement('div');
         this.modalElem.classList.add('modal');
         setTimeout(()=>{
             this.modalElem.classList.add('open');
         }, 400);
+
 
         const modalContentElem = document.createElement('div');
         modalContentElem.classList.add('content');
@@ -92,17 +120,19 @@
                 this.close()
             }
         });
+
+        
         //title
         const titleTextElem = document.createElement('p');
         titleTextElem.classList.add('title');
-        titleTextElem.textContent = this.title;
+        titleTextElem.textContent = reason;
 
         modalContentElem.appendChild(titleTextElem);
 
         //date
         const dateTextElem = document.createElement('p');
         dateTextElem.classList.add('date');
-        dateTextElem.textContent = this.date;
+        dateTextElem.textContent = date;
 
         modalContentElem.appendChild(dateTextElem);
 
@@ -116,24 +146,37 @@
         //details
         const detailsTextElem = document.createElement('p');
         detailsTextElem.classList.add('details');
-        detailsTextElem.textContent = this.details;
+        detailsTextElem.textContent = text;
 
         modalContentElem.appendChild(detailsTextElem);
 
         //reviewed
-        const reviewedTextElem = document.createElement('button');
+        const reviewedButtonForm = document.createElement('form');
+        reviewedButtonForm.setAttribute('action', '/reviewReport?id='+id);
+        reviewedButtonForm.setAttribute('method', 'POST');
+        
+        const reviewedTextElem = document.createElement('input');
+        reviewedTextElem.setAttribute('type', 'submit');
         reviewedTextElem.classList.add('reviewed');
-        reviewedTextElem.textContent = this.reviewed;
+        reviewedTextElem.value = this.reviewed;
 
-        modalContentElem.appendChild(reviewedTextElem);
+        reviewedButtonForm.appendChild(reviewedTextElem);
+        modalContentElem.appendChild(reviewedButtonForm);
 
 
         //dismissed
-        const dismissedTextElem = document.createElement('button');
-        dismissedTextElem.classList.add('dismissed');
-        dismissedTextElem.textContent = this.dismissed;
+        const dismissedButtonForm = document.createElement('form');
+        dismissedButtonForm.setAttribute('action', '/dismissReport?id='+id);
+        dismissedButtonForm.setAttribute('method', 'POST');
 
-        modalContentElem.appendChild(dismissedTextElem);
+
+        const dismissedTextElem = document.createElement('input');
+        dismissedTextElem.setAttribute('type', 'submit');
+        dismissedTextElem.classList.add('dismissed');
+        dismissedTextElem.value = this.dismissed;
+
+        dismissedButtonForm.appendChild(dismissedTextElem);
+        modalContentElem.appendChild(dismissedButtonForm);
 
         document.body.appendChild(this.modalElem);
     }
@@ -153,20 +196,12 @@
 }
 
     const modal = new ReportModal({
-        title: 'This is a title',
-        details: 'these are the details',
-        date: 'kkkkkk',
-        reporter:'dddddddd',
-        reported:'mmmmmmmmmmmm',
+        title: 'Title Goes Here',
+        details: 'These are the Details',
+        date: 'This is the Date',
+        reporter:'This is the Person Reporting',
+        reported:'This is the Person being Reported'
     });
-
-    //const reportButton = document.querySelectorAll('.reportButtons');
-
-    //reportButton.forEach(reportButton => 
-    //{reportButton.addEventListener('click', ()=> {
-    //        modal.createAndOpen();
-    //    })
-    //});
 </script>
 
 </html>

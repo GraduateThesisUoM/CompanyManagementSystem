@@ -96,13 +96,31 @@ app.post('/getData', async (req, res) => {
   res.send({payload: search});
 });
 
+
+/*--------   ADMIN - USER PROFILE*/
 app.get('/userProfile', checkAuthenticated, async (req,res)=>{
-  res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id), reports: await Report.find({reported_id: req.query.id})});
+  res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id), reports_for: await Report.find({reported_id: req.query.id}), reports_by: await Report.find({reporter_id: req.query.id})});
 });
 
-app.post('/userProfile', checkAuthenticated, async (req,res)=>{
+
+/*--------   BAN-UNBAN */
+app.post('/changeBanStatus', checkAuthenticated, async (req,res)=>{
   await User.updateOne({_id: req.query.id}, [{$set:{banned:{$eq:[false,"$banned"]}}}]);
-  res.redirect('#');
+  res.redirect('/');
+});
+
+
+/*--------   REVIEW REPORT */
+app.post('/reviewReport', checkAuthenticated, async (req,res)=>{
+  await Report.updateOne({_id: req.query.id}, {$set: {status: "reviewed"}});
+  res.redirect('/');
+});
+
+
+/*--------   DISMISS REPORT */
+app.post('/dismissReport', checkAuthenticated, async (req,res)=>{
+  await Report.updateOne({_id: req.query.id}, {$set: {status: "dismissed"}});
+  res.redirect('/');
 });
 
 /*--------   LOG IN */
@@ -375,11 +393,6 @@ app.post('/report-user', checkAuthenticated, async (req,res)=> {
   });
   await newReport.save();
   res.redirect("/clients");
-});
-
-/*--------   REPORT DETAILS PAGE */
-app.get('/report-page', checkAuthenticated, async (req, res) => {
-  res.render('general/report_page.ejs', {report: await Report.find({_id: req.query.id})});
 });
 
 
