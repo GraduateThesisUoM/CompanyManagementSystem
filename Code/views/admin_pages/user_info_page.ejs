@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="modal.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
     <title>User Profile</title>
 </head>
 <body>
@@ -29,52 +29,60 @@
     <hr>
     <h1>Relationships</h1>
     <hr>
-    <h1>Reports</h1>
-    <span>Show Reports By User</span>
+    <h1>Pending Reports</h1>
+    <span>Show Reports For User</span>
     <label class="switch">
         <input type="checkbox" id="reports-toggle" name="reports-toggle" onclick="modal.showCorrectReports()">
         <span class="slider round"></span>
     </label>
-    <span>Show Reports For User</span>
+    <span>Show Reports By User</span>
     <br>
 
-    <div id="reports-for-user-admin-div" name="reports-for-user-admin-div"></div>
-        <% for(var i=0; i<reports_for.length ;i++){ %>
-            <span>Report Reason:<%= reports_for[i].reason %></span>
-            <br>
-            <span>Reported on:<%= reports_for[i].registrationDate %></span>
-            <br>
-            <a href="/userProfile?id=<%=reports_for[i].reporter_id%>">Reporter</a>
-            <br>
-            <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_for[i]._id %>','<%- reports_for[i].reason %>', '<%- reports_for[i].text %>', '<%- reports_for[i].registrationDate %>')">Details</button>
-            <br>
-            <br>
-        <%}%>
+    <div id="reports-for-user-admin-div" name="reports-for-user-admin-div">
+        <span id="no-reports-for-span" name="no-reports-for-span">No reports to show</span>
+        <%if(reports_for.length > 0){ %>
+            <script>document.getElementById('no-reports-for-span').style.display = 'none';</script>
+            <%for(var i=0; i<reports_for.length ;i++){ %>
+                <span>Report Reason: <%= reports_for[i].reason %></span>
+                <br>
+                <span>Reported on: <%= reports_for[i].registrationDate %></span>
+                <br>
+                <span>Reported by: <a href="/userProfile?id=<%=reports_for[i].reporter_id%>"><%= reports_for[i].reporter_firstName%> <%= reports_for[i].reporter_lastName%></a></span>
+                <br>
+                <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_for[i]._id %>','<%- reports_for[i].reason %>', '<%- reports_for[i].text %>', '<%- reports_for[i].registrationDate %>')">Details</button>
+                <br>
+                <br>
+            <%}
+        }%>
     </div>
 
-    <div id="reports-by-user-admin-div" name="reports-by-user-admin-div"></div>
-        <% for(var i=0; i<reports_by.length ;i++){ %>
-            <span>Report Reason:<%= reports_by[i].reason %></span>
-            <br>
-            <span>Reported on:<%= reports_by[i].registrationDate %></span>
-            <br>
-            <a href="/userProfile?id=<%=reports_bys[i].reporter_id%>">Reporter</a>
-            <br>
-            <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_by[i]._id %>','<%- reports_by[i].reason %>', '<%- reports_by[i].text %>', '<%- reports_by[i].registrationDate %>')">Details</button>
-            <br>
-            <br>
-        <%}%>
+    <div id="reports-by-user-admin-div" name="reports-by-user-admin-div"  style="display: none;">
+        <span id="no-reports-by-span" name="no-reports-by-span">No reports to show</span>
+        <%if(reports_by.length > 0){%>
+            <script>document.getElementById('no-reports-by-span').style.display = 'none';</script>
+            <%for(var i=0; i<reports_by.length ;i++){ %>
+                <span>Report Reason: <%= reports_by[i].reason %></span>
+                <br>
+                <span>Reported on: <%= reports_by[i].registrationDate %></span>
+                <br>
+                <span>Reported: <a href="/userProfile?id=<%=reports_by[i].reported_id%>"><%= reports_by[i].reported_firstName%> <%= reports_by[i].reported_lastName%></a></span>
+                <br>
+                <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_by[i]._id %>','<%- reports_by[i].reason %>', '<%- reports_by[i].text %>', '<%- reports_by[i].registrationDate %>')">Details</button>
+                <br>
+                <br>
+            <%}
+        }%>
     </div>
 
 </body>
+
 <script>
+    //class for the report modal
     class ReportModal{
     constructor({
         title,
         details,
         date,
-        reporter,
-        reported,
         reviewed,
         dismissed,
         cancel
@@ -82,11 +90,20 @@
         this.title = title;
         this.details = details;
         this.date = date;
-        this.reporter = reporter;
-        this.reported = reported;
         this.reviewed = 'Mark as reviewed',
         this.dismissed = 'Dismiss',
         this.cancel = 'X'
+    }
+
+    showCorrectReports(){
+        if(document.getElementById('reports-toggle').checked){
+            document.getElementById('reports-for-user-admin-div').style.display = 'none';
+            document.getElementById('reports-by-user-admin-div').style.display = 'block';
+        }
+        else{
+            document.getElementById('reports-for-user-admin-div').style.display = 'block';
+            document.getElementById('reports-by-user-admin-div').style.display = 'none';
+        }
     }
 
     
@@ -136,12 +153,6 @@
 
         modalContentElem.appendChild(dateTextElem);
 
-        //reported
-        const reportedTextElem = document.createElement('p');
-        reportedTextElem.classList.add('reported');
-        reportedTextElem.textContent = this.reported;
-
-        modalContentElem.appendChild(reportedTextElem);
 
         //details
         const detailsTextElem = document.createElement('p');

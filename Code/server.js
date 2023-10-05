@@ -106,21 +106,21 @@ app.get('/userProfile', checkAuthenticated, async (req,res)=>{
 /*--------   BAN-UNBAN */
 app.post('/changeBanStatus', checkAuthenticated, async (req,res)=>{
   await User.updateOne({_id: req.query.id}, [{$set:{banned:{$eq:[false,"$banned"]}}}]);
-  res.redirect('/');
+  res.redirect('back');
 });
 
 
 /*--------   REVIEW REPORT */
 app.post('/reviewReport', checkAuthenticated, async (req,res)=>{
   await Report.updateOne({_id: req.query.id}, {$set: {status: "reviewed"}});
-  res.redirect('/');
+  res.redirect('back');
 });
 
 
 /*--------   DISMISS REPORT */
 app.post('/dismissReport', checkAuthenticated, async (req,res)=>{
   await Report.updateOne({_id: req.query.id}, {$set: {status: "dismissed"}});
-  res.redirect('/');
+  res.redirect('back');
 });
 
 /*--------   LOG IN */
@@ -416,15 +416,22 @@ app.get('/report-user', checkAuthenticated, (req, res) => {
 });
 
 app.post('/report-user', checkAuthenticated, async (req,res)=> {
-  const newReport = new Report({
-    reporter_id: req.user._id,
-    reported_id: req.query.id,
-    reason: req.body.report_user_radio,
-    status: "pending",
-    text: req.body.report_textarea
+  const reported = await getUserById(req.query.id); //user that gets reported
+
+  const newReport = new Report({ //report constructor
+    reporter_id: req.user._id, //reporter id
+    reporter_firstName: req.user.firstName, //reporter first name
+    reporter_lastName: req.user.lastName, //reporter last name
+    reported_id: req.query.id, //reported id
+    reported_firstName: reported.firstName, //reported first name
+    reported_lastName: reported.lastName, //reported last name
+    reason: req.body.report_user_radio, //reason for report (taken from a radio in report page)
+    status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
+    text: req.body.report_textarea //report text-details
   });
+
   await newReport.save();
-  res.redirect("/clients");
+  res.redirect("back");
 });
 
 
