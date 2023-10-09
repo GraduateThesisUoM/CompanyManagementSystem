@@ -8,6 +8,12 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true },
   password: { type: String, required: true },
   banned: { type: Boolean, required: true, default: false },
+  status : {
+    type: String,
+    enum: ['active', 'baned', 'deleted'],
+    required: true,
+    default: 'active'
+  },
 
 
   afm: { type: String, required: false },
