@@ -117,10 +117,10 @@ app.post('/log-in', checkNotAuthenticated, passport.authenticate('local', {
 
 
 /*--------   SING UP */
-app.get('/sing-up', checkNotAuthenticated, (req, res) => {
-  res.render('sing_up.ejs');
+app.get('/sign-up', checkNotAuthenticated, (req, res) => {
+  res.render('sign_up.ejs');
 });
-app.post('/sing-up', async (req, res) => {
+app.post('/sign-up', async (req, res) => {
   try {
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){

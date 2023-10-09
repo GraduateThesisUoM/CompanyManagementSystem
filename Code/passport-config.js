@@ -13,7 +13,12 @@ function initialize(passport, getUserByEmail, getUserById) {
         try {
           //if (await bcrypt.compare(password, user.password)) {
           if (password == user.password) {
-            return done(null, user)
+            if (user.banned) {
+              return done(null, false, { message: 'baned' })
+            }
+            else{
+              return done(null, user)
+            }
           } else {
             return done(null, false, { message: 'Password incorrect' })
           }
