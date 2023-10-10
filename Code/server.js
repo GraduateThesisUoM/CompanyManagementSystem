@@ -132,7 +132,6 @@ app.post('/sign-up', async (req, res) => {
         email: req.body.email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakey,
-        myaccountant: "not assigned",
         companyName: req.body.companyName,
         companyLogo: req.body.companyLogo,
       });
@@ -541,7 +540,7 @@ app.get('/error', (req, res) => {
   res.render('general/error_page.ejs');
 });
 /*--------   DELETE ACCOUNT */
-app.get('/delete-account', checkAuthenticated, (req, res) => {
+/*app.get('/delete-account', checkAuthenticated, (req, res) => {
   res.render('general/delete_account.ejs', { user: req.user });
 });
 app.post('/delete-account', checkAuthenticated, async (req, res) => {
@@ -558,7 +557,7 @@ app.post('/delete-account', checkAuthenticated, async (req, res) => {
     console.error('Error deleting account:', err);
     res.redirect('/error?origin_page=delete-account&error='+err);
   }
-});
+});*/
 
 app.delete('/logout', (req, res) => {
   req.logout(() => {
