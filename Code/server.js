@@ -124,7 +124,7 @@ app.post('/sign-up', async (req, res) => {
   try {
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
-      const newUser = new User({
+      const newUser = new Client({
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -137,6 +137,11 @@ app.post('/sign-up', async (req, res) => {
         companyLogo: req.body.companyLogo,
       });
       // Save the new user to the database
+    await newUser.save();
+    if (req.body.self_accountant == "true"){
+      newUser.myaccountant.id = newUser._id;
+      newUser.myaccountant.status = "self_accountant";
+    }
     await newUser.save();
     console.log("User created successfully");
     }

@@ -8,8 +8,7 @@ const ClientSchema = new mongoose.Schema({
     status: {
       type: String,
       enum: ['assigned', 'pending', 'not_assigned','self_accountant','rejected'],
-      default: 'not_assigned',
-      required: true,
+      default: 'not_assigned'
     },
   }
 });
