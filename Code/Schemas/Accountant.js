@@ -12,7 +12,7 @@ const AccountantSchema = new mongoose.Schema({
     },
     status: {
       type: String,
-      enum: ['pending', 'assigned', 'rejected'],
+      enum: ['pending', 'assigned', 'rejected', 'canceled'],
       default: 'pending'
     }
   }]

@@ -171,7 +171,7 @@ app.post('/sign-up', async (req, res) => {
     await newUser.save();
     console.log("Admin created successfully");
     }
-    res.redirect('/log-in');
+    res.redirect('/log-in?message=success_sign_up');
   } catch (err) {
     console.error('Error saving user:', err);
     res.redirect('/error?origin_page=sing-up&error='+err);
@@ -281,13 +281,22 @@ app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
         }
       }
     }
+    
     const accountant = await Accountant.findOne({_id:req.session.accountant._id});
-      accountant.clients.push({id: req.user._id, status:"pending"});
+    if(req.body.user_action == "cancel_request"){
+      console.log("Cancel accountant request");
+      req.user.myaccountant.id = 'not_assigned'
+      req.user.myaccountant.status = 'not_assigned'
+    }
+    else if(req.body.user_action == "sent_request"){
+      console.log("Sent accountant request");
+      accountant.clients.push({id: req.user._id, status: "pending"});
+      await accountant.save();
       req.user.myaccountant.id = accountant._id
       req.user.myaccountant.status = "pending"
-      await accountant.save();
-      await req.user.save();
-    res.redirect('/pick-accountant');
+    } 
+    await req.user.save();
+    res.redirect('/pick-accountant?message=success_send_req_to_accountant');
   }
   catch (err) {
     console.error('Error updating user data:', err);
