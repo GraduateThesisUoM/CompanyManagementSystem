@@ -540,24 +540,36 @@ app.get('/error', (req, res) => {
   res.render('general/error_page.ejs');
 });
 /*--------   DELETE ACCOUNT */
-/*app.get('/delete-account', checkAuthenticated, (req, res) => {
+app.get('/delete-account', checkAuthenticated, (req, res) => {
   res.render('general/delete_account.ejs', { user: req.user });
 });
 app.post('/delete-account', checkAuthenticated, async (req, res) => {
   try{
     if(req.user.password == req.body.password){
-      await User.deleteOne({ _id: req.user._id });
+      const user = await User.findOne({ _id: req.user._id });
+      user.account_status = 'deleted';
+      await user.save();
+      // Logout the user
+      req.logout((err) => {
+        if (err) {
+          console.error('Error during logout:', err);
+          // Handle the error if needed
+        }
+
+        // Redirect to the login page with a success message
+        console.log("Delete account Completed successfully")
+        res.redirect('/log-in?message=deletecomplete');
+      });
     }
     else{
       res.redirect('/delete-account?error=wrong_password');
     }
-    res.redirect('/log-in?message=deletecomplete');
   }
   catch (err) {
     console.error('Error deleting account:', err);
     res.redirect('/error?origin_page=delete-account&error='+err);
   }
-});*/
+});
 
 app.delete('/logout', (req, res) => {
   req.logout(() => {
