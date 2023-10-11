@@ -37,7 +37,12 @@
                     window.location ="/pick-accountant"
             });
             if ("<%= accountant._id %>" == "<%= user.myaccountant.id %>"){
-                $("#request_bnt").prop("disabled", true);
+                $("#request_bnt").hide();
+                $("#cansel_request_bnt").show();
+            }
+            else{
+                $("#request_bnt").show();
+                $("#cansel_request_bnt").hide();
             }
             $("#request_bnt").click(function(){
                 $("#user_action").val("sent_request")

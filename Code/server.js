@@ -189,8 +189,8 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
       var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: req.user.myaccountant.id, type:"client"});
       if (accountant_review == null){
         accountant_review = new Review({
-          client_id: req.user._id,
-          accountant_id: req.user.myaccountant.id,
+          reviewer_id: req.user._id,
+          reviewed_id: req.user.myaccountant.id,
           rating: -1,
           registrationDate: ''
         });
@@ -370,23 +370,37 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
 
 /*--------   CLIENT PROFILE */
 app.get('/client-profile', checkAuthenticated, async (req, res) => {
-  res.render('accountant_pages/client_profile.ejs', {user: await getUserById(req.query.id)});
+  const accountants_client = await Client.findOne({_id:req.query.id});
+  var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: accountants_client._id, type:"accountant"});
+  if (accountant_review == null){
+    accountant_review = new Review({
+      reviewer_id: req.user._id,
+      reviewed_id: accountants_client._id,
+      rating: -1,
+      registrationDate: ''
+    });
+  }
+
+  res.render('accountant_pages/client_profile.ejs', {user : req.user,client: accountants_client, review : accountant_review});
 });
 app.post('/client-profile', checkAuthenticated, async (req, res) => {
   try {
-    /*let newReview;
+    const accountants_client = await Client.findOne({_id:req.query.id});
+    console.log(req.uuu)
+    console.log(accountants_client)
+    let newReview;
     const review = await Review.findOne({
       reviewer_id: req.user._id,
-      reviewed_id: req.user.myaccountant.id,
-      type: "client",
+      reviewed_id: accountants_client._id,
+      type: "accountant",
     });
 
     if (review == null) {
       newReview = new Review({
         reviewer_id: req.user._id,
-        reviewed_id: req.user.myaccountant.id,
+        reviewed_id: accountants_client._id,
         text: req.body.rating_textarea,
-        type: "client",
+        type: "accountant",
         rating: req.body.rating_input,
       });
     } else {
@@ -396,7 +410,7 @@ app.post('/client-profile', checkAuthenticated, async (req, res) => {
       newReview = review;
     }
 
-    await newReview.save();*/
+    await newReview.save();
     console.log('Review created or updated successfully');
     res.redirect('/client-profile');
   } catch (err) {
@@ -580,6 +594,7 @@ app.post('/delete-account', checkAuthenticated, async (req, res) => {
   }
 });
 
+/*--------   LOG OUT */
 app.delete('/logout', (req, res) => {
   req.logout(() => {
     res.redirect('/log-in');
