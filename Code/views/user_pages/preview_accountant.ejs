@@ -76,18 +76,28 @@
             const reviews_div = $("#reviews_div");
 
             reviews.forEach(review => {
-                const review_div = $("<div>").text("5");
+                const review_div = $("<div>");
                 const stars_div = $("<div>");
-
+                const date_review_div = $("<div>").text(review.registrationDate);
+                review_div.append(date_review_div);
                 // Adding 5 buttons to stars_div
                 for (let i = 1; i <= 5; i++) {
-                    const star_button = $("<button>").addClass("star_btn");
+                    var star_button = $("<button>").addClass("star_btn star_selected");
+                    if(i<= review.rating){
+                        star_button = $("<button>").addClass("star_btn star_selected");
+                    }
+                    else{
+                        star_button = $("<button>").addClass("star_btn");
+                    }
+                    
                     stars_div.append(star_button);
                     const star_i = $("<i>").addClass("fa-solid fa-star");
                     star_button.append(star_i);
                 }
-
+                const text_review_div = $("<div>").text(review.text);
                 review_div.append(stars_div);
+                review_div.append(text_review_div)
+
                 reviews_div.append(review_div);
             });
 
