@@ -18,8 +18,8 @@
 <body>
 
     <div id="general-client-info" name="general-client-info">
-        <h2><%= client.firstName %> <%= client.lastName %></h2>
-        <h3><%= client.companyLogo %> <%= client.companyName %></h3>
+        <h2><%= selected_client.firstName %> <%= selected_client.lastName %></h2>
+        <h3><%= selected_client.companyLogo %> <%= selected_client.companyName %></h3>
     </div>
 
     <div id="client-transactions-div" name="client-transactions-div">
@@ -46,11 +46,12 @@
     </div>
 
     <button id="remove-client-button" name="remove-client-button">Remove Client</button>
-    <a href="report-user?id=<%=client._id%>">Report Client</a>
+    <a href="report-user?id=<%=selected_client._id%>">Report Client</a>
 
     <div id="client-rating-div" name="client-rating-div">
         <h2>Rating Client</h2>
          <form class="rating_form" action="/client-profile" method="POST">
+            <input type="text" name='clients_id' value="<%= selected_client._id %>">
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
@@ -95,10 +96,10 @@
                 });
             })(i);
         }
-        /*if('<%= review.rating%>'!='-1'){
+        if('<%= review.rating%>'!='-1'){
             $("#rating_textarea").val('<%= review.text%>');
             starButtons[parseInt('<%= review.rating%>')-1].click()
-        }*/
+        }
         
     });
 </script>

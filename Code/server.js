@@ -381,17 +381,16 @@ app.get('/client-profile', checkAuthenticated, async (req, res) => {
     });
   }
 
-  res.render('accountant_pages/client_profile.ejs', {user : req.user,client: accountants_client, review : accountant_review});
+  res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review});
 });
 app.post('/client-profile', checkAuthenticated, async (req, res) => {
   try {
-    const accountants_client = await Client.findOne({_id:req.query.id});
-    console.log(req.uuu)
-    console.log(accountants_client)
+    const accountants_client = await Client.findOne({_id:req.body.clients_id});
     let newReview;
     const review = await Review.findOne({
       reviewer_id: req.user._id,
       reviewed_id: accountants_client._id,
+      rating: -1,
       type: "accountant",
     });
 
@@ -412,7 +411,7 @@ app.post('/client-profile', checkAuthenticated, async (req, res) => {
 
     await newReview.save();
     console.log('Review created or updated successfully');
-    res.redirect('/client-profile');
+    res.redirect('/client-profile?id='+req.body.clients_id);
   } catch (err) {
     console.error('Error updating user data:', err);
     res.redirect('/error?origin_page=client-profile&error=' + err);
