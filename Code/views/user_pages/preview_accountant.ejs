@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Προεπισκόπηση Λογιστή</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="my_accountant_css.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <%- include('../partials/header'); %>
     </head>
     <body>
@@ -28,6 +31,22 @@
         <hr>
         <div id="rating-div" name="rating-div">
             <h2>Reviews and Comments</h2>
+            <!--form class="rating_form" action="/my-accountant-rate" method="POST">
+                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                <br>
+                <input type="text" id='rating_input' name='rating_input'>
+                <br>
+                <textarea id='rating_textarea' name='rating_textarea'></textarea>
+                <br>
+                <button type="submit">Submit</button>
+            </form-->
+            <div id="reviews_div">
+
+            </div>
         </div>
     </body>
     <%- include('../partials/footer'); %>
@@ -52,6 +71,26 @@
                 $("#user_action").val("cancel_request")
                 $("#submit_preview_accountant").click()
             });
+            const reviews = JSON.parse(`<%- JSON.stringify(reviews) %>`);
+
+            const reviews_div = $("#reviews_div");
+
+            reviews.forEach(review => {
+                const review_div = $("<div>").text("5");
+                const stars_div = $("<div>");
+
+                // Adding 5 buttons to stars_div
+                for (let i = 1; i <= 5; i++) {
+                    const star_button = $("<button>").addClass("star_btn");
+                    stars_div.append(star_button);
+                    const star_i = $("<i>").addClass("fa-solid fa-star");
+                    star_button.append(star_i);
+                }
+
+                review_div.append(stars_div);
+                reviews_div.append(review_div);
+            });
+
         });
         
     </script>

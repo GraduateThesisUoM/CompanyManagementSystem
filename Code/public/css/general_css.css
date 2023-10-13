@@ -39,3 +39,14 @@ body{
 #footer_text{
     padding: 15px;
 }
+
+.star_btn{
+    border: none;
+    text-align: center;
+    text-decoration: none;
+    background-color: transparent;
+    font-size: 50px;
+}
+.star_selected{
+    color: gold;
+}

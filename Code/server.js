@@ -255,8 +255,8 @@ app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
 });
 app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
   try {
-    const accountant = await Accountant.find({_id:req.body.accountant_id});
-    req.session.accountant = accountant[0];
+    const accountant = await Accountant.findOne({_id:req.body.accountant_id});
+    req.session.accountant = accountant;
     res.redirect('/preview-accountant');
   }
   catch (err) {
@@ -267,7 +267,8 @@ app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
 
 /*--------   ACCOUNTANT PREVIEW */
 app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
-  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user });
+  const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
+  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user, reviews: reviews });
 });
 app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
   try {
