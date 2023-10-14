@@ -47,7 +47,7 @@
                 <br>
                 <span>Reported on: <%= reports_for[i].registrationDate %></span>
                 <br>
-                <span>Reported by: <a href="/userProfile?id=<%=reports_for[i].reporter_id%>"><%= reports_for[i].reporter_firstName%> <%= reports_for[i].reporter_lastName%></a></span>
+                <span>Reported by: <a href="/userProfile?id=<%=reports_for[i].reporter_id%>">User</a></span>
                 <br>
                 <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_for[i]._id %>','<%- reports_for[i].reason %>', '<%- reports_for[i].text %>', '<%- reports_for[i].registrationDate %>')">Details</button>
                 <br>
@@ -65,7 +65,7 @@
                 <br>
                 <span>Reported on: <%= reports_by[i].registrationDate %></span>
                 <br>
-                <span>Reported: <a href="/userProfile?id=<%=reports_by[i].reported_id%>"><%= reports_by[i].reported_firstName%> <%= reports_by[i].reported_lastName%></a></span>
+                <span>Reported: <a href="/userProfile?id=<%=reports_by[i].reported_id%>">User</a></span>
                 <br>
                 <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_by[i]._id %>','<%- reports_by[i].reason %>', '<%- reports_by[i].text %>', '<%- reports_by[i].registrationDate %>')">Details</button>
                 <br>

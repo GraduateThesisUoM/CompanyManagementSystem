@@ -449,15 +449,10 @@ app.get('/report-user', checkAuthenticated, (req, res) => {
 });
 
 app.post('/report-user', checkAuthenticated, async (req,res)=> {
-  const reported = await getUserById(req.query.id); //user that gets reported
 
   const newReport = new Report({ //report constructor
     reporter_id: req.user._id, //reporter id
-    reporter_firstName: req.user.firstName, //reporter first name
-    reporter_lastName: req.user.lastName, //reporter last name
     reported_id: req.query.id, //reported id
-    reported_firstName: reported.firstName, //reported first name
-    reported_lastName: reported.lastName, //reported last name
     reason: req.body.report_user_radio, //reason for report (taken from a radio in report page)
     status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
     text: req.body.report_textarea //report text-details
