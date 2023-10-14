@@ -66,19 +66,16 @@ app.get('/', checkAuthenticated, async (req, res) => {
 /*--------   to be optimized */
 app.post('/getData', async (req, res) => {
   let payload = req.body.payload.trim();
-  var banflag = false;
-  if(req.body.isBanned === true){
-    banflag = true;
-  }
+
   if(req.body.type === 'everyone'){
-    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, banned: banflag}).exec();
-    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, banned: banflag}).exec();
-    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, banned: banflag}).exec();
+    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
+    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
+    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
   }
   else{
-    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, banned: banflag}).exec();
-    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, banned: banflag}).exec();
-    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, banned: banflag}).exec();
+    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
+    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
+    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
   }
   
   
@@ -105,7 +102,17 @@ app.get('/userProfile', checkAuthenticated, async (req,res)=>{
 
 /*--------   BAN-UNBAN */
 app.post('/changeBanStatus', checkAuthenticated, async (req,res)=>{
-  await User.updateOne({_id: req.query.id}, [{$set:{banned:{$eq:[false,"$banned"]}}}]);
+  
+  //variable contains the status we want to insert
+  var status_value = "active"; 
+  
+  //check the value of the button to see if we are banning or unbanning the user
+  if(req.body.change_ban_status_button == "Ban"){
+    status_value = "banned";
+  }
+  
+  //update the status of the user
+  await User.updateOne({_id: req.query.id}, [{$set:{account_status: status_value }}]);
   res.redirect('back');
 });
 

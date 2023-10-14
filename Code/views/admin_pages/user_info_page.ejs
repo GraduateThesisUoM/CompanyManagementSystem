@@ -12,13 +12,13 @@
         <h1><%= user.firstName; %> <%= user.lastName; %></h1>
         <h2>Email: <%= user.email; %></h2>
         <h2>User type: <%= user.type; %></h2>
-        <h2>Ban status: <%= user.banned; %></h2>
+        <h2>Ban status: <%= user.account_status; %></h2>
 
         <form action="/changeBanStatus?id=<%=user._id%>"  method="POST">
-            <% if(user.banned === true){ %>
-                <input type="submit" id="unban-button" name="unban-button" value="Unban User">
+            <% if(user.account_status === "banned"){ %>
+                <input type="submit" id="change_ban_status_button" name="change_ban_status_button" value="Unban">
             <% }else{ %>
-                <input type="submit" id="ban-button" name="ban-button" value="Ban User">
+                <input type="submit" id="change_ban_status_button" name="change_ban_status_button" value="Ban">
             <% } %>
         </form>
         

@@ -13,8 +13,8 @@
         <label for="adminQuery">Search</label>
         <input type="text" name="adminQuery" id="adminQuery" onkeyup="sendData(this)">
         <br>
-        <input type="checkbox" name="isBannedCheckbox" id="isBannedCheckbox" onchange="sendData($('#adminQuery').value)">
-        <label for="isBannedCheckbox">Search For Banned Users</label>
+        <input type="checkbox" name="statusCheckbox" id="statusCheckbox" onchange="sendData($('#adminQuery').value)">
+        <label for="statusCheckbox">Search For Banned Users</label>
         <br>
         <input type="radio" id="everyone" name="userTypeSelection" value="everyone" checked="checked">
         <label for="everyone">Search For Everyone</label><br>
@@ -45,7 +45,7 @@
                     <td><%= userList[i].lastName %></td>
                     <td><%= userList[i].email %></td>
                     <td><%= userList[i].type %></td>
-                    <td><%= userList[i].banned %></td>
+                    <td><%= userList[i].account_status %></td>
                     <td><a href="">visit</a></td>
                 </tr>
                 <% }
@@ -88,10 +88,10 @@
             const searchResults = document.getElementById('search-results');
             let match = e.value.match(/^[a-zA-Z1-9 ]*/);
             let match2 = e.value.match(/\s*/);
-            var isBanned = false;
+            var status = "active";
 
-            if($('#isBannedCheckbox').is(':checked')){
-                isBanned = true;
+            if($('#statusCheckbox').is(':checked')){
+                status = "banned";
             }
             var userType = $("input[type=radio][name=userTypeSelection]:checked").val();
             
@@ -104,7 +104,7 @@
                 fetch('getData', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({payload: e.value, isBanned: isBanned, type: userType}),
+                    body: JSON.stringify({payload: e.value, status: status, type: userType}),
                 }).then(res => res.json()).then(data => {
                     let payload = data.payload;
                     searchResults.innerHTML = '';
