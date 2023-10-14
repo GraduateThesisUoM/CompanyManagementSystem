@@ -18,9 +18,11 @@
             <form class="display_block" action="/preview-accountant" method="POST" >
                 <label for="firstName">Όνομα : <%= accountant.firstName %> <%= accountant.lastName %></label>
                 <label for="email">Email : <%= accountant.email %></label>
+                <input type="text" id="user_action" name="user_action">
                 <button type="submit" id="submit_preview_accountant">submit</button>
             </form>
             <button id="request_bnt">Αποστολή Αιτίματος</button>
+            <button id="cansel_request_bnt">Ακύρωση Αιτίματος</button>
             <button id="back_btn">Πίσω</button>
         </div>
         <hr>
@@ -35,10 +37,20 @@
                     window.location ="/pick-accountant"
             });
             if ("<%= accountant._id %>" == "<%= user.myaccountant.id %>"){
-                $("#request_bnt").prop("disabled", true);
+                $("#request_bnt").hide();
+                $("#cansel_request_bnt").show();
+            }
+            else{
+                $("#request_bnt").show();
+                $("#cansel_request_bnt").hide();
             }
             $("#request_bnt").click(function(){
-                    $("#submit_preview_accountant").click()
+                $("#user_action").val("sent_request")
+                $("#submit_preview_accountant").click()
+            });
+            $("#cansel_request_bnt").click(function(){
+                $("#user_action").val("cancel_request")
+                $("#submit_preview_accountant").click()
             });
         });
         

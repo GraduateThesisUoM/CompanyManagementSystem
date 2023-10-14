@@ -135,14 +135,14 @@ app.post('/log-in', checkNotAuthenticated, passport.authenticate('local', {
 
 
 /*--------   SING UP */
-app.get('/sing-up', checkNotAuthenticated, (req, res) => {
-  res.render('sing_up.ejs');
+app.get('/sign-up', checkNotAuthenticated, (req, res) => {
+  res.render('sign_up.ejs');
 });
-app.post('/sing-up', async (req, res) => {
+app.post('/sign-up', async (req, res) => {
   try {
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
-      const newUser = new User({
+      const newUser = new Client({
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -150,11 +150,15 @@ app.post('/sing-up', async (req, res) => {
         email: req.body.email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakey,
-        myaccountant: "not assigned",
         companyName: req.body.companyName,
         companyLogo: req.body.companyLogo,
       });
       // Save the new user to the database
+    await newUser.save();
+    if (req.body.self_accountant == "true"){
+      newUser.myaccountant.id = newUser._id;
+      newUser.myaccountant.status = "self_accountant";
+    }
     await newUser.save();
     console.log("User created successfully");
     }
@@ -185,7 +189,7 @@ app.post('/sing-up', async (req, res) => {
     await newUser.save();
     console.log("Admin created successfully");
     }
-    res.redirect('/log-in');
+    res.redirect('/log-in?message=success_sign_up');
   } catch (err) {
     console.error('Error saving user:', err);
     res.redirect('/error?origin_page=sing-up&error='+err);
@@ -203,8 +207,8 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
       var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: req.user.myaccountant.id, type:"client"});
       if (accountant_review == null){
         accountant_review = new Review({
-          client_id: req.user._id,
-          accountant_id: req.user.myaccountant.id,
+          reviewer_id: req.user._id,
+          reviewed_id: req.user.myaccountant.id,
           rating: -1,
           registrationDate: ''
         });
@@ -295,13 +299,22 @@ app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
         }
       }
     }
+    
     const accountant = await Accountant.findOne({_id:req.session.accountant._id});
-      accountant.clients.push({id: req.user._id, status:"pending"});
+    if(req.body.user_action == "cancel_request"){
+      console.log("Cancel accountant request");
+      req.user.myaccountant.id = 'not_assigned'
+      req.user.myaccountant.status = 'not_assigned'
+    }
+    else if(req.body.user_action == "sent_request"){
+      console.log("Sent accountant request");
+      accountant.clients.push({id: req.user._id, status: "pending"});
+      await accountant.save();
       req.user.myaccountant.id = accountant._id
       req.user.myaccountant.status = "pending"
-      await accountant.save();
-      await req.user.save();
-    res.redirect('/pick-accountant');
+    } 
+    await req.user.save();
+    res.redirect('/pick-accountant?message=success_send_req_to_accountant');
   }
   catch (err) {
     console.error('Error updating user data:', err);
@@ -375,23 +388,36 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
 
 /*--------   CLIENT PROFILE */
 app.get('/client-profile', checkAuthenticated, async (req, res) => {
-  res.render('accountant_pages/client_profile.ejs', {user: await getUserById(req.query.id)});
+  const accountants_client = await Client.findOne({_id:req.query.id});
+  var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: accountants_client._id, type:"accountant"});
+  if (accountant_review == null){
+    accountant_review = new Review({
+      reviewer_id: req.user._id,
+      reviewed_id: accountants_client._id,
+      rating: -1,
+      registrationDate: ''
+    });
+  }
+
+  res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review});
 });
 app.post('/client-profile', checkAuthenticated, async (req, res) => {
   try {
-    /*let newReview;
+    const accountants_client = await Client.findOne({_id:req.body.clients_id});
+    let newReview;
     const review = await Review.findOne({
       reviewer_id: req.user._id,
-      reviewed_id: req.user.myaccountant.id,
-      type: "client",
+      reviewed_id: accountants_client._id,
+      rating: -1,
+      type: "accountant",
     });
 
     if (review == null) {
       newReview = new Review({
         reviewer_id: req.user._id,
-        reviewed_id: req.user.myaccountant.id,
+        reviewed_id: accountants_client._id,
         text: req.body.rating_textarea,
-        type: "client",
+        type: "accountant",
         rating: req.body.rating_input,
       });
     } else {
@@ -401,9 +427,9 @@ app.post('/client-profile', checkAuthenticated, async (req, res) => {
       newReview = review;
     }
 
-    await newReview.save();*/
+    await newReview.save();
     console.log('Review created or updated successfully');
-    res.redirect('/client-profile');
+    res.redirect('/client-profile?id='+req.body.clients_id);
   } catch (err) {
     console.error('Error updating user data:', err);
     res.redirect('/error?origin_page=client-profile&error=' + err);
@@ -562,12 +588,24 @@ app.get('/delete-account', checkAuthenticated, (req, res) => {
 app.post('/delete-account', checkAuthenticated, async (req, res) => {
   try{
     if(req.user.password == req.body.password){
-      await User.deleteOne({ _id: req.user._id });
+      const user = await User.findOne({ _id: req.user._id });
+      user.account_status = 'deleted';
+      await user.save();
+      // Logout the user
+      req.logout((err) => {
+        if (err) {
+          console.error('Error during logout:', err);
+          // Handle the error if needed
+        }
+
+        // Redirect to the login page with a success message
+        console.log("Delete account Completed successfully")
+        res.redirect('/log-in?message=deletecomplete');
+      });
     }
     else{
       res.redirect('/delete-account?error=wrong_password');
     }
-    res.redirect('/log-in?message=deletecomplete');
   }
   catch (err) {
     console.error('Error deleting account:', err);
@@ -575,6 +613,7 @@ app.post('/delete-account', checkAuthenticated, async (req, res) => {
   }
 });
 
+/*--------   LOG OUT */
 app.delete('/logout', (req, res) => {
   req.logout(() => {
     res.redirect('/log-in');
