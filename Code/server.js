@@ -96,7 +96,10 @@ app.post('/getData', async (req, res) => {
 
 /*--------   ADMIN - USER PROFILE*/
 app.get('/userProfile', checkAuthenticated, async (req,res)=>{
-  res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id), reports_for: await Report.find({reported_id: req.query.id}), reports_by: await Report.find({reporter_id: req.query.id})});
+  res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id), 
+    reports_for: await Report.find({$and:[{reported_id: req.query.id}, {reporter_id: {$ne:req.query.id}}]}), 
+    reports_by: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: {$ne:req.query.id}}]}),
+    general_reports: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: req.query.id}]})});
 });
 
 
@@ -454,6 +457,26 @@ app.post('/report-user', checkAuthenticated, async (req,res)=> {
     reporter_id: req.user._id, //reporter id
     reported_id: req.query.id, //reported id
     reason: req.body.report_user_radio, //reason for report (taken from a radio in report page)
+    status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
+    text: req.body.report_textarea //report text-details
+  });
+
+  await newReport.save();
+  res.redirect("back");
+});
+
+
+/*--------   GENERAL REPORT */
+app.get('/general-report', checkAuthenticated, (req, res) => {
+  res.render('general/general_report.ejs');
+});
+
+app.post('/general-report', checkAuthenticated, async (req,res)=> {
+
+  const newReport = new Report({ //report constructor
+    reporter_id: req.user._id, //reporter id
+    reported_id: req.user.id, //same as above
+    reason: req.body.report_title_area, //reason for report
     status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
     text: req.body.report_textarea //report text-details
   });

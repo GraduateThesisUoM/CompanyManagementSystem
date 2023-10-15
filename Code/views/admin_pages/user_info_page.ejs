@@ -28,51 +28,69 @@
     </div>
     <hr>
     <h1>Relationships</h1>
-    <hr>
-    <h1>Pending Reports</h1>
-    <span>Show Reports For User</span>
-    <label class="switch">
-        <input type="checkbox" id="reports-toggle" name="reports-toggle" onclick="modal.showCorrectReports()">
-        <span class="slider round"></span>
-    </label>
-    <span>Show Reports By User</span>
-    <br>
 
-    <div id="reports-for-user-admin-div" name="reports-for-user-admin-div">
-        <span id="no-reports-for-span" name="no-reports-for-span">No reports to show</span>
-        <%if(reports_for.length > 0){ %>
-            <script>document.getElementById('no-reports-for-span').style.display = 'none';</script>
-            <%for(var i=0; i<reports_for.length ;i++){ %>
-                <span>Report Reason: <%= reports_for[i].reason %></span>
+    <div id="general-reports-admin-div" name="general-reports-admin-div">
+        <%if(general_reports.length > 0){ %>
+            <h2>General Reports</h2>
+            <%for(var i=0; i<general_reports.length ;i++){ %>
+                <span>Report Reason: <%= general_reports[i].reason %></span>
                 <br>
-                <span>Reported on: <%= reports_for[i].registrationDate %></span>
+                <span>Reported on: <%= general_reports[i].registrationDate %></span>
                 <br>
-                <span>Reported by: <a href="/userProfile?id=<%=reports_for[i].reporter_id%>">User</a></span>
-                <br>
-                <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_for[i]._id %>','<%- reports_for[i].reason %>', '<%- reports_for[i].text %>', '<%- reports_for[i].registrationDate %>')">Details</button>
+                <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- general_reports[i]._id %>','<%- general_reports[i].reason %>', '<%- general_reports[i].text %>', '<%- general_reports[i].registrationDate %>')">Details</button>
                 <br>
                 <br>
-            <%}
-        }%>
+            <%}%>
+            <hr>
+        <%}%>
     </div>
+    
+    <%if((reports_for.length > 0) || (reports_by.length > 0)){%>
+        <h2>User Reports</h2>
+        <span>Show Reports For User</span>
+        <label class="switch">
+            <input type="checkbox" id="reports-toggle" name="reports-toggle" onclick="modal.showCorrectReports()">
+            <span class="slider round"></span>
+        </label>
+        <span>Show Reports By User</span>
+        <br>
 
-    <div id="reports-by-user-admin-div" name="reports-by-user-admin-div"  style="display: none;">
-        <span id="no-reports-by-span" name="no-reports-by-span">No reports to show</span>
-        <%if(reports_by.length > 0){%>
-            <script>document.getElementById('no-reports-by-span').style.display = 'none';</script>
-            <%for(var i=0; i<reports_by.length ;i++){ %>
-                <span>Report Reason: <%= reports_by[i].reason %></span>
-                <br>
-                <span>Reported on: <%= reports_by[i].registrationDate %></span>
-                <br>
-                <span>Reported: <a href="/userProfile?id=<%=reports_by[i].reported_id%>">User</a></span>
-                <br>
-                <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_by[i]._id %>','<%- reports_by[i].reason %>', '<%- reports_by[i].text %>', '<%- reports_by[i].registrationDate %>')">Details</button>
-                <br>
-                <br>
-            <%}
-        }%>
-    </div>
+        <div id="reports-for-user-admin-div" name="reports-for-user-admin-div">
+            <span id="no-reports-for-span" name="no-reports-for-span">No reports to show</span>
+            <%if(reports_for.length > 0){ %>
+                <script>document.getElementById('no-reports-for-span').style.display = 'none';</script>
+                <%for(var i=0; i<reports_for.length ;i++){ %>
+                    <span>Report Reason: <%= reports_for[i].reason %></span>
+                    <br>
+                    <span>Reported on: <%= reports_for[i].registrationDate %></span>
+                    <br>
+                    <span>Reported by: <a href="/userProfile?id=<%=reports_for[i].reporter_id%>">User</a></span>
+                    <br>
+                    <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_for[i]._id %>','<%- reports_for[i].reason %>', '<%- reports_for[i].text %>', '<%- reports_for[i].registrationDate %>')">Details</button>
+                    <br>
+                    <br>
+                <%}
+            }%>
+        </div>
+
+        <div id="reports-by-user-admin-div" name="reports-by-user-admin-div"  style="display: none;">
+            <span id="no-reports-by-span" name="no-reports-by-span">No reports to show</span>
+            <%if(reports_by.length > 0){%>
+                <script>document.getElementById('no-reports-by-span').style.display = 'none';</script>
+                <%for(var i=0; i<reports_by.length ;i++){ %>
+                    <span>Report Reason: <%= reports_by[i].reason %></span>
+                    <br>
+                    <span>Reported on: <%= reports_by[i].registrationDate %></span>
+                    <br>
+                    <span>Reported: <a href="/userProfile?id=<%=reports_by[i].reported_id%>">User</a></span>
+                    <br>
+                    <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_by[i]._id %>','<%- reports_by[i].reason %>', '<%- reports_by[i].text %>', '<%- reports_by[i].registrationDate %>')">Details</button>
+                    <br>
+                    <br>
+                <%}
+            }%>
+        </div>
+    <%}%>
 
 </body>
 
