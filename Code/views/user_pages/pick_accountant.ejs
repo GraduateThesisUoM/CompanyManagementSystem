@@ -44,7 +44,13 @@
 
                 var count = 0;
                 accountantsArray.forEach(accountant => {
-                    const accountantElement = $("<div>").addClass("accountant_element").text(accountant.firstName + " " + accountant.lastName + " . . . . . . . av_rating : " + ratings[count]);
+                    const accountantElement = $("<div>").addClass("accountant_element");
+                    const accountantElement_accountant_name = $("<div>").text(accountant.firstName + " " + accountant.lastName);
+                    const accountantElement_accountant_rating = $("<div>").text(" . . . . . . . av_rating : " + ratings[count]);
+
+                    accountantElement.append(accountantElement_accountant_name);
+                    accountantElement.append(accountantElement_accountant_rating);
+
                     const buttonElement = $("<button>").text("Προφίλ").addClass("accountant_button").click(function() {
                         $("#accountant_id").val(accountant._id);
                         $("#accountant_id_submit_btn").click();
