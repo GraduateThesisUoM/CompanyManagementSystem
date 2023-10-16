@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Full Report List</title>
+</head>
+<body>
+    <%for(var i=reports.length - 1; i>=0; i--){%>
+        <span>Report Reason: <%= reports[i].reason %></span>
+        <br>
+        <span>Reported on: <%= reports[i].registrationDate %></span>
+        <br>
+        <span>Reported by: <a href="/userProfile?id=<%=reports[i].reporter_id%>">User</a></span>
+        <br>
+        <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports[i]._id %>','<%- reports[i].reason %>', '<%- reports[i].text %>', '<%- reports[i].registrationDate %>')">Details</button>
+        <br>
+        <br>
+    <%}%>
+</body>
+</html>

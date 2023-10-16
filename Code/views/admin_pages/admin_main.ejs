@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Main</title>
+    <link rel="stylesheet" href="modal.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <body>
@@ -26,35 +27,32 @@
         <div id="search-results">
             
         </div>
-        <h3>Recent Searches</h3>
-        <table>
-            <tr>
-                <th>Id</th>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Email</th>
-                <th>Type</th>
-                <th>Ban Status</th>
-                <th>Profile</th>
-            </tr>
-            <% for (var i =0; i < userList.length;  i++ ) { %>
-                <% if(userList[i].type != 'admin'){ %>
-                <tr>
-                    <td><%= userList[i].id %></td>
-                    <td><%= userList[i].firstName %></td>
-                    <td><%= userList[i].lastName %></td>
-                    <td><%= userList[i].email %></td>
-                    <td><%= userList[i].type %></td>
-                    <td><%= userList[i].account_status %></td>
-                    <td><a href="">visit</a></td>
-                </tr>
-                <% }
-            } %>
-        </table>
     </div>
-    <div id="bug-reports-div" name="bug-reports-div">
-        
-    </div>
+    <%if(pending_reports.length>0){%>
+        <div id="pending-reports-div" name="pending-reports-div">
+            <h2>Pending Reports</h2>
+            <%
+                var list_summary_end = 0;
+                if(pending_reports.length > 5){
+                    list_summary_end = pending_reports.length - 6;
+                }
+            %>
+            <%for(var i=pending_reports.length - 1; i>=list_summary_end; i--){%>
+                <span>Report Reason: <%= pending_reports[i].reason %></span>
+                <br>
+                <span>Reported on: <%= pending_reports[i].registrationDate %></span>
+                <br>
+                <span>Reported by: <a href="/userProfile?id=<%=pending_reports[i].reporter_id%>">User</a></span>
+                <br>
+                <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- pending_reports[i]._id %>','<%- pending_reports[i].reason %>', '<%- pending_reports[i].text %>', '<%- pending_reports[i].registrationDate %>')">Details</button>
+                <br>
+                <br>
+            <%}
+            if(pending_reports.length > 5){%>
+                <a href="report-list-page">Show more</a>
+            <%}%>
+        </div>
+    <%}%>
     <div id="stats-div" name="stats-div">
         <h2>Site Stats</h2>
         <%  var admins = 0;
@@ -124,6 +122,132 @@
             }
         }
     </script>
+    <script>
+        class ReportModal{
+           constructor({
+               title,
+               details,
+               date,
+               reviewed,
+               dismissed,
+               cancel
+           }){
+               this.title = title;
+               this.details = details;
+               this.date = date;
+               this.reviewed = 'Mark as reviewed',
+               this.dismissed = 'Dismiss',
+               this.cancel = 'X'
+           }
+       
+           
+           createAndOpen(id, reason, text, date, resolve, reject){
+               this.modalElem = document.createElement('div');
+               this.modalElem.classList.add('modal');
+               setTimeout(()=>{
+                   this.modalElem.classList.add('open');
+               }, 400);
+       
+       
+               const modalContentElem = document.createElement('div');
+               modalContentElem.classList.add('content');
+       
+               this.modalElem.appendChild(modalContentElem);
+       
+               //cancel
+               const cancelTextElem = document.createElement('button');
+               cancelTextElem.classList.add('cancel');
+               cancelTextElem.textContent = this.cancel;
+       
+               modalContentElem.appendChild(cancelTextElem);
+       
+               cancelTextElem.addEventListener('click', () =>{
+                   this.close();
+               });
+       
+               this.modalElem.addEventListener('click', event => {
+                   if (event.target.className === 'modal open') {
+                       this.close()
+                   }
+               });
+       
+               
+               //title
+               const titleTextElem = document.createElement('p');
+               titleTextElem.classList.add('title');
+               titleTextElem.textContent = reason;
+       
+               modalContentElem.appendChild(titleTextElem);
+       
+               //date
+               const dateTextElem = document.createElement('p');
+               dateTextElem.classList.add('date');
+               dateTextElem.textContent = date;
+       
+               modalContentElem.appendChild(dateTextElem);
+       
+       
+               //details
+               const detailsTextElem = document.createElement('p');
+               detailsTextElem.classList.add('details');
+               detailsTextElem.textContent = text;
+       
+               modalContentElem.appendChild(detailsTextElem);
+       
+               //reviewed
+               const reviewedButtonForm = document.createElement('form');
+               reviewedButtonForm.setAttribute('action', '/reviewReport?id='+id);
+               reviewedButtonForm.setAttribute('method', 'POST');
+               
+               const reviewedTextElem = document.createElement('input');
+               reviewedTextElem.setAttribute('type', 'submit');
+               reviewedTextElem.classList.add('reviewed');
+               reviewedTextElem.value = this.reviewed;
+       
+               reviewedButtonForm.appendChild(reviewedTextElem);
+               modalContentElem.appendChild(reviewedButtonForm);
+       
+       
+               //dismissed
+               const dismissedButtonForm = document.createElement('form');
+               dismissedButtonForm.setAttribute('action', '/dismissReport?id='+id);
+               dismissedButtonForm.setAttribute('method', 'POST');
+       
+       
+               const dismissedTextElem = document.createElement('input');
+               dismissedTextElem.setAttribute('type', 'submit');
+               dismissedTextElem.classList.add('dismissed');
+               dismissedTextElem.value = this.dismissed;
+       
+               dismissedButtonForm.appendChild(dismissedTextElem);
+               modalContentElem.appendChild(dismissedButtonForm);
+       
+               document.body.appendChild(this.modalElem);
+           }
+       
+           open(){
+               return new Promise((resolve, reject)=>{
+                   this.createAndOpen(resolve, reject);
+               });
+           }
+       
+           close(){
+               this.modalElem.classList.remove('open');
+               setTimeout(()=>{
+                   document.body.removeChild(this.modalElem);
+               }, 400);
+           }
+       
+       }
+   
+       const modal = new ReportModal({
+           title: 'Title Goes Here',
+           details: 'These are the Details',
+           date: 'This is the Date',
+           reporter:'This is the Person Reporting',
+           reported:'This is the Person being Reported'
+       });
+   </script>
     
 </body>
 

@@ -16,8 +16,6 @@ const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
 const sendEmail = require('./email_sender');
 
-const getAllUsers = require('./getAllUsers');
-
 // Connect to MongoDB
 connectDB();
 
@@ -58,7 +56,7 @@ app.get('/', checkAuthenticated, async (req, res) => {
     res.render('user_pages/user_main.ejs',{user : req.user});
   };
   if(req.user.type == 'admin'){
-    res.render('admin_pages/admin_main.ejs',{user : req.user, userList : await getAllUsers()});
+    res.render('admin_pages/admin_main.ejs',{user : req.user, userList : await User.find(), pending_reports: await Report.find({status: "pending"})});
   };
 });
 
@@ -446,6 +444,11 @@ app.post('/client-profile', checkAuthenticated, async (req, res) => {
   }
 });
 
+/*--------   REPORT LIST PAGE */
+app.get('/report-list-page', checkAuthenticated, async (req, res) => {
+  res.render('admin_pages/report_list_page.ejs', {reports: await Report.find()});
+});
+
 /*--------   REPORT USER */
 app.get('/report-user', checkAuthenticated, (req, res) => {
   res.render('general/report_user.ejs');
@@ -453,10 +456,15 @@ app.get('/report-user', checkAuthenticated, (req, res) => {
 
 app.post('/report-user', checkAuthenticated, async (req,res)=> {
 
+  let report_reason = req.body.report_user_radio;
+  if(req.body.report_user_radio === "Other"){
+    report_reason = req.body.report_title;
+  }
+
   const newReport = new Report({ //report constructor
     reporter_id: req.user._id, //reporter id
     reported_id: req.query.id, //reported id
-    reason: req.body.report_user_radio, //reason for report (taken from a radio in report page)
+    reason: report_reason, //reason for report (taken from a radio in report page or inserted by the user)
     status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
     text: req.body.report_textarea //report text-details
   });

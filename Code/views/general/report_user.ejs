@@ -10,14 +10,16 @@
     <h1>Report Client</h1>
     <form action="" method="POST">
         <h2>Select Reason For Report</h2>
-        <input type="radio" name="report_user_radio" id="report_user_radio_harassment" value="Harassment" required>
+        <input type="radio" name="report_user_radio" id="report_user_radio_harassment" value="Harassment" onclick="disableReasonTextField();" required>
         <label for="report_user_radio_harassment">Harassment</label><br>
-        <input type="radio" name="report_user_radio" id="report_user_radio_pretend" value="Pretending to be someone" required>
+        <input type="radio" name="report_user_radio" id="report_user_radio_pretend" value="Pretending to be someone" onclick="disableReasonTextField();" required>
         <label for="report_user_radio_pretend">Pretending to be someone</label><br>
-        <input type="radio" name="report_user_radio" id="report_user_radio_fraud" value="Fraud or Scam" required>
+        <input type="radio" name="report_user_radio" id="report_user_radio_fraud" value="Fraud or Scam" onclick="disableReasonTextField();" required>
         <label for="report_user_radio_fraud">Fraud/Scam</label><br>
-        <input type="radio" name="report_user_radio" id="report_user_radio_other" value="Other" required>
+        <input type="radio" name="report_user_radio" id="report_user_radio_other" value="Other" onclick="enableReasonTextfield();" required>
         <label for="report_user_radio_other">Something else</label><br>
+        <label for="report_title" name="report_title_label" id="report_title_label" style="display: none;">Please add a reason</label>
+        <input type="text" name="report_title" id="report_title" style="display: none;">
         <hr>
         <h2>Describe The Problem</h2>
         <textarea name="report_textarea" id="report_textarea" cols="30" rows="10" required></textarea><br>
@@ -25,5 +27,20 @@
     </form>
     
 </body>
+<script>
+
+    function disableReasonTextField(){
+        document.getElementById('report_title_label').style.display = "none";
+        document.getElementById('report_title').style.display = "none";
+        document.getElementById('report_title').required = false;
+        document.getElementById('report_title').value = "";
+    }
+
+    function enableReasonTextfield(){
+        document.getElementById('report_title_label').style.display = "block";
+        document.getElementById('report_title').style.display = "block";
+        document.getElementById('report_title').required = true;
+    }
+</script>
 <%- include('../partials/footer'); %>
 </html>
