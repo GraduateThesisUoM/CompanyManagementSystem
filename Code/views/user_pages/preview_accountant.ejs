@@ -76,7 +76,7 @@
             const reviews_div = $("#reviews_div");
 
             reviews.forEach(review => {
-                const review_div = $("<div>");
+                const review_div = $("<div>").addClass("preview_review");
                 const stars_div = $("<div>");
                 const date_review_div = $("<div>").text(review.registrationDate);
                 review_div.append(date_review_div);

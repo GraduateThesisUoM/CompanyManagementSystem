@@ -247,12 +247,26 @@ app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
     const accountants = await Accountant.find({}); // Fetch all accountants from the database
     accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
 
-    res.render('user_pages/pick_accountant.ejs', { accountants: accountants});
+    const ratings = [];
+
+    for (const accountant of accountants){
+      var average_rating = 0
+    
+      const reviews = await Review.find({reviewed_id: accountant._id, type: "client"});
+
+      for (const review of reviews){
+        average_rating = average_rating + review.rating;
+      }
+      ratings.push((average_rating / reviews.length).toFixed(1));
+    }
+
+    res.render('user_pages/pick_accountant.ejs', { accountants: accountants, ratings: ratings});
   } catch (err) {
     console.error('Error fetching accountants:', err);
     res.redirect('/error?origin_page=pick-accountant&error=' + err);
   }
 });
+
 app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
   try {
     const accountant = await Accountant.findOne({_id:req.body.accountant_id});

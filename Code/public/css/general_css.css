@@ -50,3 +50,9 @@ body{
 .star_selected{
     color: gold;
 }
+
+.preview_review{
+    padding: 10px;
+    border: 2px solid black;
+    margin-bottom: 5px;
+}
