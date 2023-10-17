@@ -6,13 +6,14 @@
     <link rel="stylesheet" href="modal.css">
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script> -->
     <title>User Profile</title>
+    <%- include('../partials/header'); %>
 </head>
 <body>
     <div id="user-info-admin-div" name="user-info-admin-div">
         <h1><%= user.firstName; %> <%= user.lastName; %></h1>
         <h2>Email: <%= user.email; %></h2>
         <h2>User type: <%= user.type; %></h2>
-        <h2>Ban status: <%= user.account_status; %></h2>
+        <h2>User status: <%= user.account_status; %></h2>
 
         <form action="/changeBanStatus?id=<%=user._id%>"  method="POST">
             <% if(user.account_status === "banned"){ %>
@@ -91,6 +92,7 @@
             }%>
         </div>
     <%}%>
+    <%- include('../partials/footer'); %>
 
 </body>
 

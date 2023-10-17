@@ -6,6 +6,7 @@
     <title>Admin Main</title>
     <link rel="stylesheet" href="modal.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <%- include('../partials/header'); %>
 </head>
 <body>
     <h1>Admin Main</h1>
@@ -80,9 +81,7 @@
         Total : <%= accountants + users + admins %>
 
     </div>
-    <form action="/logout?_method=DELETE" method="POST">
-        <button type="submit">Log Out</button>
-    </form>
+    
 
     <script>
         function sendData(e){
@@ -248,6 +247,8 @@
            reported:'This is the Person being Reported'
        });
    </script>
+
+<%- include('../partials/footer'); %>
     
 </body>
 
