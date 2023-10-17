@@ -46,6 +46,10 @@
         <div class ='requests'>
             <form action="/my-accountant-requests" method="POST">
                 <h2>Requests</h2>
+                <div id="my_requests_record">
+
+                </div>
+                <h3>New Request</h3>
                 <div>
                     <label for="request_type">Type : </label>
                     <select name = 'request_type' id = 'request_type'>
@@ -65,7 +69,7 @@
                 <textarea name="request_text" id="request_text"></textarea>
                 <button style="display:none;" id="submit_from_request_btn" type="submit"></button>
             </form>
-            <button id="submit_request_btn">Submits</button>
+            <button id="submit_request_btn">Submit</button>
         </div>
 
         <button id="back_btn">Πίσω</button>

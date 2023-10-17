@@ -52,6 +52,10 @@ app.use(express.static('./public/css'));
 
 /*--------   INDEX */
 app.get('/', checkAuthenticated, async (req, res) => {
+  const user = await User.findOne({_id:req.user._id});
+  user.last_log_in = new Date().toISOString();
+  user.save()
+  req.user = user;
   if(req.user.type == 'accountant'){
     res.render('accountant_pages/accountant_main.ejs',{user : req.user});
   };
@@ -279,7 +283,13 @@ app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
       for (const review of reviews){
         average_rating = average_rating + review.rating;
       }
-      ratings.push((average_rating / reviews.length).toFixed(1));
+      if(reviews.length > 0){
+        ratings.push((average_rating / reviews.length).toFixed(1));
+      }
+      else{
+        ratings.push("-");
+      }
+      
     }
 
     res.render('user_pages/pick_accountant.ejs', { accountants: accountants, ratings: ratings});
@@ -396,6 +406,7 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
         break
       }
     }
+    console.error('Accountant ', req.body.accountant_action, ' Client Succesfull');
     res.redirect('/clients');
   }
   catch (err) {
