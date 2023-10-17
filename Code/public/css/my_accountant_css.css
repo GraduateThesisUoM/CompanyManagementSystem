@@ -1,10 +1,10 @@
-.rating_form >  .star_btn{
+/*.rating_form >  .star_btn{
     border: none;
     text-align: center;
     text-decoration: none;
     background-color: transparent;
     font-size: 50px;
-}
+}*/
 
 .messaging_form{
     border-style: solid;
@@ -14,6 +14,6 @@
     background-color: rgb(136, 136, 136);
 }
 
-.star_selected{
+/*.star_selected{
     color: gold;
-}
+}*/
