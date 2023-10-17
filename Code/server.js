@@ -44,6 +44,7 @@ const Accountant  = require("./Schemas/Accountant");
 const Client  = require("./Schemas/Client");
 const Review  = require("./Schemas/Review");
 const Report = require("./Schemas/Report");
+const Request = require("./Schemas/Request");
 const { cache } = require('ejs');
 const { isSet } = require('util/types');
 
@@ -240,6 +241,27 @@ app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
     res.redirect('/error?origin_page=my-accountant&error=' + err);
   }
 });
+
+app.post('/my-accountant-requests', checkAuthenticated, async (req, res) => {
+  try {
+    const newRequest = new Request({
+      sender_id: req.user._id,
+      receiver_id: req.user.myaccountant.id,
+      type: req.body.request_type,
+      title: req.body.request_title,
+      text: req.body.request_text,
+      rating: req.body.rating_input,
+    });
+
+    newRequest.save()
+    console.log('Reuest created successfully');
+    res.redirect('/my-accountant');
+  } catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=my-accountant&error=' + err);
+  }
+});
+
 
 /*--------   PICK ACCOUNTANT */
 app.get('/pick-accountant', checkAuthenticated, async (req, res) => {

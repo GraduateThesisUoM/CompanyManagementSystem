@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Define the report schema
-const ReportSchema = new mongoose.Schema({
+const RequestSchema = new mongoose.Schema({
   sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   receiver_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   type: {
@@ -14,11 +14,11 @@ const ReportSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['viewed', 'executed', 'pending', 'rejected'],
-    required: true
+    required: true,
+    default: 'pending',
   },
-  due_date: { type: String},
   registrationDate: { type: Date, default: Date.now , required: true}
 });
 
 
-module.exports = mongoose.model("Report", ReportSchema)
+module.exports = mongoose.model("Request", RequestSchema)

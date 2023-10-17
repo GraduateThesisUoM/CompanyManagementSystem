@@ -20,10 +20,9 @@
 .requests{
     border: 2px solid black;
 }
-.requests * {
+.requests * * {
     display: block;
 }
-
-#requests_form_title_div{
+.requests * * {
     display: flex;
 }

@@ -15,10 +15,10 @@
     </head>
     <body>
         <h1>Ο Λογιστής Μου</h1>
-        <p>id : <%= accountant._id %></p>
-        <p>First Name : <%= accountant.firstName %></p>
-        <p>Last Name : <%= accountant.lastName %></p>
-        <p>Email : <%= accountant.email %></p>
+        <p>
+            First Name : <%= accountant.firstName %><br>
+            Last Name : <%= accountant.lastName %><br>
+            Email : <%= accountant.email %></p>
 
         <form class="messaging_form">
             <h2>Messaging</h2>
@@ -43,23 +43,30 @@
             <br>
             <button type="submit">Submit</button>
         </form>
-
-        <form class ='requests' action="/my-accountant-requests" method="POST">
-            <h2>Requests</h2>
-            <select name = 'request_type' id = 'request_type'>
-                <option value="..." disabled selected>...</option>
-                <option value="something_1">Other</option>
-                <option value="something_2">Other</option>
-                <option value="something_3">Other</option>
-                <option value="other">Other</option>
-            </select>
-            <div id="requests_form_title_div">
-                <label for="request_title">Title : </label>
-                <input placeholder="Tilte" id="request_title" name="request_title">
-            </div>
-            <textarea name="text" id="text"></textarea>
-            <button type="submit">Submit</button>
-        </form>
+        <div class ='requests'>
+            <form action="/my-accountant-requests" method="POST">
+                <h2>Requests</h2>
+                <div>
+                    <label for="request_type">Type : </label>
+                    <select name = 'request_type' id = 'request_type'>
+                        <option value="..." disabled selected>...</option>
+                        <option value="something_1">Something_1</option>
+                        <option value="something_2">Something_2</option>
+                        <option value="something_3">Something_3</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div>
+                    <label for="request_title">Title : </label>
+                    <input placeholder="Tilte" id="request_title" name="request_title">
+                </div>
+                
+                <textarea name="request_text" id="request_text"></textarea>
+                <button style="display:none;" id="submit_from_request_btn" type="submit"></button>
+            </form>
+            <button id="submit_request_btn">Submits</button>
+        </div>
 
         <button id="back_btn">Πίσω</button>
     </body>
@@ -68,6 +75,16 @@
        $(document).ready(function(){
             $("#back_btn").click(function(){
                 window.location = "/"
+            });
+
+            $("#submit_request_btn").click(function(){
+                if( document.getElementById("request_type").value == "..."){
+                    alert("Plese select the type of the request")
+                }
+                else{
+                    document.getElementById("submit_from_request_btn").click();
+                }
+                
             });
 
             var starButtons = $(".star_btn");
