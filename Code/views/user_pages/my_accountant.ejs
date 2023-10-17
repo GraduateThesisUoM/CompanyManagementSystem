@@ -21,6 +21,7 @@
         <p>Email : <%= accountant.email %></p>
 
         <form class="messaging_form">
+            <h2>Messaging</h2>
             <p>You : hello</p>
             <p><%= accountant.firstName %> : hi</p>
             <textarea></textarea>
@@ -29,6 +30,7 @@
         </form>
 
         <form class="rating_form" action="/my-accountant-rate" method="POST">
+            <h2>Rating</h2>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
@@ -39,6 +41,23 @@
             <br>
             <textarea id='rating_textarea' name='rating_textarea'></textarea>
             <br>
+            <button type="submit">Submit</button>
+        </form>
+
+        <form class ='requests' action="/my-accountant-requests" method="POST">
+            <h2>Requests</h2>
+            <select name = 'request_type' id = 'request_type'>
+                <option value="..." disabled selected>...</option>
+                <option value="something_1">Other</option>
+                <option value="something_2">Other</option>
+                <option value="something_3">Other</option>
+                <option value="other">Other</option>
+            </select>
+            <div id="requests_form_title_div">
+                <label for="request_title">Title : </label>
+                <input placeholder="Tilte" id="request_title" name="request_title">
+            </div>
+            <textarea name="text" id="text"></textarea>
             <button type="submit">Submit</button>
         </form>
 
