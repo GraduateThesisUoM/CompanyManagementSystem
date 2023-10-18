@@ -57,7 +57,10 @@ app.get('/', checkAuthenticated, async (req, res) => {
   user.save()
   req.user = user;
   if(req.user.type == 'accountant'){
-    res.render('accountant_pages/accountant_main.ejs',{user : req.user});
+    //add something to get the requsets that hapen wile away
+    const requests = await Request.find({receiver_id:req.user._id, status: 'pending'});
+    console.log(requests)
+    res.render('accountant_pages/accountant_main.ejs',{user : req.user, requests : requests});
   };
   if(req.user.type == 'user'){
     res.render('user_pages/user_main.ejs',{user : req.user});

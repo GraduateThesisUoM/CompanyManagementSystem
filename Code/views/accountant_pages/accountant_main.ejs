@@ -1,26 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Main Page</title>
-    <%- include('../partials/header'); %>
-</head>
-<body>
-    <h1>Accountant main page</h1>
-    <h2>Welcome <%= user.firstName %> <%= user.lastName %></h2>
-    <div id="assignments-div" name="assignments-div">
-        <h2>current assignments will go here</h2>
-    </div>
-    <div id="pages-div" name="pages-div">
-        <a href="working">working page</a>
-        <a href="clients">client list</a>
-        <a href="assignment-history">assignment history</a>
-    </div>
-    <form action="/logout?_method=DELETE" method="POST">
-        <button type="submit">Log Out</button>
-    </form>
-</body>
-<%- include('../partials/footer'); %>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Main Page</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="accountant_main_css.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <h1>Accountant main page</h1>
+        <h2>Welcome <%= user.firstName %> <%= user.lastName %></h2>
+        <div>
+            <h2>My Requests</h2>
+            <div id="requests_div"></div>
+        </div>
+        <div id="pages-div" name="pages-div">
+            <a href="working">working page</a>
+            <a href="clients">client list</a>
+            <a href="assignment-history">assignment history</a>
+        </div>
+        <form action="/logout?_method=DELETE" method="POST">
+            <button type="submit">Log Out</button>
+        </form>
+    </body>
+    <%- include('../partials/footer'); %>
+    <script>
+        var requests;
+        try {
+            requests = JSON.parse(`<%- JSON.stringify(requests) %>`);
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+            // Handle the error as needed
+        }
+        const requests_div = $("#requests_div");
+
+        requests.forEach(request => {
+            const request_div = $("<div>").addClass('request_div');
+            const request_sender_id_div = $("<div>").text("Sender ID : " + request.sender_id);
+            const request_type_div = $("<div>").text("Type : " + request.type);
+            const request_title_div = $("<div>").text("Title : " + request.title);
+            const request_text_div = $("<div>").text("Text : " + request.text);
+            const request_registrationDate_div = $("<div>").text("RegistrationDate : " + request.registrationDate);
+            const request_btn = $("<button>").text("->");
+            
+            requests_div.append(request_div);
+            request_div.append(request_sender_id_div);
+            request_div.append(request_type_div);
+            request_div.append(request_title_div);
+            request_div.append(request_text_div);
+            request_div.append(request_registrationDate_div);
+            request_div.append(request_btn);
+            
+        })
+    </script>
 
 </html>
