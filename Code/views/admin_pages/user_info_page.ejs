@@ -10,13 +10,13 @@
 </head>
 <body>
     <div id="user-info-admin-div" name="user-info-admin-div">
-        <h1><%= user.firstName; %> <%= user.lastName; %></h1>
-        <h2>Email: <%= user.email; %></h2>
-        <h2>User type: <%= user.type; %></h2>
-        <h2>User status: <%= user.account_status; %></h2>
+        <h1><%= user_profile.firstName; %> <%= user_profile.lastName; %></h1>
+        <h2>Email: <%= user_profile.email; %></h2>
+        <h2>User type: <%= user_profile.type; %></h2>
+        <h2>User status: <%= user_profile.account_status; %></h2>
 
-        <form action="/changeBanStatus?id=<%=user._id%>"  method="POST">
-            <% if(user.account_status === "banned"){ %>
+        <form action="/changeBanStatus?id=<%=user_profile._id%>"  method="POST">
+            <% if(user_profile.account_status === "banned"){ %>
                 <input type="submit" id="change_ban_status_button" name="change_ban_status_button" value="Unban">
             <% }else{ %>
                 <input type="submit" id="change_ban_status_button" name="change_ban_status_button" value="Ban">
@@ -46,7 +46,7 @@
         <%}%>
     </div>
     
-    <%if((reports_for.length > 0) || (reports_by.length > 0)){%>
+    <%if((reports_for_user.length > 0) || (reports_by_user.length > 0)){%>
         <h2>User Reports</h2>
         <span>Show Reports For User</span>
         <label class="switch">
@@ -58,16 +58,25 @@
 
         <div id="reports-for-user-admin-div" name="reports-for-user-admin-div">
             <span id="no-reports-for-span" name="no-reports-for-span">No reports to show</span>
-            <%if(reports_for.length > 0){ %>
+            <%if(reports_for_user.length > 0){ %>
                 <script>document.getElementById('no-reports-for-span').style.display = 'none';</script>
-                <%for(var i=reports_for.length - 1; i>=0 ;i--){ %>
-                    <span>Report Reason: <%= reports_for[i].reason %></span>
+                <%for(var i=reports_for_user.length - 1; i>=0 ;i--){ %>
+                    <span>Report Reason: <%= reports_for_user[i].reason %></span>
                     <br>
-                    <span>Reported on: <%= reports_for[i].registrationDate %></span>
+                    <span>Reported on: <%= reports_for_user[i].registrationDate %></span>
                     <br>
-                    <span>Reported by: <a href="/userProfile?id=<%=reports_for[i].reporter_id%>">User</a></span>
+                    <% 
+                        var reporter = null;
+                        for(var j=0;j < user_list.length;j++){
+                            if(user_list[j].id == reports_for_user[i].reporter_id){
+                                reporter = user_list[j];
+                                break;
+                            }
+                        }
+                    %>
+                    <span>Reported by: <a href="/user-profile?id=<%=reports_for_user[i].reporter_id%>"><%=reporter.firstName%> <%=reporter.lastName%></a></span>
                     <br>
-                    <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_for[i]._id %>','<%- reports_for[i].reason %>', '<%- reports_for[i].text %>', '<%- reports_for[i].registrationDate %>')">Details</button>
+                    <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_for_user[i]._id %>','<%- reports_for_user[i].reason %>', '<%- reports_for_user[i].text %>', '<%- reports_for_user[i].registrationDate %>')">Details</button>
                     <br>
                     <br>
                 <%}
@@ -76,16 +85,25 @@
 
         <div id="reports-by-user-admin-div" name="reports-by-user-admin-div"  style="display: none;">
             <span id="no-reports-by-span" name="no-reports-by-span">No reports to show</span>
-            <%if(reports_by.length > 0){%>
+            <%if(reports_by_user.length > 0){%>
                 <script>document.getElementById('no-reports-by-span').style.display = 'none';</script>
-                <%for(var i=reports_by.length - 1; i>=0 ;i--){ %>
-                    <span>Report Reason: <%= reports_by[i].reason %></span>
+                <%for(var i=reports_by_user.length - 1; i>=0 ;i--){ %>
+                    <span>Report Reason: <%= reports_by_user[i].reason %></span>
                     <br>
-                    <span>Reported on: <%= reports_by[i].registrationDate %></span>
+                    <span>Reported on: <%= reports_by_user[i].registrationDate %></span>
                     <br>
-                    <span>Reported: <a href="/userProfile?id=<%=reports_by[i].reported_id%>">User</a></span>
+                    <% 
+                        var reported = null;
+                        for(var j=0;j < user_list.length;j++){
+                            if(user_list[j].id == reports_by_user[i].reported_id){
+                                reported = user_list[j];
+                                break;
+                            }
+                        }
+                    %>
+                    <span>Reported: <a href="/user-profile?id=<%=reports_by_user[i].reported_id%>"><%= reported.firstName%> <%= reported.lastName%></a></span>
                     <br>
-                    <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_by[i]._id %>','<%- reports_by[i].reason %>', '<%- reports_by[i].text %>', '<%- reports_by[i].registrationDate %>')">Details</button>
+                    <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- reports_by_user[i]._id %>','<%- reports_by_user[i].reason %>', '<%- reports_by_user[i].text %>', '<%- reports_by_user[i].registrationDate %>')">Details</button>
                     <br>
                     <br>
                 <%}
@@ -170,7 +188,7 @@
     
             //reviewed
             const reviewedButtonForm = document.createElement('form');
-            reviewedButtonForm.setAttribute('action', '/reviewReport?id='+id);
+            reviewedButtonForm.setAttribute('action', '/review-report?id='+id);
             reviewedButtonForm.setAttribute('method', 'POST');
             
             const reviewedTextElem = document.createElement('input');
@@ -184,7 +202,7 @@
     
             //dismissed
             const dismissedButtonForm = document.createElement('form');
-            dismissedButtonForm.setAttribute('action', '/dismissReport?id='+id);
+            dismissedButtonForm.setAttribute('action', '/dismiss-report?id='+id);
             dismissedButtonForm.setAttribute('method', 'POST');
     
     

@@ -43,15 +43,23 @@
                 <br>
                 <span>Reported on: <%= pending_reports[i].registrationDate %></span>
                 <br>
-                <span>Reported by: <a href="/userProfile?id=<%=pending_reports[i].reporter_id%>">User</a></span>
+                <% 
+                    var reporter = null;
+                    for(var j=0;j < user_list.length;j++){
+                        if(user_list[j].id == pending_reports[i].reporter_id){
+                            reporter = user_list[j];
+                            break;
+                        }
+                    }
+                %>
+                <span>Reported by: <a href="/user-profile?id=<%=pending_reports[i].reporter_id%>"><%= reporter.firstName%> <%= reporter.lastName%></a></span>
                 <br>
                 <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- pending_reports[i]._id %>','<%- pending_reports[i].reason %>', '<%- pending_reports[i].text %>', '<%- pending_reports[i].registrationDate %>')">Details</button>
                 <br>
                 <br>
-            <%}
-            if(pending_reports.length > 5){%>
-                <a href="report-list-page">Show more</a>
-            <%}%>
+            <%} %>
+            <a href="report-list-page">Show full list</a>
+            
         </div>
     <%}%>
     <div id="stats-div" name="stats-div">
@@ -59,14 +67,14 @@
         <%  var admins = 0;
             var users = 0;
             var accountants = 0;
-            for (var i =0;i < userList.length; i++){
-                if(userList[i].type == 'admin'){
+            for (var i =0;i < user_list.length; i++){
+                if(user_list[i].type == 'admin'){
                     admins++;
                 }
-                if(userList[i].type == 'user'){
+                if(user_list[i].type == 'user'){
                     users++;
                 }
-                if(userList[i].type == 'accountant'){
+                if(user_list[i].type == 'accountant'){
                     accountants++;
                 }
                 
@@ -114,7 +122,7 @@
                     }
                     payload.forEach((user, index) => {
                     if(index > 0) searchResults.innerHTML += '<hr>';
-                        searchResults.innerHTML += `<a href='/userProfile?id=${user._id}'>${user.firstName} ${user.lastName} ${user.email} ${user.type}</a>`;
+                        searchResults.innerHTML += `<a href='/user-profile?id=${user._id}'>${user.firstName} ${user.lastName} ${user.email} ${user.type}</a>`;
                     });
                     return;
                 });
@@ -195,7 +203,7 @@
        
                //reviewed
                const reviewedButtonForm = document.createElement('form');
-               reviewedButtonForm.setAttribute('action', '/reviewReport?id='+id);
+               reviewedButtonForm.setAttribute('action', '/review-report?id='+id);
                reviewedButtonForm.setAttribute('method', 'POST');
                
                const reviewedTextElem = document.createElement('input');
@@ -209,7 +217,7 @@
        
                //dismissed
                const dismissedButtonForm = document.createElement('form');
-               dismissedButtonForm.setAttribute('action', '/dismissReport?id='+id);
+               dismissedButtonForm.setAttribute('action', '/dismiss-report?id='+id);
                dismissedButtonForm.setAttribute('method', 'POST');
        
        

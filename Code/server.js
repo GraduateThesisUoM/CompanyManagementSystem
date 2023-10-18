@@ -44,6 +44,7 @@ const Review  = require("./Schemas/Review");
 const Report = require("./Schemas/Report");
 const { cache } = require('ejs');
 const { isSet } = require('util/types');
+const { report } = require('process');
 
 app.use(express.static('./public/css'));
 
@@ -51,13 +52,16 @@ app.use(express.static('./public/css'));
 app.get('/', checkAuthenticated, async (req, res) => {
   if(req.user.type == 'accountant'){
     res.render('accountant_pages/accountant_main.ejs',{user : req.user});
-  };
+  }
   if(req.user.type == 'user'){
     res.render('user_pages/user_main.ejs',{user : req.user});
-  };
+  }
   if(req.user.type == 'admin'){
-    res.render('admin_pages/admin_main.ejs',{user : req.user, userList : await User.find(), pending_reports: await Report.find({status: "pending"})});
-  };
+
+    res.render('admin_pages/admin_main.ejs',{user : req.user, 
+    user_list: await User.find(), pending_reports: await Report.find({status: "pending"})
+    });
+  }
 });
 
 /*--------   SEARCH FOR USER IN ADMIN PAGE */
@@ -93,11 +97,13 @@ app.post('/getData', async (req, res) => {
 
 
 /*--------   ADMIN - USER PROFILE*/
-app.get('/userProfile', checkAuthenticated, async (req,res)=>{
-  res.render('admin_pages/user_info_page.ejs', {user : await getUserById(req.query.id), 
-    reports_for: await Report.find({$and:[{reported_id: req.query.id}, {reporter_id: {$ne:req.query.id}}]}), 
-    reports_by: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: {$ne:req.query.id}}]}),
-    general_reports: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: req.query.id}]})});
+app.get('/user-profile', checkAuthenticated, async (req,res)=>{
+
+  res.render('admin_pages/user_info_page.ejs', {user: req.user ,user_profile : await getUserById(req.query.id), 
+    reports_for_user: await Report.find({$and:[{reported_id: req.query.id}, {reporter_id: {$ne:req.query.id}}, {status: "pending"}]}),
+    reports_by_user: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: {$ne:req.query.id}}, {status: "pending"}]}),
+    user_list: await User.find(),
+    general_reports: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: req.query.id}]})})
 });
 
 
@@ -119,15 +125,21 @@ app.post('/changeBanStatus', checkAuthenticated, async (req,res)=>{
 
 
 /*--------   REVIEW REPORT */
-app.post('/reviewReport', checkAuthenticated, async (req,res)=>{
+app.post('/review-report', checkAuthenticated, async (req,res)=>{
   await Report.updateOne({_id: req.query.id}, {$set: {status: "reviewed"}});
   res.redirect('back');
 });
 
 
 /*--------   DISMISS REPORT */
-app.post('/dismissReport', checkAuthenticated, async (req,res)=>{
+app.post('/dismiss-report', checkAuthenticated, async (req,res)=>{
   await Report.updateOne({_id: req.query.id}, {$set: {status: "dismissed"}});
+  res.redirect('back');
+});
+
+/*--------   REEVALUATE REPORT */
+app.post('/reevaluate-report', checkAuthenticated, async (req,res)=>{
+  await Report.updateOne({_id: req.query.id}, {$set: {status: "pending"}});
   res.redirect('back');
 });
 
@@ -461,8 +473,11 @@ app.post('/client-profile', checkAuthenticated, async (req, res) => {
 
 /*--------   REPORT LIST PAGE */
 app.get('/report-list-page', checkAuthenticated, async (req, res) => {
-  res.render('admin_pages/report_list_page.ejs', {reports: await Report.find()});
-});
+  res.render('admin_pages/report_list_page.ejs', {user: req.user, pending_reports: await Report.find({status: "pending"}), 
+  reviewed_reports: await Report.find({status: "reviewed"}), 
+  dismissed_reports: await Report.find({status: "dismissed"}),
+  user_list: await User.find()
+})});
 
 /*--------   REPORT USER */
 app.get('/report-user', checkAuthenticated, (req, res) => {
@@ -491,7 +506,7 @@ app.post('/report-user', checkAuthenticated, async (req,res)=> {
 
 /*--------   GENERAL REPORT */
 app.get('/general-report', checkAuthenticated, (req, res) => {
-  res.render('general/general_report.ejs');
+  res.render('general/general_report.ejs', {user: req.user});
 });
 
 app.post('/general-report', checkAuthenticated, async (req,res)=> {
