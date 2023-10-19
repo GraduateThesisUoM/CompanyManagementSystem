@@ -2,8 +2,8 @@ const mongoose = require('mongoose');
 
 // Define the report schema
 const RequestSchema = new mongoose.Schema({
-  sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-  receiver_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  sender_id: { type: String, required: true },
+  receiver_id: { type: String, required: true },
   type: {
     type: String,
     enum: ['something_1','something_2','something_3', 'other'],

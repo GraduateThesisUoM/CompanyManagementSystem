@@ -257,8 +257,7 @@ app.post('/my-accountant-requests', checkAuthenticated, async (req, res) => {
       receiver_id: req.user.myaccountant.id,
       type: req.body.request_type,
       title: req.body.request_title,
-      text: req.body.request_text,
-      rating: req.body.rating_input,
+      text: req.body.request_text
     });
 
     newRequest.save()

@@ -45,7 +45,7 @@
         </form>
         <div class ='requests'>
                 <h2>Requests</h2>
-                <div>
+                <div id="my_requests_div">
                     <table id="my_requests_record">
                         <tr> <!-- This is a table row -->
                             <th>Type</th> <!-- Table header cell -->
@@ -55,9 +55,9 @@
                             <th> </th>
                         </tr>
                     </table>
-                    <form action="/my-accountant-delete-request" method="POST">
+                    <form action="/my-accountant-delete-request" method="POST" id="delete_request_from">
                         <input name="request_id" id="request_id">
-                        <button id="submit_from_request_btn" type="submit">Submit</button>
+                        <button id="submit_from_delete_request_btn" type="submit">Submit</button>
                     </form>
                 </div>
                 <div id="new_request">
@@ -151,7 +151,8 @@
             }
             const requests_table = $("#my_requests_record");
             if(requests.length == 0){
-                requests_div.text("You haven't made any requests addressed to your current accountant");
+                requests_table.hide()
+                $("#my_requests_div").append($("<p>").text("You haven't made any requests addressed to your current accountant"))
             }
             else{
                 requests.forEach(request => {
@@ -165,6 +166,7 @@
                     const btn_delete = $("<button>").text("Delete");
                     btn_delete.click(function() {
                         $("#request_id").val(request._id)
+                        $("#submit_from_delete_request_btn").click()
                     });
                     
                     requests_table.append(row);
