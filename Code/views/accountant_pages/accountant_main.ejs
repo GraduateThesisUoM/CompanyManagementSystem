@@ -21,7 +21,8 @@
         <div>
             <h2>My Requests</h2>
             <div id="requests_div"></div>
-            <form>
+            <form id="requests_answer_div">
+                <textarea></textarea>
                 <input id="request_form_input" type="text">
                 <button id="request_form_submit_btn" type="submit">submit</button>
             </form>
@@ -37,12 +38,20 @@
     </body>
     <%- include('../partials/footer'); %>
     <script>
+        const timestamp_options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+
         var requests;
         try {
             requests = JSON.parse(`<%- JSON.stringify(requests) %>`);
         } catch (error) {
             console.error("Error parsing JSON:", error);
-            // Handle the error as needed
         }
 
         var clients;
@@ -50,24 +59,30 @@
             clients = JSON.parse(`<%- JSON.stringify(clients) %>`);
         } catch (error) {
             console.error("Error parsing JSON:", error);
-            // Handle the error as needed
         }
+
+        const requests_answer_div = $("#requests_answer_div");
+        requests_answer_div.hide();
         const requests_div = $("#requests_div");
-        const request_div = $("<div>").addClass('request_div');
+        
         var request_sender_div = "";
 
         requests.forEach(request => {
+            const request_div = $("<div>").addClass('request_div');
             clients.forEach(client => {
                 if(client._id == request.sender_id){
                     request_sender_div = $("<div>").text("Name : " + client.firstName + " " + client.lastName );
                 }
             })
-            
-            
             const request_type_div = $("<div>").text("Type : " + request.type);
             const request_title_div = $("<div>").text("Title : " + request.title);
-            const request_registrationDate_div = $("<div>").text("RegistrationDate : " + request.registrationDate);
+            const date = new Date(request.registrationDate);
+            const request_registrationDate_div = $("<div>").text("RegistrationDate : " + date.toLocaleString('en-US', timestamp_options));
             const request_btn = $("<button>").text("->");
+            request_btn.click(function() {
+                requests_answer_div.show();
+                $("#request_form_input").val(request._id)
+            });
             
             requests_div.append(request_div);
             request_div.append(request_sender_div);

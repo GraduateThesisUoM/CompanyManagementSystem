@@ -11,6 +11,7 @@ const RequestSchema = new mongoose.Schema({
   },
   title: { type: String},
   text: { type: String},
+  response: { type: String},
   status: {
     type: String,
     enum: ['viewed', 'executed', 'pending', 'rejected'],

@@ -44,38 +44,62 @@
             <button type="submit">Submit</button>
         </form>
         <div class ='requests'>
-            <form action="/my-accountant-requests" method="POST">
                 <h2>Requests</h2>
-                <div id="my_requests_record">
-
-                </div>
-                <h3>New Request</h3>
                 <div>
-                    <label for="request_type">Type : </label>
-                    <select name = 'request_type' id = 'request_type'>
-                        <option value="..." disabled selected>...</option>
-                        <option value="something_1">Something_1</option>
-                        <option value="something_2">Something_2</option>
-                        <option value="something_3">Something_3</option>
-                        <option value="other">Other</option>
-                    </select>
+                    <table id="my_requests_record">
+                        <tr> <!-- This is a table row -->
+                            <th>Type</th> <!-- Table header cell -->
+                            <th>Title</th>
+                            <th>RegistrationDate</th>
+                            <th>Status</th>
+                            <th> </th>
+                        </tr>
+                    </table>
+                    <form action="/my-accountant-delete-request" method="POST">
+                        <input name="request_id" id="request_id">
+                        <button id="submit_from_request_btn" type="submit">Submit</button>
+                    </form>
                 </div>
-                
-                <div>
-                    <label for="request_title">Title : </label>
-                    <input placeholder="Tilte" id="request_title" name="request_title">
+                <div id="new_request">
+                    <form action="/my-accountant-requests" method="POST">
+                        <h3>New Request</h3>
+                        <div>
+                            <label for="request_type">Type : </label>
+                            <select name = 'request_type' id = 'request_type'>
+                                <option value="..." disabled selected>...</option>
+                                <option value="something_1">Something_1</option>
+                                <option value="something_2">Something_2</option>
+                                <option value="something_3">Something_3</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="request_title">Title : </label>
+                            <input placeholder="Tilte" id="request_title" name="request_title">
+                        </div>
+                        
+                        <textarea name="request_text" id="request_text"></textarea>
+                        <button style="display:none;" id="submit_from_request_btn" type="submit"></button>
+                    </form>
+                    <button id="submit_request_btn">Submit</button>
                 </div>
-                
-                <textarea name="request_text" id="request_text"></textarea>
-                <button style="display:none;" id="submit_from_request_btn" type="submit"></button>
-            </form>
-            <button id="submit_request_btn">Submit</button>
+            
         </div>
 
         <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>
     <script>
+        const timestamp_options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+
        $(document).ready(function(){
             $("#back_btn").click(function(){
                 window.location = "/"
@@ -117,6 +141,40 @@
             if('<%= review.rating%>'!='-1'){
                 $("#rating_textarea").val('<%= review.text%>');
                 starButtons[parseInt('<%= review.rating%>')-1].click()
+            }
+
+            var requests;
+            try {
+                requests = JSON.parse(`<%- JSON.stringify(requests) %>`);
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+            }
+            const requests_table = $("#my_requests_record");
+            if(requests.length == 0){
+                requests_div.text("You haven't made any requests addressed to your current accountant");
+            }
+            else{
+                requests.forEach(request => {
+                    const row = $("<tr>");
+                    const cell_type = $("<td>").text(request.type);
+                    const cell_title = $("<td>").text(request.title);
+                    const date = new Date(request.registrationDate);
+                    const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                    const cell_status = $("<td>").text(request.status);
+                    const cell_actions = $("<td>");
+                    const btn_delete = $("<button>").text("Delete");
+                    btn_delete.click(function() {
+                        $("#request_id").val(request._id)
+                    });
+                    
+                    requests_table.append(row);
+                    row.append(cell_type);
+                    row.append(cell_title);
+                    row.append(cell_reg_date);
+                    row.append(cell_status);
+                    row.append(cell_actions);
+                    cell_actions.append(btn_delete);
+                });
             }
             
         });

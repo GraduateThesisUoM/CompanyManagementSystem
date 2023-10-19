@@ -194,6 +194,7 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
     }
     else if (req.user.myaccountant.status == "assigned"){
       const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
+      const users_requests = await Request.find({ sender_id :req.user._id, receiver_id :req.user.myaccountant.id});
       var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: req.user.myaccountant.id, type:"client"});
       if (accountant_review == null){
         accountant_review = new Review({
@@ -204,7 +205,7 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
         });
       }
 
-      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review});
+      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review, requests : users_requests});
     }
     else{
       res.redirect('pick-accountant');
@@ -263,6 +264,24 @@ app.post('/my-accountant-requests', checkAuthenticated, async (req, res) => {
     newRequest.save()
     console.log('Reuest created successfully');
     res.redirect('/my-accountant');
+  } catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=my-accountant&error=' + err);
+  }
+});
+
+app.post('/my-accountant-delete-request', checkAuthenticated, async (req, res) => {
+  try {
+    // Find and delete the request by its ID
+    const deletedRequest = await Request.findOneAndDelete({ _id: req.body.request_id });
+
+    if (deletedRequest) {
+      console.log('Request deleted successfully');
+      res.redirect('/my-accountant');
+    } else {
+      console.log('Request not found');
+      res.redirect('/my-accountant');
+    }
   } catch (err) {
     console.error('Error updating user data:', err);
     res.redirect('/error?origin_page=my-accountant&error=' + err);
