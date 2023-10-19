@@ -10,7 +10,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!--CSS-->
     <link rel="stylesheet" href="general_css.css">
-    <link rel="stylesheet" href="my_accountant_css.css">
+    <link rel="stylesheet" href="clients_profile_css.css">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <%- include('../partials/header'); %>
@@ -31,12 +31,22 @@
     </div>
 
     <div id="client-assignments-div" name="client-assignments-div">
-        <h2>Client Assignments</h2>
-        <ul>
-            <li>Assignment 1</li>
-            <li>Assignment 2</li>
-        </ul>
-        <hr>
+        <h2>Client Requests</h2>
+        <div id="my_requests_div">
+            <table id="clients_requests_record">
+                <tr> <!-- This is a table row -->
+                    <th>Type</th> <!-- Table header cell -->
+                    <th>Title</th>
+                    <th>RegistrationDate</th>
+                    <th>Status</th>
+                    <th> </th>
+                </tr>
+            </table>
+            <form action="/my-accountant-delete-request" method="POST" id="delete_request_from">
+                <input name="request_id" id="request_id">
+                <button id="submit_from_delete_request_btn" type="submit">Submit</button>
+            </form>
+        </div>
         <a href="">Client Assignment History</a>
     </div>
 
@@ -69,6 +79,15 @@
 </body>
 <script>
     $(document).ready(function(){
+        const timestamp_options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+
         $("#back_btn").click(function(){
             window.location = "/clients"
         });
@@ -99,6 +118,43 @@
         if('<%= review.rating%>'!='-1'){
             $("#rating_textarea").val('<%= review.text%>');
             starButtons[parseInt('<%= review.rating%>')-1].click()
+        }
+
+        var requests;
+        try {
+            requests = JSON.parse(`<%- JSON.stringify(clients_requests) %>`);
+        } catch (error) {
+            console.error("Error parsing JSON:", error);
+        }
+
+        const requests_table = $("#clients_requests_record");
+        if(requests.length == 0){
+            requests_table.hide()
+            $("#my_requests_div").append($("<p>").text("You haven't made any requests addressed to your current accountant"))
+        }
+        else{
+            requests.forEach(request => {
+                const row = $("<tr>");
+                const cell_type = $("<td>").text(request.type);
+                const cell_title = $("<td>").text(request.title);
+                const date = new Date(request.registrationDate);
+                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_status = $("<td>").text(request.status);
+                const cell_actions = $("<td>");
+                const btn_delete = $("<button>").text("Delete");
+                btn_delete.click(function() {
+                    $("#request_id").val(request._id)
+                    $("#submit_from_delete_request_btn").click()
+                });
+                
+                requests_table.append(row);
+                row.append(cell_type);
+                row.append(cell_title);
+                row.append(cell_reg_date);
+                row.append(cell_status);
+                row.append(cell_actions);
+                cell_actions.append(btn_delete);
+            });
         }
         
     });

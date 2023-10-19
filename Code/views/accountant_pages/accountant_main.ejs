@@ -20,7 +20,22 @@
         <h2>Welcome <%= user.firstName %> <%= user.lastName %></h2>
         <div>
             <h2>My Requests</h2>
-            <div id="requests_div"></div>
+            <div id="requests_div">
+                <table id="my_requests_record">
+                    <tr> <!-- This is a table row -->
+                        <th>Type</th> <!-- Table header cell -->
+                        <th>Title</th>
+                        <th>RegistrationDate</th>
+                        <th>Status</th>
+                        <th> </th>
+                    </tr>
+                </table>
+                <form action="/accountant-main-act-on-request" method="POST" id="delete_request_from">
+                    <input name="request_id" id="request_id">
+                    <input name="request_action" id="request_action">
+                    <button id="submit_from_delete_request_btn" type="submit">Submit</button>
+                </form>
+            </div>
             <form id="requests_answer_div">
                 <textarea></textarea>
                 <input id="request_form_input" type="text">
@@ -66,32 +81,43 @@
         const requests_div = $("#requests_div");
         
         var request_sender_div = "";
-
-        requests.forEach(request => {
-            const request_div = $("<div>").addClass('request_div');
-            clients.forEach(client => {
-                if(client._id == request.sender_id){
-                    request_sender_div = $("<div>").text("Name : " + client.firstName + " " + client.lastName );
-                }
-            })
-            const request_type_div = $("<div>").text("Type : " + request.type);
-            const request_title_div = $("<div>").text("Title : " + request.title);
-            const date = new Date(request.registrationDate);
-            const request_registrationDate_div = $("<div>").text("RegistrationDate : " + date.toLocaleString('en-US', timestamp_options));
-            const request_btn = $("<button>").text("->");
-            request_btn.click(function() {
-                requests_answer_div.show();
-                $("#request_form_input").val(request._id)
+        const requests_table = $("#my_requests_record");
+        if(requests.length == 0){
+            requests_table.hide()
+            $("#my_requests_div").append($("<p>").text("You haven't made any requests addressed to your current accountant"))
+        }
+        else{
+            requests.forEach(request => {
+                const row = $("<tr>");
+                const cell_type = $("<td>").text(request.type);
+                const cell_title = $("<td>").text(request.title);
+                const date = new Date(request.registrationDate);
+                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_status = $("<td>").text(request.status);
+                const cell_actions = $("<td>");
+                const btn_view = $("<button>").text("View").click(act_on_request('view', request._id));
+                const btn_execute= $("<button>").text("Execute").click(function() {
+                    $("#request_id").val(request._id);
+                    $("#request_action").val('execute');
+                    //$("#submit_from_delete_request_btn").click()
+                });
+                
+                requests_table.append(row);
+                row.append(cell_type);
+                row.append(cell_title);
+                row.append(cell_reg_date);
+                row.append(cell_status);
+                row.append(cell_actions);
+                cell_actions.append(btn_view);
+                cell_actions.append(btn_execute);
             });
-            
-            requests_div.append(request_div);
-            request_div.append(request_sender_div);
-            request_div.append(request_type_div);
-            request_div.append(request_title_div);
-            request_div.append(request_registrationDate_div);
-            request_div.append(request_btn);
-            
-        })
+
+            function act_on_request(action, request_id){
+                $("#request_id").val(request_id);
+                $("#request_action").val(action);
+                //$("#submit_from_delete_request_btn").click()
+            }
+        }
     </script>
 
 </html>
