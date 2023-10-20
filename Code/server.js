@@ -52,10 +52,10 @@ app.use(express.static('./public/css'));
 
 /*--------   INDEX */
 app.get('/', checkAuthenticated, async (req, res) => {
-  const user = await User.findOne({_id:req.user._id});
+  /*const user = await User.findOne({_id:req.user._id});
   user.last_log_in = new Date().toISOString();
   user.save()
-  req.user = user;
+  req.user = user;*/
   if(req.user.type == 'accountant'){
     //add something to get the requsets that hapen wile away
     const requests = await Request.find({receiver_id:req.user._id, status: 'pending'});
@@ -68,6 +68,27 @@ app.get('/', checkAuthenticated, async (req, res) => {
   if(req.user.type == 'admin'){
     res.render('admin_pages/admin_main.ejs',{user : req.user, userList : await getAllUsers()});
   };
+});
+
+/*--------   VIEW REQUEST */
+app.get('/view-request', checkAuthenticated, async (req, res) => {
+  const request = await Request.findOne({ _id : req.query.req_id});
+  const accountants_client = await Client.findOne({ _id : request.sender_id});
+
+  res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, accountants_client : accountants_client});
+});
+
+app.post('/view-request', checkAuthenticated, async (req, res) => {
+  try {
+    const request = await Request.findOne({ _id : req.body.request_id});
+    request.status = req.body.action;
+    request.save();
+    res.redirect('/');
+  }
+  catch (err) {
+    console.error('Error saving user:', err);
+    res.redirect('/error?origin_page=view-request&error='+err);
+  }
 });
 
 /*--------   SEARCH FOR USER IN ADMIN PAGE */

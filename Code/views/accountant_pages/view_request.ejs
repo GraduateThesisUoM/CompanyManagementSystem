@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>View Request</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <h1>View Request</h1>
+        <div>Όνομα Πελάτη : <%= accountants_client.firstName %> <%= accountants_client.lastName %></div>
+        <div>Κατηγωρία Αιτίματος : <%= request.type %></div>
+        <div>Τίτλος : <%= request.title %></div>
+        <div>Κείμενο : <%= request.text %></div>
+        <button id="reject_btn">Reject</button>
+        <button id="execute_btn">Execute</button>
+        <form action="/view-request" method="POST">
+            <input name="action" id="action">
+            <input name="request_id" id="request_id" value="<%= request._id %>">
+            <button type="submit" id="request_submit_btn">Submit</button>
+        </form>
+    </body>
+    <%- include('../partials/footer'); %>
+    <script>
+        const timestamp_options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+        $(document).ready(function() {
+            $("#reject_btn").click(function() {
+                $("#action").val("rejected")
+                $("#request_submit_btn").click();
+            });
+            $("#execute_btn").click(function() {
+                $("#action").val("executed");
+                $("#request_submit_btn").click();
+            });
+        });
+
+    </script>
+
+</html>

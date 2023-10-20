@@ -19,28 +19,17 @@
         <h1>Accountant main page</h1>
         <h2>Welcome <%= user.firstName %> <%= user.lastName %></h2>
         <div>
-            <h2>My Requests</h2>
+            <h2>Pending Requests</h2>
             <div id="requests_div">
                 <table id="my_requests_record">
                     <tr> <!-- This is a table row -->
                         <th>Type</th> <!-- Table header cell -->
                         <th>Title</th>
                         <th>RegistrationDate</th>
-                        <th>Status</th>
                         <th> </th>
                     </tr>
                 </table>
-                <form action="/accountant-main-act-on-request" method="POST" id="delete_request_from">
-                    <input name="request_id" id="request_id">
-                    <input name="request_action" id="request_action">
-                    <button id="submit_from_delete_request_btn" type="submit">Submit</button>
-                </form>
             </div>
-            <form id="requests_answer_div">
-                <textarea></textarea>
-                <input id="request_form_input" type="text">
-                <button id="request_form_submit_btn" type="submit">submit</button>
-            </form>
         </div>
         <div id="pages-div" name="pages-div">
             <a href="working">working page</a>
@@ -76,8 +65,6 @@
             console.error("Error parsing JSON:", error);
         }
 
-        const requests_answer_div = $("#requests_answer_div");
-        requests_answer_div.hide();
         const requests_div = $("#requests_div");
         
         var request_sender_div = "";
@@ -93,30 +80,18 @@
                 const cell_title = $("<td>").text(request.title);
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
-                const cell_status = $("<td>").text(request.status);
                 const cell_actions = $("<td>");
-                const btn_view = $("<button>").text("View").click(act_on_request('view', request._id));
-                const btn_execute= $("<button>").text("Execute").click(function() {
-                    $("#request_id").val(request._id);
-                    $("#request_action").val('execute');
-                    //$("#submit_from_delete_request_btn").click()
+                const btn_view = $("<button>").text("View").click(function() {
+                    window.location.href = '/view-request?req_id='+request._id;
                 });
                 
                 requests_table.append(row);
                 row.append(cell_type);
                 row.append(cell_title);
                 row.append(cell_reg_date);
-                row.append(cell_status);
                 row.append(cell_actions);
                 cell_actions.append(btn_view);
-                cell_actions.append(btn_execute);
             });
-
-            function act_on_request(action, request_id){
-                $("#request_id").val(request_id);
-                $("#request_action").val(action);
-                //$("#submit_from_delete_request_btn").click()
-            }
         }
     </script>
 

@@ -17,7 +17,7 @@
   }
   
   /* Style table data cells */
-  #my_requests_record > tbody > tr > td , #clients_requests_record > tbody > tr > th {
+  #my_requests_record > tbody > tr > td , #my_requests_record > tbody > tr > th {
     border: 1px solid #000; /* Add a 1px solid black border around td elements */
     padding: 8px; /* Add some padding for better readability */
     text-align: left; /* Align text to the left within td elements */
