@@ -58,7 +58,7 @@ app.get('/', checkAuthenticated, async (req, res) => {
   req.user = user;*/
   if(req.user.type == 'accountant'){
     //add something to get the requsets that hapen wile away
-    const requests = await Request.find({receiver_id:req.user._id, status: 'pending'});
+    const requests = await Request.find({receiver_id:req.user._id});
     const clients = await Client.find({type: 'user'});
     res.render('accountant_pages/accountant_main.ejs',{user : req.user, requests : requests, clients : clients});
   };
@@ -73,6 +73,8 @@ app.get('/', checkAuthenticated, async (req, res) => {
 /*--------   VIEW REQUEST */
 app.get('/view-request', checkAuthenticated, async (req, res) => {
   const request = await Request.findOne({ _id : req.query.req_id});
+  request.status = 'viewed';
+  request.save();
   const accountants_client = await Client.findOne({ _id : request.sender_id});
 
   res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, accountants_client : accountants_client});
@@ -82,6 +84,7 @@ app.post('/view-request', checkAuthenticated, async (req, res) => {
   try {
     const request = await Request.findOne({ _id : req.body.request_id});
     request.status = req.body.action;
+    request.response = req.body.response;
     request.save();
     res.redirect('/');
   }

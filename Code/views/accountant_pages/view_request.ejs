@@ -10,6 +10,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="view_request_css.css">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <%- include('../partials/header'); %>
@@ -23,10 +24,12 @@
         <button id="reject_btn">Reject</button>
         <button id="execute_btn">Execute</button>
         <form action="/view-request" method="POST">
+            <textarea name="response" id="response"></textarea>
             <input name="action" id="action">
             <input name="request_id" id="request_id" value="<%= request._id %>">
             <button type="submit" id="request_submit_btn">Submit</button>
         </form>
+        <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>
     <script>
@@ -39,6 +42,10 @@
             second: '2-digit'
         };
         $(document).ready(function() {
+             $("#back_btn").click(function(){
+                window.location = "/"
+            });
+
             $("#reject_btn").click(function() {
                 $("#action").val("rejected")
                 $("#request_submit_btn").click();
@@ -47,6 +54,11 @@
                 $("#action").val("executed");
                 $("#request_submit_btn").click();
             });
+            if("<%= request.status %>" == "executed" || "<%= request.status %>" == "rejected"){
+                alert("ff")
+                $("#reject_btn").hide();
+                $("#execute_btn").hide();
+            }
         });
 
     </script>
