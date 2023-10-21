@@ -23,16 +23,18 @@
         <div>Κείμενο : <%= request.text %></div>
         <button id="reject_btn">Reject</button>
         <button id="execute_btn">Execute</button>
+        <p id="sended_resonse">You haven't sent a response</p>
         <form action="/view-request" method="POST">
             <textarea name="response" id="response"></textarea>
-            <input name="action" id="action">
-            <input name="request_id" id="request_id" value="<%= request._id %>">
-            <button type="submit" id="request_submit_btn">Submit</button>
+            <input style="display: none;" name="action" id="action">
+            <input style="display: none;" name="request_id" id="request_id" value="<%= request._id %>">
+            <button style="display: none;" type="submit" id="request_submit_btn">Submit</button>
         </form>
         <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>
     <script>
+        $("#sended_resonse").hide();
         const timestamp_options = {
             year: 'numeric',
             month: 'long',
@@ -55,9 +57,13 @@
                 $("#request_submit_btn").click();
             });
             if("<%= request.status %>" == "executed" || "<%= request.status %>" == "rejected"){
-                alert("ff")
                 $("#reject_btn").hide();
                 $("#execute_btn").hide();
+                $("#response").hide();
+                $("#sended_resonse").show();
+                if("<%= request.response %>" != ""){
+                    $("#sended_resonse").text("<%= request.response %>")
+                }
             }
         });
 

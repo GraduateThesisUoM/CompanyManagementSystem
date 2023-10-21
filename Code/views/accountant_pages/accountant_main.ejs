@@ -139,11 +139,11 @@
             $("#pending_requests_div").append($("<p>").text("You have no pending requests at the moment"));
             pending_requests_table.hide();
         }
-        else if(executed_count == 0){
+        if(executed_count == 0){
             $("#executed_requests_div").append($("<p>").text("You have no executed requests at the moment"));
             executed_requests_table.hide()
         }
-        else if(rejected_count == 0){
+        if(rejected_count == 0){
             $("#rejected_requests_div").append($("<p>").text("You have no rejected requests at the moment"));
             rejected_requests_table.hide()
         }

@@ -73,10 +73,11 @@ app.get('/', checkAuthenticated, async (req, res) => {
 /*--------   VIEW REQUEST */
 app.get('/view-request', checkAuthenticated, async (req, res) => {
   const request = await Request.findOne({ _id : req.query.req_id});
-  request.status = 'viewed';
-  request.save();
+  if( request.status == "pending"){
+    request.status = 'viewed';
+    request.save();
+  }
   const accountants_client = await Client.findOne({ _id : request.sender_id});
-
   res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, accountants_client : accountants_client});
 });
 
