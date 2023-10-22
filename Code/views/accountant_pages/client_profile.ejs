@@ -115,16 +115,10 @@
                 });
             })(i);
         }
-<<<<<<< HEAD
-        
-=======
         if('<%= review.rating%>'!='-1'){
             $("#rating_textarea").val('<%= review.text%>');
             starButtons[parseInt('<%= review.rating%>')-1].click()
         }
-<<<<<<< HEAD
->>>>>>> main
-=======
 
         var requests;
         try {
@@ -161,9 +155,7 @@
                 row.append(cell_actions);
                 cell_actions.append(btn_delete);
             });
-        }
->>>>>>> Nektarios2
-        
+        }        
     });
 </script>
 <%- include('../partials/footer'); %>
