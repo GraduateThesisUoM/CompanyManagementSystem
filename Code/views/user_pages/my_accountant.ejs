@@ -15,12 +15,13 @@
     </head>
     <body>
         <h1>Ο Λογιστής Μου</h1>
-        <p>id : <%= accountant._id %></p>
-        <p>First Name : <%= accountant.firstName %></p>
-        <p>Last Name : <%= accountant.lastName %></p>
-        <p>Email : <%= accountant.email %></p>
+        <p>
+            First Name : <%= accountant.firstName %><br>
+            Last Name : <%= accountant.lastName %><br>
+            Email : <%= accountant.email %></p>
 
         <form class="messaging_form">
+            <h2>Messaging</h2>
             <p>You : hello</p>
             <p><%= accountant.firstName %> : hi</p>
             <textarea></textarea>
@@ -29,6 +30,7 @@
         </form>
 
         <form class="rating_form" action="/my-accountant-rate" method="POST">
+            <h2>Rating</h2>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
@@ -41,15 +43,80 @@
             <br>
             <button type="submit">Submit</button>
         </form>
+<<<<<<< HEAD
         <a href="report-user?id=<%=accountant._id%>">Report Accountant</a>
+=======
+        <div class ='requests'>
+                <h2>Requests</h2>
+                <div id="my_requests_div">
+                    <table id="my_requests_record">
+                        <tr> <!-- This is a table row -->
+                            <th>Type</th> <!-- Table header cell -->
+                            <th>Title</th>
+                            <th>RegistrationDate</th>
+                            <th>Status</th>
+                            <th> </th>
+                        </tr>
+                    </table>
+                    <form action="/my-accountant-delete-request" method="POST" id="delete_request_from">
+                        <input name="request_id" id="request_id">
+                        <button id="submit_from_delete_request_btn" type="submit">Submit</button>
+                    </form>
+                </div>
+                <div id="new_request">
+                    <form action="/my-accountant-requests" method="POST">
+                        <h3>New Request</h3>
+                        <div>
+                            <label for="request_type">Type : </label>
+                            <select name = 'request_type' id = 'request_type'>
+                                <option value="..." disabled selected>...</option>
+                                <option value="something_1">Something_1</option>
+                                <option value="something_2">Something_2</option>
+                                <option value="something_3">Something_3</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label for="request_title">Title : </label>
+                            <input placeholder="Tilte" id="request_title" name="request_title">
+                        </div>
+                        
+                        <textarea name="request_text" id="request_text"></textarea>
+                        <button style="display:none;" id="submit_from_request_btn" type="submit"></button>
+                    </form>
+                    <button id="submit_request_btn">Submit</button>
+                </div>
+            
+        </div>
+>>>>>>> Nektarios2
 
         <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>
     <script>
+        const timestamp_options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        };
+
        $(document).ready(function(){
             $("#back_btn").click(function(){
                 window.location = "/"
+            });
+
+            $("#submit_request_btn").click(function(){
+                if( document.getElementById("request_type").value == "..."){
+                    alert("Plese select the type of the request")
+                }
+                else{
+                    document.getElementById("submit_from_request_btn").click();
+                }
+                
             });
 
             var starButtons = $(".star_btn");
@@ -78,6 +145,43 @@
             if('<%= review.rating%>'!='-1'){
                 $("#rating_textarea").val('<%= review.text%>');
                 starButtons[parseInt('<%= review.rating%>')-1].click()
+            }
+
+            var requests;
+            try {
+                requests = JSON.parse(`<%- JSON.stringify(requests) %>`);
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+            }
+            
+            const requests_table = $("#my_requests_record");
+            if(requests.length == 0){
+                requests_table.hide()
+                $("#my_requests_div").append($("<p>").text("You haven't made any requests addressed to your current accountant"))
+            }
+            else{
+                requests.forEach(request => {
+                    const row = $("<tr>");
+                    const cell_type = $("<td>").text(request.type);
+                    const cell_title = $("<td>").text(request.title);
+                    const date = new Date(request.registrationDate);
+                    const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                    const cell_status = $("<td>").text(request.status);
+                    const cell_actions = $("<td>");
+                    const btn_delete = $("<button>").text("Delete");
+                    btn_delete.click(function() {
+                        $("#request_id").val(request._id)
+                        $("#submit_from_delete_request_btn").click()
+                    });
+                    
+                    requests_table.append(row);
+                    row.append(cell_type);
+                    row.append(cell_title);
+                    row.append(cell_reg_date);
+                    row.append(cell_status);
+                    row.append(cell_actions);
+                    cell_actions.append(btn_delete);
+                });
             }
             
         });

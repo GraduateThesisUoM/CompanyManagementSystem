@@ -42,6 +42,7 @@ const Accountant  = require("./Schemas/Accountant");
 const Client  = require("./Schemas/Client");
 const Review  = require("./Schemas/Review");
 const Report = require("./Schemas/Report");
+const Request = require("./Schemas/Request");
 const { cache } = require('ejs');
 const { isSet } = require('util/types');
 const { report } = require('process');
@@ -50,9 +51,21 @@ app.use(express.static('./public/css'));
 
 /*--------   INDEX */
 app.get('/', checkAuthenticated, async (req, res) => {
+  /*const user = await User.findOne({_id:req.user._id});
+  user.last_log_in = new Date().toISOString();
+  user.save()
+  req.user = user;*/
   if(req.user.type == 'accountant'){
+<<<<<<< HEAD
     res.render('accountant_pages/accountant_main.ejs',{user : req.user});
   }
+=======
+    //add something to get the requsets that hapen wile away
+    const requests = await Request.find({receiver_id:req.user._id});
+    const clients = await Client.find({type: 'user'});
+    res.render('accountant_pages/accountant_main.ejs',{user : req.user, requests : requests, clients : clients});
+  };
+>>>>>>> Nektarios2
   if(req.user.type == 'user'){
     res.render('user_pages/user_main.ejs',{user : req.user});
   }
@@ -61,6 +74,31 @@ app.get('/', checkAuthenticated, async (req, res) => {
     res.render('admin_pages/admin_main.ejs',{user : req.user, 
     user_list: await User.find(), pending_reports: await Report.find({status: "pending"})
     });
+  }
+});
+
+/*--------   VIEW REQUEST */
+app.get('/view-request', checkAuthenticated, async (req, res) => {
+  const request = await Request.findOne({ _id : req.query.req_id});
+  if( request.status == "pending"){
+    request.status = 'viewed';
+    request.save();
+  }
+  const accountants_client = await Client.findOne({ _id : request.sender_id});
+  res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, accountants_client : accountants_client});
+});
+
+app.post('/view-request', checkAuthenticated, async (req, res) => {
+  try {
+    const request = await Request.findOne({ _id : req.body.request_id});
+    request.status = req.body.action;
+    request.response = req.body.response;
+    request.save();
+    res.redirect('/');
+  }
+  catch (err) {
+    console.error('Error saving user:', err);
+    res.redirect('/error?origin_page=view-request&error='+err);
   }
 });
 
@@ -224,6 +262,7 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
     }
     else if (req.user.myaccountant.status == "assigned"){
       const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
+      const users_requests = await Request.find({ sender_id :req.user._id, receiver_id :req.user.myaccountant.id});
       var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: req.user.myaccountant.id, type:"client"});
       if (accountant_review == null){
         accountant_review = new Review({
@@ -234,7 +273,7 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
         });
       }
 
-      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review});
+      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review, requests : users_requests});
     }
     else{
       res.redirect('pick-accountant');
@@ -279,6 +318,44 @@ app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
   }
 });
 
+app.post('/my-accountant-requests', checkAuthenticated, async (req, res) => {
+  try {
+    const newRequest = new Request({
+      sender_id: req.user._id,
+      receiver_id: req.user.myaccountant.id,
+      type: req.body.request_type,
+      title: req.body.request_title,
+      text: req.body.request_text
+    });
+
+    newRequest.save()
+    console.log('Reuest created successfully');
+    res.redirect('/my-accountant');
+  } catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=my-accountant&error=' + err);
+  }
+});
+
+app.post('/my-accountant-delete-request', checkAuthenticated, async (req, res) => {
+  try {
+    // Find and delete the request by its ID
+    const deletedRequest = await Request.findOneAndDelete({ _id: req.body.request_id });
+
+    if (deletedRequest) {
+      console.log('Request deleted successfully');
+      res.redirect('/my-accountant');
+    } else {
+      console.log('Request not found');
+      res.redirect('/my-accountant');
+    }
+  } catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=my-accountant&error=' + err);
+  }
+});
+
+
 /*--------   PICK ACCOUNTANT */
 app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
   try {
@@ -295,7 +372,13 @@ app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
       for (const review of reviews){
         average_rating = average_rating + review.rating;
       }
-      ratings.push((average_rating / reviews.length).toFixed(1));
+      if(reviews.length > 0){
+        ratings.push((average_rating / reviews.length).toFixed(1));
+      }
+      else{
+        ratings.push("-");
+      }
+      
     }
 
     res.render('user_pages/pick_accountant.ejs', { accountants: accountants, ratings: ratings});
@@ -412,6 +495,7 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
         break
       }
     }
+    console.error('Accountant ', req.body.accountant_action, ' Client Succesfull');
     res.redirect('/clients');
   }
   catch (err) {
@@ -424,6 +508,7 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
 /*--------   CLIENT PROFILE */
 app.get('/client-profile', checkAuthenticated, async (req, res) => {
   const accountants_client = await Client.findOne({_id:req.query.id});
+  const clients_requests = await Request.find({receiver_id:req.user._id, sender_id: accountants_client._id, status: 'pending'});
   var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: accountants_client._id, type:"accountant"});
   if (accountant_review == null){
     accountant_review = new Review({
@@ -434,7 +519,7 @@ app.get('/client-profile', checkAuthenticated, async (req, res) => {
     });
   }
 
-  res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review});
+  res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review, clients_requests : clients_requests});
 });
 app.post('/client-profile', checkAuthenticated, async (req, res) => {
   try {
