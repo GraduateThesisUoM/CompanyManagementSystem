@@ -48,6 +48,7 @@ const { isSet } = require('util/types');
 const { report } = require('process');
 
 app.use(express.static('./public/css'));
+app.use(express.static('./public/imgs'));
 
 /*--------   INDEX */
 app.get('/', checkAuthenticated, async (req, res) => {

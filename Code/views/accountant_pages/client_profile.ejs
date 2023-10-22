@@ -19,6 +19,7 @@
 
     <div id="general-client-info" name="general-client-info">
         <h2><%= selected_client.firstName %> <%= selected_client.lastName %></h2>
+        <img src="imgs/complogo1.png">
         <h3><%= selected_client.companyLogo %> <%= selected_client.companyName %></h3>
     </div>
 
@@ -130,7 +131,7 @@
         const requests_table = $("#clients_requests_record");
         if(requests.length == 0){
             requests_table.hide()
-            $("#my_requests_div").append($("<p>").text("You haven't made any requests addressed to your current accountant"))
+            $("#my_requests_div").append($("<p>").text("The Client haven't made any requests addressed you"))
         }
         else{
             requests.forEach(request => {
