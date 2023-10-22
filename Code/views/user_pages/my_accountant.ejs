@@ -58,6 +58,7 @@
                             <th> </th>
                         </tr>
                     </table>
+                    <button id="more_requests_btn">More...</button>
                     <div id="display_request">
                         <p id="request_preview_status"></p>
                         <p id="request_preview_type"></p>
@@ -102,6 +103,8 @@
     </body>
     <%- include('../partials/footer'); %>
     <script>
+        const visible_request_num = 10;
+        var request_table_expanded = false;
         const timestamp_options = {
             year: 'numeric',
             month: 'long',
@@ -114,6 +117,21 @@
        $(document).ready(function(){
             $("#back_btn").click(function(){
                 window.location = "/"
+            });
+            $("#more_requests_btn").click(function(){
+                request_table_expanded = !request_table_expanded;
+                if(request_table_expanded){
+                    $("#more_requests_btn").text("Less...");
+                    for (let i = visible_request_num; i <= requests.length; i++) {
+                    $("#row_"+i).show();
+                }
+                }
+                else{
+                    $("#more_requests_btn").text("More...");
+                    for (let i = visible_request_num; i <= id_count; i++) {
+                    $("#row_"+i).hide();
+                }
+                }
             });
 
             $("#submit_request_btn").click(function(){
@@ -178,8 +196,10 @@
                 my_requests_div.append($("<p>").text("You haven't made any requests addressed to your current accountant"))
             }
             else{
+                var id_count = -1;
                 requests.forEach(request => {
-                    const row = $("<tr>");
+                    id_count = id_count + 1;
+                    const row = $("<tr>").attr("id", "row_"+id_count);
                     const cell_type = $("<td>").text(request.type);
                     const cell_title = $("<td>").text(request.title);
                     const date = new Date(request.registrationDate);
@@ -210,6 +230,9 @@
                     cell_actions.append(btn_delete);
                     cell_actions.append(btn_view);
                 });
+                for (let i = visible_request_num; i <= id_count; i++) {
+                    $("#row_"+i).hide();
+                }
             }
             
         });

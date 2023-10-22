@@ -57,9 +57,17 @@ app.get('/', checkAuthenticated, async (req, res) => {
   req.user = user;*/
   if(req.user.type == 'accountant'){
     //add something to get the requsets that hapen wile away
-    const requests = await Request.find({receiver_id:req.user._id});
+    const requests_pending = await Request.find({receiver_id:req.user._id, status : "pending" });
+    const requests_viewed = await Request.find({receiver_id:req.user._id, status :  "viewed"});
+    const requests_rejected = await Request.find({receiver_id:req.user._id, status :  "rejected"});
+    const requests_executed = await Request.find({receiver_id:req.user._id, status : "executed"});
     const clients = await Client.find({type: 'user'});
-    res.render('accountant_pages/accountant_main.ejs',{user : req.user, requests : requests, clients : clients});
+    res.render('accountant_pages/accountant_main.ejs',{user : req.user,
+      requests_pending : requests_pending,
+      requests_viewed : requests_viewed,
+      requests_rejected : requests_rejected,
+      requests_executed : requests_executed,
+      clients : clients});
   };
   if(req.user.type == 'user'){
     res.render('user_pages/user_main.ejs',{user : req.user});

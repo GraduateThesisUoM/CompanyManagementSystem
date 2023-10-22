@@ -29,6 +29,7 @@
                         <th> </th>
                     </tr>
                 </table>
+                <button id="more_pending_requests_btn">More ...</button>
             </div>
         </div>
         <div>
@@ -42,6 +43,7 @@
                         <th> </th>
                     </tr>
                 </table>
+                <button id="more_executed_requests_btn">More ...</button>
             </div>
         </div>
         <div>
@@ -55,6 +57,7 @@
                         <th> </th>
                     </tr>
                 </table>
+                <button id="more_rejected_requests_btn">More ...</button>
             </div>
         </div>
         <div id="pages-div" name="pages-div">
@@ -65,6 +68,11 @@
     </body>
     <%- include('../partials/footer'); %>
     <script>
+        const visible_request_num = 5;
+        var request_pendign_table_expanded = false;
+        var request_executed_table_expanded = false;
+        var request_rejected_table_expanded = false;
+
         const timestamp_options = {
             year: 'numeric',
             month: 'long',
@@ -74,76 +82,207 @@
             second: '2-digit'
         };
 
-        var requests;
-        try {
-            requests = JSON.parse(`<%- JSON.stringify(requests) %>`);
-        } catch (error) {
-            console.error("Error parsing JSON:", error);
-        }
-
+        var requests_pending;
+        var requests_viewed;
+        var requests_rejected;
+        var requests_executed;
         var clients;
-        try {
-            clients = JSON.parse(`<%- JSON.stringify(clients) %>`);
-        } catch (error) {
-            console.error("Error parsing JSON:", error);
-        }
-
-        //const requests_div = $("#pending_requests_div");
-        
         var request_sender_div = "";
-        const pending_requests_table = $("#pending_requests_table");
-        const executed_requests_table = $("#executed_requests_table");
-        const rejected_requests_table = $("#rejected_requests_table");
 
-        var pending_count = 0;
-        var executed_count = 0;
-        var rejected_count = 0;
+        $(document).ready(function(){
 
-        requests.forEach(request => {
-            const row = $("<tr>");
-            if(request.status == "pending"){
-                row.css("background-color", "lime");
+            $("#more_pending_requests_btn").click(function(){
+                request_pendign_table_expanded = !request_pendign_table_expanded;
+                if(request_pendign_table_expanded){
+                    $("#more_pending_requests_btn").text("Less...");
+                    for (let i = visible_request_num; i <= pending_count; i++) {
+                        $("#row_pendign_"+i).show();
+                    }
+                }
+                else{
+                    $("#more_pending_requests_btn").text("More...");
+                    for (let i = visible_request_num; i <= pending_count; i++) {
+                        $("#row_pendign_"+i).hide();
+                    }
+                }
+            });
+
+            $("#more_executed_requests_btn").click(function(){
+                request_executed_table_expanded = !request_executed_table_expanded;
+                if(request_executed_table_expanded){
+                    $("#more_executed_requests_btn").text("Less...");
+                    for (let i = visible_request_num; i <= executed_count; i++) {
+                        $("#row_executed_"+i).show();
+                    }
+                }
+                else{
+                    $("#more_executed_requests_btn").text("More...");
+                    for (let i = visible_request_num; i <= executed_count; i++) {
+                        $("#row_executed_"+i).hide();
+                    }
+                }
+            });
+
+            $("#more_rejected_requests_btn").click(function(){
+                request_rejected_table_expanded = !request_rejected_table_expanded;
+                if(request_rejected_table_expanded){
+                    $("#more_rejected_requests_btn").text("Less...");
+                    for (let i = visible_request_num; i <= rejected_count; i++) {
+                        $("#row_rejected_"+i).show();
+                    }
+                }
+                else{
+                    $("#more_rejected_requests_btn").text("More...");
+                    for (let i = visible_request_num; i <= rejected_count; i++) {
+                        $("#row_rejected_"+i).hide();
+                    }
+                }
+            });
+
+
+            try {
+                requests_pending = JSON.parse(`<%- JSON.stringify(requests_pending) %>`);
+                requests_viewed = JSON.parse(`<%- JSON.stringify(requests_viewed) %>`);
+                requests_rejected = JSON.parse(`<%- JSON.stringify(requests_rejected) %>`);
+                requests_executed = JSON.parse(`<%- JSON.stringify(requests_executed) %>`);
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+            }
+
+            try {
+                clients = JSON.parse(`<%- JSON.stringify(clients) %>`);
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
             }
             
-            const cell_type = $("<td>").text(request.type);
-            const cell_title = $("<td>").text(request.title);
-            const date = new Date(request.registrationDate);
-            const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
-            const cell_actions = $("<td>");
-            const btn_view = $("<button>").text("View").click(function() {
-                window.location.href = '/view-request?req_id='+request._id;
-            });
-            
-            row.append(cell_type);
-            row.append(cell_title);
-            row.append(cell_reg_date);
-            row.append(cell_actions);
-            cell_actions.append(btn_view);
-            if(request.status == "pending" || request.status == "viewed"){
+            const pending_requests_table = $("#pending_requests_table");
+            const executed_requests_table = $("#executed_requests_table");
+            const rejected_requests_table = $("#rejected_requests_table");
+
+            var pending_count = 0;
+            var executed_count = 0;
+            var rejected_count = 0;
+
+            requests_pending.forEach(request => {
+                const row = $("<tr>").css("background-color", "lime").attr("id", "row_pendign_"+pending_count);
+
+                const cell_type = $("<td>").text(request.type);
+                const cell_title = $("<td>").text(request.title);
+                const date = new Date(request.registrationDate);
+                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_actions = $("<td>");
+                const btn_view = $("<button>").text("View").click(function() {
+                    window.location.href = '/view-request?req_id='+request._id;
+                });
+                
+                row.append(cell_type);
+                row.append(cell_title);
+                row.append(cell_reg_date);
+                row.append(cell_actions);
+                cell_actions.append(btn_view);
+
                 pending_requests_table.append(row);
                 pending_count = pending_count +1;
-            }
-            else if(request.status == "executed"){
+            });
+
+            requests_viewed.forEach(request => {
+                const row = $("<tr>").attr("id", "row_pendign_"+pending_count);
+
+                const cell_type = $("<td>").text(request.type);
+                const cell_title = $("<td>").text(request.title);
+                const date = new Date(request.registrationDate);
+                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_actions = $("<td>");
+                const btn_view = $("<button>").text("View").click(function() {
+                    window.location.href = '/view-request?req_id='+request._id;
+                });
+                
+                row.append(cell_type);
+                row.append(cell_title);
+                row.append(cell_reg_date);
+                row.append(cell_actions);
+                cell_actions.append(btn_view);
+
+                pending_requests_table.append(row);
+                pending_count = pending_count +1;
+            });
+
+            requests_executed.forEach(request => {
+                const row = $("<tr>").attr("id", "row_executed_"+executed_count);
+
+                const cell_type = $("<td>").text(request.type);
+                const cell_title = $("<td>").text(request.title);
+                const date = new Date(request.registrationDate);
+                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_actions = $("<td>");
+                const btn_view = $("<button>").text("View").click(function() {
+                    window.location.href = '/view-request?req_id='+request._id;
+                });
+                
+                row.append(cell_type);
+                row.append(cell_title);
+                row.append(cell_reg_date);
+                row.append(cell_actions);
+                cell_actions.append(btn_view);
+
                 executed_requests_table.append(row);
                 executed_count = executed_count +1;
-            }
-            else if(request.status == "rejected"){
+            });
+
+            requests_rejected.forEach(request => {
+                const row = $("<tr>").attr("id", "row_rejected_" + rejected_count);
+
+                const cell_type = $("<td>").text(request.type);
+                const cell_title = $("<td>").text(request.title);
+                const date = new Date(request.registrationDate);
+                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_actions = $("<td>");
+                const btn_view = $("<button>").text("View").click(function() {
+                    window.location.href = '/view-request?req_id='+request._id;
+                });
+                
+                row.append(cell_type);
+                row.append(cell_title);
+                row.append(cell_reg_date);
+                row.append(cell_actions);
+                cell_actions.append(btn_view);
+
                 rejected_requests_table.append(row);
                 rejected_count = rejected_count +1;
+            });
+
+
+            // Pending 
+            if(pending_count == 0){
+                $("#pending_requests_div").append($("<p>").text("You have no pending requests at the moment"));
+                pending_requests_table.hide();
+            }
+            else{
+                for (let i = visible_request_num; i <= pending_count; i++) {
+                    $("#row_pendign_"+i).hide();
+                }
+            }
+            //Executed
+            if(executed_count == 0){
+                $("#executed_requests_div").append($("<p>").text("You have no executed requests at the moment"));
+                executed_requests_table.hide()
+            }
+            else{
+                for (let i = visible_request_num; i <= executed_count; i++) {
+                    $("#row_executed_"+i).hide();
+                }
+            }
+            //Rejected
+            if(rejected_count == 0){
+                $("#rejected_requests_div").append($("<p>").text("You have no rejected requests at the moment"));
+                rejected_requests_table.hide()
+            }
+            else{
+                for (let i = visible_request_num; i <= rejected_count; i++) {
+                    $("#row_rejected_"+i).hide();
+                }
             }
         });
-        if(pending_count == 0){
-            $("#pending_requests_div").append($("<p>").text("You have no pending requests at the moment"));
-            pending_requests_table.hide();
-        }
-        if(executed_count == 0){
-            $("#executed_requests_div").append($("<p>").text("You have no executed requests at the moment"));
-            executed_requests_table.hide()
-        }
-        if(rejected_count == 0){
-            $("#rejected_requests_div").append($("<p>").text("You have no rejected requests at the moment"));
-            rejected_requests_table.hide()
-        }
         
     </script>
 
