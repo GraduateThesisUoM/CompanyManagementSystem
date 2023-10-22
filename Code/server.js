@@ -56,16 +56,11 @@ app.get('/', checkAuthenticated, async (req, res) => {
   user.save()
   req.user = user;*/
   if(req.user.type == 'accountant'){
-<<<<<<< HEAD
-    res.render('accountant_pages/accountant_main.ejs',{user : req.user});
-  }
-=======
     //add something to get the requsets that hapen wile away
     const requests = await Request.find({receiver_id:req.user._id});
     const clients = await Client.find({type: 'user'});
     res.render('accountant_pages/accountant_main.ejs',{user : req.user, requests : requests, clients : clients});
   };
->>>>>>> Nektarios2
   if(req.user.type == 'user'){
     res.render('user_pages/user_main.ejs',{user : req.user});
   }
