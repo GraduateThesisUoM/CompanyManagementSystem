@@ -19,8 +19,10 @@
 
     <div id="general-client-info" name="general-client-info">
         <h2><%= selected_client.firstName %> <%= selected_client.lastName %></h2>
-        <img src="imgs/complogo1.png">
-        <h3><%= selected_client.companyLogo %> <%= selected_client.companyName %></h3>
+        <div class="badge">
+            <img src="/<%= selected_client.companyLogo %>" id="company_logo">
+            <h3> <%= selected_client.companyName %></h3>
+        </div>
     </div>
 
     <div id="client-transactions-div" name="client-transactions-div">
@@ -43,7 +45,7 @@
                     <th> </th>
                 </tr>
             </table>
-            <form action="/my-accountant-delete-request" method="POST" id="delete_request_from">
+            <form style="display: none;" action="/my-accountant-delete-request" method="POST" id="delete_request_from">
                 <input name="request_id" id="request_id">
                 <button id="submit_from_delete_request_btn" type="submit">Submit</button>
             </form>
@@ -62,14 +64,14 @@
     <div id="client-rating-div" name="client-rating-div">
         <h2>Rating Client</h2>
          <form class="rating_form" action="/client-profile" method="POST">
-            <input type="text" name='clients_id' value="<%= selected_client._id %>">
+            <input style="display: none;" type="text" name='clients_id' value="<%= selected_client._id %>">
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <br>
-            <input type="text" id='rating_input' name='rating_input'>
+            <input style="display: none;" type="text" id='rating_input' name='rating_input'>
             <br>
             <textarea id='rating_textarea' name='rating_textarea'></textarea>
             <br>

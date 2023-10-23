@@ -632,7 +632,9 @@ app.get('/profile-page', checkAuthenticated, async (req, res) => {
     res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviewUserArray});
   };
   if(req.user.type == 'user'){
-    res.render('user_pages/profile_user.ejs',{user : req.user});
+    const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
+
+    res.render('user_pages/profile_user.ejs',{user : req.user, users_accountant : users_accountant});
   };
 });
 app.post('/profile-page', checkAuthenticated, async (req, res) => {

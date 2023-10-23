@@ -17,7 +17,7 @@
 
             <form class="display_block" action="/profile-page" method="POST" >
                 <label for="firstName">Όνομα</label>
-                <input type="text" name="firstName" required value="<%= user.firstName %>">
+                <input type="text" name="firstName" id="firstName" required value="<%= user.firstName %>">
                 <label for="lastName">Επίθετο</label>
                 <input type="text" name="lastName" required value="<%= user.lastName %>">
                 <label for="email">Email</label>
@@ -35,8 +35,7 @@
                         <input type="text" name="companyLogo" id="companyLogo"  value="<%= user.companyLogo%>">
 
                         <span id="users_accountant">
-                            <label for="my_accountant">Λογιστής:</label>
-                            <input type="text" name="my_accountant" id="my_accountant">
+                            <p id="my_accountant">x</p>
                         </span>
                     </span>
                 </span>
@@ -67,10 +66,13 @@
     };
     $(document).ready(function(){
         if(my_accountant.id == "not_assigned"){
-            $("#my_accountant").val("Δεν έχει οριστεί");
+            $("#my_accountant").text("Δεν έχει οριστεί");
         }
-        else if(my_accountant.id == userData.id){
-            $("#my_accountant").val("Αυτοδιαχείριση Λογιστικών");
+        else if(my_accountant.id == "<%= user._id %>"){
+            $("#my_accountant").text("Αυτοδιαχείριση Λογιστικών");
+        }
+        else{
+            $("#my_accountant").text("Λογιστής: <%= users_accountant.firtsName %> <%= users_accountant.lastName %>");
         }
          $("#back_btn").click(function(){
                 window.location ="/"

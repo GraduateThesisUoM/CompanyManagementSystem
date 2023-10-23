@@ -3,16 +3,31 @@
     width: 100%; /* Make the table take up the full width of its container */
   }
   
-  /* Style table header cells */
-  #clients_requests_record > tbody > tr {
-    border: 1px solid #000; /* Add a 1px solid black border around th elements */
-    padding: 8px; /* Add some padding for better readability */
-    text-align: left; /* Align text to the left within th elements */
-  }
-  
-  /* Style table data cells */
-  #clients_requests_record > tbody > tr > td , #clients_requests_record > tbody > tr > th {
-    border: 1px solid #000; /* Add a 1px solid black border around td elements */
-    padding: 8px; /* Add some padding for better readability */
-    text-align: left; /* Align text to the left within td elements */
-  }
+/* Style table header cells */
+#clients_requests_record > tbody > tr {
+  border: 1px solid #000; /* Add a 1px solid black border around th elements */
+  padding: 8px; /* Add some padding for better readability */
+  text-align: left; /* Align text to the left within th elements */
+}
+
+/* Style table data cells */
+#clients_requests_record > tbody > tr > td , #clients_requests_record > tbody > tr > th {
+  border: 1px solid #000; /* Add a 1px solid black border around td elements */
+  padding: 8px; /* Add some padding for better readability */
+  text-align: left; /* Align text to the left within td elements */
+}
+
+#company_logo{
+  height: 150px;
+  width: 150px;
+  object-fit: contain;
+}
+
+.badge{
+  width: fit-content;
+  background-color: gray;
+}
+
+.badge > h3{
+  text-align: center;
+}
