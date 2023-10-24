@@ -25,7 +25,26 @@
         
     </div>
     <div id="user-reviews-admin-div" name="user-reviews-admin-div">
-        <h1>Reviews</h1>
+        <%if(reviews_for_user.length > 0){%>
+            <h2>Reviews</h2>
+            <%for(var i=0;i < reviews_for_user.length;i++){
+                for(var j=0;j < user_list.length;j++){
+                    if(reviews_for_user[i].reviewer_id == user_list[j].id){ %>
+                        <span>Rating: <%= reviews_for_user[i].rating.toString() %>/5</span>
+                        <br>
+                        <span>Date: <%= reviews_for_user[i].registrationDate %></span>
+                        <br>
+                        <span><%= reviews_for_user[i].text %></span>
+                        <br>
+                        <form action="/remove-review?id=<%=reviews_for_user[i]._id%>"  method="POST">
+                            <input type="submit" id="remove_review_button" name="remove_review_button" value="Remove review">
+                        </form>
+                        <br>
+                        <hr>
+                    <%}
+                }
+            }
+        }%>
     </div>
     <hr>
     <div id="relationships-admin-div" name="relationships-admin-div">

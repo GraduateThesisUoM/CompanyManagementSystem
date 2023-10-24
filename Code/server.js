@@ -144,12 +144,13 @@ app.get('/user-profile', checkAuthenticated, async (req,res)=>{
   res.render('admin_pages/user_info_page.ejs', {user: req.user ,user_profile : await getUserById(req.query.id), 
     reports_for_user: await Report.find({$and:[{reported_id: req.query.id}, {reporter_id: {$ne:req.query.id}}, {status: "pending"}]}),
     reports_by_user: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: {$ne:req.query.id}}, {status: "pending"}]}),
+    reviews_for_user: await Review.find({reviewed_id: req.query.id}),
     user_list: await User.find(),
     general_reports: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: req.query.id}]})})
 });
 
 
-/*--------   BAN-UNBAN */
+/*--------  ADMIN - BAN - UN-BAN */
 app.post('/changeBanStatus', checkAuthenticated, async (req,res)=>{
   
   //variable contains the status we want to insert
@@ -165,10 +166,18 @@ app.post('/changeBanStatus', checkAuthenticated, async (req,res)=>{
   res.redirect('back');
 });
 
+/*--------   ADMIN - REMOVE REVIEW */
+app.post('/remove-review', checkAuthenticated, async (req,res)=>{
+  await Review.deleteOne({_id: req.query.id});
+  res.redirect('back');
+});
+
+
+/*--------   ADMIN - REMOVE RELATIONSHIPS */
 app.post('/remove-relationship', checkAuthenticated, async (req,res)=>{
   //update client
   await Client.updateOne({_id: req.query.id_user}, {$set: {"myaccountant.status": "not_assigned", "myaccountant.id": "not_assigned"}});
-  
+
   //update accountant
   await Accountant.updateOne({_id: req.query.id_acc}, {$pull: {clients: {id: req.query.id_user}}});
   res.redirect('back');
