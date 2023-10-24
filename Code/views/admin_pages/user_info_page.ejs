@@ -28,7 +28,42 @@
         <h1>Reviews</h1>
     </div>
     <hr>
-    <h1>Relationships</h1>
+    <div id="relationships-admin-div" name="relationships-admin-div">
+        <% if(user_profile.type == "accountant" && user_profile.clients.length > 0){ %>
+            <h2>Clients</h2>
+            <% for(var i=0;i < user_list.length;i++){ 
+                for(var j=0;j < user_profile.clients.length ;j++){
+                    if(user_list[i].id == user_profile.clients[j].id && user_profile.clients[j].status != "pending"){ %>
+                        <a href="/user-profile?id=<%=user_list[i].id%>"><%=user_list[i].firstName%> <%=user_list[i].lastName%></a>
+                        <form action="/remove-relationship?id_user=<%=user_list[i].id%>&id_acc=<%=user_profile._id%>"  method="POST">
+                            <input type="submit" id="remove_relationship_button" name="remove_relationship_button" value="Remove">
+                        </form>
+                        <br>
+                    <%}
+                } 
+            }
+        }
+        else if(user_profile.type == "user" && user_profile.myaccountant.status == "assigned"){%>
+            <h2>Accountant</h2>
+            <%for(var i=0;i < user_list.length ;i++){
+                if(user_list[i].id == user_profile.myaccountant.id){ %>
+                    <a href="/user-profile?id=<%=user_list[i].id%>"><%=user_list[i].firstName%> <%=user_list[i].lastName%></a>
+                    <form action="/remove-relationship?id_user=<%=user_profile._id%>&id_acc=<%=user_list[i]._id%>"  method="POST">
+                        <input type="submit" id="remove_relationship_button" name="remove_relationship_button" value="Remove">
+                    </form>
+                    <br>
+                <%}
+            }
+        }
+        else if(user_profile.type == "user" && user_profile.myaccountant.status == "self_accountant"){%>
+            <h2>Accountant</h2>
+            <span>This user is a self-accountant</span>
+        <%}
+        else if(user_profile.type == "user" && user_profile.myaccountant.status == "pending"){%>
+            <h2>Accountant</h2>
+            <span>This user has an application pending</span>
+        <%}%>
+    </div>
 
     <div id="general-reports-admin-div" name="general-reports-admin-div">
         <%if(general_reports.length > 0){ %>

@@ -165,6 +165,15 @@ app.post('/changeBanStatus', checkAuthenticated, async (req,res)=>{
   res.redirect('back');
 });
 
+app.post('/remove-relationship', checkAuthenticated, async (req,res)=>{
+  //update client
+  await Client.updateOne({_id: req.query.id_user}, {$set: {"myaccountant.status": "not_assigned", "myaccountant.id": "not_assigned"}});
+  
+  //update accountant
+  await Accountant.updateOne({_id: req.query.id_acc}, {$pull: {clients: {id: req.query.id_user}}});
+  res.redirect('back');
+});
+
 
 /*--------   REVIEW REPORT */
 app.post('/review-report', checkAuthenticated, async (req,res)=>{
