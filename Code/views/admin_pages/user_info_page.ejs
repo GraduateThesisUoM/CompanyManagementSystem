@@ -15,7 +15,7 @@
         <h2>User type: <%= user_profile.type; %></h2>
         <h2>User status: <%= user_profile.account_status; %></h2>
 
-        <form action="/changeBanStatus?id=<%=user_profile._id%>"  method="POST">
+        <form action="/change-ban-status?id=<%=user_profile._id%>"  method="POST">
             <% if(user_profile.account_status === "banned"){ %>
                 <input type="submit" id="change_ban_status_button" name="change_ban_status_button" value="Unban">
             <% }else{ %>
