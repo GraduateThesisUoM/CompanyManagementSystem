@@ -109,7 +109,7 @@
                 return;
             }
             if(match[0] === e.value){
-                fetch('getData', {
+                fetch('get-data', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({payload: e.value, status: status, type: userType}),

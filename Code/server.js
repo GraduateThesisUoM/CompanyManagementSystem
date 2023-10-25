@@ -108,81 +108,145 @@ app.post('/view-request', checkAuthenticated, async (req, res) => {
 
 /*--------   SEARCH FOR USER IN ADMIN PAGE */
 /*--------   to be optimized */
-app.post('/getData', async (req, res) => {
-  let payload = req.body.payload.trim();
+app.post('/get-data', async (req, res) => {
+  try{
+    let payload = req.body.payload.trim();
 
-  if(req.body.type === 'everyone'){
-    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
-    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
-    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
-  }
-  else{
-    var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
-    var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
-    var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
-  }
+    if(req.body.type === 'everyone'){
+      var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
+      var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
+      var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
+    }
+    else{
+      var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
+      var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
+      var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
+    }
   
   
-  var search = resultByFname.concat(resultByLname, resultByEmail); 
+    var search = resultByFname.concat(resultByLname, resultByEmail); 
   
-  for(var i=0;i<search.length;i++){
-    for(var j=i+1;j<search.length;j++){
-      if(search[i]._id.equals(search[j]._id)){
-        search.splice(j, j);
-        j--;
+    for(var i=0;i<search.length;i++){
+      for(var j=i+1;j<search.length;j++){
+        if(search[i]._id.equals(search[j]._id)){
+          search.splice(j, j);
+          j--;
+        }
       }
     }
-  }
   
-  res.send({payload: search});
+    res.send({payload: search});
+  }
+  catch (err) {
+    console.error('Error searching for user:', err);
+    res.redirect('/error?origin_page=get-data&error=' + err);
+  }
 });
 
 
 /*--------   ADMIN - USER PROFILE*/
 app.get('/user-profile', checkAuthenticated, async (req,res)=>{
-
-  res.render('admin_pages/user_info_page.ejs', {user: req.user ,user_profile : await getUserById(req.query.id), 
-    reports_for_user: await Report.find({$and:[{reported_id: req.query.id}, {reporter_id: {$ne:req.query.id}}, {status: "pending"}]}),
-    reports_by_user: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: {$ne:req.query.id}}, {status: "pending"}]}),
-    user_list: await User.find(),
-    general_reports: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: req.query.id}]})})
+  try{
+    res.render('admin_pages/user_info_page.ejs', {user: req.user ,user_profile : await getUserById(req.query.id), 
+      reports_for_user: await Report.find({$and:[{reported_id: req.query.id}, {reporter_id: {$ne:req.query.id}}, {status: "pending"}]}),
+      reports_by_user: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: {$ne:req.query.id}}, {status: "pending"}]}),
+      reviews_for_user: await Review.find({reviewed_id: req.query.id}),
+      user_list: await User.find(),
+      general_reports: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: req.query.id}]})})
+    }
+    catch (err) {
+      console.error('Error loading user page:', err);
+      res.redirect('/error?origin_page=user-profile&error=' + err);
+    }
 });
 
 
-/*--------   BAN-UNBAN */
-app.post('/changeBanStatus', checkAuthenticated, async (req,res)=>{
+/*--------  ADMIN - BAN - UN-BAN */
+app.post('/change-ban-status', checkAuthenticated, async (req,res)=>{
+  try{
+    //variable contains the status we want to insert
+    var status_value = "active"; 
   
-  //variable contains the status we want to insert
-  var status_value = "active"; 
+    //check the value of the button to see if we are banning or unbanning the user
+    if(req.body.change_ban_status_button == "Ban"){
+      status_value = "banned";
+    }
   
-  //check the value of the button to see if we are banning or unbanning the user
-  if(req.body.change_ban_status_button == "Ban"){
-    status_value = "banned";
+    //update the status of the user
+    await User.updateOne({_id: req.query.id}, [{$set:{account_status: status_value }}]);
+    res.redirect('back');
   }
-  
-  //update the status of the user
-  await User.updateOne({_id: req.query.id}, [{$set:{account_status: status_value }}]);
-  res.redirect('back');
+  catch (err) {
+    console.error('Error changing ban status:', err);
+    res.redirect('/error?origin_page=change-ban-status&error=' + err);
+  }
+});
+
+/*--------   ADMIN - REMOVE REVIEW */
+app.post('/remove-review', checkAuthenticated, async (req,res)=>{
+  try{
+    await Review.deleteOne({_id: req.query.id});
+    res.redirect('back');
+  }
+  catch (err) {
+    console.error('Error deleting review:', err);
+    res.redirect('/error?origin_page=remove-review&error=' + err);
+  }
+});
+
+
+/*--------   ADMIN - REMOVE RELATIONSHIPS */
+app.post('/remove-relationship', checkAuthenticated, async (req,res)=>{
+  try{
+    //update client
+    await Client.updateOne({_id: req.query.id_user}, {$set: {"myaccountant.status": "not_assigned", "myaccountant.id": "not_assigned"}});
+
+    //update accountant
+    await Accountant.updateOne({_id: req.query.id_acc}, {$pull: {clients: {id: req.query.id_user}}});
+    res.redirect('back');
+  }
+  catch (err) {
+    console.error('Error deleting relationship:', err);
+    res.redirect('/error?origin_page=remove-relationship&error=' + err);
+  }
 });
 
 
 /*--------   REVIEW REPORT */
 app.post('/review-report', checkAuthenticated, async (req,res)=>{
-  await Report.updateOne({_id: req.query.id}, {$set: {status: "reviewed"}});
-  res.redirect('back');
+  try{
+    await Report.updateOne({_id: req.query.id}, {$set: {status: "reviewed"}});
+    res.redirect('back');
+  }
+  catch (err) {
+    console.error('Error reviewing report:', err);
+    res.redirect('/error?origin_page=review-report&error=' + err);
+  }
 });
 
 
 /*--------   DISMISS REPORT */
 app.post('/dismiss-report', checkAuthenticated, async (req,res)=>{
-  await Report.updateOne({_id: req.query.id}, {$set: {status: "dismissed"}});
-  res.redirect('back');
+  try{
+    await Report.updateOne({_id: req.query.id}, {$set: {status: "dismissed"}});
+    res.redirect('back');
+  }
+  catch (err) {
+    console.error('Error dismissing report:', err);
+    res.redirect('/error?origin_page=dismiss-report&error=' + err);
+  }
 });
 
 /*--------   REEVALUATE REPORT */
 app.post('/reevaluate-report', checkAuthenticated, async (req,res)=>{
-  await Report.updateOne({_id: req.query.id}, {$set: {status: "pending"}});
-  res.redirect('back');
+  try{
+    await Report.updateOne({_id: req.query.id}, {$set: {status: "pending"}});
+    res.redirect('back');
+  }
+  catch (err) {
+    console.error('Error reevaluating report:', err);
+    res.redirect('/error?origin_page=reevaluate-report&error=' + err);
+  }
 });
 
 /*--------   LOG IN */
@@ -562,54 +626,83 @@ app.post('/client-profile', checkAuthenticated, async (req, res) => {
 
 /*--------   REPORT LIST PAGE */
 app.get('/report-list-page', checkAuthenticated, async (req, res) => {
-  res.render('admin_pages/report_list_page.ejs', {user: req.user, pending_reports: await Report.find({status: "pending"}), 
-  reviewed_reports: await Report.find({status: "reviewed"}), 
-  dismissed_reports: await Report.find({status: "dismissed"}),
-  user_list: await User.find()
-})});
+  try{
+    res.render('admin_pages/report_list_page.ejs', {user: req.user, pending_reports: await Report.find({status: "pending"}), 
+    reviewed_reports: await Report.find({status: "reviewed"}), 
+    dismissed_reports: await Report.find({status: "dismissed"}),
+    user_list: await User.find()})
+  }
+  catch (err) {
+    console.error('Error loading reports page:', err);
+    res.redirect('/error?origin_page=report-list-page&error=' + err);
+  }
+});
 
 /*--------   REPORT USER */
 app.get('/report-user', checkAuthenticated, (req, res) => {
-  res.render('general/report_user.ejs');
+  try{
+    res.render('general/report_user.ejs');
+  }
+  catch (err) {
+    console.error('Error loading report user page:', err);
+    res.redirect('/error?origin_page=report-user&error=' + err);
+  }
 });
 
 app.post('/report-user', checkAuthenticated, async (req,res)=> {
+  try{
+    let report_reason = req.body.report_user_radio;
+    if(req.body.report_user_radio === "Other"){
+      report_reason = req.body.report_title;
+    }
 
-  let report_reason = req.body.report_user_radio;
-  if(req.body.report_user_radio === "Other"){
-    report_reason = req.body.report_title;
+    const newReport = new Report({ //report constructor
+      reporter_id: req.user._id, //reporter id
+      reported_id: req.query.id, //reported id
+      reason: report_reason, //reason for report (taken from a radio in report page or inserted by the user)
+      status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
+      text: req.body.report_textarea //report text-details
+    });
+
+    await newReport.save();
+    res.redirect("back");
   }
-
-  const newReport = new Report({ //report constructor
-    reporter_id: req.user._id, //reporter id
-    reported_id: req.query.id, //reported id
-    reason: report_reason, //reason for report (taken from a radio in report page or inserted by the user)
-    status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
-    text: req.body.report_textarea //report text-details
-  });
-
-  await newReport.save();
-  res.redirect("back");
+  catch (err) {
+    console.error('Error creating report:', err);
+    res.redirect('/error?origin_page=report-user&error=' + err);
+  }
 });
 
 
 /*--------   GENERAL REPORT */
 app.get('/general-report', checkAuthenticated, (req, res) => {
-  res.render('general/general_report.ejs', {user: req.user});
+  try{
+    res.render('general/general_report.ejs', {user: req.user});
+  }
+  catch (err) {
+    console.error('Error loading general report page:', err);
+    res.redirect('/error?origin_page=general-report&error=' + err);
+  }
 });
 
 app.post('/general-report', checkAuthenticated, async (req,res)=> {
 
-  const newReport = new Report({ //report constructor
-    reporter_id: req.user._id, //reporter id
-    reported_id: req.user.id, //same as above
-    reason: req.body.report_title_area, //reason for report
-    status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
-    text: req.body.report_textarea //report text-details
-  });
+  try{
+    const newReport = new Report({ //report constructor
+      reporter_id: req.user._id, //reporter id
+      reported_id: req.user.id, //same as above
+      reason: req.body.report_title_area, //reason for report
+      status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
+      text: req.body.report_textarea //report text-details
+    });
 
-  await newReport.save();
-  res.redirect("back");
+    await newReport.save();
+    res.redirect("back");
+  }
+  catch (err) {
+    console.error('Error creating general report:', err);
+    res.redirect('/error?origin_page=general-report&error=' + err);
+  }
 });
 
 
