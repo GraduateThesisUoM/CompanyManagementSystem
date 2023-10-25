@@ -388,15 +388,28 @@ app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
 
 app.post('/my-accountant-requests', checkAuthenticated, async (req, res) => {
   try {
-    const newRequest = new Request({
-      sender_id: req.user._id,
-      receiver_id: req.user.myaccountant.id,
-      type: req.body.request_type,
-      title: req.body.request_title,
-      text: req.body.request_text
-    });
-
-    newRequest.save()
+    if(req.body.request_due_date == ""){
+      const newRequest = new Request({
+        sender_id: req.user._id,
+        receiver_id: req.user.myaccountant.id,
+        type: req.body.request_type,
+        title: req.body.request_title,
+        text: req.body.request_text
+      });
+      newRequest.save();
+    }
+    else{
+      const newRequest = new Request({
+        sender_id: req.user._id,
+        receiver_id: req.user.myaccountant.id,
+        type: req.body.request_type,
+        title: req.body.request_title,
+        text: req.body.request_text,
+        due_date : req.body.request_due_date
+      });
+      newRequest.save();
+    }
+    
     console.log('Reuest created successfully');
     res.redirect('/my-accountant');
   } catch (err) {
@@ -449,7 +462,7 @@ app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
       
     }
 
-    res.render('user_pages/pick_accountant.ejs', { accountants: accountants, ratings: ratings});
+    res.render('user_pages/pick_accountant.ejs', { user: req.user, accountants: accountants, ratings: ratings});
   } catch (err) {
     console.error('Error fetching accountants:', err);
     res.redirect('/error?origin_page=pick-accountant&error=' + err);

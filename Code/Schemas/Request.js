@@ -11,6 +11,7 @@ const RequestSchema = new mongoose.Schema({
   },
   title: { type: String},
   text: { type: String},
+  due_date: { type: String, default: "no due date"},
   response: { type: String},
   response_date: { type: Date },
   status: {
