@@ -54,6 +54,7 @@
                             <th>Type</th> <!-- Table header cell -->
                             <th>Title</th>
                             <th>Registration Date</th>
+                            <th>Due Date</th>
                             <th>Status</th>
                             <th> </th>
                         </tr>
@@ -64,6 +65,7 @@
                         <p id="request_preview_type"></p>
                         <p id="request_preview_title"></p>
                         <p id="request_preview_reg_date"></p>
+                        <p id="request_preview_due_date"></p>
                         <p id="request_preview_text"></p>
                         <button id="show_hide_request_preview">Hide</button>
                     </div>
@@ -190,6 +192,7 @@
             hide_btn.click(function() {
                 $("#request_preview_status").text("");
                 $("#request_preview_reg_date").text("");
+                $("#request_preview_due_date").text("");
                 $("#request_preview_title").text("");
                 $("#request_preview_type").text("");
                 $("#request_preview_text").text("");
@@ -209,6 +212,7 @@
                     const cell_title = $("<td>").text(request.title);
                     const date = new Date(request.registrationDate);
                     const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                    const cell_due_date = $("<td>").text(request.due_date);
                     const cell_status = $("<td>").text(request.status);
                     const cell_actions = $("<td>");
                     const btn_delete = $("<button>").text("Delete");
@@ -220,6 +224,7 @@
                     btn_view.click(function() {
                         $("#request_preview_status").text("Status : " + request.status);
                         $("#request_preview_reg_date").text("Type : " + request.type);
+                        $("#request_preview_due_date").text("Due Date : " + request.due_date);
                         $("#request_preview_title").text("Registration Date : " + date);
                         $("#request_preview_type").text("Title : " + request.title);
                         $("#request_preview_text").text("Text : " + request.text);
@@ -230,6 +235,7 @@
                     row.append(cell_type);
                     row.append(cell_title);
                     row.append(cell_reg_date);
+                    row.append(cell_due_date);
                     row.append(cell_status);
                     row.append(cell_actions);
                     cell_actions.append(btn_delete);

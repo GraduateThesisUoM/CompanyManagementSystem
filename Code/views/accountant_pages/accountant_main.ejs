@@ -25,7 +25,8 @@
                     <tr> <!-- This is a table row -->
                         <th>Type</th> <!-- Table header cell -->
                         <th>Title</th>
-                        <th>RegistrationDate</th>
+                        <th>Registration Date</th>
+                        <th>Due Date</th>
                         <th> </th>
                     </tr>
                 </table>
@@ -39,7 +40,8 @@
                     <tr> <!-- This is a table row -->
                         <th>Type</th> <!-- Table header cell -->
                         <th>Title</th>
-                        <th>RegistrationDate</th>
+                        <th>Registration Date</th>
+                        <th>Due Date</th>
                         <th> </th>
                     </tr>
                 </table>
@@ -53,7 +55,8 @@
                     <tr> <!-- This is a table row -->
                         <th>Type</th> <!-- Table header cell -->
                         <th>Title</th>
-                        <th>RegistrationDate</th>
+                        <th>Registration Date</th>
+                        <th>Due Date</th>
                         <th> </th>
                     </tr>
                 </table>
@@ -170,6 +173,7 @@
                 const cell_title = $("<td>").text(request.title);
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_due_date = $("<td>").text(request.due_date);
                 const cell_actions = $("<td>");
                 const btn_view = $("<button>").text("View").click(function() {
                     window.location.href = '/view-request?req_id='+request._id;
@@ -178,6 +182,7 @@
                 row.append(cell_type);
                 row.append(cell_title);
                 row.append(cell_reg_date);
+                row.append(cell_due_date);
                 row.append(cell_actions);
                 cell_actions.append(btn_view);
 
@@ -192,6 +197,7 @@
                 const cell_title = $("<td>").text(request.title);
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_due_date = $("<td>").text(request.due_date);
                 const cell_actions = $("<td>");
                 const btn_view = $("<button>").text("View").click(function() {
                     window.location.href = '/view-request?req_id='+request._id;
@@ -200,6 +206,7 @@
                 row.append(cell_type);
                 row.append(cell_title);
                 row.append(cell_reg_date);
+                row.append(cell_due_date);
                 row.append(cell_actions);
                 cell_actions.append(btn_view);
 
@@ -214,6 +221,7 @@
                 const cell_title = $("<td>").text(request.title);
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_due_date = $("<td>").text(request.due_date);
                 const cell_actions = $("<td>");
                 const btn_view = $("<button>").text("View").click(function() {
                     window.location.href = '/view-request?req_id='+request._id;
@@ -222,6 +230,7 @@
                 row.append(cell_type);
                 row.append(cell_title);
                 row.append(cell_reg_date);
+                row.append(cell_due_date);
                 row.append(cell_actions);
                 cell_actions.append(btn_view);
 
@@ -236,6 +245,7 @@
                 const cell_title = $("<td>").text(request.title);
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_due_date = $("<td>").text(request.due_date);
                 const cell_actions = $("<td>");
                 const btn_view = $("<button>").text("View").click(function() {
                     window.location.href = '/view-request?req_id='+request._id;
@@ -244,6 +254,7 @@
                 row.append(cell_type);
                 row.append(cell_title);
                 row.append(cell_reg_date);
+                row.append(cell_due_date);
                 row.append(cell_actions);
                 cell_actions.append(btn_view);
 
