@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Request History</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="accountant_request_history_css.css">
+        <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <h1>Request History</h1>
+        <div id="requests_div" >
+            <table id="requests_table" class="requests_table">
+                <tr> <!-- This is a table row -->
+                    <th>Type</th> <!-- Table header cell -->
+                    <th>Title</th>
+                    <th>Registration Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                </tr>
+            </table>
+        </div>
+
+    </body>
+    <%- include('../partials/footer'); %>
+    <script>
+        $(document).ready(function(){
+            $("#back_btn").click(function(){
+                    window.location ="/"
+            });
+
+            const requests_table = $("#requests_table");
+            const timestamp_options = {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            };
+
+            var requests;
+            try {
+                requests = JSON.parse(`<%- JSON.stringify(requests) %>`);
+            } catch (error) {
+                console.error("Error parsing JSON:", error);
+            }
+
+            requests.forEach(request => {
+                const row = $("<tr>");
+
+                const cell_type = $("<td>").text(request.type);
+                const cell_title = $("<td>").text(request.title);
+                const date = new Date(request.registrationDate);
+                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
+                const cell_due_date = $("<td>").text(request.due_date);
+                const cell_status = $("<td>").text(request.status);
+                
+                row.append(cell_type);
+                row.append(cell_title);
+                row.append(cell_reg_date);
+                row.append(cell_due_date);
+                row.append(cell_status);
+
+                requests_table.append(row);
+            });
+
+
+        });
+    </script>
+</html>

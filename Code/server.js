@@ -586,6 +586,12 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
 
 });
 
+/*--------   REQUEST HISTORY */
+app.get('/request-history', checkAuthenticated, async (req, res) => {
+  const requests = await Request.find({receiver_id:req.user._id});
+  res.render('accountant_pages/request_history.ejs', {user: req.user, requests: requests});
+});
+
 /*--------   CLIENT PROFILE */
 app.get('/client-profile', checkAuthenticated, async (req, res) => {
   const accountants_client = await Client.findOne({_id:req.query.id});

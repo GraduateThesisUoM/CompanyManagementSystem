@@ -1,0 +1,18 @@
+.requests_table {
+    border-collapse: collapse; /* Collapse border spacing */
+    width: 100%; /* Make the table take up the full width of its container */
+  }
+    
+  /* Style table header cells */
+  .requests_table > tbody > tr {
+    border: 1px solid #000; /* Add a 1px solid black border around th elements */
+    padding: 8px; /* Add some padding for better readability */
+    text-align: left; /* Align text to the left within th elements */
+  }
+  
+  /* Style table data cells */
+  .requests_table > tbody > tr > td , .requests_table > tbody > tr > th {
+    border: 1px solid #000; /* Add a 1px solid black border around td elements */
+    padding: 8px; /* Add some padding for better readability */
+    text-align: left; /* Align text to the left within td elements */
+  }
