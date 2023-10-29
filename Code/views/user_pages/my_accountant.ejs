@@ -18,16 +18,9 @@
         <p>
             First Name : <%= accountant.firstName %><br>
             Last Name : <%= accountant.lastName %><br>
-            Email : <%= accountant.email %></p>
+            Email : <%= accountant.email %>
+        </p>
 
-        <form class="messaging_form">
-            <h2>Messaging</h2>
-            <p>You : hello</p>
-            <p><%= accountant.firstName %> : hi</p>
-            <textarea></textarea>
-            <br>
-            <button type="submit">Submit</button>
-        </form>
 
         <form class="rating_form" action="/my-accountant-rate" method="POST">
             <h2>Rating</h2>
@@ -37,7 +30,7 @@
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
             <br>
-            <input type="text" id='rating_input' name='rating_input'>
+            <input style="display: none;" type="text" id='rating_input' name='rating_input'>
             <br>
             <textarea id='rating_textarea' name='rating_textarea'></textarea>
             <br>
@@ -110,7 +103,7 @@
     </body>
     <%- include('../partials/footer'); %>
     <script>
-        const visible_request_num = 10;
+        const visible_request_num = 5;
         var request_table_expanded = false;
         const timestamp_options = {
             year: 'numeric',
