@@ -52,10 +52,6 @@ app.use(express.static('./public/imgs'));
 
 /*--------   INDEX */
 app.get('/', checkAuthenticated, async (req, res) => {
-  /*const user = await User.findOne({_id:req.user._id});
-  user.last_log_in = new Date().toISOString();
-  user.save()
-  req.user = user;*/
   if(req.user.type == 'accountant'){
     //add something to get the requsets that hapen wile away
     const requests_pending = await Request.find({receiver_id:req.user._id, status : "pending" });
@@ -266,13 +262,15 @@ app.get('/sign-up', checkNotAuthenticated, (req, res) => {
 });
 app.post('/sign-up', async (req, res) => {
   try {
+    const saltRounds = 10; // You can adjust the number of salt rounds for security
+    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     // Create a new user instance with the provided data
     if (req.body.account_type == 'user'){
       const newUser = new Client({
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        password: req.body.password,
+        password: hashedPassword,
         email: req.body.email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakey,
@@ -293,7 +291,7 @@ app.post('/sign-up', async (req, res) => {
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        password: req.body.password,
+        password: hashedPassword,
         email: req.body.email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakey,
@@ -308,7 +306,7 @@ app.post('/sign-up', async (req, res) => {
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
-        password: req.body.password,
+        password: hashedPassword,
         email: req.body.email
       });
       // Save the new user to the database
@@ -880,7 +878,10 @@ app.post('/delete-account', checkAuthenticated, async (req, res) => {
 });
 
 /*--------   LOG OUT */
-app.delete('/logout', (req, res) => {
+app.delete('/logout', async (req, res) => {
+  const user = await User.findOne({_id:req.user._id});
+  user.last_log_out = new Date().toISOString();
+  user.save()
   req.logout(() => {
     res.redirect('/log-in');
   });

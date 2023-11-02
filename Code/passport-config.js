@@ -11,8 +11,7 @@ function initialize(passport, getUserByEmail, getUserById) {
           return done(null, false, { message: 'No user with that email' });
         }        
         try {
-          //if (await bcrypt.compare(password, user.password)) {
-          if (password == user.password) {
+          if (await bcrypt.compare(password, user.password)) {
             if (user.status == 'baned') {
               return done(null, false, { message: 'baned' })
             }
