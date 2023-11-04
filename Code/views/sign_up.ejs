@@ -25,7 +25,10 @@
     <input type="password" id="password" name="password" placeholder="Κωδικός" required>
     <label for="password_confirm">Επιβεβαίωση Κωδικού</label>
     <input type="password" id="password_confirm" name="password_confirm" placeholder="Κωδικός" required>
-    <label for="showpasswordcheckbox">Εμφάνηση Κωδικού</label><input type="checkbox" id="showpasswordcheckbox">
+    <div class="checkbox_conatainer">
+      <input type="checkbox" id="showpasswordcheckbox">
+      <label for="showpasswordcheckbox">Εμφάνηση Κωδικού</label>
+    </div>
     <span id="admin_hide">
       <label for="afm">Α.Φ.Μ.</label>
       <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ.">
@@ -37,9 +40,11 @@
         <input type="text" name="companyName" id="companyName">
         <label for="companyLogo">Λογότυπο εταιρείας :</label>
         <input type="text" name="companyLogo" id="companyLogo">
-        <label for="self_accountant_check_box">Αυτοδιαχείριση λογιστικών :</label>
-        <input type="checkbox" id="self_accountant_check_box">
-        <input type="text" name="self_accountant" id="self_accountant" value="false">
+        <div class="checkbox_conatainer">
+          <input type="checkbox" id="self_accountant_check_box">
+          <label for="self_accountant_check_box">Αυτοδιαχείριση λογιστικών :</label>
+          <input style="display: none;" type="text" name="self_accountant" id="self_accountant" value="false">
+        </div>
       </span>
     </span>
     <button style="display: none;" id="submit_btn" type="submit">Εγγραφή</button>

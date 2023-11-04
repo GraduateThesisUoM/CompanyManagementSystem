@@ -56,3 +56,7 @@ body{
     border: 2px solid black;
     margin-bottom: 5px;
 }
+
+.checkbox_conatainer{
+    display: flex;
+}
