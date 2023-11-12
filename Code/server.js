@@ -43,6 +43,7 @@ const Client  = require("./Schemas/Client");
 const Review  = require("./Schemas/Review");
 const Report = require("./Schemas/Report");
 const Request = require("./Schemas/Request");
+const Notification = require("./Schemas/Notification");
 const { cache } = require('ejs');
 const { isSet } = require('util/types');
 const { report } = require('process');
@@ -64,10 +65,12 @@ app.get('/', checkAuthenticated, async (req, res) => {
       requests_viewed : requests_viewed,
       requests_rejected : requests_rejected,
       requests_executed : requests_executed,
+      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]}),
       clients : clients});
   };
   if(req.user.type == 'user'){
-    res.render('user_pages/user_main.ejs',{user : req.user});
+    res.render('user_pages/user_main.ejs',{user : req.user,
+      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
   }
   if(req.user.type == 'admin'){
 
@@ -85,7 +88,8 @@ app.get('/view-request', checkAuthenticated, async (req, res) => {
     request.save();
   }
   const accountants_client = await Client.findOne({ _id : request.sender_id});
-  res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, accountants_client : accountants_client});
+  res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, accountants_client : accountants_client, 
+    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
 });
 
 app.post('/view-request', checkAuthenticated, async (req, res) => {
@@ -99,6 +103,19 @@ app.post('/view-request', checkAuthenticated, async (req, res) => {
   catch (err) {
     console.error('Error saving user:', err);
     res.redirect('/error?origin_page=view-request&error='+err);
+  }
+});
+
+/*--------   READ NOTIFICATION */
+app.post('/notification-read', async (req, res) =>{
+  try{
+    var components = req.body.v.toString().split('^');
+    console.log(components);
+    await Notification.updateOne({_id: components[1]},{$set: {status: "read"}});
+  }
+  catch (err) {
+    console.error('Error changing notification:', err);
+    res.redirect('/error?origin_page=/notification-read&error=' + err);
   }
 });
 
@@ -339,7 +356,8 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
         });
       }
 
-      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review, requests : users_requests});
+      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review, requests : users_requests,
+        notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
     }
     else{
       res.redirect('pick-accountant');
@@ -460,7 +478,8 @@ app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
       
     }
 
-    res.render('user_pages/pick_accountant.ejs', { user: req.user, accountants: accountants, ratings: ratings});
+    res.render('user_pages/pick_accountant.ejs', { user: req.user, accountants: accountants, ratings: ratings,
+      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
   } catch (err) {
     console.error('Error fetching accountants:', err);
     res.redirect('/error?origin_page=pick-accountant&error=' + err);
@@ -482,7 +501,8 @@ app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
 /*--------   ACCOUNTANT PREVIEW */
 app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
   const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
-  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user, reviews: reviews });
+  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user, reviews: reviews,
+    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]}) });
 });
 app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
   try {
@@ -509,6 +529,14 @@ app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
       await accountant.save();
       req.user.myaccountant.id = accountant._id
       req.user.myaccountant.status = "pending"
+
+      const newNotification = new Notification({ //Notification constructor
+        user_id: req.user.myaccountant.id,
+        relevant_user_id: req.user._id,
+        type: "hiring-request-notification",
+        status: "unread"
+      });
+      await newNotification.save();
     } 
     await req.user.save();
     res.redirect('/pick-accountant?message=success_send_req_to_accountant');
@@ -520,13 +548,15 @@ app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
 });
 
 /*--------   WORKING */
-app.get('/working', checkAuthenticated, (req, res) => {
-  res.render('accountant_pages/working_page.ejs');
+app.get('/working', checkAuthenticated, async (req, res) => {
+  res.render('accountant_pages/working_page.ejs', {user: req.user,
+    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
 });
 
 /*--------   ASSIGNMENT HISTORY */
-app.get('/assignment-history', checkAuthenticated, (req, res) => {
-  res.render('accountant_pages/assignment_history.ejs');
+app.get('/assignment-history', checkAuthenticated, async (req, res) => {
+  res.render('accountant_pages/assignment_history.ejs', {user: req.user,
+    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
 });
 
 /*--------   CLIENTS */
@@ -554,7 +584,8 @@ app.get('/clients', checkAuthenticated, async (req, res) => {
       }
     }
   }
-  res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired });
+  res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired, 
+    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
 
 });
 app.post('/clients', checkAuthenticated, async (req, res) => {
@@ -587,7 +618,8 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
 /*--------   REQUEST HISTORY */
 app.get('/request-history', checkAuthenticated, async (req, res) => {
   const requests = await Request.find({receiver_id:req.user._id});
-  res.render('accountant_pages/request_history.ejs', {user: req.user, requests: requests});
+  res.render('accountant_pages/request_history.ejs', {user: req.user, requests: requests, 
+    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
 });
 
 /*--------   CLIENT PROFILE */
@@ -604,7 +636,8 @@ app.get('/client-profile', checkAuthenticated, async (req, res) => {
     });
   }
 
-  res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review, clients_requests : clients_requests});
+  res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review, clients_requests : clients_requests, 
+    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
 });
 app.post('/client-profile', checkAuthenticated, async (req, res) => {
   try {
@@ -656,9 +689,10 @@ app.get('/report-list-page', checkAuthenticated, async (req, res) => {
 });
 
 /*--------   REPORT USER */
-app.get('/report-user', checkAuthenticated, (req, res) => {
+app.get('/report-user', checkAuthenticated, async (req, res) => {
   try{
-    res.render('general/report_user.ejs');
+    res.render('general/report_user.ejs', {user: req.user, 
+      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
   }
   catch (err) {
     console.error('Error loading report user page:', err);
@@ -692,9 +726,10 @@ app.post('/report-user', checkAuthenticated, async (req,res)=> {
 
 
 /*--------   GENERAL REPORT */
-app.get('/general-report', checkAuthenticated, (req, res) => {
+app.get('/general-report', checkAuthenticated, async (req, res) => {
   try{
-    res.render('general/general_report.ejs', {user: req.user});
+    res.render('general/general_report.ejs', {user: req.user,
+      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
   }
   catch (err) {
     console.error('Error loading general report page:', err);
@@ -724,8 +759,9 @@ app.post('/general-report', checkAuthenticated, async (req,res)=> {
 
 
 /*--------   SETTINGS */
-app.get('/settings', checkAuthenticated, (req, res) => {
-  res.render('general/settings.ejs', { user: req.user });
+app.get('/settings', checkAuthenticated, async (req, res) => {
+  res.render('general/settings.ejs', { user: req.user,
+    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
 });
 
 /*--------   PROFILE */
@@ -739,12 +775,14 @@ app.get('/profile-page', checkAuthenticated, async (req, res) => {
       return { review, user: matchingUser };
     });
 
-    res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviewUserArray});
+    res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviewUserArray, 
+      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
   };
   if(req.user.type == 'user'){
     const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
 
-    res.render('user_pages/profile_user.ejs',{user : req.user, users_accountant : users_accountant});
+    res.render('user_pages/profile_user.ejs',{user : req.user, users_accountant : users_accountant, 
+      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
   };
 });
 app.post('/profile-page', checkAuthenticated, async (req, res) => {
@@ -846,8 +884,9 @@ app.get('/error', (req, res) => {
   res.render('general/error_page.ejs');
 });
 /*--------   DELETE ACCOUNT */
-app.get('/delete-account', checkAuthenticated, (req, res) => {
-  res.render('general/delete_account.ejs', { user: req.user });
+app.get('/delete-account', checkAuthenticated, async (req, res) => {
+  res.render('general/delete_account.ejs', { user: req.user,
+    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]}) });
 });
 app.post('/delete-account', checkAuthenticated, async (req, res) => {
   try{

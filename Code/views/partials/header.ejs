@@ -10,9 +10,16 @@
     <div id="menu" name="menu">
         <a href="settings">Settings</a>
         <!-- Will be a pop-up not a unique page-->
-        <a href="">Notifications</a>
         <%if(user.type != 'admin'){%>
             <a href="profile-page">Profile</a>
+            <select name="notifications" id="notifications" onchange="NotificationClick(this.value)">
+                <option value="title" selected>Notifications <%= notification_list.length %></option>
+                    <%for(var i = 0; i < notification_list.length; i++){
+                        if(notification_list[i].type == "hiring-request-notification"){%>
+                            <option value="/clients^<%= notification_list[i]._id%>">Someone wants to hire you!</option>
+                        <%}
+                    }%>
+            </select>
         <%}%>
         <form action="/logout?_method=DELETE" method="POST">
             <button type="submit">Log Out</button>
@@ -20,4 +27,16 @@
     </div>
 
 </header>
+<script>
+    function NotificationClick(value){
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "/notification-read", true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+        xhr.send(JSON.stringify({
+            v: value
+        }));
+        
+    }
+      
+</script>
 </html>
