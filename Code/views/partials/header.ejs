@@ -16,7 +16,10 @@
                 <option value="title" selected>Notifications <%= notification_list.length %></option>
                     <%for(var i = 0; i < notification_list.length; i++){
                         if(notification_list[i].type == "hiring-request-notification"){%>
-                            <option value="/clients^<%= notification_list[i]._id%>">Someone wants to hire you!</option>
+                            <option value="/clients^<%= notification_list[i]._id%>">People want to hire you!</option>
+                        <%}
+                        if(notification_list[i].type == "review-notification"){%>
+                            <option value="/profile-page^<%= notification_list[i]._id%>">Someone left a Review!</option>
                         <%}
                     }%>
             </select>
@@ -29,13 +32,17 @@
 </header>
 <script>
     function NotificationClick(value){
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "/notification-read", true);
-        xhr.setRequestHeader('Content-Type', 'application/json');
-        xhr.send(JSON.stringify({
-            v: value
-        }));
-        
+      
+        var components = value.toString().split("^");
+        fetch("/notification-read", {
+            method: "POST",
+            headers: {'Content-Type': 'application/json'}, 
+            body: JSON.stringify({notification_id: components[1]})
+        }).then(res => {
+            if(res.ok){
+                window.location.replace(components[0]);
+            }
+        });  
     }
       
 </script>

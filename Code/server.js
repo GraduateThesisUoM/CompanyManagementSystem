@@ -65,12 +65,12 @@ app.get('/', checkAuthenticated, async (req, res) => {
       requests_viewed : requests_viewed,
       requests_rejected : requests_rejected,
       requests_executed : requests_executed,
-      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]}),
+      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}),
       clients : clients});
   };
   if(req.user.type == 'user'){
     res.render('user_pages/user_main.ejs',{user : req.user,
-      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
   }
   if(req.user.type == 'admin'){
 
@@ -89,7 +89,7 @@ app.get('/view-request', checkAuthenticated, async (req, res) => {
   }
   const accountants_client = await Client.findOne({ _id : request.sender_id});
   res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, accountants_client : accountants_client, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
 });
 
 app.post('/view-request', checkAuthenticated, async (req, res) => {
@@ -106,12 +106,13 @@ app.post('/view-request', checkAuthenticated, async (req, res) => {
   }
 });
 
+
 /*--------   READ NOTIFICATION */
 app.post('/notification-read', async (req, res) =>{
   try{
-    var components = req.body.v.toString().split('^');
-    console.log(components);
-    await Notification.updateOne({_id: components[1]},{$set: {status: "read"}});
+    var notif_id =  req.body.notification_id;
+    await Notification.updateOne({_id: notif_id},{$set: {status: "read"}});
+    res.sendStatus(200);
   }
   catch (err) {
     console.error('Error changing notification:', err);
@@ -357,7 +358,7 @@ app.get('/my-accountant', checkAuthenticated, async (req, res) => {
       }
 
       res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review, requests : users_requests,
-        notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
     }
     else{
       res.redirect('pick-accountant');
@@ -392,6 +393,18 @@ app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
       review.rating = req.body.rating_input;
       newReview = review;
     }
+
+    //Notification Creation for review
+    var exist_check = await Notification.findOne({$and: [{user_id:req.user.myaccountant.id}, {type:"review-notification"}]});
+      if(exist_check == null){
+        const newNotification = new Notification({ //Notification constructor
+          user_id: req.user.myaccountant.id,
+          relevant_user_id: req.user._id,
+          type: "review-notification",
+          status: "unread"
+        });
+        await newNotification.save();
+      }
 
     await newReview.save();
     console.log('Review created or updated successfully');
@@ -479,7 +492,7 @@ app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
     }
 
     res.render('user_pages/pick_accountant.ejs', { user: req.user, accountants: accountants, ratings: ratings,
-      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
   } catch (err) {
     console.error('Error fetching accountants:', err);
     res.redirect('/error?origin_page=pick-accountant&error=' + err);
@@ -502,7 +515,7 @@ app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
 app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
   const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
   res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user, reviews: reviews,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]}) });
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });
 });
 app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
   try {
@@ -530,13 +543,18 @@ app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
       req.user.myaccountant.id = accountant._id
       req.user.myaccountant.status = "pending"
 
-      const newNotification = new Notification({ //Notification constructor
-        user_id: req.user.myaccountant.id,
-        relevant_user_id: req.user._id,
-        type: "hiring-request-notification",
-        status: "unread"
-      });
-      await newNotification.save();
+      //Notification Creation for Requests
+      var exist_check = await Notification.findOne({$and: [{user_id:req.user.myaccountant.id}, {type:"hiring-request-notification"}]});
+      if(exist_check == null){
+        const newNotification = new Notification({ //Notification constructor
+          user_id: req.user.myaccountant.id,
+          relevant_user_id: req.user._id,
+          type: "hiring-request-notification",
+          status: "unread"
+        });
+        await newNotification.save();
+      }
+      
     } 
     await req.user.save();
     res.redirect('/pick-accountant?message=success_send_req_to_accountant');
@@ -550,13 +568,13 @@ app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
 /*--------   WORKING */
 app.get('/working', checkAuthenticated, async (req, res) => {
   res.render('accountant_pages/working_page.ejs', {user: req.user,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
 });
 
 /*--------   ASSIGNMENT HISTORY */
 app.get('/assignment-history', checkAuthenticated, async (req, res) => {
   res.render('accountant_pages/assignment_history.ejs', {user: req.user,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
 });
 
 /*--------   CLIENTS */
@@ -585,7 +603,7 @@ app.get('/clients', checkAuthenticated, async (req, res) => {
     }
   }
   res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
 
 });
 app.post('/clients', checkAuthenticated, async (req, res) => {
@@ -619,7 +637,7 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
 app.get('/request-history', checkAuthenticated, async (req, res) => {
   const requests = await Request.find({receiver_id:req.user._id});
   res.render('accountant_pages/request_history.ejs', {user: req.user, requests: requests, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
 });
 
 /*--------   CLIENT PROFILE */
@@ -637,7 +655,7 @@ app.get('/client-profile', checkAuthenticated, async (req, res) => {
   }
 
   res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review, clients_requests : clients_requests, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
 });
 app.post('/client-profile', checkAuthenticated, async (req, res) => {
   try {
@@ -692,7 +710,7 @@ app.get('/report-list-page', checkAuthenticated, async (req, res) => {
 app.get('/report-user', checkAuthenticated, async (req, res) => {
   try{
     res.render('general/report_user.ejs', {user: req.user, 
-      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
   }
   catch (err) {
     console.error('Error loading report user page:', err);
@@ -729,7 +747,7 @@ app.post('/report-user', checkAuthenticated, async (req,res)=> {
 app.get('/general-report', checkAuthenticated, async (req, res) => {
   try{
     res.render('general/general_report.ejs', {user: req.user,
-      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
   }
   catch (err) {
     console.error('Error loading general report page:', err);
@@ -761,7 +779,7 @@ app.post('/general-report', checkAuthenticated, async (req,res)=> {
 /*--------   SETTINGS */
 app.get('/settings', checkAuthenticated, async (req, res) => {
   res.render('general/settings.ejs', { user: req.user,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
 });
 
 /*--------   PROFILE */
@@ -776,13 +794,13 @@ app.get('/profile-page', checkAuthenticated, async (req, res) => {
     });
 
     res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviewUserArray, 
-      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
   };
   if(req.user.type == 'user'){
     const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
 
     res.render('user_pages/profile_user.ejs',{user : req.user, users_accountant : users_accountant, 
-      notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]})});
+      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
   };
 });
 app.post('/profile-page', checkAuthenticated, async (req, res) => {
@@ -886,7 +904,7 @@ app.get('/error', (req, res) => {
 /*--------   DELETE ACCOUNT */
 app.get('/delete-account', checkAuthenticated, async (req, res) => {
   res.render('general/delete_account.ejs', { user: req.user,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id},{registrationDate: {$gt: req.user.last_log_out}}]}) });
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });
 });
 app.post('/delete-account', checkAuthenticated, async (req, res) => {
   try{
