@@ -97,6 +97,21 @@ app.post('/view-request', checkAuthenticated, async (req, res) => {
     const request = await Request.findOne({ _id : req.body.request_id});
     request.status = req.body.action;
     request.response = req.body.response;
+
+
+    //Notification Creation for Assignments
+    var exist_check = await Notification.findOne({$and: [{user_id: request.sender_id}, {type:"assignments-status-notification"}]});
+    if(exist_check == null){
+      const newNotification = new Notification({ //Notification constructor
+        user_id: request.sender_id,
+        relevant_user_id: req.user._id,
+        type: "assignments-status-notification",
+        status: "unread"
+      });
+      await newNotification.save();
+    }
+
+
     request.save();
     res.redirect('/');
   }
