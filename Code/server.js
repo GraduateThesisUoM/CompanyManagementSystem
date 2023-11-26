@@ -691,6 +691,20 @@ app.post('/client-profile', checkAuthenticated, async (req, res) => {
         type: "accountant",
         rating: req.body.rating_input,
       });
+
+      //Notification Creation for review
+      var exist_check = await Notification.findOne({$and: [{user_id:accountants_client._id}, {type:"review-notification"}]});
+      if(exist_check == null){
+        const newNotification = new Notification({ //Notification constructor
+          user_id: accountants_client._id,
+          relevant_user_id: req.user._id,
+          type: "review-notification",
+          status: "unread"
+        });
+        await newNotification.save();
+      }
+
+
     } else {
       // Update the existing review's text and rating
       review.text = req.body.rating_textarea;
