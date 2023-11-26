@@ -51,165 +51,25 @@ const { report } = require('process');
 app.use(express.static('./public/css'));
 app.use(express.static('./public/imgs'));
 
-/*--------   INDEX */
-app.get('/', checkAuthenticated, async (req, res) => {
-  if(req.user.type == 'accountant'){
-    //add something to get the requsets that hapen wile away
-    const requests_pending = await Request.find({receiver_id:req.user._id, status : "pending" });
-    const requests_viewed = await Request.find({receiver_id:req.user._id, status :  "viewed"});
-    const requests_rejected = await Request.find({receiver_id:req.user._id, status :  "rejected"});
-    const requests_executed = await Request.find({receiver_id:req.user._id, status : "executed"});
-    const clients = await Client.find({type: 'user'});
-    res.render('accountant_pages/accountant_main.ejs',{user : req.user,
-      requests_pending : requests_pending,
-      requests_viewed : requests_viewed,
-      requests_rejected : requests_rejected,
-      requests_executed : requests_executed,
-      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}),
-      clients : clients});
-  };
-  if(req.user.type == 'user'){
-    res.render('user_pages/user_main.ejs',{user : req.user,
-      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
-  }
-  if(req.user.type == 'admin'){
 
-    res.render('admin_pages/admin_main.ejs',{user : req.user, 
-    user_list: await User.find(), pending_reports: await Report.find({status: "pending"})
-    });
-  }
-});
+//Routes
+const indexRoute = require("./routes/IndexRoutes");
+app.use("/", indexRoute);
 
-/*--------   VIEW REQUEST */
-app.get('/view-request', checkAuthenticated, async (req, res) => {
-  const request = await Request.findOne({ _id : req.query.req_id});
-  if( request.status == "pending"){
-    request.status = 'viewed';
-    request.save();
-  }
-  const accountants_client = await Client.findOne({ _id : request.sender_id});
-  res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, accountants_client : accountants_client, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
-});
+const viewRequestRoute = require("./routes/ViewRequestRoutes");
+app.use("/view-request", viewRequestRoute);
 
-app.post('/view-request', checkAuthenticated, async (req, res) => {
-  try {
-    const request = await Request.findOne({ _id : req.body.request_id});
-    request.status = req.body.action;
-    request.response = req.body.response;
+const readNotification = require("./routes/ReadNotificationRoutes");
+app.use("/notification-read", readNotification);
 
+const searchUserAdmin = require("./routes/SearchUserAdmin");
+app.use("/get-data", searchUserAdmin);
 
-    //Notification Creation for Assignments
-    var exist_check = await Notification.findOne({$and: [{user_id: request.sender_id}, {type:"assignments-status-notification"}]});
-    if(exist_check == null){
-      const newNotification = new Notification({ //Notification constructor
-        user_id: request.sender_id,
-        relevant_user_id: req.user._id,
-        type: "assignments-status-notification",
-        status: "unread"
-      });
-      await newNotification.save();
-    }
+const userProfileAdminRoutes = require("./routes/UserProfileAdminRoutes");
+app.use("/user-profile", userProfileAdminRoutes);
 
-
-    request.save();
-    res.redirect('/');
-  }
-  catch (err) {
-    console.error('Error saving user:', err);
-    res.redirect('/error?origin_page=view-request&error='+err);
-  }
-});
-
-
-/*--------   READ NOTIFICATION */
-app.post('/notification-read', async (req, res) =>{
-  try{
-    var notif_id =  req.body.notification_id;
-    await Notification.updateOne({_id: notif_id},{$set: {status: "read"}});
-    res.sendStatus(200);
-  }
-  catch (err) {
-    console.error('Error changing notification:', err);
-    res.redirect('/error?origin_page=/notification-read&error=' + err);
-  }
-});
-
-/*--------   SEARCH FOR USER IN ADMIN PAGE */
-/*--------   to be optimized */
-app.post('/get-data', async (req, res) => {
-  try{
-    let payload = req.body.payload.trim();
-
-    if(req.body.type === 'everyone'){
-      var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
-      var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
-      var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
-    }
-    else{
-      var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
-      var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
-      var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
-    }
-  
-  
-    var search = resultByFname.concat(resultByLname, resultByEmail); 
-  
-    for(var i=0;i<search.length;i++){
-      for(var j=i+1;j<search.length;j++){
-        if(search[i]._id.equals(search[j]._id)){
-          search.splice(j, j);
-          j--;
-        }
-      }
-    }
-  
-    res.send({payload: search});
-  }
-  catch (err) {
-    console.error('Error searching for user:', err);
-    res.redirect('/error?origin_page=get-data&error=' + err);
-  }
-});
-
-
-/*--------   ADMIN - USER PROFILE*/
-app.get('/user-profile', checkAuthenticated, async (req,res)=>{
-  try{
-    res.render('admin_pages/user_info_page.ejs', {user: req.user ,user_profile : await getUserById(req.query.id), 
-      reports_for_user: await Report.find({$and:[{reported_id: req.query.id}, {reporter_id: {$ne:req.query.id}}, {status: "pending"}]}),
-      reports_by_user: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: {$ne:req.query.id}}, {status: "pending"}]}),
-      reviews_for_user: await Review.find({reviewed_id: req.query.id}),
-      user_list: await User.find(),
-      general_reports: await Report.find({$and:[{reporter_id: req.query.id}, {reported_id: req.query.id}]})})
-    }
-    catch (err) {
-      console.error('Error loading user page:', err);
-      res.redirect('/error?origin_page=user-profile&error=' + err);
-    }
-});
-
-
-/*--------  ADMIN - BAN - UN-BAN */
-app.post('/change-ban-status', checkAuthenticated, async (req,res)=>{
-  try{
-    //variable contains the status we want to insert
-    var status_value = "active"; 
-  
-    //check the value of the button to see if we are banning or unbanning the user
-    if(req.body.change_ban_status_button == "Ban"){
-      status_value = "banned";
-    }
-  
-    //update the status of the user
-    await User.updateOne({_id: req.query.id}, [{$set:{account_status: status_value }}]);
-    res.redirect('back');
-  }
-  catch (err) {
-    console.error('Error changing ban status:', err);
-    res.redirect('/error?origin_page=change-ban-status&error=' + err);
-  }
-});
+const changeBanStatusRoutes = require("./routes/BanStatusRoutes");
+app.use("/change-ban-status", changeBanStatusRoutes);
 
 /*--------   ADMIN - REMOVE REVIEW */
 app.post('/remove-review', checkAuthenticated, async (req,res)=>{
@@ -978,7 +838,7 @@ app.post('/delete-account', checkAuthenticated, async (req, res) => {
 
 /*--------   LOG OUT */
 app.delete('/logout', async (req, res) => {
-  const user = await User.findOne({_id:req.user._id});
+  const user = await User.findOne({_id:req.user.id});
   user.last_log_out = new Date().toISOString();
   user.save()
   req.logout(() => {

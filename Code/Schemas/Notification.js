@@ -6,7 +6,7 @@ const NotificationSchema = new mongoose.Schema({
   relevant_user_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   type: { type: String, required: true },
   status: {type: String, required: true},
-  registrationDate: { type: Date, default: Date.now , required: true}
+  registrationDate: { type: Date, default: Date.now , required: true},
 });
 
 
