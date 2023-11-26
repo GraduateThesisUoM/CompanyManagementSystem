@@ -18,6 +18,9 @@
                         if(notification_list[i].type == "hiring-request-notification"){%>
                             <option value="/clients^<%= notification_list[i]._id%>">People want to hire you!</option>
                         <%}
+                        if(notification_list[i].type == "hiring-request-user-notification"){%>
+                            <option value="/my-accountant^<%= notification_list[i]._id%>">An accountant agreed to work with you!</option>
+                        <%}
                         if(notification_list[i].type == "review-notification"){%>
                             <option value="/profile-page^<%= notification_list[i]._id%>">Someone left a Review!</option>
                         <%}

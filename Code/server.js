@@ -632,13 +632,26 @@ app.post('/clients', checkAuthenticated, async (req, res) => {
         client.myaccountant.status = req.user._id;
         if(req.body.accountant_action == "assigned"){
           client.myaccountant.status = "assigned";
+
+          //Notification Creation for review
+          var exist_check = await Notification.findOne({$and: [{user_id: client._id}, {type:"hiring-request-user-notification"}]});
+          if(exist_check == null){
+            const newNotification = new Notification({ //Notification constructor
+              user_id: client._id,
+              relevant_user_id: req.user._id,
+              type: "hiring-request-user-notification",
+              status: "unread"
+            });
+            await newNotification.save();
+          }
+
         }
         client.myaccountant.status = req.body.accountant_action
         await client.save();
         break
       }
     }
-    console.error('Accountant ', req.body.accountant_action, ' Client Succesfull');
+    console.error('Accountant ', req.body.accountant_action, ' Client Successful');
     res.redirect('/clients');
   }
   catch (err) {
