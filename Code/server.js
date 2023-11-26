@@ -71,34 +71,12 @@ app.use("/user-profile", userProfileAdminRoutes);
 const changeBanStatusRoutes = require("./routes/BanStatusRoutes");
 app.use("/change-ban-status", changeBanStatusRoutes);
 
-/*--------   ADMIN - REMOVE REVIEW */
-app.post('/remove-review', checkAuthenticated, async (req,res)=>{
-  try{
-    await Review.deleteOne({_id: req.query.id});
-    res.redirect('back');
-  }
-  catch (err) {
-    console.error('Error deleting review:', err);
-    res.redirect('/error?origin_page=remove-review&error=' + err);
-  }
-});
+const removeReviewAdmin = require("./routes/RemoveReviewAdmin");
+app.use("/remove-review", removeReviewAdmin);
 
+const removeRelationshipsAdmin = require("./routes/RemoveRelationshipsAdmin");
+app.use("/remove-relationship", removeRelationshipsAdmin);
 
-/*--------   ADMIN - REMOVE RELATIONSHIPS */
-app.post('/remove-relationship', checkAuthenticated, async (req,res)=>{
-  try{
-    //update client
-    await Client.updateOne({_id: req.query.id_user}, {$set: {"myaccountant.status": "not_assigned", "myaccountant.id": "not_assigned"}});
-
-    //update accountant
-    await Accountant.updateOne({_id: req.query.id_acc}, {$pull: {clients: {id: req.query.id_user}}});
-    res.redirect('back');
-  }
-  catch (err) {
-    console.error('Error deleting relationship:', err);
-    res.redirect('/error?origin_page=remove-relationship&error=' + err);
-  }
-});
 
 
 /*--------   REVIEW REPORT */
