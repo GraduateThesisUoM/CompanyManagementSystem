@@ -86,197 +86,23 @@ app.use("/reevaluate-report", reevaluateReportAdmin);
 const logIn = require("./routes/LogInRoutes");
 app.use("/log-in", logIn);
 
+const signUp = require("./routes/SignUpRoutes");
+app.use("/sign-up", signUp);
 
-/*--------   SING UP */
-app.get('/sign-up', checkNotAuthenticated, (req, res) => {
-  res.render('sign_up.ejs');
-});
-app.post('/sign-up', async (req, res) => {
-  try {
-    const saltRounds = 10; // You can adjust the number of salt rounds for security
-    const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
-    // Create a new user instance with the provided data
-    if (req.body.account_type == 'user'){
-      const newUser = new Client({
-        type: req.body.account_type,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: hashedPassword,
-        email: req.body.email,
-        afm: req.body.afm,
-        mydatakey: req.body.mydatakey,
-        companyName: req.body.companyName,
-        companyLogo: req.body.companyLogo,
-      });
-      // Save the new user to the database
-    await newUser.save();
-    if (req.body.self_accountant == "true"){
-      newUser.myaccountant.id = newUser._id;
-      newUser.myaccountant.status = "self_accountant";
-    }
-    await newUser.save();
-    console.log("User created successfully");
-    }
-    else if (req.body.account_type == 'accountant'){
-      const newAccountant = new Accountant({
-        type: req.body.account_type,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: hashedPassword,
-        email: req.body.email,
-        afm: req.body.afm,
-        mydatakey: req.body.mydatakey,
-        clients:[]
-      });
-      // Save the new user to the database
-    await newAccountant.save();
-    console.log("Accountant created successfully");
-    }
-    else if (req.body.account_type == 'admin'){
-      const newUser = new User({
-        type: req.body.account_type,
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        password: hashedPassword,
-        email: req.body.email
-      });
-      // Save the new user to the database
-    await newUser.save();
-    console.log("Admin created successfully");
-    }
-    res.redirect('/log-in?message=success_sign_up');
-  } catch (err) {
-    console.error('Error saving user:', err);
-    res.redirect('/error?origin_page=sing-up&error='+err);
-  }
-});
+const myAccountantRoutes = require("./routes/MyAccountantRoutes");
+app.use("/my-accountant", myAccountantRoutes);
 
-/*--------    ΜΥ ACCOUNTΑΝΤ */
-app.get('/my-accountant', checkAuthenticated, async (req, res) => {
-  try {
-    if (req.user.myaccountant.status == "self_accountant"){
-      res.render('user_pages/self_accountant.ejs');
-    }
-    else if (req.user.myaccountant.status == "assigned"){
-      const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
-      const users_requests = await Request.find({ sender_id :req.user._id, receiver_id :req.user.myaccountant.id});
-      var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: req.user.myaccountant.id, type:"client"});
-      if (accountant_review == null){
-        accountant_review = new Review({
-          reviewer_id: req.user._id,
-          reviewed_id: req.user.myaccountant.id,
-          rating: -1,
-          registrationDate: ''
-        });
-      }
+const myAccountantRate = require("./routes/MyAccountantRate");
+app.use("/my-accountant-rate", myAccountantRate);
 
-      res.render('user_pages/my_accountant.ejs', { user: req.user, accountant: users_accountant, review : accountant_review, requests : users_requests,
-        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
-    }
-    else{
-      res.redirect('pick-accountant');
-    }
-  }
-  catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=my-accountant&error='+err);
-  }
-});
+const myAccountantRequests = require("./routes/MyAccountantRequests");
+app.use("/my-accountant-requests", myAccountantRequests);
 
-app.post('/my-accountant-rate', checkAuthenticated, async (req, res) => {
-  try {
-    let newReview;
-    const review = await Review.findOne({
-      reviewer_id: req.user._id,
-      reviewed_id: req.user.myaccountant.id,
-      type: "client",
-    });
+const myAccountantDeleteRequest = require("./routes/MyAccountantDeleteRequest");
+app.use("/my-accountant-delete-request", myAccountantDeleteRequest);
 
-    if (review == null) {
-      newReview = new Review({
-        reviewer_id: req.user._id,
-        reviewed_id: req.user.myaccountant.id,
-        text: req.body.rating_textarea,
-        type: "client",
-        rating: req.body.rating_input,
-      });
-    } else {
-      // Update the existing review's text and rating
-      review.text = req.body.rating_textarea;
-      review.rating = req.body.rating_input;
-      newReview = review;
-    }
 
-    //Notification Creation for review
-    var exist_check = await Notification.findOne({$and: [{user_id:req.user.myaccountant.id}, {type:"review-notification"}]});
-      if(exist_check == null){
-        const newNotification = new Notification({ //Notification constructor
-          user_id: req.user.myaccountant.id,
-          relevant_user_id: req.user._id,
-          type: "review-notification",
-          status: "unread"
-        });
-        await newNotification.save();
-      }
 
-    await newReview.save();
-    console.log('Review created or updated successfully');
-    res.redirect('/my-accountant');
-  } catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=my-accountant&error=' + err);
-  }
-});
-
-app.post('/my-accountant-requests', checkAuthenticated, async (req, res) => {
-  try {
-    if(req.body.request_due_date == ""){
-      const newRequest = new Request({
-        sender_id: req.user._id,
-        receiver_id: req.user.myaccountant.id,
-        type: req.body.request_type,
-        title: req.body.request_title,
-        text: req.body.request_text
-      });
-      newRequest.save();
-    }
-    else{
-      const newRequest = new Request({
-        sender_id: req.user._id,
-        receiver_id: req.user.myaccountant.id,
-        type: req.body.request_type,
-        title: req.body.request_title,
-        text: req.body.request_text,
-        due_date : req.body.request_due_date
-      });
-      newRequest.save();
-    }
-    
-    console.log('Reuest created successfully');
-    res.redirect('/my-accountant');
-  } catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=my-accountant&error=' + err);
-  }
-});
-
-app.post('/my-accountant-delete-request', checkAuthenticated, async (req, res) => {
-  try {
-    // Find and delete the request by its ID
-    const deletedRequest = await Request.findOneAndDelete({ _id: req.body.request_id });
-
-    if (deletedRequest) {
-      console.log('Request deleted successfully');
-      res.redirect('/my-accountant');
-    } else {
-      console.log('Request not found');
-      res.redirect('/my-accountant');
-    }
-  } catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=my-accountant&error=' + err);
-  }
-});
 
 
 /*--------   PICK ACCOUNTANT */
