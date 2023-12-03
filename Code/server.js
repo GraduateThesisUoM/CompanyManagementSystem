@@ -101,276 +101,29 @@ app.use("/my-accountant-requests", myAccountantRequests);
 const myAccountantDeleteRequest = require("./routes/MyAccountantDeleteRequest");
 app.use("/my-accountant-delete-request", myAccountantDeleteRequest);
 
+const pickAccountantRoutes = require("./routes/PickAccountantRoutes");
+app.use("/pick-accountant", pickAccountantRoutes);
+
+const previewAccountantRoutes = require("./routes/AccountantPreviewRoutes");
+app.use("/preview-accountant", previewAccountantRoutes);
+
+const workingPageRoutes = require("./routes/WorkingPageRoutes");
+app.use("/working", workingPageRoutes);
+
+const clientsPageRoutes = require("./routes/ClientsPageRouters");
+app.use("/clients", clientsPageRoutes);
+
+const requestHistoryRoutes = require("./routes/RequestHistoryRoutes");
+app.use("/request-history", requestHistoryRoutes);
+
+const clientProfileRoutes = require("./routes/ClientProfileRoutes");
+app.use("/client-profile", clientProfileRoutes);
+
+const reportListPageRoutes = require("./routes/ReportListPageRouters");
+app.use("/report-list-page", reportListPageRoutes);
 
 
 
-
-/*--------   PICK ACCOUNTANT */
-app.get('/pick-accountant', checkAuthenticated, async (req, res) => {
-  try {
-    const accountants = await Accountant.find({}); // Fetch all accountants from the database
-    accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
-
-    const ratings = [];
-
-    for (const accountant of accountants){
-      var average_rating = 0
-    
-      const reviews = await Review.find({reviewed_id: accountant._id, type: "client"});
-
-      for (const review of reviews){
-        average_rating = average_rating + review.rating;
-      }
-      if(reviews.length > 0){
-        ratings.push((average_rating / reviews.length).toFixed(1));
-      }
-      else{
-        ratings.push("-");
-      }
-      
-    }
-
-    res.render('user_pages/pick_accountant.ejs', { user: req.user, accountants: accountants, ratings: ratings,
-      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
-  } catch (err) {
-    console.error('Error fetching accountants:', err);
-    res.redirect('/error?origin_page=pick-accountant&error=' + err);
-  }
-});
-
-app.post('/pick-accountant', checkAuthenticated, async (req, res) => {
-  try {
-    const accountant = await Accountant.findOne({_id:req.body.accountant_id});
-    req.session.accountant = accountant;
-    res.redirect('/preview-accountant');
-  }
-  catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=pick-accountant&error='+err);
-  }
-});
-
-/*--------   ACCOUNTANT PREVIEW */
-app.get('/preview-accountant', checkAuthenticated, async (req, res) => {
-  const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
-  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user, reviews: reviews,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });
-});
-app.post('/preview-accountant', checkAuthenticated, async (req, res) => {
-  try {
-    if(req.user.myaccountant.id!="not_assigned"){
-      const last_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
-      for (let i = 0; i < last_accountant.clients.length; i++){
-        if( last_accountant.clients[i].id.equals(req.user._id)){
-          last_accountant.clients.splice(i, 1);
-          await last_accountant.save();
-          break;
-        }
-      }
-    }
-    
-    const accountant = await Accountant.findOne({_id:req.session.accountant._id});
-    if(req.body.user_action == "cancel_request"){
-      console.log("Cancel accountant request");
-      req.user.myaccountant.id = 'not_assigned'
-      req.user.myaccountant.status = 'not_assigned'
-    }
-    else if(req.body.user_action == "sent_request"){
-      console.log("Sent accountant request");
-      accountant.clients.push({id: req.user._id, status: "pending"});
-      await accountant.save();
-      req.user.myaccountant.id = accountant._id
-      req.user.myaccountant.status = "pending"
-
-      //Notification Creation for Requests
-      var exist_check = await Notification.findOne({$and: [{user_id:req.user.myaccountant.id}, {type:"hiring-request-notification"}]});
-      if(exist_check == null){
-        const newNotification = new Notification({ //Notification constructor
-          user_id: req.user.myaccountant.id,
-          relevant_user_id: req.user._id,
-          type: "hiring-request-notification",
-          status: "unread"
-        });
-        await newNotification.save();
-      }
-      
-    } 
-    await req.user.save();
-    res.redirect('/pick-accountant?message=success_send_req_to_accountant');
-  }
-  catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=pick-accountant&error='+err);
-  }
-});
-
-/*--------   WORKING */
-app.get('/working', checkAuthenticated, async (req, res) => {
-  res.render('accountant_pages/working_page.ejs', {user: req.user,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
-});
-
-/*--------   ASSIGNMENT HISTORY */
-app.get('/assignment-history', checkAuthenticated, async (req, res) => {
-  res.render('accountant_pages/assignment_history.ejs', {user: req.user,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
-});
-
-/*--------   CLIENTS */
-app.get('/clients', checkAuthenticated, async (req, res) => {
-  const clients_pending = [];
-  const clients_active = [];
-  const clients_expired = [];
-  if (req.user.clients.length === 0) {
-    console.log('no clients');
-  } else {
-    for (const client of req.user.clients) {
-      const user = await User.findById(client.id);
-      const clientInfo = {
-        user: user,
-        status: client.status
-      };
-      if(client.status == "pending"){
-        clients_pending.push(clientInfo);
-      }
-      else if(client.status == "assigned"){
-        clients_active.push(clientInfo);
-      }
-      else{
-        clients_expired.push(clientInfo);
-      }
-    }
-  }
-  res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
-
-});
-app.post('/clients', checkAuthenticated, async (req, res) => {
-  try {
-    for (let i = 0; i < req.user.clients.length; i++) {
-      if(req.user.clients[i].id.equals(req.body.clients_id)){
-        req.user.clients[i].status =  req.body.accountant_action
-        await req.user.save();
-
-        const client = await User.findById(req.body.clients_id);
-        client.myaccountant.status = req.user._id;
-        if(req.body.accountant_action == "assigned"){
-          client.myaccountant.status = "assigned";
-
-          //Notification Creation for review
-          var exist_check = await Notification.findOne({$and: [{user_id: client._id}, {type:"hiring-request-user-notification"}]});
-          if(exist_check == null){
-            const newNotification = new Notification({ //Notification constructor
-              user_id: client._id,
-              relevant_user_id: req.user._id,
-              type: "hiring-request-user-notification",
-              status: "unread"
-            });
-            await newNotification.save();
-          }
-
-        }
-        client.myaccountant.status = req.body.accountant_action
-        await client.save();
-        break
-      }
-    }
-    console.error('Accountant ', req.body.accountant_action, ' Client Successful');
-    res.redirect('/clients');
-  }
-  catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=clients&error='+err);
-  }
-
-});
-
-/*--------   REQUEST HISTORY */
-app.get('/request-history', checkAuthenticated, async (req, res) => {
-  const requests = await Request.find({receiver_id:req.user._id});
-  res.render('accountant_pages/request_history.ejs', {user: req.user, requests: requests, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
-});
-
-/*--------   CLIENT PROFILE */
-app.get('/client-profile', checkAuthenticated, async (req, res) => {
-  const accountants_client = await Client.findOne({_id:req.query.id});
-  const clients_requests = await Request.find({receiver_id:req.user._id, sender_id: accountants_client._id, status: 'pending'});
-  var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: accountants_client._id, type:"accountant"});
-  if (accountant_review == null){
-    accountant_review = new Review({
-      reviewer_id: req.user._id,
-      reviewed_id: accountants_client._id,
-      rating: -1,
-      registrationDate: ''
-    });
-  }
-
-  res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review, clients_requests : clients_requests, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
-});
-app.post('/client-profile', checkAuthenticated, async (req, res) => {
-  try {
-    const accountants_client = await Client.findOne({_id:req.body.clients_id});
-    let newReview;
-    const review = await Review.findOne({
-      reviewer_id: req.user._id,
-      reviewed_id: accountants_client._id,
-      rating: -1,
-      type: "accountant",
-    });
-
-    if (review == null) {
-      newReview = new Review({
-        reviewer_id: req.user._id,
-        reviewed_id: accountants_client._id,
-        text: req.body.rating_textarea,
-        type: "accountant",
-        rating: req.body.rating_input,
-      });
-
-      //Notification Creation for review
-      var exist_check = await Notification.findOne({$and: [{user_id:accountants_client._id}, {type:"review-notification"}]});
-      if(exist_check == null){
-        const newNotification = new Notification({ //Notification constructor
-          user_id: accountants_client._id,
-          relevant_user_id: req.user._id,
-          type: "review-notification",
-          status: "unread"
-        });
-        await newNotification.save();
-      }
-
-
-    } else {
-      // Update the existing review's text and rating
-      review.text = req.body.rating_textarea;
-      review.rating = req.body.rating_input;
-      newReview = review;
-    }
-
-    await newReview.save();
-    console.log('Review created or updated successfully');
-    res.redirect('/client-profile?id='+req.body.clients_id);
-  } catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=client-profile&error=' + err);
-  }
-});
-
-/*--------   REPORT LIST PAGE */
-app.get('/report-list-page', checkAuthenticated, async (req, res) => {
-  try{
-    res.render('admin_pages/report_list_page.ejs', {user: req.user, pending_reports: await Report.find({status: "pending"}), 
-    reviewed_reports: await Report.find({status: "reviewed"}), 
-    dismissed_reports: await Report.find({status: "dismissed"}),
-    user_list: await User.find()})
-  }
-  catch (err) {
-    console.error('Error loading reports page:', err);
-    res.redirect('/error?origin_page=report-list-page&error=' + err);
-  }
-});
 
 /*--------   REPORT USER */
 app.get('/report-user', checkAuthenticated, async (req, res) => {
