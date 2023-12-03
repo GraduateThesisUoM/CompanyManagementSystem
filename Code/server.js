@@ -74,57 +74,17 @@ app.use("/change-ban-status", changeBanStatusRoutes);
 const removeReviewAdmin = require("./routes/RemoveReviewAdmin");
 app.use("/remove-review", removeReviewAdmin);
 
-const removeRelationshipsAdmin = require("./routes/RemoveRelationshipsAdmin");
-app.use("/remove-relationship", removeRelationshipsAdmin);
+const reviewReportAdmin = require("./routes/ReviewReportAdmin");
+app.use("/review-report", reviewReportAdmin);
 
+const dismissReportAdmin = require("./routes/DismissReportAdmin");
+app.use("/dismiss-report", dismissReportAdmin);
 
+const reevaluateReportAdmin = require("./routes/ReevaluateReportAdmin");
+app.use("/reevaluate-report", reevaluateReportAdmin);
 
-/*--------   REVIEW REPORT */
-app.post('/review-report', checkAuthenticated, async (req,res)=>{
-  try{
-    await Report.updateOne({_id: req.query.id}, {$set: {status: "reviewed"}});
-    res.redirect('back');
-  }
-  catch (err) {
-    console.error('Error reviewing report:', err);
-    res.redirect('/error?origin_page=review-report&error=' + err);
-  }
-});
-
-
-/*--------   DISMISS REPORT */
-app.post('/dismiss-report', checkAuthenticated, async (req,res)=>{
-  try{
-    await Report.updateOne({_id: req.query.id}, {$set: {status: "dismissed"}});
-    res.redirect('back');
-  }
-  catch (err) {
-    console.error('Error dismissing report:', err);
-    res.redirect('/error?origin_page=dismiss-report&error=' + err);
-  }
-});
-
-/*--------   REEVALUATE REPORT */
-app.post('/reevaluate-report', checkAuthenticated, async (req,res)=>{
-  try{
-    await Report.updateOne({_id: req.query.id}, {$set: {status: "pending"}});
-    res.redirect('back');
-  }
-  catch (err) {
-    console.error('Error reevaluating report:', err);
-    res.redirect('/error?origin_page=reevaluate-report&error=' + err);
-  }
-});
-
-/*--------   LOG IN */
-app.get('/log-in', checkNotAuthenticated, (req, res) => {
-  res.render('log_in.ejs');
-});
-app.post('/log-in', checkNotAuthenticated, passport.authenticate('local', {
-  successRedirect: '/',
-  failureRedirect: '/log-in',
-  failureFlash: true
-}));
+const logIn = require("./routes/LogInRoutes");
+app.use("/log-in", logIn);
 
 
 /*--------   SING UP */
