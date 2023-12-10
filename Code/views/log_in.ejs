@@ -34,6 +34,9 @@
         if(urlParams.get('message')=="deletecomplete"){
           alert("Η διαγραφή του λογαριασμού σας ολοκληρόθηκε με επιτιχεία");
         }
+        else if(urlParams.get('message')=="success_sign_up"){
+          alert("Sign Up Completed Successfully");
+        }
       }
       $("#sign_up_btn").click(function(){
         window.location ="sign-up"

@@ -19,7 +19,7 @@ router.post('/', Authentication.checkNotAuthenticated, async (req, res) => {
     const { email } = req.body;
   
     try {
-      const user = await User.findOne({ email });
+      const user = await User.findOne({ email: email });
       if (!user) {
         console.log('User not found');
       }

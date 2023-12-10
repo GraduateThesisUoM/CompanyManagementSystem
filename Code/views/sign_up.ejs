@@ -56,6 +56,9 @@
   $(document).ready(function(){
     const urlParams = new URLSearchParams(window.location.search);
     const isAdmin = urlParams.get("admin") === "true";
+
+    const users_list = JSON.parse(`<%- JSON.stringify(users_list) %>`);
+
     if(isAdmin){
       $("#companyName").prop("required", false);
       $("#user_btn").hide();
@@ -69,6 +72,7 @@
     $("#log_in_btn").click(function(){
       window.location ="log-in"
     });
+
     $("#user_btn").click(function(){
       $("#h2").text("Χρήστης");
       $("#account_type").val("user");
@@ -91,17 +95,34 @@
         $("#self_accountant").val(isChecked ? "true" : "false");
     });
     $("#sign_up_btn").click(function(){
+      var all_checks_ok = true;
       const passwordInput = $("#password").val();
       const passwordConfirmInput = $("#password_confirm").val();
 
       if (passwordInput !== passwordConfirmInput) {
         // Passwords do not match, show an error message or take appropriate action
         alert("Οι κωδικοί δεν ταιριάζουν. Παρακαλούμε ελέγξτε ξανά.");
-        return false; // Prevent form submission
+        $("#password").val("").focus()
+        all_checks_ok = false;
       }
 
-      // If passwords match, submit the form
-      $("#submit_btn").click();
+      users_list.forEach(user => {
+        if (user.email === $("#email").val()) {
+          alert("Email already exists")
+          all_checks_ok = false;
+          if(all_checks_ok){
+            $("#email").val("").focus();
+          }else{
+            $("#email").val("");
+          }
+        }
+      });
+
+      if(all_checks_ok){
+        // If passwords match, submit the form
+        $("#submit_btn").click();
+      }
+      
     });
 
   });

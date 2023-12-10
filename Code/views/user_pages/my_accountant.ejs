@@ -98,7 +98,7 @@
                 </div>
             
         </div>
-
+        <button id="remove_accountant">Αφαίρεση Λογιστή</button>
         <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>
@@ -118,6 +118,11 @@
             $("#back_btn").click(function(){
                 window.location = "/"
             });
+
+            $("#remove_accountant").click(function(){
+                window.location ="remove_accountant"
+            });
+
             $("#more_requests_btn").click(function(){
                 request_table_expanded = !request_table_expanded;
                 if(request_table_expanded){

@@ -12,9 +12,11 @@ const Client  = require("../Schemas/Client");
 const Authentication = require("../AuthenticationFunctions");
 
 /*--------   SING UP */
-router.get('/', Authentication.checkNotAuthenticated, (req, res) => {
-    res.render('../views/sign_up.ejs');
+router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
+  const users = await User.find();
+    res.render('../views/sign_up.ejs',{users_list: users});
   });
+
   router.post('/', async (req, res) => {
     try {
       const saltRounds = 10; // You can adjust the number of salt rounds for security

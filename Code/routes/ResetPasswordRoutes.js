@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require('bcrypt');
 
 //Models
 const User = require("../Schemas/User");
@@ -39,8 +40,8 @@ router.post('/', Authentication.checkNotAuthenticated,  async (req, res) => {
       }
   
       // Update the user's password and remove the token and expiration fields
-      //user.password = await bcrypt.hash(password, 10);
-      user.password = password;
+      const saltRounds = 10;
+      user.password = await bcrypt.hash(password, saltRounds);;
       user.resetPasswordToken = undefined;
       user.resetPasswordExpires = undefined;
       await user.save();

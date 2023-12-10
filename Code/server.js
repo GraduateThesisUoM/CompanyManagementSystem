@@ -130,7 +130,8 @@ app.use("/delete-account", deleteAccountRoutes);
 const logOutRouts = require("./routes/LogOutRoutes");
 app.use("/logout", logOutRouts);
 
-
+const RemoveAccountantRouts = require("./routes/RemoveAccountant");
+app.use("/remove_accountant", RemoveAccountantRouts);
 
 
 app.listen(3000, () => {
