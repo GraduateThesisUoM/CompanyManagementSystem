@@ -27,6 +27,19 @@
                     $("#submit_btn").click();
                 }
             });
+            const urlParams = new URLSearchParams(window.location.search);
+            const error = urlParams.get("error");
+            if(error != null){
+                alert(error);
+            }
+            $("#showpasswordcheckbox").click(function(){
+                const passwordInput = $("#password");
+                const passwordConfirmInput = $("#password_confirm");
+                const isChecked = $(this).prop("checked");
+                passwordInput.prop("type", isChecked ? "text" : "password");
+                passwordConfirmInput.prop("type", isChecked ? "text" : "password");
+            });
+            
         });
       </script>
 </html>

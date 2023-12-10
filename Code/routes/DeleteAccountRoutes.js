@@ -1,4 +1,5 @@
 const express = require("express");
+const bcrypt = require('bcrypt');
 const router = express.Router();
 
 //Models
@@ -16,7 +17,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try{
-      if(req.user.password == req.body.password){
+      if (await bcrypt.compare(req.body.password, req.user.password)){
         const user = await User.findOne({ _id: req.user._id });
         user.account_status = 'deleted';
         await user.save();
