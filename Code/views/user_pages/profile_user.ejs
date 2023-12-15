@@ -33,10 +33,6 @@
                         <input type="text" name="companyName" id="companyName" value="<%= user.companyName%>">
                         <label for="companyLogo">Λογότυπο εταιρείας :</label>
                         <input type="text" name="companyLogo" id="companyLogo"  value="<%= user.companyLogo%>">
-
-                        <span id="users_accountant">
-                            <p id="my_accountant">x</p>
-                        </span>
                     </span>
                 </span>
                 <button type="submit" id="edit-info-button" name="edit-info-button">Αποθήκευση αλλαγών</button>
@@ -70,9 +66,6 @@
         }
         else if(my_accountant.id == "<%= user._id %>"){
             $("#my_accountant").text("Αυτοδιαχείριση Λογιστικών");
-        }
-        else{
-            $("#my_accountant").text("Λογιστής: <%= users_accountant.firtsName %> <%= users_accountant.lastName %>");
         }
          $("#back_btn").click(function(){
                 window.location ="/"

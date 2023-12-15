@@ -24,10 +24,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       res.render('accountant_pages/profile_accountant.ejs',{user : req.user, reviews: reviewUserArray, 
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
     };
-    if(req.user.type == 'user'){
-      const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});
-  
-      res.render('user_pages/profile_user.ejs',{user : req.user, users_accountant : users_accountant, 
+    if(req.user.type == 'user'){ 
+      res.render('user_pages/profile_user.ejs',{user : req.user, 
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
     };
 });

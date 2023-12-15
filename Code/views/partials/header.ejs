@@ -18,14 +18,23 @@
                         if(notification_list[i].type == "hiring-request-notification"){%>
                             <option value="/clients^<%= notification_list[i]._id%>">People want to hire you!</option>
                         <%}
-                        if(notification_list[i].type == "hiring-request-user-notification"){%>
+                        if(notification_list[i].type == "assigned-request-user-notification"){%>
                             <option value="/my-accountant^<%= notification_list[i]._id%>">An accountant agreed to work with you!</option>
+                        <%}
+                        if(notification_list[i].type == "rejected-request-user-notification"){%>
+                            <option value="/my-accountant^<%= notification_list[i]._id%>">An accountant has chosen not to work with you!</option>
                         <%}
                         if(notification_list[i].type == "review-notification"){%>
                             <option value="/profile-page^<%= notification_list[i]._id%>">Someone left a Review!</option>
                         <%}
                         if(notification_list[i].type == "assignments-status-notification"){%>
                             <option value="/my-accountant^<%= notification_list[i]._id%>">An assignment changed status!</option>
+                        <%}
+                        if(notification_list[i].type == "admin-relationship-sever-user"){%>
+                            <option value="/my-accountant^<%= notification_list[i]._id%>">Admin has removed your accountant!</option>
+                        <%}
+                        if(notification_list[i].type == "admin-relationship-sever-acc"){%>
+                            <option value="/clients^<%= notification_list[i]._id%>">Admin has removed a client!</option>
                         <%}
                     }%>
             </select>

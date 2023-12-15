@@ -48,13 +48,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
           await req.user.save();
   
           const client = await User.findById(req.body.clients_id);
-          client.myaccountant.status = req.user._id;
-          if(req.body.accountant_action == "assigned"){
-            client.myaccountant.status = "assigned";
-
-            create_notification(client._id, req.user._id, "hiring-request-user-notification");
-  
-          }
+          create_notification(client._id, req.user._id, req.body.accountant_action+"-request-user-notification");          
           client.myaccountant.status = req.body.accountant_action
           await client.save();
           break

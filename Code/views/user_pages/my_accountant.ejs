@@ -98,7 +98,10 @@
                 </div>
             
         </div>
-        <button id="remove_accountant">Αφαίρεση Λογιστή</button>
+        <form action="/remove_accountant"  method="POST">
+            <button type="submit" id="remove_accountant">Αφαίρεση Λογιστή</button>
+        </form>
+        
         <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>

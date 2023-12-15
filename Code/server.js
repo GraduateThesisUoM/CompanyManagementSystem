@@ -61,6 +61,9 @@ app.use("/remove-review", removeReviewAdmin);
 const reviewReportAdmin = require("./routes/ReviewReportAdmin");
 app.use("/review-report", reviewReportAdmin);
 
+const removeRelationshipAdmin = require("./routes/RemoveRelationshipsAdmin");
+app.use("/remove-relationship", removeRelationshipAdmin);
+
 const dismissReportAdmin = require("./routes/DismissReportAdmin");
 app.use("/dismiss-report", dismissReportAdmin);
 
