@@ -36,6 +36,9 @@
                         if(notification_list[i].type == "admin-relationship-sever-acc"){%>
                             <option value="/clients^<%= notification_list[i]._id%>">Admin has removed a client!</option>
                         <%}
+                        if(notification_list[i].type == "firing-accountant-notification"){%>
+                            <option value="/clients^<%= notification_list[i]._id%>">One of your clients just fired you!</option>
+                        <%}
                     }%>
             </select>
         <%}%>
