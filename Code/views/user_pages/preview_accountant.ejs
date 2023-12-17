@@ -43,16 +43,31 @@
                     window.location ="/pick-accountant"
             });
             if ("<%= accountant._id %>" == "<%= user.myaccountant.id %>"){
-                $("#request_bnt").hide();
-                $("#cansel_request_bnt").show();
+                if ("pending" == "<%= user.myaccountant.status %>"){
+                    $("#request_bnt").hide();
+                    $("#cansel_request_bnt").show();
+                }
+                else{
+                    $("#request_bnt").show();
+                    $("#cansel_request_bnt").hide();
+                }
             }
             else{
                 $("#request_bnt").show();
                 $("#cansel_request_bnt").hide();
             }
             $("#request_bnt").click(function(){
-                $("#user_action").val("sent_request")
-                $("#submit_preview_accountant").click()
+                if("pending" == "<%= user.myaccountant.status %>"){
+                    var result = confirm("You have already sent a request to another accountant do you want to cacsel the previous?");
+                    if (result) {
+                        $("#user_action").val("sent_request")
+                        $("#submit_preview_accountant").click()
+                    }
+                }
+                else{
+                    $("#user_action").val("sent_request")
+                    $("#submit_preview_accountant").click()
+                }
             });
             $("#cansel_request_bnt").click(function(){
                 $("#user_action").val("cancel_request")
