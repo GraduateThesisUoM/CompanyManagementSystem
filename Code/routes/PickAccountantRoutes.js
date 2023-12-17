@@ -54,5 +54,12 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     }
 });
 
+router.post('/make-self-accountant', Authentication.checkAuthenticated, async (req, res) => {
+  console.log("gggggggggggggggggggg");
+  res.redirect('/self-accountant');
+});
+
+
+
 module.exports = router;
   

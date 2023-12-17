@@ -14,7 +14,7 @@ const Authentication = require("../AuthenticationFunctions");
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
       if (req.user.myaccountant.status == "self_accountant"){
-        res.render('user_pages/self_accountant.ejs');
+        res.redirect('self-accountant');
       }
       else if (req.user.myaccountant.status == "assigned"){
         const users_accountant = await Accountant.findOne({_id:req.user.myaccountant.id});

@@ -13,10 +13,13 @@
     </head>
     <body>
         <h1>Επιλογή Λογιστή</h1>
+        <form action="/self-accountant-register" method="POST">
+            <button type="submit" id="self_accountant_id_submit_btn">Αυτοδιαχείριση λογιστικών</button>
+            </form>
         <form action="/pick-accountant" method="POST">
-        <input name="accountant_id" id="accountant_id">
+        <input style="display:none" name="accountant_id" id="accountant_id">
 
-        <button type="submit" id="accountant_id_submit_btn">Submit</button>
+        <button style="display:none" type="submit" id="accountant_id_submit_btn">Submit</button>
         </form>
 
         <div id="accountan_table">
