@@ -139,8 +139,11 @@ app.use("/remove_accountant", RemoveAccountantRouts);
 const SelfAccountandRoutes = require("./routes/SelfAccountantRoutes.js");
 app.use("/self-accountant", SelfAccountandRoutes);
 
-const SelfAccountandRegisterRoutes = require("./routes/SelfAccountantRegister");
+const SelfAccountandRegisterRoutes = require("./routes/SelfAccountantRegister.js");
 app.use("/self-accountant-register", SelfAccountandRegisterRoutes);
+
+const CreateRoutes = require("./routes/CreateRoutes.js");
+app.use("/create", CreateRoutes);
 
 
 app.listen(3000, () => {
