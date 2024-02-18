@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "alert": "^6.0.1",
     "pusher": "^5.2.0"
   }
 }
