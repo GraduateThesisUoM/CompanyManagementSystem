@@ -17,10 +17,13 @@
             <button id="series_btn">Σειρά</button>
         </nav>
         <h1 id="header1"></h1>
-        <div id="warehouse_div">
-
-
-        </div>
+        <form action="/create/warehouse" method="POST" id="warehouse_div">
+            <label>Τίτλος : </label>
+            <input type="text" name="warehouse_title">
+            <label>Τοποθεσία : </label>
+            <input type="text" name="warehouse_location">
+            <button type="submit">Submit</button>
+        </form>
         <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>
