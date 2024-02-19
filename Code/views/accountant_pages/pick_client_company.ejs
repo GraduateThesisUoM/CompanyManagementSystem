@@ -12,23 +12,10 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <nav>
-            <button id="warehouse_btn">Αποθήκη</button>
-            <button id="series_btn">Σειρά</button>
-        </nav>
+        <h1 id="header1">Rick Client Company</h1>
         <div id="pick_client">
             <div>Name</div>
             <div>Button</div>
-        </div>
-        <div id="container" style="display: none;">
-        <h1 id="header1"></h1>
-            <form action="/create/warehouse" method="POST" id="warehouse_div">
-                <label>Τίτλος : </label>
-                <input type="text" name="warehouse_title">
-                <label>Τοποθεσία : </label>
-                <input type="text" name="warehouse_location">
-                <button type="submit">Submit</button>
-            </form>
         </div>
         <button id="back_btn">Πίσω</button>
     </body>
@@ -58,18 +45,8 @@
             }
 
             $("#back_btn").click(function(){
-                    window.location ="/"
+                    window.location ="working"
             });
-
-            $("#warehouse_btn").click(function(){
-                $("#header1").text("Δημιουργία Αποθήκης");
-            });
-            $("#series_btn").click(function(){
-                $("#header1").text("Δημιουργία Σειράς");
-            });
-            function pick_client(index){
-                alert(index);
-            }
         });
     </script>
 </html>

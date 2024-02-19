@@ -145,6 +145,9 @@ app.use("/self-accountant-register", SelfAccountandRegisterRoutes);
 const CreateRoutes = require("./routes/CreateRoutes.js");
 app.use("/create", CreateRoutes);
 
+const PickClientCompanyRotes = require("./routes/PickClientCompanyRoutes.js");
+app.use("/pickclientcompany", PickClientCompanyRotes);
+
 
 app.listen(3000, () => {
   console.log('Server started on port 3000');
