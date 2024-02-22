@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const User = require("../Schemas/User");
 const Accountant  = require("../Schemas/Accountant");
 const Client  = require("../Schemas/Client");
+const Company  = require("../Schemas/Company");
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
@@ -22,6 +23,23 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
       const saltRounds = 10; // You can adjust the number of salt rounds for security
       const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
       // Create a new user instance with the provided data
+      console.log(req.body.companyNewExisting);
+      try{
+        if(req.body.companyNewExisting = '0'){
+          const newComany = new Company({
+            companyName : req.body.companyName,
+            companyLogo : req.body.companyLogo
+          });
+          await newComany.save();
+        }
+        else{
+          console.log('fff');
+        }
+      }
+      catch(e){
+        console.error('Error creating company ', err);
+        res.redirect('/error?origin_page=sign-up&error='+err);
+      }
       if (req.body.account_type == 'user'){
         const newUser = new Client({
           type: req.body.account_type,
@@ -30,17 +48,17 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
           password: hashedPassword,
           email: req.body.email,
           afm: req.body.afm,
-          mydatakey: req.body.mydatakey,
+          mydatakey: req.body.mydatakey/*,
           companyName: req.body.companyName,
-          companyLogo: req.body.companyLogo,
+          companyLogo: req.body.companyLogo*/
         });
         // Save the new user to the database
-      await newUser.save();
+      //await newUser.save();
       if (req.body.self_accountant == "true"){
         newUser.myaccountant.id = newUser._id;
         newUser.myaccountant.status = "self_accountant";
       }
-      await newUser.save();
+      //await newUser.save();
       console.log("User created successfully");
       }
       else if (req.body.account_type == 'accountant'){
@@ -73,7 +91,7 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
       res.redirect('/log-in?message=success_sign_up');
     } catch (err) {
       console.error('Error saving user:', err);
-      res.redirect('/error?origin_page=sing-up&error='+err);
+      res.redirect('/error?origin_page=sign-up&error='+err);
     }
 });
 

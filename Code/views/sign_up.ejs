@@ -36,10 +36,22 @@
       <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
       <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData (προαιρετικό)">
       <span id="accountant_hide">
-        <label for="companyName">'Ονομα εταιρείας:</label>
-        <input type="text" name="companyName" id="companyName">
-        <label for="companyLogo">Λογότυπο εταιρείας :</label>
-        <input type="text" name="companyLogo" id="companyLogo">
+        <span style="display: flex;">
+          <button type="button" id="newCompanybtn">Νέα Εταιρία</button>
+          <button type="button" id="existingCompanybtn">Υπάρχουσα Εταιρία</button>
+          <input id="companyNewExisting" name="companyNewExisting" value="-1">
+        </span>
+        <span id="newCompany" style="display: none;">
+          <label for="companyName">'Ονομα εταιρείας:</label>
+          <input type="text" name="companyName" id="companyName">
+          <label for="companyLogo">Λογότυπο εταιρείας :</label>
+          <input type="text" name="companyLogo" id="companyLogo">
+        </span>
+        <span id="existingCompany" style="display: none;">
+          <label for="companyCode">Κωδικός Εταιρείας:</label>
+          <input type="text" name="companyCode" id="companyCode">
+        </span>
+
         <div class="checkbox_conatainer">
           <input type="checkbox" id="self_accountant_check_box">
           <label for="self_accountant_check_box">Αυτοδιαχείριση Λογιστικών :</label>
@@ -93,6 +105,20 @@
     $("#self_accountant_check_box").change(function() {
         const isChecked = $(this).prop("checked");
         $("#self_accountant").val(isChecked ? "true" : "false");
+    });
+    $("#newCompanybtn").click(function() {
+        $('#newCompany').css('display', 'block');
+        $('#existingCompany').css('display', 'none');
+        $('#newCompanybtn').css('font-weight', 'bold');
+        $('#existingCompanybtn').css('font-weight', 'normal');
+        $('#companyNewExisting').val("0");
+    });
+    $("#existingCompanybtn").click(function() {
+        $('#newCompany').css('display', 'none');
+        $('#existingCompany').css('display', 'block');
+        $('#newCompanybtn').css('font-weight', 'normal');
+        $('#existingCompanybtn').css('font-weight', 'bold');
+        $('#companyNewExisting').val("1");
     });
     $("#sign_up_btn").click(function(){
       var all_checks_ok = true;

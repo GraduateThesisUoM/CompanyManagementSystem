@@ -18,8 +18,8 @@ const UserSchema = new mongoose.Schema({
 
   afm: { type: String, required: false },
   mydatakey: { type: String, required: false },
-  companyName: { type: String, required: false },
-  companyLogo: { type: String, required: false },
+  /*companyName: { type: String, required: false },
+  companyLogo: { type: String, required: false },*/
 
   resetPasswordToken: { type: String, required: false},
   resetPasswordExpires: { type: Date, required: false}, 
