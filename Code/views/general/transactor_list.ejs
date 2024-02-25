@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id="basic-filter-div">
+        <a href="/transactor">Νέος</a>
+    </div>
+    <div id="tr-list-div">
+        <% if(transactor_list.length > 0){
+            for(var i=0; i<transactor_list.length; i++){ %>
+                <span><%= transactor_list[i].code %> <%= transactor_list[i].name%></span>
+            <% }
+        }else{ %>
+            <span>Δεν υπάρχει συναλλασόμενος!</span>
+        <% } %>
+    </div>
+    
+</body>
+</html>

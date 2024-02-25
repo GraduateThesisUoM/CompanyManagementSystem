@@ -136,9 +136,11 @@ app.use("/logout", logOutRouts);
 const RemoveAccountantRouts = require("./routes/RemoveAccountant");
 app.use("/remove_accountant", RemoveAccountantRouts);
 
+const TransactorList = require("./routes/TransactorListRoutes");
+app.use("/transactor-list", TransactorList);
+
 const Transactor = require("./routes/TransactorRoutes");
 app.use("/transactor", Transactor);
-
 
 app.listen(3000, () => {
   console.log('Server started on port 3000');
