@@ -12,7 +12,9 @@ const CompanySchema = new mongoose.Schema({
       enum: ['active', 'disabled'],
       default: 'active'
   },
-  userslicense: { type: Number, required: true,default:1 }
+  userslicense: { type: Number, required: true,default:1 },
+  signupcode: { type: String, required: true},
+  autochangesignupcode:{type:Number, required: true,default:1}
 });
 
 // Export the model for the Accountant schema

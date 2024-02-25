@@ -144,6 +144,10 @@
         }
       });
 
+      if($("#companyNewExisting").val()==-1){
+        all_checks_ok = false;
+      }
+
       if(all_checks_ok){
         // If passwords match, submit the form
         $("#submit_btn").click();

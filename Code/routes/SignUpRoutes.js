@@ -28,7 +28,8 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
         if(req.body.companyNewExisting = '0'){
           const newComany = new Company({
             companyName : req.body.companyName,
-            companyLogo : req.body.companyLogo
+            companyLogo : req.body.companyLogo,
+            signupcode : generateRandomCode(6)
           });
           await newComany.save();
         }
@@ -94,5 +95,17 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
       res.redirect('/error?origin_page=sign-up&error='+err);
     }
 });
+
+function generateRandomCode(length) {
+  const characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let code = '';
+
+  for (let i = 0; i < length; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      code += characters[randomIndex];
+  }
+
+  return code;
+}
 
 module.exports = router;
