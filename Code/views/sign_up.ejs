@@ -41,15 +41,15 @@
           <button type="button" id="existingCompanybtn">Υπάρχουσα Εταιρία</button>
           <input id="companyNewExisting" name="companyNewExisting" value="-1">
         </span>
+        <label for="companyName">'Ονομα εταιρείας:</label>
+        <input type="text" name="companyName" id="companyName">
         <span id="newCompany" style="display: none;">
-          <label for="companyName">'Ονομα εταιρείας:</label>
-          <input type="text" name="companyName" id="companyName">
           <label for="companyLogo">Λογότυπο εταιρείας :</label>
           <input type="text" name="companyLogo" id="companyLogo">
         </span>
         <span id="existingCompany" style="display: none;">
-          <label for="companyCode">Κωδικός Εταιρείας:</label>
-          <input type="text" name="companyCode" id="companyCode">
+          <label for="companyRegisterCode">Κωδικός Εταιρείας:</label>
+          <input type="text" name="companyRegisterCode" id="companyRegisterCode">
         </span>
 
         <div class="checkbox_conatainer">
@@ -70,6 +70,7 @@
     const isAdmin = urlParams.get("admin") === "true";
 
     const users_list = JSON.parse(`<%- JSON.stringify(users_list) %>`);
+    const companies_list = JSON.parse(`<%- JSON.stringify(companies) %>`);
 
     if(isAdmin){
       $("#companyName").prop("required", false);
@@ -144,7 +145,35 @@
         }
       });
 
-      if($("#companyNewExisting").val()==-1){
+      if($('#companyNewExisting')==0){
+        companies_list.forEach(copmany => {
+          if (copmany.name === $("#companyName").val()) {
+            alert("Company already exists");
+            $("#companyName").val("").focus();
+            all_checks_ok = false;
+            //return false; // exit loop
+          }
+        });
+      }
+      else if($('#companyNewExisting')==1){
+        companies_list.forEach(copmany => {
+          if (copmany.name === $("#companyName").val()) {
+            if(copmany.signupcode != $("#companyRegisterCode").val()){
+              alert("Company Name and Registration Code does not match");
+              $("#companyRegisterCode").val("").focus();
+              all_checks_ok = false;
+            }
+          }
+        });
+        if(companies_list.length() == 0){
+          alert("There is no companies created");
+          $("#companyName").val("").focus();
+          $("#companyRegisterCode").val("");
+          all_checks_ok = false;
+        }
+      }
+      else if($('#companyNewExisting')==-1){
+        alert("Must Choose a Company");
         all_checks_ok = false;
       }
 

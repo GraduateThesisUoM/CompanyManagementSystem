@@ -15,7 +15,8 @@ const Authentication = require("../AuthenticationFunctions");
 /*--------   SING UP */
 router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
   const users = await User.find();
-    res.render('../views/sign_up.ejs',{users_list: users});
+  const companies = await Company.find();
+    res.render('../views/sign_up.ejs',{users_list: users,companies :companies});
   });
 
   router.post('/', async (req, res) => {
@@ -23,21 +24,22 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
       const saltRounds = 10; // You can adjust the number of salt rounds for security
       const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
       // Create a new user instance with the provided data
-      console.log(req.body.companyNewExisting);
+      var company;
       try{
-        if(req.body.companyNewExisting = '0'){
-          const newComany = new Company({
-            companyName : req.body.companyName,
-            companyLogo : req.body.companyLogo,
+        if(req.body.companyNewExisting == '0'){
+
+          company = new Company({
+            name : req.body.companyName,
+            logo : req.body.companyLogo,
             signupcode : generateRandomCode(6)
           });
-          await newComany.save();
+          await company.save();
         }
         else{
           console.log('fff');
         }
       }
-      catch(e){
+      catch(err){
         console.error('Error creating company ', err);
         res.redirect('/error?origin_page=sign-up&error='+err);
       }
@@ -49,17 +51,16 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
           password: hashedPassword,
           email: req.body.email,
           afm: req.body.afm,
-          mydatakey: req.body.mydatakey/*,
-          companyName: req.body.companyName,
-          companyLogo: req.body.companyLogo*/
+          mydatakey: req.body.mydatakey,
+          company: company._id
         });
         // Save the new user to the database
-      //await newUser.save();
+      await newUser.save();
       if (req.body.self_accountant == "true"){
         newUser.myaccountant.id = newUser._id;
         newUser.myaccountant.status = "self_accountant";
       }
-      //await newUser.save();
+      await newUser.save();
       console.log("User created successfully");
       }
       else if (req.body.account_type == 'accountant'){

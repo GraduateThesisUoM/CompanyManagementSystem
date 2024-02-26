@@ -18,6 +18,7 @@ const UserSchema = new mongoose.Schema({
 
   afm: { type: String, required: false },
   mydatakey: { type: String, required: false },
+  company: {type: mongoose.Schema.Types.ObjectId, required: true},
   /*companyName: { type: String, required: false },
   companyLogo: { type: String, required: false },*/
 
