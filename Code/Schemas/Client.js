@@ -17,9 +17,10 @@ const ClientSchema = new mongoose.Schema({
     default: null
   },
   companyOwned : {
-    type: mongoose.Schema.Types.ObjectId,
-    required: false,
-    default: null
+    type: Number,
+    enum: [0,1],
+    required: true,
+    default: 0
   }
 });
 

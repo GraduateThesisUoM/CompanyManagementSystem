@@ -20,29 +20,25 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
   });
 
   router.post('/', async (req, res) => {
+    var company;
     try {
       const saltRounds = 10; // You can adjust the number of salt rounds for security
       const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
       // Create a new user instance with the provided data
-      var company;
-      try{
         if(req.body.companyNewExisting == '0'){
-
-          company = new Company({
+          //New Company
+          var newCompany = new Company({
             name : req.body.companyName,
             logo : req.body.companyLogo,
             signupcode : generateRandomCode(6)
           });
-          await company.save();
+          await newCompany.save();
         }
         else{
-          console.log('fff');
+          //Existing Company
+          company = await Company.findOne({name:req.body.companyName, signupcode:req.body.companyRegisterCode});
+          console.log(company);
         }
-      }
-      catch(err){
-        console.error('Error creating company ', err);
-        res.redirect('/error?origin_page=sign-up&error='+err);
-      }
       if (req.body.account_type == 'user'){
         const newUser = new Client({
           type: req.body.account_type,
@@ -54,13 +50,14 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
           mydatakey: req.body.mydatakey,
           company: company._id
         });
+        console.log(newUser); 
         // Save the new user to the database
-      await newUser.save();
+      //await newUser.save();
       if (req.body.self_accountant == "true"){
         newUser.myaccountant.id = newUser._id;
         newUser.myaccountant.status = "self_accountant";
       }
-      await newUser.save();
+      //await newUser.save();
       console.log("User created successfully");
       }
       else if (req.body.account_type == 'accountant'){

@@ -45,7 +45,7 @@
         <input type="text" name="companyName" id="companyName">
         <span id="newCompany" style="display: none;">
           <label for="companyLogo">Λογότυπο εταιρείας :</label>
-          <input type="text" name="companyLogo" id="companyLogo">
+          <input type="file" name="companyLogo" id="companyLogo">
         </span>
         <span id="existingCompany" style="display: none;">
           <label for="companyRegisterCode">Κωδικός Εταιρείας:</label>
@@ -147,7 +147,7 @@
 
       if($('#companyNewExisting')==0){
         companies_list.forEach(copmany => {
-          if (copmany.name === $("#companyName").val()) {
+          if (copmany.name === $("#companyName").val() || company.signupcode === $("#companyRegisterCode").val()) {
             alert("Company already exists");
             $("#companyName").val("").focus();
             all_checks_ok = false;
