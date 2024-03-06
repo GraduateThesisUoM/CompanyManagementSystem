@@ -13,6 +13,7 @@ const CompanySchema = new mongoose.Schema({
       default: 'active'
   },
   userslicense: { type: Number, required: true,default:1 },
+  licenseinuse: { type: Number, required: true,default:1 },
   signupcode: { type: String, required: true},
   autochangesignupcode:{type:Number, required: true,default:1}
 });
