@@ -57,12 +57,13 @@
                 $("#cansel_request_bnt").hide();
             }
             $("#request_bnt").click(function(){
+                
                 if("pending" == "<%= user.myaccountant.status %>"){
-                    var result = confirm("You have already sent a request to another accountant do you want to cacsel the previous?");
+                    /*var result = confirm("You have already sent a request to another accountant do you want to cacsel the previous?");
                     if (result) {
                         $("#user_action").val("sent_request")
                         $("#submit_preview_accountant").click()
-                    }
+                    }*/
                 }
                 else{
                     $("#user_action").val("sent_request")

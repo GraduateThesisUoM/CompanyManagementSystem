@@ -12,8 +12,16 @@ const CompanySchema = new mongoose.Schema({
       enum: ['active', 'disabled'],
       default: 'active'
   },
-  userslicense: { type: Number, required: true,default:1 },
-  licenseinuse: { type: Number, required: true,default:1 },
+  companyaccountant: {
+    id: { type: String, required: false,default: 'not_assigned'},
+    status: {
+      type: String,
+      enum: ['assigned', 'pending', 'not_assigned','self_accountant','rejected'],
+      default: 'not_assigned'
+    },
+  },
+  users_num: { type: Number, required: true,default:1 },
+  license_num: { type: Number, required: true,default:1 },
   signupcode: { type: String, required: true},
   autochangesignupcode:{type:Number, required: true,default:1}
 });

@@ -39,10 +39,10 @@
         <span style="display: flex;">
           <button type="button" id="newCompanybtn">Νέα Εταιρία</button>
           <button type="button" id="existingCompanybtn">Υπάρχουσα Εταιρία</button>
-          <input id="companyNewExisting" name="companyNewExisting" value="-1">
+          <input id="companyNewExisting" name="companyNewExisting" value="-1" style="display: none;">
         </span>
-        <label for="companyName">'Ονομα εταιρείας:</label>
-        <input type="text" name="companyName" id="companyName">
+        <label for="companyName" id="companyName_label" style="display: none;">'Ονομα εταιρείας:</label>
+        <input type="text" name="companyName" id="companyName" style="display: none;">
         <span id="newCompany" style="display: none;">
           <label for="companyLogo">Λογότυπο εταιρείας :</label>
           <input type="file" name="companyLogo" id="companyLogo">
@@ -106,20 +106,30 @@
     $("#self_accountant_check_box").change(function() {
         const isChecked = $(this).prop("checked");
         $("#self_accountant").val(isChecked ? "true" : "false");
+        $("#newCompanybtn").click();
     });
     $("#newCompanybtn").click(function() {
-        $('#newCompany').css('display', 'block');
-        $('#existingCompany').css('display', 'none');
-        $('#newCompanybtn').css('font-weight', 'bold');
-        $('#existingCompanybtn').css('font-weight', 'normal');
-        $('#companyNewExisting').val("0");
+      $('#companyName').css('display', 'block');
+      $('#companyName_label').css('display', 'block');
+      $('#newCompany').css('display', 'block');
+      $('#existingCompany').css('display', 'none');
+      $('#newCompanybtn').css('font-weight', 'bold');
+      $('#existingCompanybtn').css('font-weight', 'normal');
+      $('#companyNewExisting').val("0");
     });
     $("#existingCompanybtn").click(function() {
-        $('#newCompany').css('display', 'none');
-        $('#existingCompany').css('display', 'block');
-        $('#newCompanybtn').css('font-weight', 'normal');
-        $('#existingCompanybtn').css('font-weight', 'bold');
-        $('#companyNewExisting').val("1");
+      $('#companyName').css('display', 'block');
+      $('#companyName_label').css('display', 'block');
+      $('#newCompany').css('display', 'none');
+      $('#existingCompany').css('display', 'block');
+      $('#newCompanybtn').css('font-weight', 'normal');
+      $('#existingCompanybtn').css('font-weight', 'bold');
+      $('#companyNewExisting').val("1");
+      if($("#self_accountant_check_box").prop("checked")){
+        $("#self_accountant_check_box").click();
+      }
+      
+      
     });
     $("#sign_up_btn").click(function(){
       var all_checks_ok = true;
@@ -145,7 +155,9 @@
         }
       });
 
-      if($('#companyNewExisting')==0){
+      if($('#companyNewExisting').val()=="0"){
+        console.log('1a');
+
         companies_list.forEach(copmany => {
           if (copmany.name === $("#companyName").val() || company.signupcode === $("#companyRegisterCode").val()) {
             alert("Company already exists");
@@ -155,31 +167,47 @@
           }
         });
       }
-      else if($('#companyNewExisting')==1){
-        companies_list.forEach(copmany => {
-          if (copmany.name === $("#companyName").val()) {
-            if(copmany.signupcode != $("#companyRegisterCode").val()){
-              alert("Company Name and Registration Code does not match");
-              $("#companyRegisterCode").val("").focus();
-              all_checks_ok = false;
-            }
+      else if($('#companyNewExisting').val()=="1"){
+        var company_credentials = true;
+        var user_num = 1;
+        var lisense_num = 1;
+        companies_list.forEach(company => {
+          if ((company.name == $("#companyName").val()) && (company.signupcode == $("#companyRegisterCode").val())){
+            company_credentials = false;
+            user_num = company.licenseinuse;
+            lisense_num = company.userslicense;
           }
         });
-        if(companies_list.length() == 0){
+
+        if(company_credentials){
+          alert("Company Name and Registration Code does not match");
+          $("#companyName").val("").focus();
+          all_checks_ok = false;
+        }
+        else if(companies_list.length == 0){
           alert("There is no companies created");
           $("#companyName").val("").focus();
           $("#companyRegisterCode").val("");
           all_checks_ok = false;
         }
+        else if(user_num == lisense_num){
+          alert("Ther are no empy sport for new user, by more");
+          all_checks_ok = false;
+        }
       }
-      else if($('#companyNewExisting')==-1){
+      else if($('#companyNewExisting').val()=="-1"){
         alert("Must Choose a Company");
+        all_checks_ok = false;
+      }
+      else{
+        console.log("fff");
         all_checks_ok = false;
       }
 
       if(all_checks_ok){
         // If passwords match, submit the form
-        $("#submit_btn").click();
+        //$("#submit_btn").click();
+        alert("ok");
       }
       
     });
