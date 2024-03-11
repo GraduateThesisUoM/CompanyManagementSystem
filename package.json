@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "alert": "^6.0.1",
+    "popup": "^0.0.3",
+    "popups": "^1.1.3",
     "pusher": "^5.2.0"
   }
 }

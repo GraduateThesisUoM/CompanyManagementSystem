@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const popup = require("popups");
 
 //Models
 const Transactor  = require("../Schemas/Transactor");
@@ -22,9 +23,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 router.post('/save', Authentication.checkAuthenticated, async (req,res)=>{
     try{
       // check if a transactor with the same code or amf exists
-    var code_check = await Transactor.findOne({$and: [{code: req.body.transactor_code}, {type: req.body.transactor_type}]});
-    var afm_check = await Transactor.findOne({$and: [{afm: req.body.transactor_afm}, {type: req.body.transactor_type}]});
-    console.log(code_check);
+    const code_check = await Transactor.findOne({$and: [{code: req.body.transactor_code}, {type: "supplier"}]});
+    const afm_check = await Transactor.findOne({$and: [{afm: req.body.transactor_AFM}, {type: "supplier"}]});
+    console.log(code_check, afm_check);
 
     // if not
     if((code_check == null) && (afm_check == null)){
@@ -64,10 +65,10 @@ router.post('/save', Authentication.checkAuthenticated, async (req,res)=>{
         await newTransactor.save();
     }
     else if((code_check != null) && (afm_check == null)){
-        alert("Ο κωδικός δεν είναι μοναδικός!");
+        popup.alert({content: "Ο κωδικός δεν είναι μοναδικός!"});
     }
     else if((code_check == null) && (afm_check != null)){
-        alert("Το ΑΦΜ δεν είναι μοναδικό!");
+        alert({content: "Το ΑΦΜ δεν είναι μοναδικό!"});
     }
     res.redirect('back');
     }

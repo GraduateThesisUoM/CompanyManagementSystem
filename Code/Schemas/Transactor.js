@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 
 // Define the report schema
 const TransactorSchema = new mongoose.Schema({
-    code:{type: String, required: true, unique: true},
+    code:{type: String, required: true},
     name: { type: String, required: true },
     occupation: { type: String, default: " "},
     address: { type: String, default: " "},
@@ -13,7 +13,7 @@ const TransactorSchema = new mongoose.Schema({
     zip: { type: String, default: " "},
     phone1: { type: String, default: " "},
     phone2: { type: String, default: " "},
-    afm: {type: String, required: true, unique: true},
+    afm: {type: String, required: true},
     type: { type: String, default: " "},
     shipping_address: { type: String, default: " "},
     shipping_district: { type: String, default: " "},

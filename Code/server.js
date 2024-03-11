@@ -136,20 +136,11 @@ app.use("/logout", logOutRouts);
 const RemoveAccountantRouts = require("./routes/RemoveAccountant");
 app.use("/remove_accountant", RemoveAccountantRouts);
 
-<<<<<<< HEAD
 const TransactorList = require("./routes/TransactorListRoutes");
 app.use("/transactor-list", TransactorList);
 
 const Transactor = require("./routes/TransactorRoutes");
 app.use("/transactor", Transactor);
-=======
-const SelfAccountandRoutes = require("./routes/SelfAccountantRoutes.js");
-app.use("/self-accountant", SelfAccountandRoutes);
-
-const SelfAccountandRegisterRoutes = require("./routes/SelfAccountantRegister");
-app.use("/self-accountant-register", SelfAccountandRegisterRoutes);
-
->>>>>>> main
 
 app.listen(3000, () => {
   console.log('Server started on port 3000');
