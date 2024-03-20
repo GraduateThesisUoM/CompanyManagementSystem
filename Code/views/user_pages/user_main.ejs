@@ -21,7 +21,13 @@
     <script>
         $(document).ready(function(){
             $("#my_accountant").click(function(){
-                window.location ="my-accountant"
+                if('<%= company.companyaccountant.id %>' == 'not_assigned' && '<%= user.companyOwner %>' == 0){
+                    alert("You need elevated rights to hire an accountant");
+                }
+                else{
+                    window.location ="my-accountant"
+                }
+                
             });
         });
       </script>

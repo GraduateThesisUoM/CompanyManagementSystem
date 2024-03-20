@@ -5,6 +5,7 @@ const router = express.Router();
 const Accountant  = require("../Schemas/Accountant");
 const Review  = require("../Schemas/Review");
 const Notification = require("../Schemas/Notification");
+const Company  = require("../Schemas/Company");
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
@@ -15,7 +16,8 @@ const create_notification = require("../CreateNotification");
 /*--------   ACCOUNTANT PREVIEW */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
-    res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant, user: req.user, reviews: reviews,
+    const company = await Company.findOne(_id=req.user.company);
+    res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company, user: req.user, reviews: reviews,
       notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });
   });
   router.post('/', Authentication.checkAuthenticated, async (req, res) => {

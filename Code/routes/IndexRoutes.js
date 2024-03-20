@@ -7,6 +7,7 @@ const Client  = require("../Schemas/Client");
 const Report = require("../Schemas/Report");
 const Request = require("../Schemas/Request");
 const Notification = require("../Schemas/Notification");
+const Company  = require("../Schemas/Company");
 
 //Authentication Function
 const Authentication = require("../AuthenticationFunctions");
@@ -30,7 +31,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         clients : clients});
     };
     if(req.user.type == 'user'){ //index for users
-      res.render('user_pages/user_main.ejs',{user : req.user,
+      const company = await Company.findOne({_id:req.user.company});
+      res.render('user_pages/user_main.ejs',{user : req.user, company: company,
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
     }
     if(req.user.type == 'admin'){ // index for admins

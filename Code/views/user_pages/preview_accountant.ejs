@@ -14,7 +14,7 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>Προεπισκόπηση Λογιστή</h1>
+        <h1>Προεπισκόπηση Λογιστή </h1>
         <div id="accountant-info-div" name="accountant-info-div">
             <h2>Info</h2>
 
@@ -42,6 +42,19 @@
             $("#back_btn").click(function(){
                     window.location ="/pick-accountant"
             });
+            const company ={
+                id: '<%= company.companyaccountant.id %>',
+                status: '<%= company.companyaccountant.status %>'
+            };
+            console.log(company);
+
+
+
+
+
+
+
+
             if ("<%= accountant._id %>" == "<%= user.myaccountant.id %>"){
                 if ("pending" == "<%= user.myaccountant.status %>"){
                     $("#request_bnt").hide();

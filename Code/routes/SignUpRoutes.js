@@ -52,6 +52,10 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
         if(req.body.companyNewExisting == '0'){
           newUser.companyOwner = 1;
         }
+        else{
+          company.users_num = company.users_num + 1;
+          await company.save();
+        }
         // Save the new user to the database
       await newUser.save();
       if (req.body.self_accountant == "true"){

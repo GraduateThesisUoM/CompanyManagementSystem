@@ -55,11 +55,7 @@
             // Show an alert with the specified message
             alert('Data update complete!');
         }
-        
-    var my_accountant = {
-        id:'<%= user.myaccountant.id %>',
-        status :"<%= user.myaccountant.status %>"
-    };
+    
     $(document).ready(function(){
         if(my_accountant.id == "not_assigned"){
             $("#my_accountant").text("Δεν έχει οριστεί");

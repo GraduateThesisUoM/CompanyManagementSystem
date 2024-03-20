@@ -5,6 +5,7 @@ const router = express.Router();
 const Accountant  = require("../Schemas/Accountant");
 const Review  = require("../Schemas/Review");
 const Notification = require("../Schemas/Notification");
+const Company  = require("../Schemas/Company");
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
@@ -15,7 +16,6 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       const accountants = await Accountant.find({}); // Fetch all accountants from the database
       accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
       const company = await Company.findOne(_id=req.user.company);
-      console.log(company);
   
       const ratings = [];
   
