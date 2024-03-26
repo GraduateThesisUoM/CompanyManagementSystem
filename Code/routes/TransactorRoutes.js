@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const popup = require("popups");
 
 //Models
 const Transactor  = require("../Schemas/Transactor");
@@ -10,8 +9,9 @@ const Authentication = require("../AuthenticationFunctions");
 
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {
     try{
-        var transactor_list = await Transactor.find();
-        res.render('../views/general/transactor_page.ejs', {transactor_list: transactor_list});
+        var transactor_list = await Transactor.find({type: req.query.type});
+        console.log(req.query.type);
+        res.render('../views/general/transactor_page.ejs', {transactor_list: transactor_list, transactor_type: req.query.type});
 
     }catch(err){
         console.error('Error loading transactor list:', err);
@@ -23,8 +23,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 router.post('/save', Authentication.checkAuthenticated, async (req,res)=>{
     try{
       // check if a transactor with the same code or amf exists
-    const code_check = await Transactor.findOne({$and: [{code: req.body.transactor_code}, {type: "supplier"}]});
-    const afm_check = await Transactor.findOne({$and: [{afm: req.body.transactor_AFM}, {type: "supplier"}]});
+    const code_check = await Transactor.findOne({$and: [{code: req.body.transactor_code}, {type: req.query.type}]});
+    const afm_check = await Transactor.findOne({$and: [{afm: req.body.transactor_AFM}, {type: req.query.type}]});
     console.log(code_check, afm_check);
 
     // if not
@@ -55,7 +55,7 @@ router.post('/save', Authentication.checkAuthenticated, async (req,res)=>{
             zip: tzip,
             phone1: tphone1,
             //phone2: "123",
-            type: "supplier",
+            type: req.query.type,
             shipping_address: tshipping_address,
             //shipping_district: "test", 
             shipping_city: tshipping_city, 
@@ -65,10 +65,10 @@ router.post('/save', Authentication.checkAuthenticated, async (req,res)=>{
         await newTransactor.save();
     }
     else if((code_check != null) && (afm_check == null)){
-        popup.alert({content: "Ο κωδικός δεν είναι μοναδικός!"});
+        //window.alert({content: "Ο κωδικός δεν είναι μοναδικός!"});
     }
-    else if((code_check == null) && (afm_check != null)){
-        alert({content: "Το ΑΦΜ δεν είναι μοναδικό!"});
+    else{
+        //window.alert({content: "Το ΑΦΜ δεν είναι μοναδικό!"});
     }
     res.redirect('back');
     }

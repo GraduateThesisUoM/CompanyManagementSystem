@@ -7,10 +7,11 @@
     <title>Transactor</title>
 </head>
 <body>
-    <form action="transactor/save" method="POST">
+    <form action="transactor/save?type=<%-transactor_type%>" method="POST">
         <span id="button-span">
             <input type="submit" value="Αποθήκευση">
-            <button id="cancel-btn">Ακύρωση</button>
+            <input type="reset" value="Ακύρωση">
+            
         </span>
         <span id="basic-info-span">
             <h2>Βασικά Στοιχεία</h2>
@@ -19,7 +20,7 @@
             <label for="transactor_name">Επωνυμία</label>
             <input type="text" id="transactor_name" name="transactor_name" required>
             <label for="transactor_AFM">ΑΦΜ</label>
-            <input type="text" id="transactor_AFM" name="transactor_AFM" value="code">
+            <input type="text" id="transactor_AFM" name="transactor_AFM" required>
         </span>
         <span id="contact-info-span">
             <h2>Στοιχεία επικοινωνίας</h2>

@@ -18,7 +18,8 @@
     <body>
         <h1>Accountant main page</h1>
         <h2>Welcome <%= user.firstName %> <%= user.lastName %></h2>
-        <a href="/transactor-list"> transactor</a>
+        <a href="/transactor-list?type=supplier"> Suppliers</a>
+        <a href="/transactor-list?type=customer"> Customers</a>
         <div>
             <h2>Pending Requests</h2>
             <div id="pending_requests_div" >
