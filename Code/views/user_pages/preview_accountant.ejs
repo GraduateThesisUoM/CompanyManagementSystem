@@ -39,39 +39,48 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
+            if (window.location.search.includes("?")) {
+                const url_message = getParameterByName('message');
+                if(url_message == "success_send_req_to_accountant"){
+                    alert("Request Sent")
+                }
+                else if(url_message == "success_send_req_to_accountant"){
+                    alert("Request Canceled")
+                }
+            }
+
+
             $("#back_btn").click(function(){
                     window.location ="/pick-accountant"
             });
-            const company ={
+            const company_accountant ={
                 id: '<%= company.companyaccountant.id %>',
                 status: '<%= company.companyaccountant.status %>'
             };
-            console.log(company);
+            console.log(company_accountant)
 
-
-
-
-
-
-
-
-            if ("<%= accountant._id %>" == "<%= user.myaccountant.id %>"){
-                if ("pending" == "<%= user.myaccountant.status %>"){
-                    $("#request_bnt").hide();
-                    $("#cansel_request_bnt").show();
-                }
-                else{
-                    $("#request_bnt").show();
-                    $("#cansel_request_bnt").hide();
+            if(company_accountant.id != 'not_assigned'){
+                if(company_accountant.id == "<%= accountant._id %>"){
+                    if(company_accountant.status == "pending"){
+                        $("#request_bnt").hide();
+                        $("#cansel_request_bnt").show();
+                    }
+                    else{
+                        $("#request_bnt").show();
+                        $("#cansel_request_bnt").hide();
+                    }
                 }
             }
             else{
                 $("#request_bnt").show();
                 $("#cansel_request_bnt").hide();
             }
+
+
+
             $("#request_bnt").click(function(){
                 
-                if("pending" == "<%= user.myaccountant.status %>"){
+                if("pending" == company_accountant.status){
                     /*var result = confirm("You have already sent a request to another accountant do you want to cacsel the previous?");
                     if (result) {
                         $("#user_action").val("sent_request")
