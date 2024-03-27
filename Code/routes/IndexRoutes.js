@@ -17,6 +17,7 @@ const Authentication = require("../AuthenticationFunctions");
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     if(req.user.type == 'accountant'){ // index for accountants
       //add something to get the requests that happen while away
+      console.log("x");
       const requests_pending = await Request.find({receiver_id:req.user._id, status : "pending" });
       const requests_viewed = await Request.find({receiver_id:req.user._id, status :  "viewed"});
       const requests_rejected = await Request.find({receiver_id:req.user._id, status :  "rejected"});

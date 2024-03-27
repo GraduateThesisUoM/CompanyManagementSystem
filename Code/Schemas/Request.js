@@ -6,8 +6,9 @@ const RequestSchema = new mongoose.Schema({
   receiver_id: { type: String, required: true },
   type: {
     type: String,
-    enum: ['something_1','something_2','something_3', 'other'],
-    required: true
+    enum: ['hiring','something_1','something_2','something_3', 'other'],
+    required: true,
+    default:'other'
   },
   title: { type: String},
   text: { type: String},
@@ -16,7 +17,7 @@ const RequestSchema = new mongoose.Schema({
   response_date: { type: Date },
   status: {
     type: String,
-    enum: ['viewed', 'executed', 'pending', 'rejected'],
+    enum: ['viewed', 'executed', 'pending', 'rejected','canceled'],
     required: true,
     default: 'pending',
   },
