@@ -59,7 +59,7 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
         // Save the new user to the database
       await newUser.save();
       if (req.body.self_accountant == "true"){
-        company.companyaccountant.id = newUser._id;
+        company.companyaccountant.id = "self_accountant";
         company.companyaccountant.status = "self_accountant";
       }
       await company.save();

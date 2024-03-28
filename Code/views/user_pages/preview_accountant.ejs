@@ -39,6 +39,7 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
+            
             if (window.location.search.includes("?")) {
                 const url_message = getParameterByName('message');
                 if(url_message == "success_send_req_to_accountant"){
@@ -57,9 +58,9 @@
                 id: '<%= company.companyaccountant.id %>',
                 status: '<%= company.companyaccountant.status %>'
             };
-            console.log(company_accountant)
-
-            if(company_accountant.id != 'not_assigned'){
+            console.log(company_accountant.id)
+            
+            if(company_accountant.id == 'fff'){
                 if(company_accountant.id == "<%= accountant._id %>"){
                     if(company_accountant.status == "pending"){
                         $("#request_bnt").hide();

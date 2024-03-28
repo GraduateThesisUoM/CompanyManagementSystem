@@ -17,9 +17,7 @@
         <h1>Τα Λογιστικά μου</h1>
 
 
-        <form action="/remove_accountant"  method="POST">
-            <button type="submit" id="remove_accountant">Αφαίρεση Λογιστή</button>
-        </form>
+        <button type="button" id="get_accountant">Προβολή Λογιστών</button>
         
         <button id="back_btn">Πίσω</button>
     </body>
@@ -41,8 +39,8 @@
                 window.location = "/"
             });
 
-            $("#remove_accountant").click(function(){
-                window.location ="remove_accountant"
+            $("#get_accountant").click(function(){
+                window.location ="/pick-accountant"
             });
             
         });

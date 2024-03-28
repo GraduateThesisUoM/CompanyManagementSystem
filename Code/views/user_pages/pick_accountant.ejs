@@ -14,7 +14,8 @@
     <body>
         <h1>Επιλογή Λογιστή</h1>
         <form action="/self-accountant-register" method="POST">
-            <button type="submit" id="self_accountant_id_submit_btn">Αυτοδιαχείριση λογιστικών</button>
+            <button type="button" id="self_accountant_btn">Αυτοδιαχείριση λογιστικών</button>
+            <button style="display: none;" type="submit" id="self_accountant_submit_btn">Αυτοδιαχείριση λογιστικών</button>
             </form>
         <form action="/pick-accountant" method="POST">
         <input style="display:none" name="accountant_id" id="accountant_id">
@@ -33,6 +34,12 @@
             $("#back_btn").click(function(){
                     window.location ="/"
             });
+            $("#self_accountant_btn").click(function(){
+                if (confirm("By choosing the self accounting option you are automatically\nfiring your accountant") == true) {
+                    $("#self_accountant_submit_btn").click();
+                }
+            });
+
             
             if(parseInt('<%= accountants.length%>') == 0){
                 alert("Δεν υπάρχουν διαθέσιμοι Λογιστές")

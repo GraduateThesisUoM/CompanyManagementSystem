@@ -5,6 +5,7 @@ const router = express.Router();
 const Accountant  = require("../Schemas/Accountant");
 const Notification = require("../Schemas/Notification");
 const Client  = require("../Schemas/Client");
+const Company  = require("../Schemas/Company");
 
 
 //Authentication Functions
@@ -26,11 +27,16 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   
 
 router.post('/', Authentication.checkAuthenticated, async (req,res)=> {
-  console.log("fff");
+  console.log("Make Self Accountant Post");
+  //Ti kanoume me ta tasks ? xanonte h rotame prota
     try{
-      await Accountant.updateOne({_id: req.user.myaccountant.id}, {$pull: {clients: {id: req.user._id}}});
-      create_notification(req.user.myaccountant.id, req.user._id, "firing-accountant-notification");
-      await Client.updateOne({_id: req.user._id}, {$set: {"myaccountant.status": "self_accountant", "myaccountant.id": req.user._id}});
+      const company = await Company.findOne({_id:req.user.company});
+      console.log(company);
+      create_notification(company.companyaccountant.id, req.user._id, "firing-accountant-notification");
+      
+      company.companyaccountant.id = "self_accountant";
+      company.companyaccountant.status = "self_accountant";
+      await company.save();
 
       res.redirect("/my-accountant")
     }
