@@ -13,7 +13,7 @@ const Authentication = require("../AuthenticationFunctions");
 
 //Create Notification Function
 const create_notification = require("../CreateNotification");
-const send_hiring_req_to_accountant =require("../SendHiringReqToAccountan")
+const send_hiring_req_to_accountant =require("../SendHiringReqToAccountan");
 
 /*--------   ACCOUNTANT PREVIEW */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
@@ -41,7 +41,6 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     }
     
     const accountant = await Accountant.findOne({_id:req.session.accountant._id});
-    console.log(accountant);
 
     if(req.body.user_action == "cancel_request"){
       console.log("Cancel accountant request");
@@ -55,8 +54,8 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     }
     else if(req.body.user_action == "sent_request"){
       console.log("Sent accountant request");
-      accountant.clients.push({id: req.user._id, status: "pending"});
-      await accountant.save();
+      /*accountant.clients.push({id: req.user._id, status: "pending"});
+      await accountant.save();*/
 
       company.companyaccountant.id = accountant._id;
       company.companyaccountant.status = "pending";
@@ -64,7 +63,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
 
       create_notification(company.companyaccountant.id, req.user._id, "hiring-request-notification");
 
-      send_hiring_req_to_accountant(company._id, accountant._id);
+      send_hiring_req_to_accountant(company._id,req.user._id, accountant._id);
       
     } 
     await req.user.save();

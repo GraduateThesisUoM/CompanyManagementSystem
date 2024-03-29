@@ -15,9 +15,9 @@ const Authentication = require("../AuthenticationFunctions");
 /*--------   SING UP */
 router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
   const users = await User.find();
-  const companies = await Company.find();
-    res.render('../views/sign_up.ejs',{users_list: users,companies :companies});
-  });
+  const companies_list = await Company.find();
+  res.render('../views/sign_up.ejs',{users_list: users,companies :companies_list});
+});
 
   router.post('/', async (req, res) => {
     try {

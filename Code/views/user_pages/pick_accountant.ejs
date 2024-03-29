@@ -31,6 +31,18 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
+            if (window.location.search.includes("?")) {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('message')) {
+                    const url_message = urlParams.get('message');
+                    if (url_message === "success_send_req_to_accountant") {
+                        alert("Request Sent");
+                    } else if (url_message === "success_cancel_req_to_accountant") {
+                        alert("Request Canceled");
+                    }
+                }
+            }
+
             $("#back_btn").click(function(){
                     window.location ="/"
             });

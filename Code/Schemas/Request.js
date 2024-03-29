@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 // Define the report schema
 const RequestSchema = new mongoose.Schema({
+  company_id: { type: String, required: true },
   sender_id: { type: String, required: true },
   receiver_id: { type: String, required: true },
   type: {
@@ -12,6 +13,7 @@ const RequestSchema = new mongoose.Schema({
   },
   title: { type: String},
   text: { type: String},
+  canseled:{ type: String},
   due_date: { type: String, default: "no due date"},
   response: { type: String},
   response_date: { type: Date },

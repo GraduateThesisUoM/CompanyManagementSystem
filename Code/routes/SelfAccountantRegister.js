@@ -6,14 +6,16 @@ const Accountant  = require("../Schemas/Accountant");
 const Notification = require("../Schemas/Notification");
 const Client  = require("../Schemas/Client");
 const Company  = require("../Schemas/Company");
+const Request = require("../Schemas/Request");
+
 
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
 const create_notification = require("../CreateNotification");
+const send_hiring_req_to_accountant =require("../SendHiringReqToAccountan");
 
-
-/*--------   PICK ACCOUNTANT */
+/*--------   Self0 ACCOUNTANT */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     try { 
       res.render('user_pages/self_accountant.ejs', { user: req.user,
@@ -31,12 +33,10 @@ router.post('/', Authentication.checkAuthenticated, async (req,res)=> {
   //Ti kanoume me ta tasks ? xanonte h rotame prota
     try{
       const company = await Company.findOne({_id:req.user.company});
-      console.log(company);
-      create_notification(company.companyaccountant.id, req.user._id, "firing-accountant-notification");
       
-      company.companyaccountant.id = "self_accountant";
-      company.companyaccountant.status = "self_accountant";
-      await company.save();
+      create_notification(company.companyaccountant.id, req.user._id, "firing-accountant-notification");
+
+      send_hiring_req_to_accountant(company._id,req.user._id, company._id);
 
       res.redirect("/my-accountant")
     }

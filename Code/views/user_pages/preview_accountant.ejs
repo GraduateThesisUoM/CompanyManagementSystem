@@ -39,16 +39,6 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
-            
-            if (window.location.search.includes("?")) {
-                const url_message = getParameterByName('message');
-                if(url_message == "success_send_req_to_accountant"){
-                    alert("Request Sent")
-                }
-                else if(url_message == "success_send_req_to_accountant"){
-                    alert("Request Canceled")
-                }
-            }
 
 
             $("#back_btn").click(function(){
@@ -60,16 +50,14 @@
             };
             console.log(company_accountant.id)
             
-            if(company_accountant.id == 'fff'){
-                if(company_accountant.id == "<%= accountant._id %>"){
-                    if(company_accountant.status == "pending"){
-                        $("#request_bnt").hide();
-                        $("#cansel_request_bnt").show();
-                    }
-                    else{
-                        $("#request_bnt").show();
-                        $("#cansel_request_bnt").hide();
-                    }
+            if(company_accountant.id == "<%= accountant._id %>" && company_accountant.status == "pending"){
+                if(company_accountant.status == "pending"){
+                    $("#request_bnt").hide();
+                    $("#cansel_request_bnt").show();
+                }
+                else{
+                    $("#request_bnt").show();
+                    $("#cansel_request_bnt").hide();
                 }
             }
             else{
@@ -82,11 +70,11 @@
             $("#request_bnt").click(function(){
                 
                 if("pending" == company_accountant.status){
-                    /*var result = confirm("You have already sent a request to another accountant do you want to cacsel the previous?");
+                    var result = confirm("You have already sent a request to another accountant do you want to cacsel the previous?");
                     if (result) {
                         $("#user_action").val("sent_request")
                         $("#submit_preview_accountant").click()
-                    }*/
+                    }
                 }
                 else{
                     $("#user_action").val("sent_request")

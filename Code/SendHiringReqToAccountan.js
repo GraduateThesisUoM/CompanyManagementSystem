@@ -3,17 +3,55 @@ express = require("express");
 const Accountant  = require("./Schemas/Accountant");
 const Company  = require("./Schemas/Company");
 const Request = require("./Schemas/Request");
+const Client  = require("./Schemas/Client");
+const { request } = require("express");
 
-async function send_hiring_req_to_accountant(userId, accountantId){
+
+async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
     // check if a notification of the same type exists for user
-    const req = new Request({
-        sender_id: userId,
-        receiver_id:accountantId,
-        type: 'hiring',
-        title:'Hiring Request'
-    });
+    /*const client_company = await Client.findOne({_id:userId});
+    const client_company = await Company.findOne({_id:companyId});*/
+    try{
 
-    await req.save();
+    
+        const company_requests = await Request.find({company_id:companyId});
+
+        const requ = new Request({
+            company_id: companyId,
+            sender_id: senderId,
+            receiver_id:accountantId,
+            type: 'hiring',
+            title:'Hiring Request'
+        });
+
+        if(requ.company_id == requ.receiver_id){
+            requ.status = 'executed';
+            const client_company = await Company.findOne({_id:companyId});
+            client_company.companyaccountant.id = 'self_accountant';
+            client_company.companyaccountant.status = 'self_accountant';
+            await client_company.save();
+        }
+
+        await requ.save();
+
+        company_requests.forEach(async request => {
+            if(request.status =='pending' || request.status =='viewed' ){
+                if(request._id != requ._id){
+                    request.status = 'canceled';
+                    request.canseled = requ._id;
+                    await request.save();
+                }
+            }
+            else if(request.status =='executed' && request.company_id == request.receiver_id && request.type == 'hiring' && request._id != requ._id){
+                request.status = 'canceled';
+                request.canseled = requ._id;
+                await request.save();
+            }
+        });
+    }
+    catch(e){
+        console.log(e)
+    }
 }
 
 module.exports = send_hiring_req_to_accountant;
