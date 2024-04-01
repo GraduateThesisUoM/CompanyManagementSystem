@@ -66,7 +66,7 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
       console.log("User created successfully");
       }
       else if (req.body.account_type == 'accountant'){
-        const newAccountant = new Accountant({
+        /*const newAccountant = new Accountant({
           type: req.body.account_type,
           firstName: req.body.firstName,
           lastName: req.body.lastName,
@@ -75,6 +75,15 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
           afm: req.body.afm,
           mydatakey: req.body.mydatakey,
           clients:[]
+        });*/
+        const newAccountant = new Accountant({
+          type: req.body.account_type,
+          firstName: req.body.firstName,
+          lastName: req.body.lastName,
+          password: hashedPassword,
+          email: req.body.email,
+          afm: req.body.afm,
+          mydatakey: req.body.mydatakeyS
         });
         // Save the new user to the database
       await newAccountant.save();

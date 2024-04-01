@@ -5,6 +5,8 @@ const router = express.Router();
 const Client  = require("../Schemas/Client");
 const Request = require("../Schemas/Request");
 const Notification = require("../Schemas/Notification");
+const Company  = require("../Schemas/Company");
+
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
@@ -27,9 +29,18 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 //POST REQUEST
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
+      const action = req.body.action; 
       const request = await Request.findOne({ _id : req.body.request_id});
-      request.status = req.body.action;
-      request.response = req.body.response;
+      request.status = action;
+      if(request.type == 'hiring'){
+        const company = await Request.Company({ _id : request.company_id});
+        company.companyaccountant.status = action;
+        
+      }
+      else{
+        request.response = req.body.response;
+      }
+      
       request.save();
 
       create_notification(request.sender_id, req.user.id, "assignments-status-notification");

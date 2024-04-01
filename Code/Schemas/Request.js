@@ -14,7 +14,7 @@ const RequestSchema = new mongoose.Schema({
   title: { type: String},
   text: { type: String},
   canseled:{ type: String},
-  due_date: { type: String, default: "no due date"},
+  due_date: { type: String, default: "no due date", required: true},
   response: { type: String},
   response_date: { type: Date },
   status: {

@@ -31,6 +31,10 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
+            if('<%=company.companyaccountant.status%>' == 'self_accountant'){
+                $("#self_accountant_btn").prop("disabled", true);
+            }
+
             if (window.location.search.includes("?")) {
                 const urlParams = new URLSearchParams(window.location.search);
                 if (urlParams.has('message')) {
