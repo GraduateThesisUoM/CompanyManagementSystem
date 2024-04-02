@@ -10,27 +10,51 @@ const Company  = require("../Schemas/Company");
 //Create Notification Function
 const create_notification = require("../CreateNotification");
 
+//Get clients Function
+const accountant_get_client_list = require("../AccountantGetClientList");
+
 //Authentication Function
 const Authentication = require("../AuthenticationFunctions");
 
 
 /*--------   CLIENTS */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
+  try{
+    const companys_clients_list = await accountant_get_client_list(req.user._id,"all");
+    console.log(companys_clients_list);
+    console.log(companys_clients_list.length);
+    if (companys_clients_list.length === 0) {
+      console.log('no clients');
+    }
+    else{
+      for (const client of companys_clients_list){
+        console.log(client.name);
+      }
+    }
+
+  }
+  catch(err){
+    console.error(err);
+      res.redirect('/error?origin_page=clients&error='+err);
+  }
+    /*
     const clients_pending = [];
     const clients_active = [];
     const clients_expired = [];
-    console.log('no clients');
-    if (req.user.clients.length === 0) {
+
+    if (accountant_get_client_list("all").length === 0) {
       console.log('no clients');
-    } else {
-      console.log(req.user.clients.length);
-      for (const client of req.user.clients) {
+    }
+    else {
+      console.log(accountant_get_client_list("all").length);
+      console.log(accountant_get_client_list("all"));
+      for (const client of accountant_get_client_list("all")) {
         const client_company = await Company.findById(client._id);
         console.log(client);
         /*const client_company_info = {
           user: client_company,
           status: client_company.status
-        };*/
+        };*//*
         if(client_company.companyaccountant.status == "pending"){
           clients_pending.push(client_company);
         }
@@ -41,7 +65,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
           clients_expired.push(client_company);
         }
       }
-    }
+    }*/
     res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired, 
       notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
   

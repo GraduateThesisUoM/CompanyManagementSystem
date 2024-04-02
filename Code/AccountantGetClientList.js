@@ -1,28 +1,26 @@
 express = require("express");
 //Models
 //const Accountant  = require("./Schemas/Accountant");
-//const Company  = require("./Schemas/Company");
 //const Client  = require("./Schemas/Client");
+const Company  = require("./Schemas/Company");
 const Request = require("./Schemas/Request");
 
 
-async function accountant_get_client_list(accountantId,select){
-    
+async function fetchClients(accountantId,select){
     try{
+        var clients = [];
+        var clients_requests;
         if(select == 'all'){
-            const clients = await Request.find({receiver_id:accountantId, type:'hiring', status: { $in: ['executed','pending', 'rejected'] } });
-            return clients
+            clients_requests = await Request.find({receiver_id:accountantId, type:'hiring', status: { $in: ['executed','pending', 'rejected'] } });
+            return clients_requests;
         }
-        else {
-            const clients = await Request.find({receiver_id:accountantId, type:'hiring', status: select });
-            return clients
-        }
+        
     }
     catch(e){
         console.log(e)
-        return [];
     }
+    
 }
 
-module.exports = accountant_get_client_list;
+module.exports = {fetchClients};
 
