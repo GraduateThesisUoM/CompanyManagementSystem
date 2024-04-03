@@ -18,8 +18,6 @@ const accountant_get_client_list = require("../AccountantGetClientList");
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     if(req.user.type == 'accountant'){ // index for accountants
       //add something to get the requests that happen while away
-      const clients2 = await accountant_get_client_list.fetchClients(req.user._id, "all");
-      console.log(clients2);
 
       const requests_pending = await Request.find({receiver_id:req.user._id, status : "pending" });
       const requests_viewed = await Request.find({receiver_id:req.user._id, status :  "viewed"});
