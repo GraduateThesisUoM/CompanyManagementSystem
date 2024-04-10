@@ -30,7 +30,8 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
           //New Company
           company = new Company({
             name : req.body.companyName,
-            logo : req.body.companyLogo,
+            //logo : req.body.companyLogo,
+            logo : "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
             signupcode : generateRandomCode(6)
           });
           await company.save();
