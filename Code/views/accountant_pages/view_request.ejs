@@ -17,7 +17,8 @@
     </head>
     <body>
         <h1>View Request</h1>
-        <div>Όνομα Πελάτη : <%= accountants_client.firstName %> <%= accountants_client.lastName %></div>
+        <div>Όνομα Εταιρίας : <%= company.name %></div>
+        <div>Όνομα Αποστολέα : <%= accountants_client.firstName %> <%= accountants_client.lastName %></div>
         <div>Κατηγωρία Αιτίματος : <%= request.type %></div>
         <div id = "no_due_date">Due Date : <%= request.due_date %></div>
         <div>Τίτλος : <%= request.title %></div>

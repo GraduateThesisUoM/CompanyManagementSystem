@@ -1,8 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
+var mongoose = require('mongoose');
+
+
 //Models
 const Review  = require("../Schemas/Review");
+const Accountant = require("../Schemas/Accountant");
+const Company = require("../Schemas/Company");
+
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
@@ -12,17 +18,22 @@ const create_notification = require("../CreateNotification");
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
+      const company = await Company.findOne({_id:req.user.company});
+      const users_accountant = await Accountant.findOne({_id:new mongoose.Types.ObjectId(company.companyaccountant.id)});
+
       let newReview;
       const review = await Review.findOne({
+        company_id: company._id,
         reviewer_id: req.user._id,
-        reviewed_id: req.user.myaccountant.id,
+        reviewed_id: users_accountant._id,
         type: "client",
       });
   
       if (review == null) {
         newReview = new Review({
+          company_id: company._id,
           reviewer_id: req.user._id,
-          reviewed_id: req.user.myaccountant.id,
+          reviewed_id: users_accountant._id,
           text: req.body.rating_textarea,
           type: "client",
           rating: req.body.rating_input,
@@ -34,7 +45,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
         newReview = review;
       }
 
-      create_notification(req.user.myaccountant.id, req.user._id, "review-notification");
+      create_notification(users_accountant._id, req.user._id, "review-notification");
   
       await newReview.save();
       console.log('Review created or updated successfully');

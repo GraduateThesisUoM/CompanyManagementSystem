@@ -1,16 +1,25 @@
 const express = require("express"); 
 const router = express.Router();
 
+var mongoose = require('mongoose');
+
+
 //Models
 const Request = require("../Schemas/Request");
+const Accountant = require("../Schemas/Accountant");
+const Company = require("../Schemas/Company");
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
+      const company = await Company.findOne({_id:req.user.company});
+      const users_accountant = await Accountant.findOne({_id:new mongoose.Types.ObjectId(company.companyaccountant.id)});
+
       if(req.body.request_due_date == ""){
         const newRequest = new Request({
+          company_id: company._id,
           sender_id: req.user._id,
           receiver_id: req.user.myaccountant.id,
           type: req.body.request_type,
