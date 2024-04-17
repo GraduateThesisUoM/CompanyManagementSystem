@@ -13,7 +13,7 @@ const Authentication = require("../AuthenticationFunctions");
 
 //Create Notification Function
 const create_notification = require("../CreateNotification");
-const send_hiring_req_to_accountant =require("../SendHiringReqToAccountan");
+const clientAccountantFunctions = require("../ClientAccountantFunctions");
 
 /*--------   ACCOUNTANT PREVIEW */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
@@ -27,7 +27,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
   try {
-    const company = await Company.findOne(_id=req.user.company);
+    const company = await Company.findOne({_id:req.user.company});
     
     if(company.companyaccountant.status !="not_assigned"){
       const last_accountant = await Accountant.findOne({_id:company.companyaccountant.id});
@@ -63,7 +63,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
 
       create_notification(company.companyaccountant.id, req.user._id, "hiring-request-notification");
 
-      send_hiring_req_to_accountant(company._id,req.user._id, accountant._id);
+      clientAccountantFunctions.send_hiring_req_to_accountant(company._id,req.user._id, accountant._id);
       
     } 
     await req.user.save();

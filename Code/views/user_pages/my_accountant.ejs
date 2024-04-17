@@ -91,10 +91,9 @@
                             <input type="date" placeholder="Due Date" id="request_due_date" name="request_due_date">
                         </div>
                         
-                        <textarea name="request_text" id="request_text"></textarea>
-                        <button style="display:none;" id="submit_from_request_btn" type="submit"></button>
+                        <textarea name="request_text" id="request_text"></textarea></br>
+                        <button id="submit_from_request_btn" type="submit">Submit</button>
                     </form>
-                    <button id="submit_request_btn">Submit</button>
                 </div>
             
         </div>
@@ -140,16 +139,6 @@
                     $("#row_"+i).hide();
                 }
                 }
-            });
-
-            $("#submit_request_btn").click(function(){
-                if( document.getElementById("request_type").value == "..."){
-                    alert("Plese select the type of the request")
-                }
-                else{
-                    document.getElementById("submit_from_request_btn").click();
-                }
-                
             });
 
             var starButtons = $(".star_btn");
@@ -200,6 +189,7 @@
                 hide_btn.hide();
             });
             hide_btn.hide();
+
             if(requests.length == 0){
                 requests_table.hide()
                 my_requests_div.append($("<p>").text("You haven't made any requests addressed to your current accountant"))

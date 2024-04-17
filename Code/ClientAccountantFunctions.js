@@ -13,7 +13,6 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
     const client_company = await Company.findOne({_id:companyId});*/
     try{
 
-    
         const company_requests = await Request.find({company_id:companyId});
 
         const requ = new Request({
@@ -48,11 +47,55 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
                 await request.save();
             }
         });
+        console.log("Hiring Request Send");
     }
     catch(e){
         console.log(e)
     }
 }
 
-module.exports = send_hiring_req_to_accountant;
+async function fire_accountant(companyId,senderId){
+    try{
+        const company = await Company.findOne({_id:companyId});
+        if (company) {
+            company.companyaccountant.status = 'fired';
+            await company.save();
+        } else {
+            console.log('Company not found');
+        }
+
+
+        const requ = new Request({
+            company_id: companyId,
+            sender_id: senderId,
+            receiver_id:company.companyaccountant.id,
+            type: 'firing',
+            title:'Firing Accountant'
+        });
+
+        await requ.save();
+
+
+        company_requests.forEach(async request => {
+            if(request.status =='pending' || request.status =='viewed' ){
+                if(request._id != requ._id){
+                    request.status = 'canceled';
+                    request.canseled = requ._id;
+                    await request.save();
+                }
+            }
+            else if(request.status =='executed' && request.company_id == request.receiver_id && request.type == 'hiring' && request._id != requ._id){
+                request.status = 'canceled';
+                request.canseled = requ._id;
+                await request.save();
+            }
+        });
+        console.log("Accountant Fired Succesfully");
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
+module.exports = { send_hiring_req_to_accountant, fire_accountant };
 

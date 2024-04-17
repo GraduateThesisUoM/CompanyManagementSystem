@@ -24,7 +24,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         }
       }
       else{
-        if(company.companyaccountant.status =="not_assigned"){
+        if(company.companyaccountant.status =="not_assigned" || company.companyaccountant.status =="fired"){
           if(req.user.companyOwner = 1){
             res.redirect('pick-accountant');
           }

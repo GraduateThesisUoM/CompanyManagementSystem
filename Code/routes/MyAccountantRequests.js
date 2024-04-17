@@ -17,28 +17,20 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       const company = await Company.findOne({_id:req.user.company});
       const users_accountant = await Accountant.findOne({_id:new mongoose.Types.ObjectId(company.companyaccountant.id)});
 
-      if(req.body.request_due_date == ""){
-        const newRequest = new Request({
-          company_id: company._id,
-          sender_id: req.user._id,
-          receiver_id: req.user.myaccountant.id,
-          type: req.body.request_type,
-          title: req.body.request_title,
-          text: req.body.request_text
-        });
-        newRequest.save();
+      const newRequest = new Request({
+        company_id: company._id,
+        sender_id: req.user._id,
+        receiver_id: users_accountant._id,
+        type: req.body.request_type,
+        title: req.body.request_title,
+        text: req.body.request_text,
+        due_date : req.body.request_due_date
+      });
+
+      if(req.body.request_due_date != ""){
+        newRequest.due_date = req.body.request_due_date;
       }
-      else{
-        const newRequest = new Request({
-          sender_id: req.user._id,
-          receiver_id: req.user.myaccountant.id,
-          type: req.body.request_type,
-          title: req.body.request_title,
-          text: req.body.request_text,
-          due_date : req.body.request_due_date
-        });
-        newRequest.save();
-      }
+      newRequest.save();
       
       console.log('Reuest created successfully');
       res.redirect('/my-accountant');

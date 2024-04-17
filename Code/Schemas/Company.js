@@ -16,7 +16,7 @@ const CompanySchema = new mongoose.Schema({
     id: { type: String, required: false,default: 'not_assigned'},
     status: {
       type: String,
-      enum: ['assigned', 'pending', 'not_assigned','self_accountant','rejected'],
+      enum: ['assigned', 'pending', 'not_assigned','self_accountant','rejected','fired'],
       default: 'not_assigned'
     },
   },

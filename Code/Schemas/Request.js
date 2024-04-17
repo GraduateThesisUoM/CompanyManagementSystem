@@ -7,14 +7,14 @@ const RequestSchema = new mongoose.Schema({
   receiver_id: { type: String, required: true },
   type: {
     type: String,
-    enum: ['hiring','something_1','something_2','something_3', 'other'],
+    enum: ['hiring','firing','something_1','something_2','something_2','something_3', 'other'],
     required: true,
     default:'other'
   },
   title: { type: String},
   text: { type: String},
   canseled:{ type: String},
-  due_date: { type: String, default: "no due date", required: true},
+  due_date: { type: String},
   response: { type: String},
   response_date: { type: Date },
   status: {
