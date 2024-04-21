@@ -6,20 +6,13 @@ const mongoose = require('mongoose');
 const CompanySchema = new mongoose.Schema({
   registrationDate: { type: Date, default: Date.now , required: true},
   name: { type: String, required: true },
-  logo: { type: String, required: false },
+  logo: { type: String, required: false ,default:"https://i.pinimg.com/originals/ec/d9/c2/ecd9c2e8ed0dbbc96ac472a965e4afda.jpg"},
   status: {
       type: String,
       enum: ['active', 'disabled'],
       default: 'active'
   },
-  companyaccountant: {
-    id: { type: String, required: false,default: 'not_assigned'},
-    status: {
-      type: String,
-      enum: ['assigned', 'pending', 'not_assigned','self_accountant','rejected','fired'],
-      default: 'not_assigned'
-    },
-  },
+  accountant: { type: String, required: false,default: 'not_assigned'},
   users_num: { type: Number, required: true,default:1 },
   license_num: { type: Number, required: true,default:1 },
   signupcode: { type: String, required: true},

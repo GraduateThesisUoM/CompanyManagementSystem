@@ -11,7 +11,8 @@ const Company  = require("../Schemas/Company");
 const create_notification = require("../CreateNotification");
 
 //Get clients Function
-const accountant_get_client_list = require("../AccountantGetClientList");
+const clientAccountantFunctions = require("../ClientAccountantFunctions");
+
 
 //Authentication Function
 const Authentication = require("../AuthenticationFunctions");
@@ -20,9 +21,9 @@ const Authentication = require("../AuthenticationFunctions");
 /*--------   CLIENTS */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   try{
-      const clients_pending = await accountant_get_client_list.fetchClients(req.user._id,"pending");
-      const clients_active = await accountant_get_client_list.fetchClients(req.user._id,"executed");
-      const clients_expired = await accountant_get_client_list.fetchClients(req.user._id,"rejected");
+      const clients_pending = await clientAccountantFunctions.fetchClients(req.user._id,"pending");
+      const clients_active = await clientAccountantFunctions.fetchClients(req.user._id,"executed");
+      const clients_expired = await clientAccountantFunctions.fetchClients(req.user._id,"rejected");
       if(clients_pending.length + clients_active.length + clients_expired.clients_expired == 0){
         console.log('no clients');
       }

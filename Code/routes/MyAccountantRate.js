@@ -8,6 +8,7 @@ var mongoose = require('mongoose');
 const Review  = require("../Schemas/Review");
 const Accountant = require("../Schemas/Accountant");
 const Company = require("../Schemas/Company");
+const Node = require("../Schemas/Node");
 
 
 //Authentication Functions
@@ -19,7 +20,9 @@ const create_notification = require("../CreateNotification");
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
       const company = await Company.findOne({_id:req.user.company});
-      const users_accountant = await Accountant.findOne({_id:new mongoose.Types.ObjectId(company.companyaccountant.id)});
+      const company_accountant_node = await Node.findOne({_id:company.accountant});
+
+      const users_accountant = await Accountant.findOne({_id:company_accountant_node.receiver_id});
 
       let newReview;
       const review = await Review.findOne({
@@ -49,7 +52,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
   
       await newReview.save();
       console.log('Review created or updated successfully');
-      res.redirect('/my-accountant');
+      res.redirect('/my-accountant?message=rating_submitted_successfully');
     } catch (err) {
       console.error('Error updating user data:', err);
       res.redirect('/error?origin_page=my-accountant&error=' + err);

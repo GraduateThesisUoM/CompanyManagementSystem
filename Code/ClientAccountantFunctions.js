@@ -2,52 +2,54 @@ express = require("express");
 //Models
 const Accountant  = require("./Schemas/Accountant");
 const Company  = require("./Schemas/Company");
-const Request = require("./Schemas/Request");
+const Node = require("./Schemas/Node");
 const Client  = require("./Schemas/Client");
-const { request } = require("express");
-
 
 async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
     // check if a notification of the same type exists for user
     /*const client_company = await Client.findOne({_id:userId});
     const client_company = await Company.findOne({_id:companyId});*/
     try{
+        console.log("enter send_hiring_req_to_accountant");
+        const company = await Company.findOne({_id:companyId});
 
-        const company_requests = await Request.find({company_id:companyId});
+        if(company.accountant != "not_assigned"){
+            console.log('send_hiring_req_to_accountant has accountant')
+            const company_nodes = await Node.find({company_id:company._id,type:"request",status: { $in: ['viewed', 'pending'] }});
 
-        const requ = new Request({
-            company_id: companyId,
-            sender_id: senderId,
-            receiver_id:accountantId,
-            type: 'hiring',
-            title:'Hiring Request'
-        });
+        
+            const last_accountant_node = await Node.find({company_id:company._id,type:"hiring",status: 'executed'});
+            last_accountant_node.status = 'canceled';
+            await last_accountant_node.save();
 
-        if(requ.company_id == requ.receiver_id){
-            requ.status = 'executed';
-            const client_company = await Company.findOne({_id:companyId});
-            client_company.companyaccountant.id = 'self_accountant';
-            client_company.companyaccountant.status = 'self_accountant';
-            await client_company.save();
+            company_nodes.forEach(async node => {
+                node.next = company_node;
+                node.status = 'canceled';
+                await node.save();
+            });
+        }
+        else{
+            console.log('send_hiring_req_to_accountant has no accountant')
         }
 
-        await requ.save();
-
-        company_requests.forEach(async request => {
-            if(request.status =='pending' || request.status =='viewed' ){
-                if(request._id != requ._id){
-                    request.status = 'canceled';
-                    request.canseled = requ._id;
-                    await request.save();
-                }
-            }
-            else if(request.status =='executed' && request.company_id == request.receiver_id && request.type == 'hiring' && request._id != requ._id){
-                request.status = 'canceled';
-                request.canseled = requ._id;
-                await request.save();
-            }
+        const company_node = new Node({
+            company_id: company._id,
+            sender_id: senderId,
+            receiver_id:accountantId,
+            type: 'relationship',
+            type2: 'hiring'
         });
-        console.log("Hiring Request Send");
+
+        if(company_node.company_id == company_node.receiver_id){
+            company_node.status = 'executed';
+        }
+
+        await company_node.save();
+        company.accountant = company_node._id;
+        await company.save();
+
+
+        console.log("Hiring Node Created");
     }
     catch(e){
         console.log(e)
@@ -57,38 +59,28 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
 async function fire_accountant(companyId,senderId){
     try{
         const company = await Company.findOne({_id:companyId});
-        if (company) {
-            company.companyaccountant.status = 'fired';
-            await company.save();
-        } else {
-            console.log('Company not found');
-        }
-
-
-        const requ = new Request({
-            company_id: companyId,
+        const company_node = await Node.findOne({_id:company.accountant});
+        const new_company_node = new Node({
+            company_id: company._id,
             sender_id: senderId,
-            receiver_id:company.companyaccountant.id,
-            type: 'firing',
-            title:'Firing Accountant'
+            receiver_id:company_node.receiver_id,
+            type: 'relationship',
+            type2: 'firing',
+            status: 'executed'
         });
 
-        await requ.save();
+        await new_company_node.save();
 
+        company.accountant = new_company_node._id;
 
-        company_requests.forEach(async request => {
-            if(request.status =='pending' || request.status =='viewed' ){
-                if(request._id != requ._id){
-                    request.status = 'canceled';
-                    request.canseled = requ._id;
-                    await request.save();
-                }
-            }
-            else if(request.status =='executed' && request.company_id == request.receiver_id && request.type == 'hiring' && request._id != requ._id){
-                request.status = 'canceled';
-                request.canseled = requ._id;
-                await request.save();
-            }
+        await company.save();
+
+        const company_nodes = await Node.find({company_id:company._id,type:"request",status: { $in: ['viewed', 'pending'] }});
+
+        company_nodes.forEach(async node => {
+            node.next = company_node;
+            node.status = 'canceled';
+            await node.save();
         });
         console.log("Accountant Fired Succesfully");
     }
@@ -97,5 +89,41 @@ async function fire_accountant(companyId,senderId){
     }
 }
 
-module.exports = { send_hiring_req_to_accountant, fire_accountant };
+async function fetchClients(accountantId,select){
+    try{
+        var clients = [];
+        var clients_Nodes;
+        if(select == 'all'){
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'hiring', status: { $in: ['executed','pending', 'rejected'] } });
+            
+        }
+        else{
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'hiring', status: select });
+        }
+
+        for (let client of clients_Nodes) {
+            clients.push(await Company.findOne({_id:client.company_id}));
+          }
+          return clients;
+        
+    }
+    catch(e){
+        console.log(e)
+    }
+    
+}
+
+async function fetchOneClient(accountantId,clientId){
+    try{
+        const client = await Node.find({receiver_id:accountantId,company_id:clientId, type:'hiring', status: 'pending' });
+        return client;
+
+    }
+    catch(e){
+        console.log(e)
+    }
+
+}
+
+module.exports = { send_hiring_req_to_accountant, fire_accountant, fetchOneClient,  fetchClients};
 

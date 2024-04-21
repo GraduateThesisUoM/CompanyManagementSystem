@@ -40,7 +40,7 @@
         <a href="/report/user?id=<%=accountant._id%>">Report Accountant</a>
 
         <div class ='requests'>
-                <h2>Requests</h2>
+                <h2>Request</h2>
                 <div id="my_requests_div">
                     <table id="my_requests_record">
                         <tr> <!-- This is a table row -->
@@ -73,10 +73,9 @@
                         <div>
                             <label for="request_type">Type : </label>
                             <select name = 'request_type' id = 'request_type'>
-                                <option value="..." disabled selected>...</option>
-                                <option value="something_1">Something_1</option>
-                                <option value="something_2">Something_2</option>
-                                <option value="something_3">Something_3</option>
+                                <option value="" disabled selected>...</option>
+                                <option value="request1">Something_1</option>
+                                <option value="request2">Something_2</option>
                                 <option value="other">Other</option>
                             </select>
                         </div>
@@ -98,7 +97,8 @@
             
         </div>
         <form action="/remove_accountant"  method="POST">
-            <button type="submit" id="remove_accountant">Αφαίρεση Λογιστή</button>
+            <button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button>
+            <button type="button" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
         </form>
         
         <button id="back_btn">Πίσω</button>
@@ -117,12 +117,21 @@
         };
 
        $(document).ready(function(){
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('message')) {
+            if(urlParams.get('message')=="rating_submitted_successfully"){
+                alert("Η αξιολόγηση καταχωρήθηκε με επιτυχία");
+            }
+        }
+
             $("#back_btn").click(function(){
                 window.location = "/"
             });
 
-            $("#remove_accountant").click(function(){
-                window.location ="remove_accountant"
+            $("#remove_accountant_btn").click(function(){
+                if (confirm("Αν απολύσετε τον λογιστή σας όλα τα εκκρεμή αιτήματα θα ακυρωθούν.") == true) {
+                    $("#remove_accountant_sbt").click();
+                }
             });
 
             $("#more_requests_btn").click(function(){
@@ -171,7 +180,7 @@
 
             var requests;
             try {
-                requests = JSON.parse(`<%- JSON.stringify(requests) %>`);
+                requests = JSON.parse(`<%- JSON.stringify(nodes) %>`);
             } catch (error) {
                 console.error("Error parsing JSON:", error);
             }

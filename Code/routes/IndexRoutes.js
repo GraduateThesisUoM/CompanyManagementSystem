@@ -5,14 +5,15 @@ const router = express.Router();
 const User = require("../Schemas/User");
 const Client  = require("../Schemas/Client");
 const Report = require("../Schemas/Report");
-const Request = require("../Schemas/Request");
+const Request = require("../Schemas/Node");
 const Notification = require("../Schemas/Notification");
 const Company  = require("../Schemas/Company");
 
 //Authentication Function
 const Authentication = require("../AuthenticationFunctions");
 //Get clients Function
-const accountant_get_client_list = require("../AccountantGetClientList");
+const clientAccountantFunctions = require("../ClientAccountantFunctions");
+
 
 //GET REQUEST
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {

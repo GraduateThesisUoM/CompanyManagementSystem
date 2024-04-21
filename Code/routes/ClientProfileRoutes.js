@@ -4,7 +4,7 @@ const router = express.Router();
 //Models
 const Client  = require("../Schemas/Client");
 const Review  = require("../Schemas/Review");
-const Request = require("../Schemas/Request");
+const Request = require("../Schemas/Node");
 const Company = require("../Schemas/Company");
 const Notification = require("../Schemas/Notification");
 

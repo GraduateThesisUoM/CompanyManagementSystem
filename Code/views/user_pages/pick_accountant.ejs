@@ -31,7 +31,7 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
-            if('<%=company.companyaccountant.status%>' == 'self_accountant'){
+            if('<%=company_node.company_id%>' == '<%=company_node.receiver_id%>'){
                 $("#self_accountant_btn").prop("disabled", true);
             }
 

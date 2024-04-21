@@ -12,6 +12,9 @@ const Company  = require("../Schemas/Company");
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
 
+const clientAccountantFunctions = require("../ClientAccountantFunctions");
+
+
 /*--------   SING UP */
 router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
   const users = await User.find();
@@ -59,11 +62,10 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
         }
         // Save the new user to the database
       await newUser.save();
+
       if (req.body.self_accountant == "true"){
-        company.companyaccountant.id = "self_accountant";
-        company.companyaccountant.status = "self_accountant";
+        clientAccountantFunctions.send_hiring_req_to_accountant(company._id,newUser._id,company._id);
       }
-      await company.save();
       console.log("User created successfully");
       }
       else if (req.body.account_type == 'accountant'){

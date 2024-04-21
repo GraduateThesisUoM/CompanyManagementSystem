@@ -6,7 +6,7 @@ const Accountant  = require("../Schemas/Accountant");
 const Review  = require("../Schemas/Review");
 const Notification = require("../Schemas/Notification");
 const Company  = require("../Schemas/Company");
-const Request = require("../Schemas/Request");
+const Request = require("../Schemas/Node");
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
@@ -29,15 +29,9 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
   try {
     const company = await Company.findOne({_id:req.user.company});
     
-    if(company.companyaccountant.status !="not_assigned"){
-      const last_accountant = await Accountant.findOne({_id:company.companyaccountant.id});
-      for (let i = 0; i < last_accountant.clients.length; i++){
-        if( last_accountant.clients[i].id.equals(req.user._id)){
-          last_accountant.clients.splice(i, 1);
-          await last_accountant.save();
-          break;
-        }
-      }
+    if(company.companyaccountant.status !="not_assigned" && company.companyaccountant.status !="fired"){
+
+      clientAccountantFunctions.fire_accountant(company._id,req.user._id)
     }
     
     const accountant = await Accountant.findOne({_id:req.session.accountant._id});
@@ -57,11 +51,11 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       /*accountant.clients.push({id: req.user._id, status: "pending"});
       await accountant.save();*/
 
-      company.companyaccountant.id = accountant._id;
+      /*company.companyaccountant = accountant._id;
       company.companyaccountant.status = "pending";
-      await company.save();
+      await company.save();*/
 
-      create_notification(company.companyaccountant.id, req.user._id, "hiring-request-notification");
+      //create_notification(company.companyaccountant.id, req.user._id, "hiring-request-notification");
 
       clientAccountantFunctions.send_hiring_req_to_accountant(company._id,req.user._id, accountant._id);
       
