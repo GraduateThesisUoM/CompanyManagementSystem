@@ -1,0 +1,4 @@
+#pick_client{
+    display: grid;
+    grid-template-columns: auto auto;
+}

@@ -18,15 +18,15 @@ const UserSchema = new mongoose.Schema({
 
   afm: { type: String, required: false },
   mydatakey: { type: String, required: false },
-  companyName: { type: String, required: false },
-  companyLogo: { type: String, required: false },
+  /*companyName: { type: String, required: false },
+  companyLogo: { type: String, required: false },*/
 
   resetPasswordToken: { type: String, required: false},
   resetPasswordExpires: { type: Date, required: false}, 
 
   type: {
     type: String,
-    enum: ['user', 'accountant', 'self-accountant', 'admin'],
+    enum: ['user', 'accountant', 'admin'],
     required: true,
   }
 

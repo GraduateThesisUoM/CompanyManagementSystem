@@ -14,7 +14,7 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>Προεπισκόπηση Λογιστή</h1>
+        <h1>Προεπισκόπηση Λογιστή </h1>
         <div id="accountant-info-div" name="accountant-info-div">
             <h2>Info</h2>
 
@@ -39,11 +39,19 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
+
+
             $("#back_btn").click(function(){
                     window.location ="/pick-accountant"
             });
-            if ("<%= accountant._id %>" == "<%= user.myaccountant.id %>"){
-                if ("pending" == "<%= user.myaccountant.status %>"){
+            const company_accountant ={
+                id: '<%= company.companyaccountant.id %>',
+                status: '<%= company.companyaccountant.status %>'
+            };
+            console.log(company_accountant.id)
+            
+            if(company_accountant.id == "<%= accountant._id %>" && company_accountant.status == "pending"){
+                if(company_accountant.status == "pending"){
                     $("#request_bnt").hide();
                     $("#cansel_request_bnt").show();
                 }
@@ -56,8 +64,12 @@
                 $("#request_bnt").show();
                 $("#cansel_request_bnt").hide();
             }
+
+
+
             $("#request_bnt").click(function(){
-                if("pending" == "<%= user.myaccountant.status %>"){
+                
+                if("pending" == company_accountant.status){
                     var result = confirm("You have already sent a request to another accountant do you want to cacsel the previous?");
                     if (result) {
                         $("#user_action").val("sent_request")

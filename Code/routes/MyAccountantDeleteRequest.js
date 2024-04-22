@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 //Models
-const Request = require("../Schemas/Request");
+const Request = require("../Schemas/Node");
 
 //Authentication Function
 const Authentication = require("../AuthenticationFunctions");

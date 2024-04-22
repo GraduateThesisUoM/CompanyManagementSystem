@@ -5,6 +5,8 @@ const router = express.Router();
 const Accountant  = require("../Schemas/Accountant");
 const Review  = require("../Schemas/Review");
 const Notification = require("../Schemas/Notification");
+const Company  = require("../Schemas/Company");
+const Node  = require("../Schemas/Node");
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
@@ -14,6 +16,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
       const accountants = await Accountant.find({}); // Fetch all accountants from the database
       accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
+      const company = await Company.findOne({_id:req.user.company});
+      const company_node = await Node.findOne({_id:company.accountant});
   
       const ratings = [];
   
@@ -34,7 +38,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         
       }
   
-      res.render('user_pages/pick_accountant.ejs', { user: req.user, accountants: accountants, ratings: ratings,
+      res.render('user_pages/pick_accountant.ejs', { user: req.user,company:company,company_node:company_node, accountants: accountants, ratings: ratings,
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
     } catch (err) {
       console.error('Error fetching accountants:', err);
@@ -53,13 +57,6 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       res.redirect('/error?origin_page=pick-accountant&error='+err);
     }
 });
-
-router.post('/make-self-accountant', Authentication.checkAuthenticated, async (req, res) => {
-  console.log("gggggggggggggggggggg");
-  res.redirect('/self-accountant');
-});
-
-
 
 module.exports = router;
   

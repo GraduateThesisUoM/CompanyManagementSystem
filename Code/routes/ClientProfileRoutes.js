@@ -4,7 +4,8 @@ const router = express.Router();
 //Models
 const Client  = require("../Schemas/Client");
 const Review  = require("../Schemas/Review");
-const Request = require("../Schemas/Request");
+const Request = require("../Schemas/Node");
+const Company = require("../Schemas/Company");
 const Notification = require("../Schemas/Notification");
 
 //Create Notification Function
@@ -15,8 +16,9 @@ const Authentication = require("../AuthenticationFunctions");
 
 /*--------   CLIENT PROFILE */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
-    const accountants_client = await Client.findOne({_id:req.query.id});
+    const accountants_client = await Company.findOne({_id:req.query.id});
     const clients_requests = await Request.find({receiver_id:req.user._id, sender_id: accountants_client._id, status: 'pending'});
+
     var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: accountants_client._id, type:"accountant"});
     if (accountant_review == null){
       accountant_review = new Review({
@@ -33,7 +35,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
-      const accountants_client = await Client.findOne({_id:req.body.clients_id});
+      const accountants_client = await Company.findOne({_id:req.body.clients_id});
       let newReview;
       const review = await Review.findOne({
         reviewer_id: req.user._id,

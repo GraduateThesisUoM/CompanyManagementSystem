@@ -14,7 +14,8 @@
     <body>
         <h1>Επιλογή Λογιστή</h1>
         <form action="/self-accountant-register" method="POST">
-            <button type="submit" id="self_accountant_id_submit_btn">Αυτοδιαχείριση λογιστικών</button>
+            <button type="button" id="self_accountant_btn">Αυτοδιαχείριση λογιστικών</button>
+            <button style="display: none;" type="submit" id="self_accountant_submit_btn">Αυτοδιαχείριση λογιστικών</button>
             </form>
         <form action="/pick-accountant" method="POST">
         <input style="display:none" name="accountant_id" id="accountant_id">
@@ -30,9 +31,31 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
+            if('<%=company_node.company_id%>' == '<%=company_node.receiver_id%>'){
+                $("#self_accountant_btn").prop("disabled", true);
+            }
+
+            if (window.location.search.includes("?")) {
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.has('message')) {
+                    const url_message = urlParams.get('message');
+                    if (url_message === "success_send_req_to_accountant") {
+                        alert("Request Sent");
+                    } else if (url_message === "success_cancel_req_to_accountant") {
+                        alert("Request Canceled");
+                    }
+                }
+            }
+
             $("#back_btn").click(function(){
                     window.location ="/"
             });
+            $("#self_accountant_btn").click(function(){
+                if (confirm("By choosing the self accounting option you are automatically\nfiring your accountant") == true) {
+                    $("#self_accountant_submit_btn").click();
+                }
+            });
+
             
             if(parseInt('<%= accountants.length%>') == 0){
                 alert("Δεν υπάρχουν διαθέσιμοι Λογιστές")

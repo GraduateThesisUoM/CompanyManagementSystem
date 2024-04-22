@@ -34,6 +34,7 @@
     <script>
         $(document).ready(function(){
             const clients_pending = JSON.parse(`<%- JSON.stringify(clients_pending) %>`);
+            console.log(clients_pending)
             const clients_active = JSON.parse(`<%- JSON.stringify(clients_active) %>`);
             const clients_expired = JSON.parse(`<%- JSON.stringify(clients_expired) %>`);
 
@@ -43,12 +44,12 @@
 
             clients_pending.forEach(client => {
                 const liElement = $("<li>")
-                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', `client-profile?id=${client.user._id}`);
+                const clientElement = $("<a href='fff'>").text(client.name).attr('href', `client-profile?id=${client._id}`);
                 const button1Element = $("<button>").text("Accept").click(function() {
-                        accountant_action(client.user._id, "assigned")
+                        accountant_action(client._id, "pending")
                         });
                 const button2Element = $("<button>").text("reject").click(function() {
-                    accountant_action(client.user._id, "rejected")
+                    accountant_action(client._id, "rejected")
                 });
                 liElement.append(clientElement);
                 liElement.append(button1Element);
@@ -57,10 +58,10 @@
             });
             clients_active.forEach(client => {
                 const liElement = $("<li>")
-                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', `client-profile?id=${client.user._id}`);
+                const clientElement = $("<a href='fff'>").text(client.name).attr('href', `client-profile?id=${client._id}`);
                 const button1Element = $("<button>").text("Accept").attr('style', 'visibility: hidden;');
                 const button2Element = $("<button>").text("reject").click(function() {
-                    accountant_action(client.user._id, "rejected")
+                    accountant_action(client._id, "rejected")
                 });
                 liElement.append(clientElement);
                 liElement.append(button1Element);
@@ -69,9 +70,9 @@
             });
             clients_expired.forEach(client => {
                 const liElement = $("<li>")
-                const clientElement = $("<a href='fff'>").text(client.user.firstName+" "+client.user.lastName).attr('href', `client-profile?id=${client.user._id}`);
+                const clientElement = $("<a href='fff'>").text(client.name+" "+client.lastName).attr('href', `client-profile?id=${client._id}`);
                 const button1Element = $("<button>").text("Accept").click(function() {
-                    accountant_action(client.user._id, "assigned")
+                    accountant_action(client._id, "executed")
                 });
                 const button2Element = $("<button>").text("reject").attr('style', 'visibility: hidden;');
                 liElement.append(clientElement);

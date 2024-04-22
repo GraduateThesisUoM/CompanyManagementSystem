@@ -36,10 +36,22 @@
       <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
       <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData (προαιρετικό)">
       <span id="accountant_hide">
-        <label for="companyName">'Ονομα εταιρείας:</label>
-        <input type="text" name="companyName" id="companyName">
-        <label for="companyLogo">Λογότυπο εταιρείας :</label>
-        <input type="text" name="companyLogo" id="companyLogo">
+        <span style="display: flex;">
+          <button type="button" id="newCompanybtn">Νέα Εταιρία</button>
+          <button type="button" id="existingCompanybtn">Υπάρχουσα Εταιρία</button>
+          <input id="companyNewExisting" name="companyNewExisting" value="-1" style="display: none;">
+        </span>
+        <label for="companyName" id="companyName_label" style="display: none;">'Ονομα εταιρείας:</label>
+        <input type="text" name="companyName" id="companyName" style="display: none;">
+        <span id="newCompany" style="display: none;">
+          <label for="companyLogo">Λογότυπο εταιρείας :</label>
+          <input type="file" name="companyLogo" id="companyLogo">
+        </span>
+        <span id="existingCompany" style="display: none;">
+          <label for="companyRegisterCode">Κωδικός Εταιρείας:</label>
+          <input type="text" name="companyRegisterCode" id="companyRegisterCode">
+        </span>
+
         <div class="checkbox_conatainer">
           <input type="checkbox" id="self_accountant_check_box">
           <label for="self_accountant_check_box">Αυτοδιαχείριση Λογιστικών :</label>
@@ -58,6 +70,7 @@
     const isAdmin = urlParams.get("admin") === "true";
 
     const users_list = JSON.parse(`<%- JSON.stringify(users_list) %>`);
+    const companies_list = JSON.parse(`<%- JSON.stringify(companies) %>`);
 
     if(isAdmin){
       $("#companyName").prop("required", false);
@@ -72,6 +85,10 @@
     $("#log_in_btn").click(function(){
       window.location ="log-in"
     });
+
+    if(companies_list.length == 0){
+      $('#existingCompanybtn').prop('disabled', true);
+    }
 
     $("#user_btn").click(function(){
       $("#h2").text("Χρήστης");
@@ -93,6 +110,30 @@
     $("#self_accountant_check_box").change(function() {
         const isChecked = $(this).prop("checked");
         $("#self_accountant").val(isChecked ? "true" : "false");
+        $("#newCompanybtn").click();
+    });
+    $("#newCompanybtn").click(function() {
+      $('#companyName').css('display', 'block');
+      $('#companyName_label').css('display', 'block');
+      $('#newCompany').css('display', 'block');
+      $('#existingCompany').css('display', 'none');
+      $('#newCompanybtn').css('font-weight', 'bold');
+      $('#existingCompanybtn').css('font-weight', 'normal');
+      $('#companyNewExisting').val("0");
+    });
+    $("#existingCompanybtn").click(function() {
+      $('#companyName').css('display', 'block');
+      $('#companyName_label').css('display', 'block');
+      $('#newCompany').css('display', 'none');
+      $('#existingCompany').css('display', 'block');
+      $('#newCompanybtn').css('font-weight', 'normal');
+      $('#existingCompanybtn').css('font-weight', 'bold');
+      $('#companyNewExisting').val("1");
+      if($("#self_accountant_check_box").prop("checked")){
+        $("#self_accountant_check_box").click();
+      }
+      
+      
     });
     $("#sign_up_btn").click(function(){
       var all_checks_ok = true;
@@ -118,8 +159,52 @@
         }
       });
 
+
+      if($("#account_type").val() == "user"){
+        if($('#companyNewExisting').val()=="0"){
+          companies_list.forEach(company => {
+            if (company.name === $("#companyName").val() || company.signupcode === $("#companyRegisterCode").val()) {
+              alert("Company already exists");
+              $("#companyName").val("").focus();
+              all_checks_ok = false;
+              //return false; // exit loop
+            }
+          });
+        }
+        else if($('#companyNewExisting').val()=="1"){
+          var company_credentials = true;
+          var user_num = 1;
+          var lisense_num = 1;
+          var company_index = -1;
+
+
+          for (let i = 0; i < companies_list.length; i++) {
+            if ((companies_list[i].name == $("#companyName").val()) && (companies_list[i].signupcode == $("#companyRegisterCode").val())){
+              company_index = i;
+              break;
+            }
+          }
+
+          if(company_index > -1){
+            if ((companies_list[company_index].name != $("#companyName").val()) || (companies_list[company_index].signupcode != $("#companyRegisterCode").val())){
+              alert("Company Name and Registration Code does not match");
+              $("#companyName").val("").focus();
+              all_checks_ok = false;
+            }
+            else if(companies_list[company_index].users_num == companies_list[company_index].license_num){
+              alert("Ther are no empy sport for new user, by more");
+              all_checks_ok = false;
+            }
+
+          }
+        }
+        else if($('#companyNewExisting').val()=="-1" && isAdmin == false){
+          alert("Must Choose a Company");
+          all_checks_ok = false;
+        }
+      }
       if(all_checks_ok){
-        // If passwords match, submit the form
+        // If all checks are ok, submit the form
         $("#submit_btn").click();
       }
       

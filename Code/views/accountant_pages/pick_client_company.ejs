@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Δημιουργία</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="create_page.css">
+        <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <h1 id="header1">Rick Client Company</h1>
+        <div id="pick_client">
+            <div>Name</div>
+            <div>Button</div>
+        </div>
+        <button id="back_btn">Πίσω</button>
+    </body>
+    <%- include('../partials/footer'); %>
+    <script>
+        $(document).ready(function(){
+
+            clients_list = JSON.parse(`<%- JSON.stringify(clients) %>`);
+            var counter = 0;
+            if (clients_list.length > 0) {
+                //$("#pick_client").empty(); // Clear the default message
+                clients_list.forEach(client => {
+                    counter++;
+                    const client_div = $("<div>").attr("id", "client_" + counter.toString()).html(
+                         client.firstName + " " + client.lastName 
+                    );
+                    const client_button = $("<button>").text(counter.toString()).click((function(index) {
+                        return function() {
+                            pick_client(index);
+                        };
+                    })(counter));
+
+                    $("#pick_client").append(client_div);
+                    $("#pick_client").append(client_button);
+                    
+                });
+            }
+
+            $("#back_btn").click(function(){
+                    window.location ="working"
+            });
+        });
+    </script>
+</html>

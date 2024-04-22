@@ -18,9 +18,9 @@
 }
 
 #company_logo{
-  height: 150px;
+  height: auto;
   width: 150px;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .badge{

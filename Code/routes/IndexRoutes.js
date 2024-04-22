@@ -5,17 +5,21 @@ const router = express.Router();
 const User = require("../Schemas/User");
 const Client  = require("../Schemas/Client");
 const Report = require("../Schemas/Report");
-const Request = require("../Schemas/Request");
+const Request = require("../Schemas/Node");
 const Notification = require("../Schemas/Notification");
+const Company  = require("../Schemas/Company");
 
 //Authentication Function
 const Authentication = require("../AuthenticationFunctions");
+//Get clients Function
+const clientAccountantFunctions = require("../ClientAccountantFunctions");
 
 
 //GET REQUEST
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     if(req.user.type == 'accountant'){ // index for accountants
       //add something to get the requests that happen while away
+
       const requests_pending = await Request.find({receiver_id:req.user._id, status : "pending" });
       const requests_viewed = await Request.find({receiver_id:req.user._id, status :  "viewed"});
       const requests_rejected = await Request.find({receiver_id:req.user._id, status :  "rejected"});
@@ -30,7 +34,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         clients : clients});
     };
     if(req.user.type == 'user'){ //index for users
-      res.render('user_pages/user_main.ejs',{user : req.user,
+      const company = await Company.findOne({_id:req.user.company});
+      res.render('user_pages/user_main.ejs',{user : req.user, company: company,
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
     }
     if(req.user.type == 'admin'){ // index for admins
