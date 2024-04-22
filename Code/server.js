@@ -12,12 +12,23 @@ const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
 
+const http = require('http').Server(app);
+//Pass the Express app into the HTTP module.
+const socketIO = require('socket.io')(http);
+
 // Connect to MongoDB
 connectDB();
 
 // Passport Configuration
 const initializePassport = require('./passport-config');
 initializePassport(passport, getUserByEmail, getUserById);
+
+socketIO.on('connection', (socket) => {
+  console.log(`⚡: ${socket.id} user just connected`);
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+});
 
 app.set('view-engine', 'ejs');
 app.use(express.json());
@@ -136,26 +147,16 @@ app.use("/logout", logOutRouts);
 const RemoveAccountantRouts = require("./routes/RemoveAccountant");
 app.use("/remove_accountant", RemoveAccountantRouts);
 
-<<<<<<< HEAD
 const TransactorList = require("./routes/TransactorListRoutes");
 app.use("/transactor-list", TransactorList);
 
 const Transactor = require("./routes/TransactorRoutes");
 app.use("/transactor", Transactor);
-=======
-const SelfAccountandRoutes = require("./routes/SelfAccountantRoutes.js");
-app.use("/self-accountant", SelfAccountandRoutes);
 
-const SelfAccountandRegisterRoutes = require("./routes/SelfAccountantRegister.js");
-app.use("/self-accountant-register", SelfAccountandRegisterRoutes);
-
-const CreateRoutes = require("./routes/CreateRoutes.js");
-app.use("/create", CreateRoutes);
-
-const PickClientCompanyRotes = require("./routes/PickClientCompanyRoutes.js");
-app.use("/pickclientcompany", PickClientCompanyRotes);
-
->>>>>>> main
+//Listen for changes on the HTTP server not the Express server
+http.listen(3005, () => {
+  console.log(`App listening at 3001`);
+});
 
 app.listen(3000, () => {
   console.log('Server started on port 3000');
