@@ -45,10 +45,9 @@
                     window.location ="/pick-accountant"
             });
             const company_accountant ={
-                id: '<%= company.companyaccountant.id %>',
-                status: '<%= company.companyaccountant.status %>'
+                id: '<%= company_node.receiver_id %>',
+                status: '<%= company_node.status %>'
             };
-            console.log(company_accountant.id)
             
             if(company_accountant.id == "<%= accountant._id %>" && company_accountant.status == "pending"){
                 if(company_accountant.status == "pending"){

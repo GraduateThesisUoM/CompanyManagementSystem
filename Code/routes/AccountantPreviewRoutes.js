@@ -6,7 +6,7 @@ const Accountant  = require("../Schemas/Accountant");
 const Review  = require("../Schemas/Review");
 const Notification = require("../Schemas/Notification");
 const Company  = require("../Schemas/Company");
-const Request = require("../Schemas/Node");
+const Node = require("../Schemas/Node");
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
@@ -19,7 +19,9 @@ const clientAccountantFunctions = require("../ClientAccountantFunctions");
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
   const company = await Company.findOne(_id=req.user.company);
-  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company, user: req.user, reviews: reviews,
+  const company_node = await Node.findOne({_id:company.accountant});
+
+  res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
     notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });
 });
 
@@ -28,8 +30,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
   try {
     const company = await Company.findOne({_id:req.user.company});
+    const company_node = await Node.findOne({_id:company.accountant});
     
-    if(company.companyaccountant.status !="not_assigned" && company.companyaccountant.status !="fired"){
+    if(company.accountant !="not_assigned" && company_node.status !="fired"){
 
       clientAccountantFunctions.fire_accountant(company._id,req.user._id)
     }

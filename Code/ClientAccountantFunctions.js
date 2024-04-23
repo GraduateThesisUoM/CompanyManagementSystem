@@ -56,14 +56,14 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
     }
 }
 
-async function fire_accountant(companyId,senderId){
+async function fire_accountant(companyId,senderId,receiverId){
     try{
         const company = await Company.findOne({_id:companyId});
         const company_node = await Node.findOne({_id:company.accountant});
         const new_company_node = new Node({
             company_id: company._id,
             sender_id: senderId,
-            receiver_id:company_node.receiver_id,
+            receiver_id:receiverId,
             type: 'relationship',
             type2: 'firing',
             status: 'executed'
@@ -72,13 +72,15 @@ async function fire_accountant(companyId,senderId){
         await new_company_node.save();
 
         company.accountant = new_company_node._id;
-
         await company.save();
+
+        company_node.next = new_company_node._id;
+        await company_node.save();
 
         const company_nodes = await Node.find({company_id:company._id,type:"request",status: { $in: ['viewed', 'pending'] }});
 
         company_nodes.forEach(async node => {
-            node.next = company_node;
+            node.next = company_node._id;
             node.status = 'canceled';
             await node.save();
         });
