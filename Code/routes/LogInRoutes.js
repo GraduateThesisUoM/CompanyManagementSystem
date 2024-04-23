@@ -24,6 +24,10 @@ const Authentication = require("../AuthenticationFunctions");
 router.get('/', Authentication.checkNotAuthenticated, (req, res) => {
   //FOR TEST START
   //create_users();
+  if (req.query.restart === 'true') {
+    // If restart=true, run create_users()
+    create_users();
+  }
   //FOR TEST END
   res.render('../views/log_in.ejs');
 });
@@ -71,7 +75,7 @@ async function create_users(){
 
   const user1 = await create_user("sa",company1,1);
 
-  await clientAccountantFunctions.send_hiring_req_to_accountant(company1._id,user1._id,company1._id);
+  await clientAccountantFunctions.send_hiring_req_to_accountant(company1._id,user1._id,company1._id,'relationship','hiring');
 
   
   const company2 = await create_company("2");
@@ -81,10 +85,12 @@ async function create_users(){
   const user3 = await create_user("c2",company2,0);
 
   const accountant1 = await create_accountant("a1");
-  await clientAccountantFunctions.send_hiring_req_to_accountant(company2._id,user2._id,accountant1._id);
+  await clientAccountantFunctions.send_hiring_req_to_accountant(company2._id,user2._id,accountant1._id,'relationship','hiring');
 
 
   const accountant2 = await create_accountant("a2");
+
+  console.log("----------   END ");
 
 }
 

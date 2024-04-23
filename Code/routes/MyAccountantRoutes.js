@@ -31,7 +31,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       }
       else{
         // has not accountant
-        if(company.accountant =="not_assigned" || company_accountant_node.type2 =="firing"){
+        if(company.accountant =="not_assigned" || company_accountant_node.type2 =="firing" || company_accountant_node.status =="pending"){
           if(req.user.companyOwner = 1){
             res.redirect('pick-accountant');
           }
