@@ -12,6 +12,8 @@ const Review  = require("../Schemas/Review");
 const Node = require("../Schemas/Node");
 const Client = require("../Schemas/Client");
 const Company = require("../Schemas/Company");
+const User = require("../Schemas/User");
+
 
 const Notification = require("../Schemas/Notification");
 
@@ -19,9 +21,13 @@ const clientAccountantFunctions = require("../ClientAccountantFunctions");
 
 //Authentication Functions
 const Authentication = require("../AuthenticationFunctions");
+//Get General Functions
+const generalFunctions = require("../GeneralFunctions");
 
 /*--------   LOG IN */
-router.get('/', Authentication.checkNotAuthenticated, (req, res) => {
+router.get('/', Authentication.checkNotAuthenticated, (req,res) => {
+  generalFunctions.checkAccessRigts('d',req.originalUrl,res);
+
   //FOR TEST START
   //create_users();
   if (req.query.restart === 'true') {
@@ -87,8 +93,9 @@ async function create_users(){
   const accountant1 = await create_accountant("a1");
   await clientAccountantFunctions.send_hiring_req_to_accountant(company2._id,user2._id,accountant1._id,'relationship','hiring');
 
-
   const accountant2 = await create_accountant("a2");
+
+  const admin1 = await create_admin("ad1")
 
   console.log("----------   END ");
 
@@ -146,4 +153,17 @@ async function create_accountant(text){
   console.log("-----------------------");
 
   return newAccountant;
+}
+
+async function create_admin(text){
+  const NewAdmin = new User({
+    type: 'admin',
+    firstName: text+"_fn",
+    lastName: text+"_ln",
+    password: await bcrypt.hash('1', 10),
+    email: text+"@"+text
+  });
+  console.log(NewAdmin);
+  console.log("-----------------------");
+  return NewAdmin;
 }

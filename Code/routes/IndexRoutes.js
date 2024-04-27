@@ -13,6 +13,9 @@ const Company  = require("../Schemas/Company");
 const Authentication = require("../AuthenticationFunctions");
 //Get clients Function
 const clientAccountantFunctions = require("../ClientAccountantFunctions");
+//Get General Functions
+const generalFunctions = require("../GeneralFunctions");
+
 
 
 //GET REQUEST
