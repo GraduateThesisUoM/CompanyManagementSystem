@@ -81,15 +81,27 @@
     <%- include('../partials/footer'); %>
     <script>
 
-        //     const socket = io('http://localhost:3000', {
-        //     reconnectionDelay: 1000,
-        //     reconnection: true,
-        //     reconnectionAttemps: 10,
-        //     transports: ['websocket'],
-        //     agent: false,
-        //     upgrade: false,
-        //     rejectUnauthorized: false
+            const socket = io('ws://localhost:3000', {
+            reconnectionDelay: 1000,
+            reconnection: true,
+            reconnectionAttemps: 10,
+            transports: ['websocket'],
+            agent: false,
+            upgrade: false,
+            rejectUnauthorized: false
+        });
+
+        // document.getElementById("test").addEventListener("click", a => {
+        //     socket.emit("hello", "world", (response) => {
+        //         console.log(response); // "got it"
+        //     });
         // });
+
+        // socket.on("hello", (arg, callback) => {
+        //     console.log(arg); // "world"
+        //     callback("got it");
+        // });
+        
 
 
         const visible_request_num = 5;

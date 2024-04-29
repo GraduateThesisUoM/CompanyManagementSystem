@@ -12,9 +12,7 @@ const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
 
-const http = require('http').Server(app);
-//Pass the Express app into the HTTP module.
-const socketIO = require('socket.io')(http);
+
 
 // Connect to MongoDB
 connectDB();
@@ -22,13 +20,6 @@ connectDB();
 // Passport Configuration
 const initializePassport = require('./passport-config');
 initializePassport(passport, getUserByEmail, getUserById);
-
-socketIO.on('connection', (socket) => {
-  console.log(`⚡: ${socket.id} user just connected`);
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-  });
-});
 
 app.set('view-engine', 'ejs');
 app.use(express.json());
@@ -153,11 +144,17 @@ app.use("/transactor-list", TransactorList);
 const Transactor = require("./routes/TransactorRoutes");
 app.use("/transactor", Transactor);
 
-//Listen for changes on the HTTP server not the Express server
-http.listen(3005, () => {
-  console.log(`App listening at 3001`);
+const http = require('http').createServer(app);
+const socketIO = require('socket.io')(http);
+
+socketIO.on('connection', (socket) => {
+  console.log(`⚡: ${socket.id} user just connected`);
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
 });
 
-app.listen(3000, () => {
+http.listen(3000, () => {
   console.log('Server started on port 3000');
 });
+
