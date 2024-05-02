@@ -9,9 +9,9 @@ const methodOverride = require('method-override');
 const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
-const path = require('path');
 
-const config = require("./config");
+//File with the paths
+const path_constants = require('./constantsPaths');
 
 // Connect to MongoDB
 connectDB();
@@ -33,128 +33,116 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(methodOverride('_method'));
 
-app.use(express.static(config.folders.css));
-app.use(express.static(config.folders.img));
-
+app.use(express.static(path_constants.folders.css));
+app.use(express.static(path_constants.folders.img));
 
 //Routes
-const indexRoute = require("./routes/GeneralRoutes/IndexRoutes.js");
-app.use("/", indexRoute);
+app.use(path_constants.pages.index.url, require(path_constants.pages.index.file));
 
-//added access check
-//const viewRequestRoute = require("./routes/AccountantRoutes/ViewRequestRoutes.js");
-const viewRequestRoute = require(path.join(__dirname, process.env.ACCOUNTANT_ROUTES_PATH, 'ViewRequestRoutes.js'));
-app.use("/view-request", viewRequestRoute);
+//View Request
+app.use(path_constants.pages.view_request.url, require(path_constants.pages.view_request.file));
 
-const readNotification = require("./routes/GeneralRoutes/ReadNotificationRoutes.js");
-app.use("/notification-read", readNotification);
+//notification-read
+app.use(path_constants.pages.notification_read.url, require(path_constants.pages.notification_read.file));
 
-const searchUserAdmin = require("./routes/AdminRoutes/SearchUserAdmin.js");
-app.use("/get-data", searchUserAdmin);
+//get-data
+app.use(path_constants.pages.get_data.url, require(path_constants.pages.get_data.file));
 
-//added access check
-const userProfileAdminRoutes = require("./routes/AdminRoutes/UserProfileAdminRoutes.js");
-app.use("/user-profile", userProfileAdminRoutes);
+//user-profile
+app.use(path_constants.pages.user_profile.url, require(path_constants.pages.user_profile.file));
 
-const changeBanStatusRoutes = require("./routes/AdminRoutes/BanStatusRoutes.js");
-app.use("/change-ban-status", changeBanStatusRoutes);
+//change-ban-status
+app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));
 
-const removeReviewAdmin = require("./routes/AdminRoutes/RemoveReviewAdmin.js");
-app.use("/remove-review", removeReviewAdmin);
+//remove-review
+app.use(path_constants.pages.remove_review.url, require(path_constants.pages.remove_review.file));
 
-const reviewReportAdmin = require("./routes/AdminRoutes/ReviewReportAdmin.js");
-app.use("/review-report", reviewReportAdmin);
+app.use(path_constants.pages.review_report.url, require(path_constants.pages.review_report.file));
 
-const removeRelationshipAdmin = require("./routes/AdminRoutes/RemoveRelationshipsAdmin.js");/*Admin Page*/
-app.use("/remove-relationship", removeRelationshipAdmin);
+app.use(path_constants.pages.remove_relationship.url, require(path_constants.pages.remove_relationship.file));
 
-const dismissReportAdmin = require("./routes/AdminRoutes/DismissReportAdmin.js");/*Admin Page*/
-app.use("/dismiss-report", dismissReportAdmin);
+app.use(path_constants.pages.dismiss_report.url, require(path_constants.pages.dismiss_report.file));
 
-const reevaluateReportAdmin = require("./routes/AdminRoutes/ReevaluateReportAdmin.js");/*Admin Page*/
-app.use("/reevaluate-report", reevaluateReportAdmin);
+app.use(path_constants.pages.reevaluate_report.url, require(path_constants.pages.reevaluate_report.file));
 
-const logIn = require("./routes/GeneralRoutes/LogInRoutes.js");
-//const logIn = require(path.join(__dirname, process.env.GENERAL_ROUTES_PATH, 'LogInRoutes.js'));
+//log_in
+app.use(path_constants.pages.log_in.url, require(path_constants.pages.log_in.file));
 
-app.use("/log-in", logIn);
+//sign_up
+app.use(path_constants.pages.sign_up.url, require(path_constants.pages.sign_up.file));
 
-const signUp = require("./routes/GeneralRoutes/SignUpRoutes.js");
-app.use("/sign-up", signUp);
+//my_accountant
+app.use(path_constants.pages.my_accountant.url, require(path_constants.pages.my_accountant.file));
 
-//added access check
-const myAccountantRoutes = require("./routes/UserRoutes/MyAccountantRoutes.js");/*User Page*/
-app.use("/my-accountant", myAccountantRoutes);
+//my_accountant_rate
+app.use(path_constants.pages.my_accountant_rate.url, require(path_constants.pages.my_accountant_rate.file));
 
-const myAccountantRate = require("./routes/UserRoutes/MyAccountantRate.js");
-app.use("/my-accountant-rate", myAccountantRate);
+//my_accountant_requests
+app.use(path_constants.pages.my_accountant_requests.url, require(path_constants.pages.my_accountant_requests.file));
 
-const myAccountantRequests = require("./routes/UserRoutes/MyAccountantRequests.js");
-app.use("/my-accountant-requests", myAccountantRequests);
+//my_accountant_delete_request
+app.use(path_constants.pages.my_accountant_delete_request.url, require(path_constants.pages.my_accountant_delete_request.file));
 
-const myAccountantDeleteRequest = require("./routes/UserRoutes/MyAccountantDeleteRequest.js");
-app.use("/my-accountant-delete-request", myAccountantDeleteRequest);
+//pick_accountant
+app.use(path_constants.pages.pick_accountant.url, require(path_constants.pages.pick_accountant.file));
 
-const pickAccountantRoutes = require("./routes/UserRoutes/PickAccountantRoutes.js");
-app.use("/pick-accountant", pickAccountantRoutes);
+//preview_accountant
+app.use(path_constants.pages.preview_accountant.url, require(path_constants.pages.preview_accountant.file));
 
-//added access check
-const previewAccountantRoutes = require("./routes/UserRoutes/AccountantPreviewRoutes.js");
-app.use("/preview-accountant", previewAccountantRoutes);
+/*const workingPageRoutes = require("./routes/WorkingPageRoutes");
+app.use("/working", workingPageRoutes);*/
 
-const workingPageRoutes = require("./routes/WorkingPageRoutes");
-app.use("/working", workingPageRoutes);
+//clients
+app.use(path_constants.pages.clients.url, require(path_constants.pages.clients.file));
 
-const clientsPageRoutes = require("./routes/AdminRoutes/ClientsPageRouters.js");
-app.use("/clients", clientsPageRoutes);
+//request_history
+app.use(path_constants.pages.request_history.url, require(path_constants.pages.request_history.file));
 
-const requestHistoryRoutes = require("./routes/AccountantRoutes/RequestHistoryRoutes.js");
-app.use("/request-history", requestHistoryRoutes);
+//client_profile
+app.use(path_constants.pages.client_profile.url, require(path_constants.pages.client_profile.file));
 
-const clientProfileRoutes = require("./routes/AdminRoutes/ClientProfileRoutes.js");
-app.use("/client-profile", clientProfileRoutes);
+//report_list_page
+app.use(path_constants.pages.report_list_page.url, require(path_constants.pages.report_list_page.file));
 
-const reportListPageRoutes = require("./routes/AdminRoutes/ReportListPageRouters.js");
-app.use("/report-list-page", reportListPageRoutes);
+//report
+app.use(path_constants.pages.report.url, require(path_constants.pages.report.file));
 
-const reportRoutes = require("./routes/GeneralRoutes/ReportRoutes.js");
-app.use("/report", reportRoutes);
+//settings
+app.use(path_constants.pages.settings.url, require(path_constants.pages.settings.file));
 
-const settingsRoutes = require("./routes/GeneralRoutes/SettingsRoutes.js");
-app.use("/settings", settingsRoutes);
+//profile_page
+app.use(path_constants.pages.profile_page.url, require(path_constants.pages.profile_page.file));
 
-const profilePageRoutes = require("./routes/GeneralRoutes/ProfilePageRoutes.js");
-app.use("/profile-page", profilePageRoutes);
+//forgot_password
+app.use(path_constants.pages.forgot_password.url, require(path_constants.pages.forgot_password.file));
 
-const forgotPasswordRoutes = require("./routes/GeneralRoutes/ForgotPasswordRoutes.js");
-app.use("/forgot-password", forgotPasswordRoutes);
+//reset_password
+app.use(path_constants.pages.reset_password.url, require(path_constants.pages.reset_password.file));
 
-const resetPasswordRoutes = require("./routes/GeneralRoutes/ResetPasswordRoutes.js");
-app.use("/reset-password", resetPasswordRoutes);
+//error
+app.use(path_constants.pages.error.url, require(path_constants.pages.error.file));
 
-const errorPageRoutes = require("./routes/GeneralRoutes/ErrorPageRoutes.js");
-app.use("/error", errorPageRoutes);
+//delete_account
+app.use(path_constants.pages.delete_account.url, require(path_constants.pages.delete_account.file));
 
-const deleteAccountRoutes = require("./routes/GeneralRoutes/DeleteAccountRoutes.js");
-app.use("/delete-account", deleteAccountRoutes);
+//logout
+app.use(path_constants.pages.logout.url, require(path_constants.pages.logout.file));
 
-const logOutRouts = require("./routes/GeneralRoutes/LogOutRoutes.js");
-app.use("/logout", logOutRouts);
+//remove_accountant
+app.use(path_constants.pages.remove_accountant.url, require(path_constants.pages.remove_accountant.file));
 
-const RemoveAccountantRouts = require("./routes/UserRoutes/RemoveAccountant.js");
-app.use("/remove_accountant", RemoveAccountantRouts);
+//self_accountant
+app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.self_accountant.file));
 
-const SelfAccountandRoutes = require("./routes/UserRoutes/SelfAccountantRoutes.js");
-app.use("/self-accountant", SelfAccountandRoutes);
-
-const SelfAccountandRegisterRoutes = require("./routes/UserRoutes/SelfAccountantRegister.js");
-app.use("/self-accountant-register", SelfAccountandRegisterRoutes);
+//self_accountant_register
+app.use(path_constants.pages.self_accountant_register.url, require(path_constants.pages.self_accountant_register.file));
 
 const CreateRoutes = require("./routes/CreateRoutes.js");
 app.use("/create", CreateRoutes);
+app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));
 
-const PickClientCompanyRotes = require("./routes/AccountantRoutes/PickClientCompanyRoutes.js");
-app.use("/pickclientcompany", PickClientCompanyRotes);
+//pickclientcompany
+app.use(path_constants.pages.pickclientcompany.url, require(path_constants.pages.pickclientcompany.file));
 
 
 app.listen(process.env.PORT, () => {
