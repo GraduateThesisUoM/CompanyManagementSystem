@@ -19,6 +19,9 @@ const Notification = require("../../Schemas/Notification");
 
 const clientAccountantFunctions = require("../../ClientAccountantFunctions");
 
+//File with the paths
+const path_constants = require('../../constantsPaths');
+
 //Authentication Functions
 const Authentication = require("../../AuthenticationFunctions");
 //Get General Functions
@@ -31,7 +34,7 @@ router.get('/', Authentication.checkNotAuthenticated, (req, res) => {
   //FOR TEST END
   res.render('../views/log_in.ejs');
 });
-  router.post('/', Authentication.checkNotAuthenticated, passport.authenticate('local', {
+router.post('/', Authentication.checkNotAuthenticated, passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/log-in',
     failureFlash: true

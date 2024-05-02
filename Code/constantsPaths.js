@@ -112,6 +112,10 @@ const pages = {
     url : "/request-history",
     file: routes.accountant+"RequestHistoryRoutes.js"
   },
+  clients :{
+    url : "/clients",
+    file: routes.accountant+"ClientsPageRouters.js"
+  },
   //Admin
   get_data :{
     url : "/get-data",
@@ -144,10 +148,6 @@ const pages = {
   dismiss_report :{
     url : "/dismiss-report",
     file: routes.admin+"DismissReportAdmin.js"
-  },
-  clients :{
-    url : "/clients",
-    file: routes.admin+"ClientsPageRouters.js"
   },
   client_profile :{
     url : "/client-profile",

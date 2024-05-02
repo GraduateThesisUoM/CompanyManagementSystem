@@ -15,13 +15,14 @@ const Authentication = require("../../AuthenticationFunctions");
 const clientAccountantFunctions = require("../../ClientAccountantFunctions");
 //Get General Functions
 const generalFunctions = require("../../GeneralFunctions");
+//File with the paths
+const path_constants = require('../../constantsPaths');
 
 
 
 //GET REQUEST
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
-  console.log()
-    
+   
     if(req.user.type == 'accountant'){ // index for accountants
       //add something to get the requests that happen while away
 
@@ -39,7 +40,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}),
         clients : clients}
 
-      //generalFunctions.checkAccessRigts(req.user,'accountant_pages/accountant_main.ejs',data,res);
+      //generalFunctions.checkAccessRigts('accountant_pages/accountant_main.ejs',data,res);
+      res.render('accountant_pages/accountant_main.ejs',data);
     }
     else if(req.user.type == 'user'){ //index for users
       const company = await Company.findOne({_id:req.user.company});
