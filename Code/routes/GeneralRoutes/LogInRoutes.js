@@ -30,13 +30,15 @@ const generalFunctions = require("../../GeneralFunctions");
 /*--------   LOG IN */
 router.get('/', Authentication.checkNotAuthenticated, (req, res) => {
   //FOR TEST START
-  //create_users();
+  create_users();
   //FOR TEST END
-  res.render('../views/log_in.ejs');
+  //generalFunctions.checkAccessRigts('.',req,res,data);
+  //res.render('../views/log_in.ejs');
+  res.render("."+path_constants.pages.log_in.view());
 });
-router.post('/', Authentication.checkNotAuthenticated, passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/log-in',
+router.post(path_constants.pages.index.url, Authentication.checkNotAuthenticated, passport.authenticate('local', {
+    successRedirect: path_constants.pages.index.url,
+    failureRedirect: path_constants.pages.log_in.url,
     failureFlash: true
 }));
 
@@ -160,6 +162,7 @@ async function create_admin(text){
     password: await bcrypt.hash('1', 10),
     email: text+"@"+text
   });
+  await NewAdmin.save();
   console.log(NewAdmin);
   console.log("-----------------------");
   return NewAdmin;
