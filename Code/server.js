@@ -10,6 +10,9 @@ const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
 
+//File with the paths
+const path_constants = require('./constantsPaths');
+
 // Connect to MongoDB
 connectDB();
 
