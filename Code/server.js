@@ -10,12 +10,6 @@ const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
 
-<<<<<<< HEAD
-
-=======
-//File with the paths
-const path_constants = require('./constantsPaths');
->>>>>>> main
 
 // Connect to MongoDB
 connectDB();
@@ -135,25 +129,6 @@ app.use(path_constants.pages.logout.url, require(path_constants.pages.logout.fil
 //remove_accountant
 app.use(path_constants.pages.remove_accountant.url, require(path_constants.pages.remove_accountant.file));
 
-<<<<<<< HEAD
-const TransactorList = require("./routes/TransactorListRoutes");
-app.use("/transactor-list", TransactorList);
-
-const Transactor = require("./routes/TransactorRoutes");
-app.use("/transactor", Transactor);
-
-const http = require('http').createServer(app);
-const socketIO = require('socket.io')(http);
-
-socketIO.on('connection', (socket) => {
-  console.log(`⚡: ${socket.id} user just connected`);
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-  });
-});
-
-http.listen(3000, () => {
-=======
 //self_accountant
 app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.self_accountant.file));
 
@@ -167,9 +142,17 @@ app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages
 //pickclientcompany
 app.use(path_constants.pages.pickclientcompany.url, require(path_constants.pages.pickclientcompany.file));
 
+const http = require('http').createServer(app);
+const socketIO = require('socket.io')(http);
 
-app.listen(process.env.PORT, () => {
->>>>>>> main
-  console.log('Server started on port 3000');
+socketIO.on('connection', (socket) => {
+  console.log(`⚡: ${socket.id} user just connected`);
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+});
+
+http.listen(process.env.PORT, () => {
+  console.log('Server started on port'+ process.env.PORT);
 });
 
