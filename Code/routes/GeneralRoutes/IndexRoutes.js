@@ -41,15 +41,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}),
       clients : clients}
 
-    //generalFunctions.checkAccessRigts('accountant_pages/accountant_main.ejs',data,res);
-    //res.render('accountant_pages/accountant_main.ejs',data);
-    //res.render(path_constants.pages.index.view('accountant'),data);
   }
   else if(req.user.type == 'user'){ //index for users
     const company = await Company.findOne({_id:req.user.company});
-    /*res.render('user_pages/user_main.ejs',{user : req.user, company: company,
-      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});*/
-
     data = {
       user : req.user,
       company: company,
@@ -59,11 +53,6 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     
   }
   else if(req.user.type == 'admin'){ // index for admins
-
-    /*res.render('admin_pages/admin_main.ejs',{user : req.user, 
-    user_list: await User.find(), pending_reports: await Report.find({status: "pending"})
-    });*/
-
     data = {
       user : req.user, 
       user_list: await User.find(),

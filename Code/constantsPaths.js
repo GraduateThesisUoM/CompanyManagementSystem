@@ -3,6 +3,17 @@ const folders ={
   img: "./public/imgs"
 };
 
+const schemas = {
+  user : "../../Schemas/User",
+  notification : "../../Schemas/Notification",
+  company : "../../Schemas/Company",
+  client : "../../Schemas/Client"
+};
+
+const url_param = {
+  param_1 : 'access_denied'
+};
+
 const routes_folder = "./routes"
 const views_folder = "./views"
 
@@ -36,11 +47,6 @@ const pages = {
         return views_folders.admin+"admin_main.ejs"
       }
     }}
-  },
-  view_request :{
-    url : "/view-request",
-    file: routes.general+"ReadNotificationRoutes.js",
-    view : ""
   },
   notification_read :{
     url : "/notification-read",
@@ -159,6 +165,13 @@ const pages = {
   clients :{
     url : "/clients",
     file: routes.accountant+"ClientsPageRouters.js",
+    view : function() { {
+      return views_folders.accountant+"clients_page.ejs"
+    }}
+  },
+  view_request :{
+    url : "/view-request",
+    file: routes.accountant+"ViewRequestRoutes.js",
     view : ""
   },
   //Admin
@@ -218,4 +231,4 @@ const pages = {
 
 
 
-module.exports = { folders,pages, routes };
+module.exports = { folders,pages, routes ,schemas,url_param};

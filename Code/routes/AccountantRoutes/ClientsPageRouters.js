@@ -1,34 +1,46 @@
 const express = require("express");
 const router = express.Router();
 
-//Models
-const User = require("../../Schemas/User");
-const Notification = require("../../Schemas/Notification");
-const Company  = require("../../Schemas/Company");
-
-
 //Create Notification Function
 const create_notification = require("../../CreateNotification");
-
 //Get clients Function
 const clientAccountantFunctions = require("../../ClientAccountantFunctions");
-
-
 //Authentication Function
 const Authentication = require("../../AuthenticationFunctions");
+//General Functions
+const generalFunctions = require("../../GeneralFunctions");
+//File with the paths
+const path_constants = require('../../constantsPaths');
+
+//Models
+//const User = require("../../Schemas/User");
+const User = require(path_constants.schemas.user);
+const Notification = require(path_constants.schemas.notification);
+const Company  = require(path_constants.schemas.company);
 
 
 /*--------   CLIENTS */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   try{
+    if(generalFunctions.checkAccessRigts(req,req.user,res)){
       const clients_pending = await clientAccountantFunctions.fetchClients(req.user._id,"pending");
       const clients_active = await clientAccountantFunctions.fetchClients(req.user._id,"executed");
-      const clients_expired = await clientAccountantFunctions.fetchClients(req.user._id,"rejected");
-      if(clients_pending.length + clients_active.length + clients_expired.clients_expired == 0){
+      const clients_rejected = await clientAccountantFunctions.fetchClients(req.user._id,"rejected");
+      if(clients_pending.length + clients_active.length + clients_rejected.length == 0){
         console.log('no clients');
       }
-      res.render('accountant_pages/clients_page.ejs', { user: req.user, clients_pending: clients_pending, clients_active: clients_active, clients_expired: clients_expired, 
-        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+      
+      res.render(path_constants.pages.clients.view(), { 
+        user: req.user,
+        clients_pending: clients_pending,
+        clients_active: clients_active,
+        clients_rejected: clients_rejected, 
+        notification_list: await Notification.find({$and:[{user_id: req.user.id} ,{status: "unread"}]})
+      });
+    }
+    else{
+      res.redirect('/error?origin_page=/&error='+path_constants.url_param.param_1);
+    }
   }
   catch(err){
     console.error(err);

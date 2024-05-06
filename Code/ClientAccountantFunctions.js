@@ -77,11 +77,11 @@ async function fetchClients(accountantId,select){
         var clients = [];
         var clients_Nodes;
         if(select == 'all'){
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:'hiring', status: { $in: ['executed','pending', 'rejected'] } });
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: { $in: ['executed','pending', 'rejected'] } });
             
         }
         else{
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:'hiring', status: select });
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: select });
         }
 
         for (let client of clients_Nodes) {
@@ -98,7 +98,7 @@ async function fetchClients(accountantId,select){
 
 async function fetchOneClient(accountantId,clientId){
     try{
-        const client = await Node.find({receiver_id:accountantId,company_id:clientId, type:'hiring', status: 'pending' });
+        const client = await Node.find({receiver_id:accountantId,company_id:clientId, type:'relationship',type2:'hiring', status: 'pending' });
         return client;
 
     }
@@ -135,5 +135,24 @@ async function create_node(companyId,senderId,receiverId,type,type2,text='',due_
 
 }
 
-module.exports = { send_hiring_req_to_accountant, fire_accountant, fetchOneClient,  fetchClients, create_node};
+async function relationship_accept_reject(companyId,action){
+    try{
+        const company = await Company.findOne({_id:companyId});
+        const relationshipNode = await Node.findOne({_id:company.accountant});
+        relationshipNode.status = action;
+        await relationshipNode.save();
+        console.log(action+"****** done");
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
+module.exports = {
+    send_hiring_req_to_accountant,
+    fire_accountant, fetchOneClient,
+    fetchClients, 
+    create_node,
+    relationship_accept_reject
+};
 

@@ -37,8 +37,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 
     //generalFunctions.checkAccessRigts(req.user,'accountant_pages/view_request.ejs',data,res);
 
-    /*res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, company:accountants_client_company, accountants_client : accountants_client, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});*/
+    res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, company:accountants_client_company, accountants_client : accountants_client, 
+    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
 });
 
 //POST REQUEST
