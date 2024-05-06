@@ -12,10 +12,6 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <form action="/clients" method="POST">
-            <input type="text" id="client_id" name="client_id">
-            <button style="display: none;" type="submit" id="client_id_submit_btn">Submit</button>
-        </form>
         <div>
             <button class="filter_buttons" id="show_all_clients">All</button>
             <button class="filter_buttons pressed" id="show_curent">Curent</button>
@@ -91,7 +87,7 @@
             }
 
             function selectClient(input){
-                $("#client_id").val(input.id)
+                window.location.href ='/client-profile?id='+input.id;
             }
         });
     </script>

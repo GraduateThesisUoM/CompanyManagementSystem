@@ -28,6 +28,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         registrationDate: ''
       });
     }
+    req.session.selected_client = accountants_client;
   
     res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review, clients_requests : clients_requests, 
       notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});

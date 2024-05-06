@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Create</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <h1>Create</h1>
+        <div id="create_menu">
+            <button id="warehouse">Αποθήκη</button>
+        </div>
+        <form action="/create" method="POST" >
+            <input type="text" id="create_type" name="create_type">
+            <button type="submits">Create</button>
+        </form>
+        <button id="back_btn">Πίσω</button>
+
+        
+    </body>
+    <%- include('../partials/footer'); %>
+    <script>
+    $(document).ready(function(){
+
+        console.log("/client-profile?id=<%= clientId %>");
+        $("#back_btn").click(function(){
+            window.location ="/client-profile?id=<%= clientId %>";
+        });
+        $("#warehouse").click(function(){
+            pick_type('warehouse')
+        });
+
+        function pick_type(type){
+            $("#create_type").val(type)
+        }
+    });
+    
+    </script>
+</html>

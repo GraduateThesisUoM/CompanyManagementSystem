@@ -92,6 +92,9 @@ app.use(path_constants.pages.preview_accountant.url, require(path_constants.page
 //clients
 app.use(path_constants.pages.clients.url, require(path_constants.pages.clients.file));
 
+//create
+app.use(path_constants.pages.create.url, require(path_constants.pages.create.file));
+
 //request_history
 app.use(path_constants.pages.request_history.url, require(path_constants.pages.request_history.file));
 

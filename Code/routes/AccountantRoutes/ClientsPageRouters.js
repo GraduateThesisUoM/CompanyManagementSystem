@@ -47,31 +47,4 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
    
 });
 
-
-router.post('/', Authentication.checkAuthenticated, async (req, res) => {
-  try {
-    /*for (let i = 0; i < req.user.clients.length; i++) {
-      if(req.user.clients[i].id.equals(req.body.clients_id)){
-        req.user.clients[i].status =  req.body.accountant_action
-        await req.user.save();
-
-        const client = await User.findById(req.body.clients_id);
-        create_notification(client._id, req.user._id, req.body.accountant_action+"-request-user-notification");          
-        client.myaccountant.status = req.body.accountant_action
-        await client.save();
-        break
-      }
-      
-    }*/
-    const client = await Company.find({_id:accountantId, type:'hiring', status: select });
-    console.error('Accountant ', req.body.accountant_action, ' Client Successful');
-    res.redirect('/clients');
-  }
-  catch (err) {
-    console.error('Error updating user data:', err);
-    res.redirect('/error?origin_page=clients&error='+err);
-  }
-  
-});
-
 module.exports = router;

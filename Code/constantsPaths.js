@@ -28,7 +28,8 @@ const views_folders= {
   accountant : "accountant_pages/",
   user : "user_pages/",
   admin : "admin_pages/",
-  general : views_folder + "/"
+  general : "general/",
+  all : views_folder + "/"
 };
 
 const pages = {
@@ -57,7 +58,7 @@ const pages = {
     url : "/log-in",
     file: routes.general+"LogInRoutes.js",
     view : function(type) { {
-      return views_folders.general+"log_in.ejs"
+      return views_folders.all+"log_in.ejs"
     }}
   },
   sign_up :{
@@ -104,6 +105,13 @@ const pages = {
     url : "/logout",
     file: routes.general+"LogOutRoutes.js",
     view : ""
+  },
+  create :{
+    url : "/create",
+    file: routes.general+"CreateRoutes.js",
+    view : function() { {
+      return views_folders.general+"create.ejs"
+    }}
   },
   //User
   my_accountant :{
