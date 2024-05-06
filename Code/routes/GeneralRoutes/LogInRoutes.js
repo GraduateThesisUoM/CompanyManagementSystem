@@ -84,13 +84,14 @@ async function create_users(){
   const company2 = await create_company("2");
   const company3 = await create_company("3");
   const company4 = await create_company("4");
+  const company5 = await create_company("5");
 
   const user1 = await create_user("sa",company1,1);
   const user2 = await create_user("c1",company2,1);
   const user3 = await create_user("c2",company2,0);
   const user4 = await create_user("c3",company3,1);
   const user5 = await create_user("c4",company4,1);
-  const user6 = await create_user("c5",company4,0);
+  const user6 = await create_user("c5",company5,0);
 
 
   const accountant1 = await create_accountant("a1");
@@ -108,7 +109,10 @@ async function create_users(){
   await clientAccountantFunctions.relationship_accept_reject(company3._id,'rejected')
   // C4 - A1
   await clientAccountantFunctions.send_hiring_req_to_accountant(company4._id,user5._id,accountant1._id,'relationship','hiring');
-  
+  // C5 - A1
+  await clientAccountantFunctions.send_hiring_req_to_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
+  await clientAccountantFunctions.fire_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
+
 
   console.log("----------   END ");
 

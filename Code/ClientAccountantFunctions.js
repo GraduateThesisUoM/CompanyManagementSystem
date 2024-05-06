@@ -56,6 +56,8 @@ async function fire_accountant(companyId,senderId,receiverId){
         await company.save();
 
         company_node.next = new_company_node._id;
+        company_node.status = 'canceled';
+
         await company_node.save();
 
         const company_nodes = await Node.find({company_id:company._id,type:"request",status: { $in: ['viewed', 'pending'] }});
@@ -77,16 +79,22 @@ async function fetchClients(accountantId,select){
         var clients = [];
         var clients_Nodes;
         if(select == 'all'){
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: { $in: ['executed','pending', 'rejected'] } });
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: { $in: ['executed','pending', 'rejected'] }, next : "-" });
             
         }
+        else if(select == 'fired'){
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'firing', status: 'executed', next : "-"  });
+        }
         else{
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: select });
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: select , next : "-"});
         }
 
         for (let client of clients_Nodes) {
             clients.push(await Company.findOne({_id:client.company_id}));
           }
+          console.log("Clients : " + select);
+          console.log(clients)
+          console.log("---")
           return clients;
         
     }
@@ -123,6 +131,9 @@ async function create_node(companyId,senderId,receiverId,type,type2,text='',due_
         if(new_node.company_id == new_node.receiver_id && type2 =='hiring'){
             new_node.status = 'executed'
         }
+        else if(type2 == 'firing'){
+            new_node.status = 'executed'
+        }
     }
     else if(type == 'request'){
         new_node.text = text;
@@ -141,7 +152,7 @@ async function relationship_accept_reject(companyId,action){
         const relationshipNode = await Node.findOne({_id:company.accountant});
         relationshipNode.status = action;
         await relationshipNode.save();
-        console.log(action+"****** done");
+        console.log(action+" done");
     }
     catch(e){
         console.log(e)

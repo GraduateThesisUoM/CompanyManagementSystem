@@ -25,8 +25,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     if(generalFunctions.checkAccessRigts(req,req.user,res)){
       const clients_pending = await clientAccountantFunctions.fetchClients(req.user._id,"pending");
       const clients_active = await clientAccountantFunctions.fetchClients(req.user._id,"executed");
-      const clients_rejected = await clientAccountantFunctions.fetchClients(req.user._id,"rejected");
-      if(clients_pending.length + clients_active.length + clients_rejected.length == 0){
+      const clients_former = await clientAccountantFunctions.fetchClients(req.user._id,"fired");
+      if(clients_pending.length + clients_active.length + clients_former.length == 0){
         console.log('no clients');
       }
       
@@ -34,7 +34,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         user: req.user,
         clients_pending: clients_pending,
         clients_active: clients_active,
-        clients_rejected: clients_rejected, 
+        clients_former: clients_former, 
         notification_list: await Notification.find({$and:[{user_id: req.user.id} ,{status: "unread"}]})
       });
     }
