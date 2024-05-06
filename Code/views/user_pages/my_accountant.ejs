@@ -97,6 +97,7 @@
             
         </div>
         <form action="/remove_accountant"  method="POST">
+            <input type="hidden" name="accountant_id" value="<%=accountant._id%>">
             <button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button>
             <button type="button" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
         </form>
