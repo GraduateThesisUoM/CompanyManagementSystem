@@ -10,7 +10,6 @@ const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
 
-
 // Connect to MongoDB
 connectDB();
 
