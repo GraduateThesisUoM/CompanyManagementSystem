@@ -85,6 +85,9 @@ async function fetchClients(accountantId,select){
         else if(select == 'fired'){
             clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'firing', status: 'executed', next : "-"  });
         }
+        else if(select == 'curent'){
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: 'executed', next : "-"  });
+        }
         else{
             clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: select , next : "-"});
         }
@@ -92,9 +95,6 @@ async function fetchClients(accountantId,select){
         for (let client of clients_Nodes) {
             clients.push(await Company.findOne({_id:client.company_id}));
           }
-          console.log("Clients : " + select);
-          console.log(clients)
-          console.log("---")
           return clients;
         
     }

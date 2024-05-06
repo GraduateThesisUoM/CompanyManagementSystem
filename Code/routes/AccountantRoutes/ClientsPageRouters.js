@@ -23,16 +23,14 @@ const Company  = require(path_constants.schemas.company);
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   try{
     if(generalFunctions.checkAccessRigts(req,req.user,res)){
-      const clients_pending = await clientAccountantFunctions.fetchClients(req.user._id,"pending");
-      const clients_active = await clientAccountantFunctions.fetchClients(req.user._id,"executed");
+      const clients_active = await clientAccountantFunctions.fetchClients(req.user._id,"curent");
       const clients_former = await clientAccountantFunctions.fetchClients(req.user._id,"fired");
-      if(clients_pending.length + clients_active.length + clients_former.length == 0){
+      if(clients_active.length + clients_former.length == 0){
         console.log('no clients');
       }
       
       res.render(path_constants.pages.clients.view(), { 
         user: req.user,
-        clients_pending: clients_pending,
         clients_active: clients_active,
         clients_former: clients_former, 
         notification_list: await Notification.find({$and:[{user_id: req.user.id} ,{status: "unread"}]})

@@ -12,10 +12,13 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
+        <form action="/clients" method="POST">
+            <input type="text" id="client_id" name="client_id">
+            <button style="display: none;" type="submit" id="client_id_submit_btn">Submit</button>
+        </form>
         <div>
             <button class="filter_buttons" id="show_all_clients">All</button>
             <button class="filter_buttons pressed" id="show_curent">Curent</button>
-            <button class="filter_buttons" id="show_requests">Requests</button>
             <button class="filter_buttons" id="show_former">Former</button>
           </div>
         <h1>List Of Current Clients</h1>
@@ -25,15 +28,11 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
-            const clients_pending = JSON.parse(`<%- JSON.stringify(clients_pending) %>`);
             const clients_active = JSON.parse(`<%- JSON.stringify(clients_active) %>`);
             const clients_former = JSON.parse(`<%- JSON.stringify(clients_former) %>`);
 
             var clients_list = [];
 
-            clients_pending.forEach(client => {
-                clients_list.push({client,status :'pending'})
-            });
             clients_active.forEach(client => {
                 clients_list.push({client,status :'active'})
             });
@@ -53,15 +52,13 @@
 
             });
 
-            $(".pending, .former").hide();
+            $(".former").hide();
 
             var show_curent = true;
-            var show_requests = false;
             var show_former = false;
 
             $("#show_all_clients").click(function() {filter_clients(this);});
             $("#show_curent").click(function() {filter_clients(this);});
-            $("#show_requests").click(function() {filter_clients(this);});
             $("#show_former").click(function() {filter_clients(this);});
         
             $("#back_btn").click(function(){
@@ -78,7 +75,6 @@
 
                 if(input.id == 'show_all_clients'){
                     show_curent = true;
-                    show_requests = true;
                     show_former = true;
                     $(".active, .pending, .former").show();
                 }
@@ -86,11 +82,6 @@
                     show_curent = !show_curent;
                     $(".active").show();
                     $(".pending, .former").hide();
-                }
-                else if(input.id == 'show_requests'){
-                    show_requests = !show_requests;
-                    $(".pending").show();
-                    $(".active, .former").hide();
                 }
                 else if(input.id == 'show_former'){
                     show_former = !show_former;
@@ -100,7 +91,7 @@
             }
 
             function selectClient(input){
-                alert(input.id);
+                $("#client_id").val(input.id)
             }
         });
     </script>

@@ -200,9 +200,11 @@
 
             requests_pending.forEach(request => {
                 const row = $("<tr>").css("background-color", "lime").attr("id", "row_pendign_"+pending_count);
-
                 const cell_type = $("<td>").text(request.type);
-                const cell_title = $("<td>").text(request.title);
+                var cell_title = $("<td>").text(request.title);
+                if(request.type == "relationship"){
+                    cell_title = $("<td>").text(request.type2);
+                }
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
                 const cell_due_date = $("<td>").text(request.due_date);
@@ -226,8 +228,10 @@
                 const row = $("<tr>").attr("id", "row_pendign_"+pending_count);
 
                 const cell_type = $("<td>").text(request.type);
-                const cell_title = $("<td>").text(request.title);
-                const date = new Date(request.registrationDate);
+                var cell_title = $("<td>").text(request.title);
+                if(request.type == "relationship"){
+                    cell_title = $("<td>").text(request.type2);
+                }                const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
                 const cell_due_date = $("<td>").text(request.due_date);
                 const cell_actions = $("<td>");
@@ -250,7 +254,10 @@
                 const row = $("<tr>").attr("id", "row_executed_"+executed_count);
 
                 const cell_type = $("<td>").text(request.type);
-                const cell_title = $("<td>").text(request.title);
+                var cell_title = $("<td>").text(request.title);
+                if(request.type == "relationship"){
+                    cell_title = $("<td>").text(request.type2);
+                }
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
                 const cell_due_date = $("<td>").text(request.due_date);
@@ -274,7 +281,10 @@
                 const row = $("<tr>").attr("id", "row_rejected_" + rejected_count);
 
                 const cell_type = $("<td>").text(request.type);
-                const cell_title = $("<td>").text(request.title);
+                var cell_title = $("<td>").text(request.title);
+                if(request.type == "relationship"){
+                    cell_title = $("<td>").text(request.type2);
+                }
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
                 const cell_due_date = $("<td>").text(request.due_date);
