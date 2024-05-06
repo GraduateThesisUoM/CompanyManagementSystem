@@ -1,10 +1,12 @@
 const express = require("express");
 const router = express.Router();
 
+//File with the paths
+const path_constants = require('../../constantsPaths');
+
 //Models
-const Warehouse = require("../../Schemas/Warehouse");
-const Notification = require("../../Schemas/Notification");
-const Client = require("../../Schemas/Client");
+const Notification = require(path_constants.schemas.notification);
+const Client = require(path_constants.schemas.client);
 
 //Authentication Function
 const Authentication = require("../../AuthenticationFunctions");

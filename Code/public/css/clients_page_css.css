@@ -1,4 +1,25 @@
-.clients_page_ul > li {
-    display: grid;
-    grid-template-columns: 50% 25% 25%;
+.pressed{
+    background-color: #04AA6D !important; /* Green */
+}
+
+.filter_buttons{
+    background-color: #6e7874;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+}
+
+#client_list{
+    background-color: red;
+    display: flex; /* Use flexbox to align items */
+    justify-content: center; /* Center items horizontally */
+    align-items: center;
+    flex-direction: column;
+}
+#client_list > button{
+    width: 50%;
 }

@@ -89,9 +89,6 @@ app.use(path_constants.pages.pick_accountant.url, require(path_constants.pages.p
 //preview_accountant
 app.use(path_constants.pages.preview_accountant.url, require(path_constants.pages.preview_accountant.file));
 
-/*const workingPageRoutes = require("./routes/WorkingPageRoutes");
-app.use("/working", workingPageRoutes);*/
-
 //clients
 app.use(path_constants.pages.clients.url, require(path_constants.pages.clients.file));
 

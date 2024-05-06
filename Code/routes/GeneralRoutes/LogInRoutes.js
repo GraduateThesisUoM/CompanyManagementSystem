@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+require('dotenv').config();
+
 const bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
 
@@ -30,7 +32,9 @@ const generalFunctions = require("../../GeneralFunctions");
 /*--------   LOG IN */
 router.get('/', Authentication.checkNotAuthenticated, (req, res) => {
   //FOR TEST START
-  create_users();
+  if (req.query.restartdb === 'true') {
+    create_users();
+  }
   //FOR TEST END
   //generalFunctions.checkAccessRigts('.',req,res,data);
   //res.render('../views/log_in.ejs');
@@ -77,24 +81,34 @@ async function create_users(){
   }
 
   const company1 = await create_company("1");
+  const company2 = await create_company("2");
+  const company3 = await create_company("3");
+  const company4 = await create_company("4");
 
   const user1 = await create_user("sa",company1,1);
-
-  await clientAccountantFunctions.send_hiring_req_to_accountant(company1._id,user1._id,company1._id,'relationship','hiring');
-
-  
-  const company2 = await create_company("2");
-
   const user2 = await create_user("c1",company2,1);
-
   const user3 = await create_user("c2",company2,0);
+  const user4 = await create_user("c3",company3,1);
+  const user5 = await create_user("c4",company4,1);
+  const user6 = await create_user("c5",company4,0);
+
 
   const accountant1 = await create_accountant("a1");
-  await clientAccountantFunctions.send_hiring_req_to_accountant(company2._id,user2._id,accountant1._id,'relationship','hiring');
-
   const accountant2 = await create_accountant("a2");
 
   const admin1 = await create_admin("ad1")
+
+  //self Acountant
+  await clientAccountantFunctions.send_hiring_req_to_accountant(company1._id,user1._id,company1._id,'relationship','hiring');
+  // C2 - A1
+  await clientAccountantFunctions.send_hiring_req_to_accountant(company2._id,user2._id,accountant1._id,'relationship','hiring');
+  await clientAccountantFunctions.relationship_accept_reject(company2._id,'executed')
+  // C3 - A1
+  await clientAccountantFunctions.send_hiring_req_to_accountant(company3._id,user4._id,accountant1._id,'relationship','hiring');
+  await clientAccountantFunctions.relationship_accept_reject(company3._id,'rejected')
+  // C4 - A1
+  await clientAccountantFunctions.send_hiring_req_to_accountant(company4._id,user5._id,accountant1._id,'relationship','hiring');
+  
 
   console.log("----------   END ");
 
