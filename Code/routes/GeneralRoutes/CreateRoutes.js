@@ -38,9 +38,19 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 });
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
-    console.log(req.body.create_type);
-    res.redirect('/create');
+    try{
 
+        console.log(req.body.create_type);
+        if(req.body.create_type == 'warehouse'){
+            const test = await generalFunctions.createWarehouse(req.session.selected_client._id, req.body.title,req.body.warehouse_address);
+            console.log(test);
+        }
+        res.redirect('/create');
+    }
+    catch(e){
+        console.error('Error on create page:', err);
+        res.redirect('/error?origin_page=create&error='+err);
+    }
 });
 
 module.exports = router;

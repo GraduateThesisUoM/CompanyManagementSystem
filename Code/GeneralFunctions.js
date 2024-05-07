@@ -1,6 +1,10 @@
 //File with the paths
 const path_constants = require('./constantsPaths');
 
+//Models
+const Client  = require("./Schemas/Client");
+const Warehouse  = require("./Schemas/Warehouse");
+
 //function checkAccessRigts(req, data ,res){
 function checkAccessRigts(req){
     try{
@@ -34,6 +38,47 @@ function checkAccessRigts(req){
     }
 }
 
+async function create_user(text,company,cOwner){
+    const user = new Client({
+      type: 'user',
+      firstName: text+'_fn',
+      lastName: text+'_ln',
+      password: await bcrypt.hash('1', 10),
+      email: text+"@"+text,
+      afm: text+'_afm',
+      mydatakey: text+'_mdk',
+      company: company._id,
+      companyOwner :cOwner
+    });
+  
+    await user.save();
+  
+    console.log(user);
+    console.log("-----------------------");
+  
+    return user;
+  }
+
+async function createWarehouse(companyID, title, location){
+    try{
+        const warehouse = new Warehouse({
+            companyID: companyID,
+            title :title,
+            location : location
+        });
+        
+        await warehouse.save();
+        
+        //console.log(warehouse);
+        console.log("warehouse created");
+        
+        return warehouse;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
 
 
-module.exports = { checkAccessRigts};
+
+module.exports = { checkAccessRigts, createWarehouse};
