@@ -23,7 +23,8 @@
             <img src="<%= selected_client.logo %>" id="company_logo">
             <h3> <%= selected_client.name %></h3>
         </div>
-        <button id="create_page">+</button>
+        <button id="create_page_btn">+</button>
+        <button id="items_page_btn">items</button>
 
     </div>
 
@@ -97,8 +98,11 @@
             window.location = "/clients"
         });
 
-        $("#create_page").click(function(){
+        $("#create_page_btn").click(function(){
             window.location = "/create"
+        });
+        $("#items_page_btn").click(function(){
+            window.location = "/items"
         });
 
         var starButtons = $(".star_btn");

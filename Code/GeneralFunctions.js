@@ -4,6 +4,7 @@ const path_constants = require('./constantsPaths');
 //Models
 const Client  = require("./Schemas/Client");
 const Warehouse  = require("./Schemas/Warehouse");
+const Item  = require("./Schemas/Item");
 
 //function checkAccessRigts(req, data ,res){
 function checkAccessRigts(req){
@@ -79,6 +80,34 @@ async function createWarehouse(companyID, title, location){
     }
 }
 
+async function createItem(companyID, title, description, price_r, discount_r, price_w,discount_w){
+    try{
+        const item = new Item({
+            companyID: companyID,
+            title :title,
+            description : description,
+            price_r :price_r
+        });
+        
+
+        if(price_w == ""){
+            item.price_w = price_r;
+        }
+        if(price_w != ""){
+            item.discount_r = discount_r;
+        }
+        if(price_w != ""){
+            item.discount_w = discount_w;
+        }
+
+        console.log("item created");
+        
+        return item;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
 
 
-module.exports = { checkAccessRigts, createWarehouse};
+module.exports = { checkAccessRigts, createWarehouse, createItem};

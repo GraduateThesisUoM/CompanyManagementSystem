@@ -11,7 +11,8 @@ const schemas = {
 };
 
 const url_param = {
-  param_1 : 'access_denied'
+  param_1 : 'access_denied',
+  param_2 : 'need_to_pick_client'
 };
 
 const routes_folder = "./routes"
@@ -111,6 +112,13 @@ const pages = {
     file: routes.general+"CreateRoutes.js",
     view : function() { {
       return views_folders.general+"create.ejs"
+    }}
+  },
+  items:{
+    url : "/items",
+    file: routes.general+"ItemsRoutes.js",
+    view : function() { {
+      return views_folders.general+"items.ejs"
     }}
   },
   //User

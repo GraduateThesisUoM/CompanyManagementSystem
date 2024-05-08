@@ -137,8 +137,10 @@ app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.s
 //self_accountant_register
 app.use(path_constants.pages.self_accountant_register.url, require(path_constants.pages.self_accountant_register.file));
 
-const CreateRoutes = require("./routes/CreateRoutes.js");
-app.use("/create", CreateRoutes);
+//items
+app.use(path_constants.pages.items.url, require(path_constants.pages.items.file));
+
+//change_ban_status
 app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));
 
 //pickclientcompany

@@ -3,6 +3,8 @@ const router = express.Router();
 
 //Models
 const Notification = require("../../Schemas/Notification");
+const Item = require("../../Schemas/Item");
+
 
 //Authentication Function
 const Authentication = require("../../AuthenticationFunctions");
@@ -12,17 +14,25 @@ const generalFunctions = require("../../GeneralFunctions");
 const constants = require('../../constantsPaths');
 
 
-/*--------   Create */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     try{
         if (req.session.selected_client != undefined) {
             if(generalFunctions.checkAccessRigts(req)){
+                const filterParam = req.query.filter;
+                if (!titleParam) {
+                    console.log("X")
+                }
+                else if(filterParam == "1"){
+                    console.log(titleParam);
+                }
                 const data = {
                     user : req.user,
                     clientId : req.session.selected_client._id,
+                    item_list : await Item.find({companyID : req.session.selected_client._id}),
                     notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})
                 };
-                res.render(constants.pages.create.view(),data);
+                
+                res.render(constants.pages.items.view(),data);
             }
             else{
                 res.redirect('/error?origin_page=/&error='+constants.url_param.param_1);
@@ -39,24 +49,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     
 });
 
-router.post('/', Authentication.checkAuthenticated, async (req, res) => {
-    try{
-
-        console.log(req.body.create_type);
-        if(req.body.create_type == 'warehouse'){
-            const warehouse = await generalFunctions.createWarehouse(req.session.selected_client._id, req.body.warehouse_title,req.body.warehouse_address);
-            console.log(warehouse);
-        }
-        else if(req.body.create_type == 'item'){
-            const item = await generalFunctions.createItem(req.session.selected_client._id, req.body.item_title,req.body.item_description,req.body.item_price_r,req.body.item_price_r_disc,req.body.item_price_w,req.body.item_price_w_disc);
-            console.log(item);
-        }
-        res.redirect('/create');
-    }
-    catch(e){
-        console.error('** ' +e+" **");
-        res.redirect('/error?origin_page=create&error='+e);
-    }
+router.post('/', (req, res) => {
+    res.redirect('/items?filters=1'); // Redirect to the GET route
 });
 
 module.exports = router;
