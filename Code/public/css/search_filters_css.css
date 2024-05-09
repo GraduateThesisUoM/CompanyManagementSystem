@@ -1,0 +1,18 @@
+.filter_form{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:5px;
+    margin: 0px;
+    padding: 0px;
+}
+.filter_column > * {
+    display: block; /* Set elements inside .filter_column to display as block */
+    width: 100%; /* Ensure each element takes up the full width of its column */
+    margin: 0px;
+    padding: 0px;
+    
+}
+.filter_column {
+    margin: 0px;
+    padding: 0px;
+}

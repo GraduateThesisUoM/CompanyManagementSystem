@@ -137,8 +137,11 @@ app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.s
 //self_accountant_register
 app.use(path_constants.pages.self_accountant_register.url, require(path_constants.pages.self_accountant_register.file));
 
-//items
-app.use(path_constants.pages.items.url, require(path_constants.pages.items.file));
+//search
+app.use(path_constants.pages.search.url, require(path_constants.pages.search.file));
+
+//filters
+app.use(path_constants.pages.filters.url, require(path_constants.pages.filters.file));
 
 //change_ban_status
 app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));

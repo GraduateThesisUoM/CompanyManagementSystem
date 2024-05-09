@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Create</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="search_filters_css.css">
+        <!--Header-->
+        <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <h1>Filters</h1>
+        <button type="button" id="fileter_type_warehouse" name="fileter_type_warehouse" class="search_type_select">Warehouse</button>
+        <button type="button" id="fileter_type_item" name="fileter_type_item" class="search_type_select">Item</button>
+        <form action="/search-filters" method="POST" class="filter_form">
+            <div class="filter_column">
+                <input type="text" id="fileter_type_input" name="fileter_type_input" style="display: none;">
+                <label for="filter_reg_date_from">Registration Date From : </label>
+                <label for="filter_code_from">Code from : </label>
+                <label for="filter_title_from">Title : </label>
+                <label for="filter_description">Description : </label>
+                <div>
+                    <input type="checkbox" id="filter_active" name="filter_active">
+                    <label for="filter_active">Active</label>
+                </div>
+                <button id="submit_btn" type="submit" style="display: none">submit</button>
+            </div>
+            <div class="filter_column">
+                <input type="date" id="filter_reg_date_from" name="filter_reg_date_from">
+                <input type="text" id="filter_code_from" name="filter_code_from">
+                <input type="text" id="filter_title_from" name="filter_title_from">
+                <input type="text" id="filter_description" name="filter_description">
+            </div>
+            <div class="filter_column">
+                <label for="filter_reg_date_to"> To : </label>
+                <label for="filter_code_to"> To : </label>
+                <label for="filter_title_to"> To : </label>
+            </div>
+            <div class="filter_column">
+                <input type="date" id="filter_reg_date_to" name="filter_reg_date_to">
+                <input type="text" id="filter_code_to" name="filter_code_to">
+                <input type="text" id="filter_title_to" name="filter_title_to">
+            </div>
+        </form>
+        <button id="click_sub_btn">Search</button>
+        <button id="back_btn">Πίσω</button>
+    </body>
+    <%- include('../partials/footer'); %>
+    <script>
+    $(document).ready(function(){
+        $("#back_btn").click(function(){
+            console.log("/client-profile?id=<%= clientId %>")
+            window.location ="/client-profile?id=<%= clientId %>";
+        });
+
+        $("#click_sub_btn").click(function(){
+            $("#submit_btn").click();
+        });
+
+        $(".search_type_select").click(function(){
+            $("#fileter_type_input").val(this.id);
+        });
+    });
+    
+    </script>
+</html>

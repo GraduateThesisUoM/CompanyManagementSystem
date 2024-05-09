@@ -50,7 +50,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    res.redirect('/items?filters=1'); // Redirect to the GET route
+    //res.redirect('/items?filters=1'); // Redirect to the GET route
 });
 
 module.exports = router;

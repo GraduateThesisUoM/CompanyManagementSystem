@@ -24,7 +24,7 @@
             <h3> <%= selected_client.name %></h3>
         </div>
         <button id="create_page_btn">+</button>
-        <button id="items_page_btn">items</button>
+        <button id="search_page_btn">Search</button>
 
     </div>
 
@@ -101,8 +101,8 @@
         $("#create_page_btn").click(function(){
             window.location = "/create"
         });
-        $("#items_page_btn").click(function(){
-            window.location = "/items"
+        $("#search_page_btn").click(function(){
+            window.location = "/search-filters"
         });
 
         var starButtons = $(".star_btn");

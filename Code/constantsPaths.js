@@ -114,11 +114,18 @@ const pages = {
       return views_folders.general+"create.ejs"
     }}
   },
-  items:{
-    url : "/items",
-    file: routes.general+"ItemsRoutes.js",
+  search:{
+    url : "/search",
+    file: routes.general+"SearchRoutes.js",
     view : function() { {
-      return views_folders.general+"items.ejs"
+      return views_folders.general+"search.ejs"
+    }}
+  },
+  filters:{
+    url : "/search-filters",
+    file: routes.general+"SearchFiltersRoutes.js",
+    view : function() { {
+      return views_folders.general+"searchfilters.ejs"
     }}
   },
   //User
