@@ -9,6 +9,7 @@ const methodOverride = require('method-override');
 const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
+const socketIO = require('./SocketIO.js');
 
 //File with the paths
 const path_constants = require('./constantsPaths');
@@ -135,6 +136,7 @@ app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.s
 app.use(path_constants.pages.self_accountant_register.url, require(path_constants.pages.self_accountant_register.file));
 
 const CreateRoutes = require("./routes/CreateRoutes.js");
+const SocketInit = require('./SocketIO.js');
 app.use("/create", CreateRoutes);
 app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));
 
@@ -142,16 +144,8 @@ app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages
 app.use(path_constants.pages.pickclientcompany.url, require(path_constants.pages.pickclientcompany.file));
 
 const http = require('http').createServer(app);
-const socketIO = require('socket.io')(http);
-
-socketIO.on('connection', (socket) => {
-  console.log(`⚡: ${socket.id} user just connected`);
-  socket.on('disconnect', () => {
-    console.log('A user disconnected');
-  });
-});
-
+socketIO(http);
 http.listen(process.env.PORT, () => {
-  console.log('Server started on port'+ process.env.PORT);
+  console.log('Server started on port '+ process.env.PORT);
 });
 

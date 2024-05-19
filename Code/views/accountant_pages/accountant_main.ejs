@@ -8,12 +8,6 @@
         <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <!--socket.io-->
-        <script
-            src="https://cdn.socket.io/4.5.0/socket.io.min.js"
-            integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
-            crossorigin="anonymous"
-        ></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
         <link rel="stylesheet" href="accountant_main_css.css">
@@ -79,30 +73,6 @@
     </body>
     <%- include('../partials/footer'); %>
     <script>
-
-            const socket = io('ws://localhost:3000', {
-            reconnectionDelay: 1000,
-            reconnection: true,
-            reconnectionAttemps: 10,
-            transports: ['websocket'],
-            agent: false,
-            upgrade: false,
-            rejectUnauthorized: false
-        });
-
-        // document.getElementById("test").addEventListener("click", a => {
-        //     socket.emit("hello", "world", (response) => {
-        //         console.log(response); // "got it"
-        //     });
-        // });
-
-        // socket.on("hello", (arg, callback) => {
-        //     console.log(arg); // "world"
-        //     callback("got it");
-        // });
-        
-
-
         const visible_request_num = 5;
         var request_pendign_table_expanded = false;
         var request_executed_table_expanded = false;

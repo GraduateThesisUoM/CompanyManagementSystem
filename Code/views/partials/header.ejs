@@ -2,6 +2,12 @@
 <html lang="en">
 <head>
     <link rel="stylesheet" href="general_css.css">
+    <!--socket.io-->
+    <script
+    src="https://cdn.socket.io/4.5.0/socket.io.min.js"
+    integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
+    crossorigin="anonymous"
+></script>
 </head>
 <header id="header" name="header">
     <div id="app-name-div" name="app-name-div">
@@ -49,6 +55,20 @@
 
 </header>
 <script>
+        const socket = io('ws://localhost:3000', {
+            reconnectionDelay: 1000,
+            reconnection: true,
+            reconnectionAttemps: 10,
+            transports: ['websocket'],
+            agent: false,
+            upgrade: false,
+            rejectUnauthorized: false
+        });
+        var u_id = "<%= user.id %>";
+        data = {user_id: u_id};
+        socket.emit('log_user', data);
+
+
     function NotificationClick(value){
       
         var components = value.toString().split("^");
