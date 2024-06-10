@@ -1,6 +1,10 @@
 //File with the paths
 const path_constants = require('./constantsPaths');
 
+//Libraries
+const bcrypt = require('bcrypt');
+
+
 //Models
 const Client  = require("./Schemas/Client");
 const Warehouse  = require("./Schemas/Warehouse");
@@ -54,7 +58,7 @@ async function create_user(text,company,cOwner){
   
     await user.save();
   
-    console.log(user);
+    console.log("User " + text + "Created");
     console.log("-----------------------");
   
     return user;
@@ -71,7 +75,7 @@ async function createWarehouse(companyID, title, location){
         await warehouse.save();
         
         //console.log(warehouse);
-        console.log("warehouse created");
+        console.log("warehouse"+title+" created");
         
         return warehouse;
     }
@@ -110,4 +114,4 @@ async function createItem(companyID, title, description, price_r, discount_r, pr
 }
 
 
-module.exports = { checkAccessRigts, createWarehouse, createItem};
+module.exports = { checkAccessRigts, createWarehouse, createItem, create_user};

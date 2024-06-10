@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Create</title>
+        <title>Search</title>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
@@ -13,7 +13,7 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>Filters</h1>
+        <h1>Search</h1>
         <button type="button" id="fileter_type_warehouse" name="fileter_type_warehouse" class="search_type_select">Warehouse</button>
         <button type="button" id="fileter_type_item" name="fileter_type_item" class="search_type_select">Item</button>
         <form action="/search-filters" method="POST" class="filter_form">
@@ -24,7 +24,9 @@
                 <label for="filter_title_from">Title : </label>
                 <label for="filter_description">Description : </label>
                 <div>
-                    <input type="checkbox" id="filter_active" name="filter_active">
+                    <button  id="filter_active_yes" class="filter_active">Yes</button>
+                    <button id="filter_active_no"  class="filter_active">No</button>
+                    <input  type="number" id="filter_active_value" name="filter_active_value" value=-1>
                     <label for="filter_active">Active</label>
                 </div>
                 <button id="submit_btn" type="submit" style="display: none">submit</button>
@@ -61,8 +63,30 @@
             $("#submit_btn").click();
         });
 
+        $(".filter_active").click(function(){
+            event.preventDefault();
+            if($(this).attr('id') == 'filter_active_yes'){
+                if($("#filter_active_value").val() == 1){
+                    $("#filter_active_value").val(-1);
+                }
+                else{
+                    $("#filter_active_value").val(1);
+                }
+            }
+            else{
+                if($("#filter_active_value").val() == 0){
+                    $("#filter_active_value").val(-1);
+                }
+                else{
+                    $("#filter_active_value").val(0);
+                }
+            }
+        });
+
         $(".search_type_select").click(function(){
             $("#fileter_type_input").val(this.id);
+            $(".search_type_select").removeClass("selected");
+            $(this).addClass("selected");
         });
     });
     

@@ -42,8 +42,24 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 });
 
 router.post('/', (req, res) => {
-    console.log("gg")
-    //res.redirect('/items?filters=1'); // Redirect to the GET route
+    console.log(req.body.fileter_type_input)
+    if(req.body.fileter_type_input == 'fileter_type_warehouse'){
+        var acive = "";
+        console.log(req.body.filter_active_value);
+        if(req.body.filter_active_value = 1){
+
+        }
+        else if(req.body.filter_active_value = 0){
+
+        }
+        else{
+
+        }
+    }
+    /*else if(req.body.fileter_type_input == 'fileter_type_item'){
+
+    }*/
+    res.redirect('/search-filters'); // Redirect to the GET route
 });
 
 module.exports = router;

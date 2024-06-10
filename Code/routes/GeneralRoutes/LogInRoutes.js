@@ -15,6 +15,7 @@ const Node = require("../../Schemas/Node");
 const Client = require("../../Schemas/Client");
 const Company = require("../../Schemas/Company");
 const User = require("../../Schemas/User");
+const Item = require("../../Schemas/Item");
 
 
 const Notification = require("../../Schemas/Notification");
@@ -80,18 +81,28 @@ async function create_users(){
       console.error("Error deleting collection:", error);
   }
 
+  const Item = mongoose.model('item');
+
+  // Assuming you want to delete the "Company" collection
+  try {
+      await Item.collection.drop();
+      console.log("Collection Item deleted successfully.");
+  } catch (error) {
+      console.error("Error deleting collection:", error);
+  }
+
   const company1 = await create_company("1");
   const company2 = await create_company("2");
   const company3 = await create_company("3");
   const company4 = await create_company("4");
   const company5 = await create_company("5");
 
-  const user1 = await create_user("sa",company1,1);
-  const user2 = await create_user("c1",company2,1);
-  const user3 = await create_user("c2",company2,0);
-  const user4 = await create_user("c3",company3,1);
-  const user5 = await create_user("c4",company4,1);
-  const user6 = await create_user("c5",company5,0);
+  const user1 = await generalFunctions.create_user("sa",company1,1);
+  const user2 = await generalFunctions.create_user("c1",company2,1);
+  const user3 = await generalFunctions.create_user("c2",company2,0);
+  const user4 = await generalFunctions.create_user("c3",company3,1);
+  const user5 = await generalFunctions.create_user("c4",company4,1);
+  const user6 = await generalFunctions.create_user("c5",company5,0);
 
 
   const accountant1 = await create_accountant("a1");
@@ -113,32 +124,13 @@ async function create_users(){
   await clientAccountantFunctions.send_hiring_req_to_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
   await clientAccountantFunctions.fire_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
 
+  const i1 = await generalFunctions.createItem(company2._id, 'i1', 'i1', 3, 0.5, 1,0.6)
 
   console.log("----------   END ");
 
 }
 
 //   TESTING
-async function create_user(text,company,cOwner){
-  const user = new Client({
-    type: 'user',
-    firstName: text+'_fn',
-    lastName: text+'_ln',
-    password: await bcrypt.hash('1', 10),
-    email: text+"@"+text,
-    afm: text+'_afm',
-    mydatakey: text+'_mdk',
-    company: company._id,
-    companyOwner :cOwner
-  });
-
-  await user.save();
-
-  console.log(user);
-  console.log("-----------------------");
-
-  return user;
-}
 
 async function create_company(index){
   const company = new Company({
