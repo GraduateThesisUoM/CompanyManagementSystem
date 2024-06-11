@@ -91,11 +91,21 @@ async function create_users(){
       console.error("Error deleting collection:", error);
   }
 
-  const company1 = await create_company("1");
-  const company2 = await create_company("2");
-  const company3 = await create_company("3");
-  const company4 = await create_company("4");
-  const company5 = await create_company("5");
+  const Warehouse = mongoose.model('warehouses');
+
+  // Assuming you want to delete the "Company" collection
+  try {
+      await Item.collection.drop();
+      console.log("Collection Warehouse deleted successfully.");
+  } catch (error) {
+      console.error("Error deleting collection:", error);
+  }
+
+  const company1 = await generalFunctions.create_company("1");
+  const company2 = await generalFunctions.create_company("2");
+  const company3 = await generalFunctions.create_company("3");
+  const company4 = await generalFunctions.create_company("4");
+  const company5 = await generalFunctions.create_company("5");
 
   const user1 = await generalFunctions.create_user("sa",company1,1);
   const user2 = await generalFunctions.create_user("c1",company2,1);
@@ -105,10 +115,10 @@ async function create_users(){
   const user6 = await generalFunctions.create_user("c5",company5,0);
 
 
-  const accountant1 = await create_accountant("a1");
-  const accountant2 = await create_accountant("a2");
+  const accountant1 = await generalFunctions.create_accountant("a1");
+  const accountant2 = await generalFunctions.create_accountant("a2");
 
-  const admin1 = await create_admin("ad1")
+  const admin1 = await generalFunctions.create_admin("ad1")
 
   //self Acountant
   await clientAccountantFunctions.send_hiring_req_to_accountant(company1._id,user1._id,company1._id,'relationship','hiring');
@@ -126,54 +136,13 @@ async function create_users(){
 
   const i1 = await generalFunctions.createItem(company2._id, 'i1', 'i1', 3, 0.5, 1,0.6)
 
+  const w1 = await generalFunctions.createWarehouse(company2._id, 'w1', 'w1_l');
+  const w2 = await generalFunctions.createWarehouse(company2._id, 'w2', 'w2_2');
+  w2.active = 0;
+  await w2.save();
+  console.log(w2);
+
+
   console.log("----------   END ");
 
-}
-
-//   TESTING
-
-async function create_company(index){
-  const company = new Company({
-    name : 'c'+index,
-    //logo : req.body.companyLogo,
-    logo : "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
-    signupcode : '1'
-  });
-  await company.save();
-  console.log(company);
-  console.log("-----------------------");
-  return company
-}
-
-async function create_accountant(text){
-  const newAccountant = new Accountant({
-    type: 'accountant',
-    firstName: text+'_fn',
-    lastName: text+'_ln',
-    password: await bcrypt.hash('1', 10),
-    email: text+"@"+text,
-    afm: text+'_afm',
-    mydatakey: text+'_mdk'
-  });
-
-  await newAccountant.save();
-
-  console.log(newAccountant);
-  console.log("-----------------------");
-
-  return newAccountant;
-}
-
-async function create_admin(text){
-  const NewAdmin = new User({
-    type: 'admin',
-    firstName: text+"_fn",
-    lastName: text+"_ln",
-    password: await bcrypt.hash('1', 10),
-    email: text+"@"+text
-  });
-  await NewAdmin.save();
-  console.log(NewAdmin);
-  console.log("-----------------------");
-  return NewAdmin;
 }

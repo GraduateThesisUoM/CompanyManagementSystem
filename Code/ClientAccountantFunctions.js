@@ -32,7 +32,7 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
         }
 
         const company_node = await create_node(company._id,senderId,accountantId,'relationship','hiring');
-        console.log(company_node)
+        /*console.log(company_node)*/
 
         company.accountant = company_node._id;
         await company.save();

@@ -20,4 +20,4 @@ const WarehouseSchema = new mongoose.Schema({
 
 
 // Export the transaction schema
-module.exports = mongoose.model("warehouse", WarehouseSchema)
+module.exports = mongoose.model("warehouses", WarehouseSchema)

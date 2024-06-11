@@ -4,6 +4,8 @@ const router = express.Router();
 //Models
 const Notification = require("../../Schemas/Notification");
 const Item = require("../../Schemas/Item");
+const Warehouse = require("../../Schemas/Warehouse");
+
 
 
 //Authentication Function
@@ -41,20 +43,20 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     
 });
 
-router.post('/', (req, res) => {
-    console.log(req.body.fileter_type_input)
+router.post('/', async (req, res) => {
     if(req.body.fileter_type_input == 'fileter_type_warehouse'){
-        var acive = "";
+        var activeStatuses = [1,0];
         console.log(req.body.filter_active_value);
         if(req.body.filter_active_value = 1){
-
+            activeStatuses = [1];
         }
         else if(req.body.filter_active_value = 0){
-
+            activeStatuses = [0];
         }
-        else{
+        var active = await Warehouse.find({active: { $in: activeStatuses }});
+        console.log("--- active");
+        console.log(active);
 
-        }
     }
     /*else if(req.body.fileter_type_input == 'fileter_type_item'){
 

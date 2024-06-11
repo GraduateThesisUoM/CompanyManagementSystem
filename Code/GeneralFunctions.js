@@ -9,6 +9,11 @@ const bcrypt = require('bcrypt');
 const Client  = require("./Schemas/Client");
 const Warehouse  = require("./Schemas/Warehouse");
 const Item  = require("./Schemas/Item");
+const Company  = require("./Schemas/Company");
+const Accountant  = require("./Schemas/Accountant");
+const User  = require("./Schemas/User");
+
+
 
 //function checkAccessRigts(req, data ,res){
 function checkAccessRigts(req){
@@ -58,11 +63,53 @@ async function create_user(text,company,cOwner){
   
     await user.save();
   
-    console.log("User " + text + "Created");
-    console.log("-----------------------");
-  
+    console.log("User " + text + " Created");  
     return user;
   }
+
+async function create_company(index){
+    const company = new Company({
+        name : 'c'+index,
+        //logo : req.body.companyLogo,
+        logo : "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
+        signupcode : '1'
+    });
+    await company.save();
+    console.log("company " + company.name + " Created");
+    return company
+}
+
+async function create_accountant(text){
+    const newAccountant = new Accountant({
+        type: 'accountant',
+        firstName: text+'_fn',
+        lastName: text+'_ln',
+        password: await bcrypt.hash('1', 10),
+        email: text+"@"+text,
+        afm: text+'_afm',
+        mydatakey: text+'_mdk'
+    });
+
+    await newAccountant.save();
+
+    console.log("Accountant " + newAccountant.firstName + " Created");
+
+    return newAccountant;
+}
+
+async function create_admin(text){
+    const NewAdmin = new User({
+      type: 'admin',
+      firstName: text+"_fn",
+      lastName: text+"_ln",
+      password: await bcrypt.hash('1', 10),
+      email: text+"@"+text
+    });
+    await NewAdmin.save();
+    console.log("Admin " + NewAdmin.firstName + " Created");
+
+    return NewAdmin;
+}
 
 async function createWarehouse(companyID, title, location){
     try{
@@ -114,4 +161,4 @@ async function createItem(companyID, title, description, price_r, discount_r, pr
 }
 
 
-module.exports = { checkAccessRigts, createWarehouse, createItem, create_user};
+module.exports = { checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,};
