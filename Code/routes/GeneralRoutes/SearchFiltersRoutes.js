@@ -44,24 +44,49 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    if(req.body.fileter_type_input == 'fileter_type_warehouse'){
-        var activeStatuses = [1,0];
-        console.log(req.body.filter_active_value);
-        if(req.body.filter_active_value = 1){
-            activeStatuses = [1];
-        }
-        else if(req.body.filter_active_value = 0){
-            activeStatuses = [0];
-        }
-        var active = await Warehouse.find({active: { $in: activeStatuses }});
-        console.log("--- active");
-        console.log(active);
+    try{
+        if(req.body.fileter_type_input == 'fileter_type_warehouse'){
+            var fromdate = "";
+            var todate = "";
+            var activeStatuses = [1,0];
+            var dates = {};
 
+            //Active -1,0,1
+            if(req.body.filter_active_value == 1){
+                activeStatuses = [1];
+            }
+            else if(req.body.filter_active_value == 0){
+                activeStatuses = [0];
+            }
+
+            //Reg Date
+            if (req.body.filter_reg_date_from != ""){
+                fromdate = new Date(req.body.filter_reg_date_from);
+                dates.registrationDate = { $gte: fromdate };
+            }
+            /*if (req.body.filter_reg_date_to != ""){
+                todate = new Date(req.body.filter_reg_date_to);
+                dates.createdAt.$lte = todate;
+            }*/
+
+            var query = { 
+                active: { $in: activeStatuses },
+                dates
+            };
+            var active = await Warehouse.find({active: { $in: activeStatuses }, registrationDate:{$gte: fromdate}});
+            console.log(active);
+
+        }
+        /*else if(req.body.fileter_type_input == 'fileter_type_item'){
+
+        }*/
+
+        res.redirect('/search-filters'); // Redirect to the GET route
     }
-    /*else if(req.body.fileter_type_input == 'fileter_type_item'){
-
-    }*/
-    res.redirect('/search-filters'); // Redirect to the GET route
+    catch(e){
+        console.error('Error on create page:', e);
+        res.redirect('/error?origin_page=/&error='+e);
+    }
 });
 
 module.exports = router;

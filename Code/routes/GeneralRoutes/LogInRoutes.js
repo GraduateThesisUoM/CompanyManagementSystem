@@ -95,7 +95,7 @@ async function create_users(){
 
   // Assuming you want to delete the "Company" collection
   try {
-      await Item.collection.drop();
+      await Warehouse.collection.drop();
       console.log("Collection Warehouse deleted successfully.");
   } catch (error) {
       console.error("Error deleting collection:", error);
@@ -139,8 +139,8 @@ async function create_users(){
   const w1 = await generalFunctions.createWarehouse(company2._id, 'w1', 'w1_l');
   const w2 = await generalFunctions.createWarehouse(company2._id, 'w2', 'w2_2');
   w2.active = 0;
+  w2.registrationDate = '2024-06-10T18:22:57.852+00:00';
   await w2.save();
-  console.log(w2);
 
 
   console.log("----------   END ");

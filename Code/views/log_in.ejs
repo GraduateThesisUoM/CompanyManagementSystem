@@ -21,7 +21,7 @@
               <input type="checkbox" id="showpasswordcheckbox">
               <label for="showpasswordcheckbox">Εμφάνηση Κωδικού</label>
             </div>
-            <button type="submit">Σύνδεση</button>
+            <button id='log_in_btn' type="submit">Σύνδεση</button>
             
         </form>
         <button id="sign_up_btn">Εγγραφή</button>
@@ -38,6 +38,15 @@
           alert("Sign Up Completed Successfully");
         }
       }
+      //test
+      else if (urlParams.has('fast_log_in')) {
+        if(urlParams.get('fast_log_in')=="1"){
+          $("#email").val("a1@a1");
+          $("#password").val("1");
+          $("#log_in_btn").click();
+        }
+      }
+      
       $("#sign_up_btn").click(function(){
         window.location ="sign-up"
       });
