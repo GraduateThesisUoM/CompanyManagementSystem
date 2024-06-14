@@ -49,7 +49,7 @@ router.post('/', async (req, res) => {
             var fromdate = "";
             var todate = "";
             var activeStatuses = [1,0];
-            var dates = {};
+            var dateQuery = {};
 
             //Active -1,0,1
             if(req.body.filter_active_value == 1){
@@ -59,22 +59,30 @@ router.post('/', async (req, res) => {
                 activeStatuses = [0];
             }
 
-            //Reg Date
-            if (req.body.filter_reg_date_from != ""){
+            // Reg Date
+            if (req.body.filter_reg_date_from != "") {
                 fromdate = new Date(req.body.filter_reg_date_from);
-                dates.registrationDate = { $gte: fromdate };
+                dateQuery.$gte = fromdate;
             }
-            /*if (req.body.filter_reg_date_to != ""){
-                todate = new Date(req.body.filter_reg_date_to);
-                dates.createdAt.$lte = todate;
-            }*/
 
-            var query = { 
-                active: { $in: activeStatuses },
-                dates
+            if (req.body.filter_reg_date_to != "") {
+                todate = new Date(req.body.filter_reg_date_to);
+                dateQuery.$lte = todate;
+            }
+
+            // Build the final query object
+            var query = {
+                active: { $in: activeStatuses }
             };
-            var active = await Warehouse.find({active: { $in: activeStatuses }, registrationDate:{$gte: fromdate}});
-            console.log(active);
+
+            // Add the date query to the query object if it has valid conditions
+            if (Object.keys(dateQuery).length > 0) {
+                query.registrationDate = dateQuery;
+            }
+
+            
+            var result = await Warehouse.find(query);
+            console.log(result);
 
         }
         /*else if(req.body.fileter_type_input == 'fileter_type_item'){
