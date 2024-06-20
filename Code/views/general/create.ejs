@@ -16,6 +16,7 @@
         <div id="create_menu">
             <button class = "create_menu_btn" id="warehouse">Αποθήκη</button>
             <button class = "create_menu_btn" id="item">Είδος</button>
+            <button class = "create_menu_btn" id="series">Σειρά</button>
         </div>
         <form action="/create" method="POST" >
             <input type="text" id="create_type" style="display: none;" name="create_type">
@@ -46,14 +47,23 @@
                 <label for="item_price_w_disc">Price Wholesale : </label>
                 <input type="number" id="item_price_w_disc" name="item_price_w_disc">
             </div>
+            <div id = 'series_div' class="create_div">
+                <label for="series_title">Title : </label>
+                <input type="text" id="series_title" name="series_title">
+                <br>
+                <label for="series_title">Type : </label>
+                <select>
+                    <option value="0">Not Selected</option>
+                </select>
+            </div>
             <button id="submit_btn" type="submit">Καταχώρηση</button>
         </form>
-        <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>
     <script>
     $(document).ready(function(){
         $(".create_div").hide();
+        $("#submit_btn").hide();
         $("#back_btn").click(function(){
             window.location ="/client-profile?id=<%= clientId %>";
         });
@@ -66,6 +76,7 @@
             $("#create_type").val(type);
             $(".create_div").hide();
             $("#"+type+"_div").show();
+            $("#submit_btn").show();
         }
     });
     
