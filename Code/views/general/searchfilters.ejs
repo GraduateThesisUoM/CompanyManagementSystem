@@ -14,46 +14,61 @@
     </head>
     <body>
         <h1>Search</h1>
-        <button type="button" id="fileter_type_warehouse" name="fileter_type_warehouse" class="search_type_select">Warehouse</button>
-        <button type="button" id="fileter_type_item" name="fileter_type_item" class="search_type_select">Item</button>
-        <form action="/search-filters" method="POST" class="filter_form">
+        <button type="button" id="filter_type_warehouse" name="filter_type_warehouse" class="search_type_select">Warehouse</button>
+        <button type="button" id="filter_type_item" name="filter_type_item" class="search_type_select">Item</button>
+        <form action="/search-filters" method="POST" class="filter_form" id ='search_filters'>
             <div class="filter_column">
-                <input type="text" id="fileter_type_input" name="fileter_type_input" style="display: none;">
+                <input type="text" id="filter_type_input" name="filter_type_input" style="display: none;">
                 <label for="filter_reg_date_from">Registration Date From : </label>
-                <label for="filter_code_from">Code from : </label>
-                <label for="filter_title_from">Title : </label>
-                <label for="filter_description">Description : </label>
-                <div>
-                    <button  id="filter_active_yes" class="filter_active">Yes</button>
-                    <button id="filter_active_no"  class="filter_active">No</button>
-                    <input  type="number" id="filter_active_value" name="filter_active_value" value=-1>
-                    <label for="filter_active">Active</label>
+                <label for="filter_id">Id : </label>
+                <label for="filter_title">Title : </label>
+                <div >
+                    
+
+                    <div class="reverse_order">
+                        <button id="filter_active_no"  class="filter_active">No</button>
+                        <button  id="filter_active_yes" class="filter_active">Yes</button>
+                        <label for="filter_active_value"class="filter_active left_text">Active   </label>
+                    </div>
+                    <input style="display: none;" type="number" id="filter_active_value" name="filter_active_value" value=-1>
                 </div>
                 <button id="submit_btn" type="submit" style="display: none">submit</button>
             </div>
             <div class="filter_column">
                 <input type="date" id="filter_reg_date_from" name="filter_reg_date_from">
-                <input type="text" id="filter_code_from" name="filter_code_from">
-                <input type="text" id="filter_title_from" name="filter_title_from">
-                <input type="text" id="filter_description" name="filter_description">
+                <input type="text" id="filter_id" name="filter_id">
+                <input type="text" id="filter_title" name="filter_title">
             </div>
             <div class="filter_column">
                 <label for="filter_reg_date_to"> To : </label>
-                <label for="filter_code_to"> To : </label>
-                <label for="filter_title_to"> To : </label>
             </div>
             <div class="filter_column">
                 <input type="date" id="filter_reg_date_to" name="filter_reg_date_to">
-                <input type="text" id="filter_code_to" name="filter_code_to">
-                <input type="text" id="filter_title_to" name="filter_title_to">
             </div>
         </form>
         <button id="click_sub_btn">Search</button>
         <button id="back_btn">Πίσω</button>
+
+        <div id="results_main_div">
+            <div id="results_title_row" class = "results_row">
+                <div class="results_title_div">A/A</div>
+                <div class="results_title_div">Id</div>
+                <div class="results_title_div">Title</div>
+                <div class="results_title_div">Registration Date</div>
+                <div class="results_title_div">Active</div>
+            </div>
+            <div id="results_data_div">
+
+            </div>
+        </div>
     </body>
     <%- include('../partials/footer'); %>
     <script>
     $(document).ready(function(){
+
+        $("#search_filters").css('display', 'none');
+        $("#click_sub_btn").css('display', 'none');
+
         $("#back_btn").click(function(){
             console.log("/client-profile?id=<%= clientId %>")
             window.location ="/client-profile?id=<%= clientId %>";
@@ -84,10 +99,51 @@
         });
 
         $(".search_type_select").click(function(){
-            $("#fileter_type_input").val(this.id);
+            $("#search_filters").css('display', 'grid');
+            $("#click_sub_btn").css('display', 'block');
+            $("#filter_type_input").val(this.id);
             $(".search_type_select").removeClass("selected");
             $(this).addClass("selected");
         });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('type')) {
+            $('#'+urlParams.get('type')).click();
+        }
+        if (urlParams.has('active')) {
+            $('.filter_active')[urlParams.get('active')].click();
+        }
+        if (urlParams.has('title')) {
+            $('#filter_title').val(urlParams.get('title'));
+        }
+        if (urlParams.has('fromdate')) {
+            $('#filter_reg_date_from').val(urlParams.get('fromdate'));
+        }
+        if (urlParams.has('todate')) {
+            $('#filter_reg_date_to').val(urlParams.get('todate'));
+        }
+        if (urlParams.has('id')) {
+            $('#filter_id').val(urlParams.get('id'));
+        }
+
+        var searchResults = JSON.parse(`<%- JSON.stringify(results) %>`);
+        const results_data_div = $("#results_data_div");
+        if (searchResults.length > 0) {
+            var counter = 1;
+            for (const result of searchResults) {
+                // Create a div for each result
+                const resultDiv = $("<div class='results_row'></div>");
+                resultDiv.append(`<div>${counter}</div>`);
+                resultDiv.append(`<div>${result._id}</div>`);
+                resultDiv.append(`<div>${result.title}</div>`);
+                resultDiv.append(`<div>${new Date(result.registrationDate).toLocaleDateString()}</div>`);
+                resultDiv.append(`<div>${result.active}</div>`);
+                // Append each result div to the results_data_div
+                results_data_div.append(resultDiv);
+
+                counter = counter
+            }
+        }
     });
     
     </script>

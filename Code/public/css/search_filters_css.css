@@ -20,3 +20,28 @@
 .selected{
     background-color: gray;
 }
+
+.reverse_order{
+    display: flex;
+    flex-direction: row-reverse; 
+}
+
+.filter_active{
+    width : 33%
+}
+.left_text {
+    text-align: left !important; 
+}
+
+.results_title_div{
+    text-align: center;
+    background-color: gray;
+}
+.results_row{
+    display: grid;
+    grid-template-columns: 5% 35% 20% 20% 20%;
+}
+
+.results_row > div{
+    text-align: center;
+}

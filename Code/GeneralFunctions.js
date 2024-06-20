@@ -152,6 +152,7 @@ async function createItem(companyID, title, description, price_r, discount_r, pr
         }
 
         console.log("item created");
+        await item.save();
         
         return item;
     }
