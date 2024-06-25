@@ -54,7 +54,6 @@ async function create_users(){
 
   const Company = mongoose.model('Company');
 
-  // Assuming you want to delete the "Company" collection
   try {
       await Company.collection.drop();
       console.log("Collection Company deleted successfully.");
@@ -63,7 +62,6 @@ async function create_users(){
   }
   const Node = mongoose.model('Node');
 
-  // Assuming you want to delete the "Company" collection
   try {
       await Node.collection.drop();
       console.log("Collection Node deleted successfully.");
@@ -73,7 +71,6 @@ async function create_users(){
   
   const User = mongoose.model('users');
 
-  // Assuming you want to delete the "Company" collection
   try {
       await User.collection.drop();
       console.log("Collection User deleted successfully.");
@@ -83,7 +80,6 @@ async function create_users(){
 
   const Item = mongoose.model('item');
 
-  // Assuming you want to delete the "Company" collection
   try {
       await Item.collection.drop();
       console.log("Collection Item deleted successfully.");
@@ -93,10 +89,18 @@ async function create_users(){
 
   const Warehouse = mongoose.model('warehouses');
 
-  // Assuming you want to delete the "Company" collection
   try {
       await Warehouse.collection.drop();
       console.log("Collection Warehouse deleted successfully.");
+  } catch (error) {
+      console.error("Error deleting collection:", error);
+  }
+
+  const Series = mongoose.model('series');
+
+  try {
+      await Series.collection.drop();
+      console.log("Collection Series deleted successfully.");
   } catch (error) {
       console.error("Error deleting collection:", error);
   }
@@ -141,6 +145,11 @@ async function create_users(){
   w2.active = 0;
   w2.registrationDate = '2024-06-10T18:22:57.852+00:00';
   await w2.save();
+
+  const s1 = await generalFunctions.createSeries(company2._id, 's1');
+  const s2 = await generalFunctions.createSeries(company2._id, 's2');
+  s2.active = 0;
+  await s2.save();
 
 
   console.log("----------   END ");

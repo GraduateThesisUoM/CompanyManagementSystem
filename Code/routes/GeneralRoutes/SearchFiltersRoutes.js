@@ -5,7 +5,9 @@ const router = express.Router();
 const Notification = require("../../Schemas/Notification");
 const Item = require("../../Schemas/Item");
 const Warehouse = require("../../Schemas/Warehouse");
+const Series = require("../../Schemas/Series");
 
+//active fileter mark with something and make work
 
 
 //Authentication Function
@@ -127,6 +129,9 @@ router.post('/', async (req, res) => {
         }
         else if(req.body.filter_type_input == 'filter_type_item'){    
             results = await Item.find();
+        }
+        else if(req.body.filter_type_input == 'filter_type_series'){    
+            results = await Series.find();
         }
         console.log(results);
 

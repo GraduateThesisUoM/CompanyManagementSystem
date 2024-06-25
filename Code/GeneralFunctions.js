@@ -12,7 +12,7 @@ const Item  = require("./Schemas/Item");
 const Company  = require("./Schemas/Company");
 const Accountant  = require("./Schemas/Accountant");
 const User  = require("./Schemas/User");
-
+const Series  = require("./Schemas/Series");
 
 
 //function checkAccessRigts(req, data ,res){
@@ -137,21 +137,13 @@ async function createItem(companyID, title, description, price_r, discount_r, pr
             companyID: companyID,
             title :title,
             description : description,
-            price_r :price_r
+            price_r :price_r,
+            price_w :price_w,
+            discount_r :discount_r,
+            discount_w :discount_w
         });
-        
 
-        if(price_w == ""){
-            item.price_w = price_r;
-        }
-        if(price_w != ""){
-            item.discount_r = discount_r;
-        }
-        if(price_w != ""){
-            item.discount_w = discount_w;
-        }
-
-        console.log("item created");
+        console.log("item "+title+" created");
         await item.save();
         
         return item;
@@ -161,5 +153,25 @@ async function createItem(companyID, title, description, price_r, discount_r, pr
     }
 }
 
+async function createSeries(companyID, title){
+    try{
+        const seies = new Series({
+            companyID: companyID,
+            title :title
+        });
+        
+        await seies.save();
+        
+        //console.log(warehouse);
+        console.log("seies "+title+" created");
 
-module.exports = { checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,};
+        return seies;
+        
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
+
+module.exports = { checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,createSeries};

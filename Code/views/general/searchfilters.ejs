@@ -16,6 +16,7 @@
         <h1>Search</h1>
         <button type="button" id="filter_type_warehouse" name="filter_type_warehouse" class="search_type_select">Warehouse</button>
         <button type="button" id="filter_type_item" name="filter_type_item" class="search_type_select">Item</button>
+        <button type="button" id="filter_type_series" name="filter_type_series" class="search_type_select">Series</button>
         <form action="/search-filters" method="POST" class="filter_form" id ='search_filters'>
             <div class="filter_column">
                 <input type="text" id="filter_type_input" name="filter_type_input" style="display: none;">
@@ -23,8 +24,6 @@
                 <label for="filter_id">Id : </label>
                 <label for="filter_title">Title : </label>
                 <div >
-                    
-
                     <div class="reverse_order">
                         <button id="filter_active_no"  class="filter_active">No</button>
                         <button  id="filter_active_yes" class="filter_active">Yes</button>
@@ -70,7 +69,6 @@
         $("#click_sub_btn").css('display', 'none');
 
         $("#back_btn").click(function(){
-            console.log("/client-profile?id=<%= clientId %>")
             window.location ="/client-profile?id=<%= clientId %>";
         });
 
