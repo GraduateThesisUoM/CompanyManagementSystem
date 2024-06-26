@@ -138,7 +138,10 @@ async function create_users(){
   await clientAccountantFunctions.send_hiring_req_to_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
   await clientAccountantFunctions.fire_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
 
-  const i1 = await generalFunctions.createItem(company2._id, 'i1', 'i1', 3, 0.5, 1,0.6)
+  const i1 = await generalFunctions.createItem(company2._id, 'i1', 'i1', 3, 0.5, 1,0.6);
+  const i2 = await generalFunctions.createItem(company2._id, 'i2', 'i2', 3, 0.5, 1,0.6);
+  i2.active = 0;
+  await i2.save();
 
   const w1 = await generalFunctions.createWarehouse(company2._id, 'w1', 'w1_l');
   const w2 = await generalFunctions.createWarehouse(company2._id, 'w2', 'w2_2');

@@ -25,8 +25,8 @@
                 <label for="filter_title">Title : </label>
                 <div >
                     <div class="reverse_order">
-                        <button id="filter_active_no"  class="filter_active">No</button>
-                        <button  id="filter_active_yes" class="filter_active">Yes</button>
+                        <button id="filter_active_no"  class="filter_active filter_active_btn">No</button>
+                        <button  id="filter_active_yes" class="filter_active filter_active_btn">Yes</button>
                         <label for="filter_active_value"class="filter_active left_text">Active   </label>
                     </div>
                     <input style="display: none;" type="number" id="filter_active_value" name="filter_active_value" value=-1>
@@ -78,12 +78,14 @@
 
         $(".filter_active").click(function(){
             event.preventDefault();
+            $(".filter_active").removeClass("cliked");
             if($(this).attr('id') == 'filter_active_yes'){
                 if($("#filter_active_value").val() == 1){
                     $("#filter_active_value").val(-1);
                 }
                 else{
                     $("#filter_active_value").val(1);
+                    $("#filter_active_yes").addClass("cliked");
                 }
             }
             else{
@@ -92,6 +94,7 @@
                 }
                 else{
                     $("#filter_active_value").val(0);
+                    $("#filter_active_no").addClass("cliked");
                 }
             }
         });

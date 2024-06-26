@@ -27,8 +27,15 @@
 }
 
 .filter_active{
-    width : 33%
+    width : 33%;
 }
+
+.filter_active_btn{
+    width : 33%;
+    border:none;
+    background-color: rgb(145, 145, 145);
+}
+
 .left_text {
     text-align: left !important; 
 }
@@ -44,4 +51,10 @@
 
 .results_row > div{
     text-align: center;
+}
+
+.cliked{
+    font-weight: bold;
+    background-color:rgb(70, 70, 70);
+    ;
 }

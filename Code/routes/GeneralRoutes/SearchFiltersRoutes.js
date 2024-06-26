@@ -7,8 +7,6 @@ const Item = require("../../Schemas/Item");
 const Warehouse = require("../../Schemas/Warehouse");
 const Series = require("../../Schemas/Series");
 
-//active fileter mark with something and make work
-
 
 //Authentication Function
 const Authentication = require("../../AuthenticationFunctions");
@@ -128,10 +126,10 @@ router.post('/', async (req, res) => {
             results = await Warehouse.find(query);
         }
         else if(req.body.filter_type_input == 'filter_type_item'){    
-            results = await Item.find();
+            results = await Item.find(query);
         }
         else if(req.body.filter_type_input == 'filter_type_series'){    
-            results = await Series.find();
+            results = await Series.find(query);
         }
         console.log(results);
 
