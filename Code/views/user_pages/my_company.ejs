@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Οι Εταιρία Μου</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <h1>Οι Εταιρία Μου</h1>
+        
+        <button id="back_btn">Πίσω</button>
+    </body>
+    <%- include('../partials/footer'); %>
+    <script>
+
+       $(document).ready(function(){
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('message')) {
+            if(urlParams.get('message')=="rating_submitted_successfully"){
+                alert("Η αξιολόγηση καταχωρήθηκε με επιτυχία");
+            }
+        }
+
+            $("#back_btn").click(function(){
+                window.location = "/"
+            });
+        });
+
+    </script>
+
+</html>

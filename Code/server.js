@@ -149,6 +149,9 @@ app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages
 //pickclientcompany
 app.use(path_constants.pages.pickclientcompany.url, require(path_constants.pages.pickclientcompany.file));
 
+//my_company
+app.use(path_constants.pages.my_company.url, require(path_constants.pages.my_company.file));
+
 const http = require('http').createServer(app);
 const socketIO = require('socket.io')(http);
 

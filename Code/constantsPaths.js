@@ -132,7 +132,16 @@ const pages = {
   my_accountant :{
     url : "/my-accountant",
     file: routes.user+"MyAccountantRoutes.js",
-    view : ""
+    view : function() { {
+      return views_folders.user+"my_accountant.ejs"
+    }}
+  },
+  my_company :{
+    url : "/my-company",
+    file: routes.user+"MyCompany.js",
+    view : function() { {
+      return views_folders.user+"my_company.ejs"
+    }}
   },
   my_accountant_rate :{
     url : "/my-accountant-rate",

@@ -15,13 +15,14 @@
         <h2>Welcome Username</h2>
 
         <button id='my_accountant'>Ο Λογιστής Μου</button>
+        <button id='my_company'>Οι Εταιρία Μου</button>
 
     </body>
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
             $("#my_accountant").click(function(){
-                if('<%= company.accountant%>' == 'not_assigned' && '<%= user.companyOwner %>' == 0){
+                if('<%= company.accountant%>' == 'not_assigned' || '<%= user.companyOwner %>' == '0'){
                     alert("You need elevated rights to hire an accountant");
                 }
                 else{
@@ -29,6 +30,13 @@
                 }
                 
             });
+            $("#my_company").click(function(){
+                window.location ="my-company"
+            });
+
+            if('<%= user.companyOwner %>' == '0'){
+                $("#my_company").hide();
+            }
         });
       </script>
 

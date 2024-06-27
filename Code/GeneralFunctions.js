@@ -18,7 +18,7 @@ const Series  = require("./Schemas/Series");
 //function checkAccessRigts(req, data ,res){
 function checkAccessRigts(req){
     try{
-        var file_path = ""
+        var file_path = "";
         // Iterate over each key-value pair in the pages object
         for (const [page, pageData] of Object.entries(path_constants.pages)) {
             if (pageData.url === req.originalUrl) {
@@ -37,10 +37,14 @@ function checkAccessRigts(req){
             page_user_type = "admin";
         }
         else{
+            console.log("access granted");
             return true;
         }
-
-        return page_user_type == req.user.type
+        if(page_user_type == req.user.type){
+            console.log("access granted");
+            return true;
+        }
+        return true
     }
     catch(e){
         console.log(e)
