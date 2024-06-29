@@ -138,7 +138,7 @@ const pages = {
   },
   my_company :{
     url : "/my-company",
-    file: routes.user+"MyCompany.js",
+    file: routes.user+"MyCompanyRoutes.js",
     view : function() { {
       return views_folders.user+"my_company.ejs"
     }}

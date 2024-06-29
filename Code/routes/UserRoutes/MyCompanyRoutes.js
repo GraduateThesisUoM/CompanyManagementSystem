@@ -22,6 +22,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       if(generalFunctions.checkAccessRigts(req,res)){
         const data = {
             user: req.user,
+            company : await Company.findOne({_id:req.user.company}),
             notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})
           }
           res.render('user_pages/my_company.ejs', data);
@@ -36,5 +37,22 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       res.redirect('/error?origin_page=my-company&error='+err);
     }
 });
+
+router.post('/', Authentication.checkAuthenticated, async (req, res) => {
+  try{
+    const company = await Company.findOne({_id:req.user.company});
+    if(company.users_num != req.body.new_license){
+      console.log('send admin request')
+    }
+    res.redirect('/my-company');
+  }
+  catch(e){
+    console.error(err);
+    res.redirect('/error?origin_page=my-company&error='+err);
+
+  }
+
+});
+
 
 module.exports = router;

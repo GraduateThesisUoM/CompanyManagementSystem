@@ -28,12 +28,6 @@
 
                     <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
                     <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData" value="<%= user.mydatakey%>">
-                    <span id="accountant_hide">
-                        <label for="companyName">'Ονομα εταιρείας:</label>
-                        <input type="text" name="companyName" id="companyName" value="<%= user.companyName%>">
-                        <label for="companyLogo">Λογότυπο εταιρείας :</label>
-                        <input type="text" name="companyLogo" id="companyLogo"  value="<%= user.companyLogo%>">
-                    </span>
                 </span>
                 <button type="submit" id="edit-info-button" name="edit-info-button">Αποθήκευση αλλαγών</button>
             </form>
@@ -57,12 +51,6 @@
         }
     
     $(document).ready(function(){
-        if(my_accountant.id == "not_assigned"){
-            $("#my_accountant").text("Δεν έχει οριστεί");
-        }
-        else if(my_accountant.id == "<%= user._id %>"){
-            $("#my_accountant").text("Αυτοδιαχείριση Λογιστικών");
-        }
          $("#back_btn").click(function(){
                 window.location ="/"
         });
