@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--DOCTYPE html>
 <html lang="en">
 <head>
 </head>
@@ -6,6 +6,51 @@
     <ul>
         <a href="/transactor-list?type=supplier">Suppliers</a>
         <a href="/transactor-list?type=customer">Customers</a>
+        <button id="buy_sidebar_btn">Αγωρές</button>
+        <button id="sell_sidebar_btn">Πωλήσεις</button>
     </ul>
 </body>
-</html>
+</html-->
+<style>
+    #sidebar_div{
+        height: 78.85vh;
+        background-color: rgb(170, 170, 170);
+    }
+
+    #sidebar_div>div{
+        margin-top: 20px;
+    }
+
+    button{
+        display: block;
+        width: 100%;
+        border: none;
+        text-align: left;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 15px;
+        background-color: transparent;
+        color: rgb(49, 47, 47);
+        font-weight: bold;
+        text-indent: 20px;
+
+    }
+    button:hover{
+        text-indent: 30px;
+        background-color: rgb(140, 140, 140);
+        cursor: pointer;
+        padding: 5px;
+        font-size: 20px;
+        box-shadow: 0px 0px 10px black;
+        color: rgb(56, 67, 167);
+    }
+</style>
+
+<div id="sidebar_div">
+    <div>
+        <button class="button" onclick="location.href='/transactor-list?type=supplier'">Suppliers</button>
+        <button class="button" onclick="location.href='/transactor-list?type=customer'">Customers</button>
+        <button id="buy_sidebar_btn">Αγωρές</button>
+        <button id="sell_sidebar_btn">Πωλήσεις</button>
+    </div>
+</div>

@@ -13,8 +13,12 @@ const CompanySchema = new mongoose.Schema({
       default: 'active'
   },
   accountant: { type: String, required: false,default: 'not_assigned'},
-  users_num: { type: Number, required: true,default:1 },
-  license_num: { type: Number, required: true,default:1 },
+  license: {
+    used: { type: Number, default: 1 },
+    bought: { type: Number, default: 1 },
+    requested: { type: Number, default: 0 },
+    for_removal: { type: Number, default: 0 }
+  },  
   signupcode: { type: String, required: true},
   autochangesignupcode:{type:Number, required: true,default:1}
 });

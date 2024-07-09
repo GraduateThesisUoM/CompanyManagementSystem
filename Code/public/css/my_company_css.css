@@ -4,11 +4,14 @@
     object-fit: cover;
 }
 
-#display_license{
+.div_display_license{
     display:grid;
-    grid-template-columns: 150px 50px;
     gap: 10px;
 }
-#edit_license{
-    display:flex;
+.div_display_license.data_section{
+    grid-template-columns: 150px 50px;
 }
+.div_display_license.btn_section{
+    grid-template-columns: 100px 100px;
+}
+

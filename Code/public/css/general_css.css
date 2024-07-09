@@ -10,8 +10,15 @@ body{
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    padding: 0px;
+    margin: 0px;
 }
 
+.has_sidebar{
+    display: grid;
+    gap: 0px;
+    grid-template-columns: 20% 80%;
+}
 
 #header{
     display: flex;

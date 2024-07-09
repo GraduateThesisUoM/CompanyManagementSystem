@@ -6,24 +6,23 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
 
+//File with the paths
+const path_constants = require('../../constantsPaths');
 
 const passport = require('passport');
 
-const Accountant  = require("../../Schemas/Accountant");;
-const Review  = require("../../Schemas/Review");
-const Node = require("../../Schemas/Node");
-const Client = require("../../Schemas/Client");
-const Company = require("../../Schemas/Company");
-const User = require("../../Schemas/User");
-const Item = require("../../Schemas/Item");
+const Accountant  = require(path_constants.schemas.two.accountant);
+const Review  = require(path_constants.schemas.two.review);
+const Node = require(path_constants.schemas.two.node);
+const Client  = require(path_constants.schemas.two.client);
+const Company  = require(path_constants.schemas.two.company);
+const User = require(path_constants.schemas.two.user);
+const Item  = require(path_constants.schemas.two.item);
 
 
-const Notification = require("../../Schemas/Notification");
+const Notification = require(path_constants.schemas.two.notification);
 
 const clientAccountantFunctions = require("../../ClientAccountantFunctions");
-
-//File with the paths
-const path_constants = require('../../constantsPaths');
 
 //Authentication Functions
 const Authentication = require("../../AuthenticationFunctions");
@@ -87,6 +86,15 @@ async function create_users(){
       console.error("Error deleting collection:", error);
   }
 
+  const Report = mongoose.model('Report');
+
+  try {
+      await Report.collection.drop();
+      console.log("Collection Report deleted successfully.");
+  } catch (error) {
+      console.error("Error deleting collection:", error);
+  }
+
   const Warehouse = mongoose.model('warehouses');
 
   try {
@@ -105,11 +113,14 @@ async function create_users(){
       console.error("Error deleting collection:", error);
   }
 
-  const company1 = await generalFunctions.create_company("1");
-  const company2 = await generalFunctions.create_company("2");
-  const company3 = await generalFunctions.create_company("3");
-  const company4 = await generalFunctions.create_company("4");
-  const company5 = await generalFunctions.create_company("5");
+  const company1 = await generalFunctions.create_company("c1",'logo',1);
+  const company2 = await generalFunctions.create_company("c2",'logo',1);
+  company2.license.used = 2;
+  company2.license.bought = 2;
+  await company2.save();
+  const company3 = await generalFunctions.create_company("c3",'logo',1);
+  const company4 = await generalFunctions.create_company("c4",'logo',1);
+  const company5 = await generalFunctions.create_company("c5",'logo',1);
 
   const user1 = await generalFunctions.create_user("sa",company1,1);
   const user2 = await generalFunctions.create_user("c1",company2,1);

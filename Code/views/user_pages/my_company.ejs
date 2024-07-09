@@ -17,18 +17,29 @@
         <h1><%= company.name %></h1>
         <img src="<%= company.logo %>" id="company_logo">
         <form action="/my-company" method="POST">
-            <div id="display_license">
+            <div class="div_display_license data_section">
                 <div>Διαθέσημες Άδιες</div>
-                <input id="new_license" name="new_license" value=''>
+                <div id="bought_license"></div>
                 <div>Άδιες Σε χρήση</div>
-                <div id="users_num"></div>
+                <div id="used_licenses"></div>
+                <div>Άδιες Σε Αναμονή</div>
+                <input type="number" id="requested_license" name="requested_license" value='' readonly>
             </div>
-            <div id="edit_license">
-                
+            <div class="div_display_license btn_section">
                 <button id="add_license">+</button>
                 <button id="subtract_license">-</button>
-                <button type = "submit">Υποβολή</button>
             </div>
+            <div class="div_display_license data_section">
+                <div>Αφαίρεση Άδειας</div>
+                <input type="number" id="remove_license" name="remove_license" value='' readonly>
+            </div>
+            <div class="div_display_license btn_section">
+                <button id="add_remove_license">+</button>
+                <button id="subtract_remove_license">-</button>
+            </div>
+            <button id="casel_license_requests">Ακύρωση Αιμάτων</button>
+            <br>
+            <button id = "submit_btn"type = "submit">Υποβολή</button>
         </form>
         
         
@@ -39,10 +50,25 @@
 
        $(document).ready(function(){
             const urlParams = new URLSearchParams(window.location.search);
-            var license_num = parseInt('<%= company.license_num %>');
-            $("#new_license").val(license_num);
-            var users_num = '<%= company.users_num %>';
-            $("#users_num").text(users_num);
+            var requested_license = parseInt('<%= company.license.requested %>');
+            var remove_license = parseInt('<%= company.license.for_removal %>');
+
+            if(remove_license + requested_license == 0){
+                $("#casel_license_requests").prop('disabled', true);
+            }
+
+            $("#requested_license").val(requested_license);
+            if(requested_license == 0){
+                $("#subtract_license").prop('disabled', true);
+            }
+            $("#remove_license").val(remove_license);
+            if(remove_license == 0){
+                $("#subtract_remove_license").prop('disabled', true);
+            }
+            var used_licenses = parseInt('<%= company.license.used %>');
+            $("#used_licenses").text(used_licenses);
+            var license_num = parseInt('<%= company.license.bought %>');
+            $("#bought_license").text(license_num);
             
             if (urlParams.has('message')) {
                 if(urlParams.get('message')=="rating_submitted_successfully"){
@@ -51,24 +77,80 @@
             }
             $("#add_license").click(function(){
                 event.preventDefault();
-                license_num = license_num + 1
-                $("#new_license").val(license_num);
+                if(remove_license > 0){
+                    if (confirm("Έχετε καταχωρίσει αίτημα για αφαίρεση άδειας, να αντικατασταθεί από το αίτημα σας για προσθήκη νέας ?") == true) {
+                        requested_license = requested_license + 1
+                        $("#requested_license").val(requested_license);
+                        $("#subtract_license").prop('disabled', false);
+                        remove_license = 0;
+                        $("#remove_license").val(remove_license);
+                    }
+                }
+                else{
+                    requested_license = requested_license + 1
+                    $("#requested_license").val(requested_license);
+                    $("#subtract_license").prop('disabled', false);
+                }
             });
 
             $("#subtract_license").click(function(){
                 event.preventDefault();
-                if($("#new_license").val() == '<%= company.users_num %>'){
-                    alert('έχετε ήδη τόσους χρήστες απενεργοποιήστε χρήστες πρώτα')
+                requested_license = requested_license - 1
+                $("#requested_license").val(requested_license);
+                if(requested_license == 0){
+                    $("#subtract_license").prop('disabled', true);
+                }
+                else if ($("#subtract_license").prop('disabled')) {
+                    $("#subtract_license").prop('disabled', false);
+                }
+        
+            });
+
+            $("#add_remove_license").click(function(){
+                event.preventDefault();
+                if(requested_license > 0){
+                    if (confirm("Έχετε καταχωρίσει αίτημα για νέες άδειες, να αντικατασταθεί από το αίτημα σας για αφαίρεση αδειών?") == true) {
+                        remove_license = remove_license + 1
+                        $("#remove_license").val(remove_license);
+                        $("#subtract_remove_license").prop('disabled', false);
+                        requested_license = 0;
+                        $("#requested_license").val(requested_license);
+                    }
                 }
                 else{
-                    license_num = license_num - 1
-                    $("#new_license").val(license_num);
+                    remove_license = remove_license + 1
+                    $("#remove_license").val(remove_license);
+                    $("#subtract_remove_license").prop('disabled', false);
                 }
                 
             });
 
+            $("#subtract_remove_license").click(function(){
+                event.preventDefault();
+                remove_license = remove_license - 1
+                $("#remove_license").val(remove_license);
+                $("#subtract_remove_license").prop('disabled', false);
+                if(remove_license == 0){
+                    $("#subtract_remove_license").prop('disabled', true);
+                }
+                else if ($("#subtract_remove_license").prop('disabled')) {
+                    $("#subtract_remove_license").prop('disabled', false);
+                }
+            });
+
             $("#back_btn").click(function(){
                 window.location = "/"
+            });
+
+            $("#casel_license_requests").click(function(){
+                event.preventDefault();
+                if (confirm("Θέλετε να ακυρώσετε τα αιτήματα σας για άδειες ?") == true) {
+                    requested_license = -1;
+                    $("#requested_license").val(requested_license);
+                    remove_license = -1;
+                    $("#remove_license").val(remove_license);
+                    $("#submit_btn").click();
+                }
             });
         });
 

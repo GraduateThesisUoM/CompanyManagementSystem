@@ -1,13 +1,38 @@
+const Item = require("./Schemas/Item");
+const Warehouse = require("./Schemas/Warehouse");
+
 const folders ={
   css: "./public/css",
   img: "./public/imgs"
 };
 
 const schemas = {
-  user : "../../Schemas/User",
-  notification : "../../Schemas/Notification",
-  company : "../../Schemas/Company",
-  client : "../../Schemas/Client"
+  one :{
+    user : "././Schemas/User",
+    notification : "././Schemas/Notification",
+    company : "././Schemas/Company",
+    client : "././Schemas/Client",
+    report : "././Schemas/Report",
+    series : "././Schemas/Series",
+    accountant : "././Schemas/Accountant",
+    item : "././Schemas/Item",
+    warehouse : "././Schemas/Warehouse",
+    node : "././Schemas/Node",
+    review : "././Schemas/Review"
+  },
+  two:{
+    user : "../../Schemas/User",
+    notification : "../../Schemas/Notification",
+    company : "../../Schemas/Company",
+    client : "../../Schemas/Client",
+    report : "../../Schemas/Report",
+    series : "../../Schemas/Series",
+    accountant : "../../Schemas/Accountant",
+    item : "../../Schemas/Item",
+    warehouse : "../../Schemas/Warehouse",
+    node : "../../Schemas/Node",
+    review : "../../Schemas/Review"
+  }
 };
 
 const url_param = {

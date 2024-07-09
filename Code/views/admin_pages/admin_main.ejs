@@ -45,14 +45,14 @@
                 <br>
                 <% 
                     var reporter = null;
-                    for(var j=0;j < user_list.length;j++){
-                        if(user_list[j].id == pending_reports[i].reporter_id){
-                            reporter = user_list[j];
+                    for(var j=0;j < company_list.length;j++){
+                        if(company_list[j].id == pending_reports[i].reporter_id){
+                            reporter = company_list[j];
                             break;
                         }
                     }
                 %>
-                <span>Reported by: <a href="/user-profile?id=<%=pending_reports[i].reporter_id%>"><%= reporter.firstName%> <%= reporter.lastName%></a></span>
+                <span>Reported by: <a href="/user-profile?id=<%=pending_reports[i].reporter_id%>"><%= reporter.name%> </a></span>
                 <br>
                 <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- pending_reports[i]._id %>','<%- pending_reports[i].reason %>', '<%- pending_reports[i].text %>', '<%- pending_reports[i].registrationDate %>')">Details</button>
                 <br>
@@ -200,7 +200,61 @@
                detailsTextElem.textContent = text;
        
                modalContentElem.appendChild(detailsTextElem);
-       
+
+               // Create the form element
+                const actionForm = document.createElement('form');
+                actionForm.setAttribute('method', 'POST');
+
+                // Create a hidden input field to dynamically set the action URL
+                const actionInput = document.createElement('input');
+                //actionInput.setAttribute('type', 'hidden');
+                actionForm.appendChild(actionInput);
+                actionInput.setAttribute('name', 'action');
+
+                // Function to handle button click events
+                function handleButtonClick(actionUrl) {
+                    actionInput.setAttribute('value', "");
+                    actionInput.setAttribute('value', actionUrl);
+                    actionForm.setAttribute('action', '/review-report?id='+id+"&action="+actionUrl);
+                    actionForm.submit();
+                }
+
+                // Create the reviewed button
+                const reviewedButton = document.createElement('input');
+                reviewedButton.setAttribute('type', 'button');
+                reviewedButton.classList.add('reviewed');
+                reviewedButton.value = 'Reviewed';
+                reviewedButton.addEventListener('click', function() {
+                    handleButtonClick('reviewed');
+                });
+
+                 // Create the Execute button
+                 const executeButton = document.createElement('input');
+                 executeButton.setAttribute('type', 'button');
+                 executeButton.classList.add('executed');
+                 executeButton.value = 'Execute';
+                 executeButton.addEventListener('click', function() {
+                    handleButtonClick('executed');
+                });
+
+                // Create the dismissed button
+                const dismissedButton = document.createElement('input');
+                dismissedButton.setAttribute('type', 'button');
+                dismissedButton.classList.add('dismissed');
+                dismissedButton.value = 'Dismissed';
+                dismissedButton.addEventListener('click', function() {
+                    handleButtonClick('dismissed');
+                });
+
+                // Append buttons to the form
+                actionForm.appendChild(executeButton);
+                actionForm.appendChild(reviewedButton);
+                actionForm.appendChild(dismissedButton);
+
+                // Append the form to modal content or body
+                modalContentElem.appendChild(actionForm);
+
+                /*
                //reviewed
                const reviewedButtonForm = document.createElement('form');
                reviewedButtonForm.setAttribute('action', '/review-report?id='+id);
@@ -227,7 +281,7 @@
                dismissedTextElem.value = this.dismissed;
        
                dismissedButtonForm.appendChild(dismissedTextElem);
-               modalContentElem.appendChild(dismissedButtonForm);
+               modalContentElem.appendChild(dismissedButtonForm);*/
        
                document.body.appendChild(this.modalElem);
            }
@@ -259,10 +313,5 @@
 <%- include('../partials/footer'); %>
     
 </body>
-
-<style>
-    
-</style>
-
 
 </html>

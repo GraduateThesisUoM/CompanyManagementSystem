@@ -4,16 +4,15 @@ const path_constants = require('./constantsPaths');
 //Libraries
 const bcrypt = require('bcrypt');
 
-
 //Models
-const Client  = require("./Schemas/Client");
-const Warehouse  = require("./Schemas/Warehouse");
-const Item  = require("./Schemas/Item");
-const Company  = require("./Schemas/Company");
-const Accountant  = require("./Schemas/Accountant");
-const User  = require("./Schemas/User");
-const Series  = require("./Schemas/Series");
-
+const Client  = require(path_constants.schemas.one.client);
+const Warehouse  = require(path_constants.schemas.one.warehouse);
+const Item  = require(path_constants.schemas.one.item);
+const Company  = require(path_constants.schemas.one.company);
+const Accountant  = require(path_constants.schemas.one.accountant);
+const User = require(path_constants.schemas.one.user);
+const Series = require(path_constants.schemas.one.series);
+const Report = require(path_constants.schemas.one.report);
 
 //function checkAccessRigts(req, data ,res){
 function checkAccessRigts(req){
@@ -37,11 +36,11 @@ function checkAccessRigts(req){
             page_user_type = "admin";
         }
         else{
-            console.log("access granted");
+            //console.log("access granted");
             return true;
         }
         if(page_user_type == req.user.type){
-            console.log("access granted");
+            //console.log("access granted");
             return true;
         }
         return true
@@ -71,12 +70,12 @@ async function create_user(text,company,cOwner){
     return user;
   }
 
-async function create_company(index){
+async function create_company(name,logo,signupcode){
     const company = new Company({
-        name : 'c'+index,
-        //logo : req.body.companyLogo,
+        name : name,
+        //logo : logo,
         logo : "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
-        signupcode : '1'
+        signupcode : signupcode
     });
     await company.save();
     console.log("company " + company.name + " Created");
@@ -163,10 +162,10 @@ async function createSeries(companyID, title){
             companyID: companyID,
             title :title
         });
+        //show reqested license
         
         await seies.save();
         
-        //console.log(warehouse);
         console.log("seies "+title+" created");
 
         return seies;
@@ -177,5 +176,24 @@ async function createSeries(companyID, title){
     }
 }
 
+async function createReport(userid,reportedid,reportreason,reporttext){
+    try{
+        const newReport = new Report({ //report constructor
+            reporter_id: userid, //reporter id
+            reported_id: reportedid, //reported id
+            reason: reportreason, //reason for report (taken from a radio in report page or inserted by the user)
+            text: reporttext //report text-details
+          });
 
-module.exports = { checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,createSeries};
+        console.log("Report for "+reportreason+" created");
+        await newReport.save();
+
+        return newReport;
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
+
+module.exports = { checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,createSeries,createReport};

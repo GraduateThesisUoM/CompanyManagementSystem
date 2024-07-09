@@ -14,9 +14,9 @@ const path_constants = require('../../constantsPaths');
 
 //Models
 //const User = require("../../Schemas/User");
-const User = require(path_constants.schemas.user);
-const Notification = require(path_constants.schemas.notification);
-const Company  = require(path_constants.schemas.company);
+const User = require(path_constants.schemas.two.user);
+const Notification = require(path_constants.schemas.two.notification);
+const Company  = require(path_constants.schemas.two.company);
 
 
 /*--------   CLIENTS */

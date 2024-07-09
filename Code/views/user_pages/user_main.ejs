@@ -11,12 +11,16 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>User main page</h1>
-        <h2>Welcome Username</h2>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1>User main page</h1>
+                <h2>Welcome Username</h2>
 
-        <button id='my_accountant'>Ο Λογιστής Μου</button>
-        <button id='my_company'>Οι Εταιρία Μου</button>
-
+                <button id='my_accountant'>Ο Λογιστής Μου</button>
+                <button id='my_company'>Οι Εταιρία Μου</button>
+            </div>
+        </div>
     </body>
     <%- include('../partials/footer'); %>
     <script>
@@ -28,7 +32,6 @@
                 else{
                     window.location ="my-accountant"
                 }
-                
             });
             $("#my_company").click(function(){
                 window.location ="my-company"

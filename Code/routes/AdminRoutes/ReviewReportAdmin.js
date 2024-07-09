@@ -10,7 +10,8 @@ const Authentication = require("../../AuthenticationFunctions");
 /*--------   REVIEW REPORT */
 router.post('/', Authentication.checkAuthenticated, async (req,res)=>{
     try{
-      await Report.updateOne({_id: req.query.id}, {$set: {status: "reviewed"}});
+      console.log(req.query);
+      await Report.updateOne({_id: req.query.id}, {$set: {status: req.query.action}});
       res.redirect('back');
     }
     catch (err) {

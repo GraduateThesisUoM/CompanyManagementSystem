@@ -45,13 +45,18 @@
           $("#password").val("1");
           $("#log_in_btn").click();
         }
-        if(urlParams.get('fast_log_in')=="2"){
+        else if(urlParams.get('fast_log_in')=="2"){
           $("#email").val("c1@c1");
           $("#password").val("1");
           $("#log_in_btn").click();
         }
-        if(urlParams.get('fast_log_in')=="3"){
+        else if(urlParams.get('fast_log_in')=="3"){
           $("#email").val("c2@c2");
+          $("#password").val("1");
+          $("#log_in_btn").click();
+        }
+        else if(urlParams.get('fast_log_in')=="4"){
+          $("#email").val("ad1@ad1");
           $("#password").val("1");
           $("#log_in_btn").click();
         }
