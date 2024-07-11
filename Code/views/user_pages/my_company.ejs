@@ -51,11 +51,17 @@
        $(document).ready(function(){
             const urlParams = new URLSearchParams(window.location.search);
             var requested_license = parseInt('<%= company.license.requested %>');
-            var remove_license = parseInt('<%= company.license.for_removal %>');
+            var remove_license = 0;;
 
-            if(remove_license + requested_license == 0){
+            if(requested_license == 0){
                 $("#casel_license_requests").prop('disabled', true);
             }
+            else if (requested_license < 0){
+                remove_license = requested_license*(-1);
+                requested_license = 0;
+            }
+
+
 
             $("#requested_license").val(requested_license);
             if(requested_license == 0){

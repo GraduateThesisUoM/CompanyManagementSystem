@@ -45,10 +45,14 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     const company = await Company.findOne({_id:req.user.company});
     if( company.license.requested > 0 || company.license.for_removal > 0){
       const report = await Report.findOne({reporter_id: company._id, reporter_id: company._id,reason:'licence',status:'pending'});
-      report.status = 'canceled';
-      await report.save();
-
-      console.log(report)
+      //report.status = 'canceled';
+      if (report != null){
+        if(report.status == 'pending'){
+          report.status = 'canceled';
+          await report.save();
+        }
+      }
+     
     }
          
       if(req.body.requested_license  == -1){
@@ -62,15 +66,16 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
         if(req.body.requested_license  > 0){
           console.log("add")
           company.license.requested = req.body.requested_license;
-          company.license.for_removal = 0;
+          //company.license.for_removal = 0;
           await company.save();
   
   
         }
         else if(req.body.remove_license  > 0){
           console.log("remove");
-          company.license.requested = 0;
-          company.license.for_removal = req.body.remove_license;
+          /*company.license.requested = 0;
+          company.license.for_removal = req.body.remove_license;*/
+          company.license.requested = req.body.remove_license*(-1);
           await company.save();
         } 
         const newReport = await generalFunctions.createReport(company._id,company._id,'licence','-');
