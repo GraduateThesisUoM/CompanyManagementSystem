@@ -1,0 +1,34 @@
+<!--DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body style="display: flex;width: 150px;height: 100%;left: 0;overflow-x: hidden;flex-direction: column;align-items: flex-start;">
+    <ul>
+        <a href="/transactor-list?type=supplier">Suppliers</a>
+        <a href="/transactor-list?type=customer">Customers</a>
+        <button id="buy_sidebar_btn">Αγωρές</button>
+        <button id="sell_sidebar_btn">Πωλήσεις</button>
+    </ul>
+</body>
+</html-->   
+
+<div id="sidebar_div">
+    <div>
+        <button class="button" onclick="location.href='/transactor-list?type=supplier'">
+            <img src="img1.png">
+            Suppliers
+        </button>
+        <button class="button" onclick="location.href='/transactor-list?type=customer'">
+            <img src="img2.png">
+            Customers
+        </button>
+        <button id="buy_sidebar_btn">
+            <img src="img3.png">
+            Buying
+        </button>
+        <button id="sell_sidebar_btn">
+            <img src="img4.png">
+            Shalles
+        </button>
+    </div>
+</div>
