@@ -25,10 +25,11 @@ body{
     flex-direction: row;
     justify-content: space-between;
     background-color: greenyellow;
-    width: 100%;
+    width: 90%;
     top: 0;
     left: 0;
-    
+    height: 10vh;
+    padding: 0px 5% ;
 }
 
 
@@ -41,7 +42,11 @@ body{
     background-color: green;
     color: white;
     text-align: center;
+    z-index: 1;
+    height: 10vh;
 }
+
+
 
 #footer_text{
     padding: 15px;
@@ -69,10 +74,9 @@ body{
 }
 
 #sidebar_div{
-    height: 78.85vh;
+    height: 80vh;
     background-color: rgb(170, 170, 170);
     position: relative;
-    z-index: 1;
 }
 
 #sidebar_div>div{

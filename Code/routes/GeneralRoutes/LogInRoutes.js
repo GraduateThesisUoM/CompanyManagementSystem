@@ -114,6 +114,8 @@ async function create_users(){
   }
 
   const company1 = await generalFunctions.create_company("c1",'logo',1);
+  company1.registrationDate = '2024-07-11T19:41:33.811+00:00';
+  await company1.save();
   const company2 = await generalFunctions.create_company("c2",'logo',1);
   company2.license.used = 2;
   company2.license.bought = 2;
@@ -121,6 +123,8 @@ async function create_users(){
   const company3 = await generalFunctions.create_company("c3",'logo',1);
   const company4 = await generalFunctions.create_company("c4",'logo',1);
   const company5 = await generalFunctions.create_company("c5",'logo',1);
+  company5.status = "disabled";
+  await company5.save();
 
   const user1 = await generalFunctions.create_user("sa",company1,1);
   const user2 = await generalFunctions.create_user("c1",company2,1);

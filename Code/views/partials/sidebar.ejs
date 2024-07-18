@@ -11,46 +11,25 @@
     </ul>
 </body>
 </html-->
-<style>
-    #sidebar_div{
-        height: 78.85vh;
-        background-color: rgb(170, 170, 170);
-    }
-
-    #sidebar_div>div{
-        margin-top: 20px;
-    }
-
-    #sidebar_div>div>button{
-        display: block;
-        width: 100%;
-        border: none;
-        text-align: left;
-        text-decoration: none;
-        display: inline-block;
-        font-size: 15px;
-        background-color: transparent;
-        color: rgb(49, 47, 47);
-        font-weight: bold;
-        text-indent: 20px;
-
-    }
-    #sidebar_div>div >button:hover{
-        text-indent: 30px;
-        background-color: rgb(140, 140, 140);
-        cursor: pointer;
-        padding: 5px;
-        font-size: 20px;
-        box-shadow: 0px 0px 10px black;
-        color: rgb(56, 67, 167);
-    }
-</style>
 
 <div id="sidebar_div">
     <div>
-        <button class="button" onclick="location.href='/transactor-list?type=supplier'">Suppliers</button>
-        <button class="button" onclick="location.href='/transactor-list?type=customer'">Customers</button>
-        <button id="buy_sidebar_btn">Αγωρές</button>
-        <button id="sell_sidebar_btn">Πωλήσεις</button>
+        <button class="button" onclick="location.href='/transactor-list?type=supplier'">
+            <img src="img1.png">
+            Suppliers
+        </button>
+        <button class="button" onclick="location.href='/transactor-list?type=customer'">
+            <img src="img2.png">
+            Customers
+        </button>
+        <button id="buy_sidebar_btn">
+            <img src="img3.png">
+            Buying
+        </button>
+        <button id="sell_sidebar_btn">
+            <img src="img4.png">
+            Shalles
+        </button>
     </div>
 </div>
+

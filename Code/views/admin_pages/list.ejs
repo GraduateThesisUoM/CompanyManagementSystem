@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>List</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <!--Header-->
+        <%- include('../partials/header'); %>
+    </head>
+    <style>
+        table{
+            border-collapse: collapse;
+            border: 2px solid rgb(140 140 140);
+        }
+        th,td{
+            border-collapse: collapse;
+            border: 2px solid rgb(140 140 140);
+        }
+    </style>
+    <body>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar_admin'); %>
+            <div>
+                <h1 id="list_header"></h1>
+                <div >
+                    Tottal Number Of <span id="span_number_of">companys</span> : <%=list_items.length%>
+                    <table>
+                          <thead>
+                            <tr>
+                                <th>A/A</th>
+                                <th>Name</th>
+                                <th>Reg Date</th>
+                                <th>Active</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                                <%if(list_items.length == 0){%>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                    <td>-</td>
+                                <%}
+                                else{
+                                    list_items.forEach(function(list_item, index) { %>
+                                        <tr>
+                                            <td><%= index + 1 %></td>
+                                            <td><%= list_item.name %></td>
+                                            <td><%= list_item.registrationDate %></td>
+                                            <td><%= list_item.status %></td>
+                                            <td>
+                                                <button>View</button>
+                                                <button>Delete</button>
+                                                <button>Black</button>
+                                            </td>
+
+                                        </tr>
+                                    <% }); %>
+                                <%}%>
+
+                            </tr>
+                          </tbody>
+                    </table>
+                </div>
+                <button id="back_btn">Πίσω</button>
+            </div>
+        </div>
+        
+    </body>
+    <%- include('../partials/footer'); %>
+    <script>
+    $(document).ready(function(){
+        var  searchfor = '';
+        if (window.location.search) {
+            searchfor = new URLSearchParams(window.location.search).get('searchfor');
+            if(searchfor =='companys'){
+                $("#list_header").html('Companys List');
+                $("#span_number_of").html('companys');
+            }
+            if(searchfor =='users'){
+                $("#list_header").html('Users List');
+                $("#span_number_of").html('users');
+            }
+        }
+        
+        $("#back_btn").click(function(){
+            window.location ="/";
+        });
+
+        
+    });
+    
+    </script>
+</html>

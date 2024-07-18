@@ -152,6 +152,10 @@ app.use(path_constants.pages.pickclientcompany.url, require(path_constants.pages
 //my_company
 app.use(path_constants.pages.my_company.url, require(path_constants.pages.my_company.file));
 
+//admin-list
+app.use(path_constants.pages.list.url, require(path_constants.pages.list.file));
+
+
 const http = require('http').createServer(app);
 const socketIO = require('socket.io')(http);
 

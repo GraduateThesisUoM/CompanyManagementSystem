@@ -237,6 +237,11 @@ const pages = {
     file: routes.admin+"SearchUserAdmin.js",
     view : ""
   },
+  list :{
+    url : "/list",
+    file: routes.admin+"List.js",
+    view : ""
+  },
   user_profile :{
     url : "/user-profile",
     file: routes.admin+"UserProfileAdminRoutes.js",
