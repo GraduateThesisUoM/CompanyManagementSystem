@@ -13,7 +13,11 @@ const DocumentSchema = new mongoose.Schema({
       paymentMethod: { type: String, required: true }
     }
   },
-  registrationDate: { type: Date, default: Date.now }
+  registrationDate: { type: Date, default: Date.now },
+  lines: {
+    type: [[mongoose.Schema.Types.Mixed]], // Array of arrays of any type
+    required: true
+  }
 });
 
 // Export the invoice schema
