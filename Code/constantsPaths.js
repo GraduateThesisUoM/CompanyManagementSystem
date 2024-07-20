@@ -153,6 +153,20 @@ const pages = {
       return views_folders.general+"searchfilters.ejs"
     }}
   },
+  list :{
+    url : "/list",
+    file: routes.general+"ListRoutes.js",
+    view : function() { {
+      return views_folders.general+"list.ejs"
+    }}
+  },
+  create_doc:{
+    url : "/create-boc",
+    file: routes.general+"CreateDocRoutes.js",
+    view : function() { {
+      return views_folders.general+"create_doc.ejs"
+    }}
+  },
   //User
   my_accountant :{
     url : "/my-accountant",
@@ -235,11 +249,6 @@ const pages = {
   get_data :{
     url : "/get-data",
     file: routes.admin+"SearchUserAdmin.js",
-    view : ""
-  },
-  list :{
-    url : "/list",
-    file: routes.admin+"List.js",
     view : ""
   },
   user_profile :{

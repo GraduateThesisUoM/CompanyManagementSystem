@@ -152,9 +152,11 @@ app.use(path_constants.pages.pickclientcompany.url, require(path_constants.pages
 //my_company
 app.use(path_constants.pages.my_company.url, require(path_constants.pages.my_company.file));
 
-//admin-list
+//list
 app.use(path_constants.pages.list.url, require(path_constants.pages.list.file));
 
+//create doc
+app.use(path_constants.pages.create_doc.url, require(path_constants.pages.create_doc.file));
 
 const http = require('http').createServer(app);
 const socketIO = require('socket.io')(http);

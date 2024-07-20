@@ -77,6 +77,11 @@ body{
     height: 100vh;
     background-color: rgb(170, 170, 170);
     position: relative;
+    
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+    justify-content: space-between;
 }
 
 #sidebar_div>div{

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Create</title>
+            <!--ajax-->
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+            <!--CSS-->
+            <link rel="stylesheet" href="general_css.css">
+            <!--Header-->
+            <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1 id="list_header"></h1>
+                <form action="/create-boc" method="POST" >
+                    <input type="text" id="doc_type" name="doc_type">
+                    <input type="date" id="doc_date" name="doc_date">
+                    <button type="submit">Register</button>
+                </form>
+            </div>
+        </div>
+
+        
+        
+        
+    </body>
+    <script>
+        $(document).ready(function(){
+            var type = "";
+            if (window.location.search) {
+                type = new URLSearchParams(window.location.search).get('type');
+                if(type =='buy'){
+                    $("#list_header").html('Create Buy Document');
+                }
+                else if(type =='sale'){
+                    $("#list_header").html('Create Sales Document');
+                }
+
+            }   
+            $("#doc_type").val(type);
+
+            $("#back_btn").click(function(){
+                window.location ="/";
+            });
+        });
+    </script>
+    <%- include('../partials/footer'); %>
+</html>

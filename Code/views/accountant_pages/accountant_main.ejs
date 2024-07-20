@@ -176,10 +176,10 @@
 
 
             try {
-                requests_pending = JSON.parse(`<%- JSON.stringify(requests_pending) %>`);
-                requests_viewed = JSON.parse(`<%- JSON.stringify(requests_viewed) %>`);
-                requests_rejected = JSON.parse(`<%- JSON.stringify(requests_rejected) %>`);
-                requests_executed = JSON.parse(`<%- JSON.stringify(requests_executed) %>`);
+                requests_pending = JSON.parse(`<%- JSON.stringify(nodes_pending) %>`);
+                requests_viewed = JSON.parse(`<%- JSON.stringify(nodes_viewed) %>`);
+                requests_rejected = JSON.parse(`<%- JSON.stringify(nodes_rejected) %>`);
+                requests_executed = JSON.parse(`<%- JSON.stringify(nodes_executed) %>`);
             } catch (error) {
                 console.error("Error parsing JSON:", error);
             }

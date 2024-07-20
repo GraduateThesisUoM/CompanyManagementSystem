@@ -45,7 +45,7 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                 list_items : list_items,
                 column_titles : column_titles
             };
-            res.render('admin_pages/list.ejs', data)
+            res.render(path_constants.pages.list.view(), data)
           }
           else{
             res.redirect('/error?origin_page=my-company&error=acces denid');
