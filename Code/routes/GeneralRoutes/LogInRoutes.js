@@ -51,67 +51,15 @@ module.exports = router;
 //---------------TEST-------------------------------------------------
 async function create_users(){
 
-  const Company = mongoose.model('Company');
-
-  try {
-      await Company.collection.drop();
-      console.log("Collection Company deleted successfully.");
-  } catch (error) {
-      console.error("Error deleting collection:", error);
-  }
-  const Node = mongoose.model('Node');
-
-  try {
-      await Node.collection.drop();
-      console.log("Collection Node deleted successfully.");
-  } catch (error) {
-      console.error("Error deleting collection:", error);
-  }
-  
-  const User = mongoose.model('users');
-
-  try {
-      await User.collection.drop();
-      console.log("Collection User deleted successfully.");
-  } catch (error) {
-      console.error("Error deleting collection:", error);
-  }
-
-  const Item = mongoose.model('item');
-
-  try {
-      await Item.collection.drop();
-      console.log("Collection Item deleted successfully.");
-  } catch (error) {
-      console.error("Error deleting collection:", error);
-  }
-
-  const Report = mongoose.model('Report');
-
-  try {
-      await Report.collection.drop();
-      console.log("Collection Report deleted successfully.");
-  } catch (error) {
-      console.error("Error deleting collection:", error);
-  }
-
-  const Warehouse = mongoose.model('warehouses');
-
-  try {
-      await Warehouse.collection.drop();
-      console.log("Collection Warehouse deleted successfully.");
-  } catch (error) {
-      console.error("Error deleting collection:", error);
-  }
-
-  const Series = mongoose.model('series');
-
-  try {
-      await Series.collection.drop();
-      console.log("Collection Series deleted successfully.");
-  } catch (error) {
-      console.error("Error deleting collection:", error);
-  }
+  await generalFunctions.drop_collection("Company");
+  await generalFunctions.drop_collection("Node");
+  await generalFunctions.drop_collection("users");
+  await generalFunctions.drop_collection("item");
+  await generalFunctions.drop_collection("Report");
+  await generalFunctions.drop_collection("warehouses");
+  await generalFunctions.drop_collection("series");
+  await generalFunctions.drop_collection("persons");
+  console.log("End Deleting -----");
 
   const company1 = await generalFunctions.create_company("c1",'logo',1);
   company1.registrationDate = '2024-07-11T19:41:33.811+00:00';
@@ -120,6 +68,10 @@ async function create_users(){
   company2.license.used = 2;
   company2.license.bought = 2;
   await company2.save();
+
+  const person1 =  await generalFunctions.create_person("p1","p1ln","p1@p1.com",111,222,company2._id);
+
+
   const company3 = await generalFunctions.create_company("c3",'logo',1);
   const company4 = await generalFunctions.create_company("c4",'logo',1);
   const company5 = await generalFunctions.create_company("c5",'logo',1);

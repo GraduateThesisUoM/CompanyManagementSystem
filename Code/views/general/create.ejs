@@ -11,50 +11,73 @@
         <!--Header-->
         <%- include('../partials/header'); %>
     </head>
+    <style>
+        .selected{
+            background-color: red;
+        }
+    </style>
     <body>
-        <h1>Create</h1>
-        <div id="create_menu">
-            <button class = "create_menu_btn" id="warehouse">Αποθήκη</button>
-            <button class = "create_menu_btn" id="item">Είδος</button>
-            <button class = "create_menu_btn" id="series">Σειρά</button>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1>Create</h1>
+                <div id="create_menu">
+                    <button class = "create_menu_btn" id="warehouse">Αποθήκη</button>
+                    <button class = "create_menu_btn" id="item">Είδος</button>
+                    <button class = "create_menu_btn" id="series">Σειρά</button>
+                    <button class = "create_menu_btn" id="person">Άτομο</button>
+                </div>
+                <form action="/create" method="POST" >
+                    <input type="text" id="create_type"  name="create_type">
+                    <div id = 'warehouse_div' class="create_div">
+                        <label for="warehouse_title">Title : </label>
+                        <input type="text" id="warehouse_title" name="warehouse_title" class="required warehouse">
+                        <br>
+                        <label for="warehouse_address">Address : </label>
+                        <input type="text" id="warehouse_address" name="warehouse_address" class="required warehouse">
+                    </div>
+                    <div id = 'item_div' class="create_div">
+                        <label for="item_title">Title : </label>
+                        <input type="text" id="item_title" name="item_title" class="required item">
+                        <br>
+                        <label for="item_description">Description : </label>
+                        <br>
+                        <textarea id = "item_description" name = "item_description" class="required item"></textarea>
+                        <br>
+                        <label for="item_price_r">Price Retail : </label>
+                        <input type="number" id="item_price_r" name="item_price_r">
+                        <br>
+                        <label for="item_price_r_disc">Discount for Retail : </label>
+                        <input type="number" id="item_price_r_disc" name="item_price_r_disc">
+                        <br>
+                        <label for="item_price_w">Price Wholesale : </label>
+                        <input type="number" id="item_price_w" name="item_price_w">
+                        <br>
+                        <label for="item_price_w_disc">Discount for Wholesale : </label>
+                        <input type="number" id="item_price_w_disc" name="item_price_w_disc">
+                    </div>
+                    <div id ='series_div' class="create_div">
+                        <label for="series_title">Title : </label>
+                        <input type="text" id="series_title" name="series_title"  class="required series">
+                    </div>
+                    <div id ='person_div' class="person_div">
+                        <label for="person_firstName">First Name : </label>
+                        <input type="text" id="person_firstName" name="person_firstName"  class="required person">
+                        <label for="person_lastName">Last Name : </label>
+                        <input type="text" id="person_lastName" name="person_lastName"  class="required person">
+                        <label for="person_email">Email : </label>
+                        <input type="email" id="person_email" name="person_email"  class="required person">
+                        <label for="person_phone">Phone : </label>
+                        <input type="number" id="person_phone" name="person_phone"  class="required person">
+                        <label for="person_vat">VAT : </label>
+                        <input type="number" id="person_vat" name="person_vat"  class="person">
+
+                    </div>
+                    <button id="my_submit_btn" type="button">Καταχώρηση</button>
+                    <button id="submit_btn" style="display: none;" type="submit">submit</button>
+                </form>
+            </div>
         </div>
-        <form action="/create" method="POST" >
-            <input type="text" id="create_type"  name="create_type">
-            <div id = 'warehouse_div' class="create_div">
-                <label for="warehouse_title">Title : </label>
-                <input type="text" id="warehouse_title" name="warehouse_title" class="required warehouse">
-                <br>
-                <label for="warehouse_address">Address : </label>
-                <input type="text" id="warehouse_address" name="warehouse_address" class="required warehouse">
-            </div>
-            <div id = 'item_div' class="create_div">
-                <label for="item_title">Title : </label>
-                <input type="text" id="item_title" name="item_title" class="required item">
-                <br>
-                <label for="item_description">Description : </label>
-                <br>
-                <textarea id = "item_description" name = "item_description" class="required item"></textarea>
-                <br>
-                <label for="item_price_r">Price Retail : </label>
-                <input type="number" id="item_price_r" name="item_price_r">
-                <br>
-                <label for="item_price_r_disc">Discount for Retail : </label>
-                <input type="number" id="item_price_r_disc" name="item_price_r_disc">
-                <br>
-                <label for="item_price_w">Price Wholesale : </label>
-                <input type="number" id="item_price_w" name="item_price_w">
-                <br>
-                <label for="item_price_w_disc">Discount for Wholesale : </label>
-                <input type="number" id="item_price_w_disc" name="item_price_w_disc">
-            </div>
-            <div id ='series_div' class="create_div">
-                <label for="series_title">Title : </label>
-                <input type="text" id="series_title" name="series_title"  class="required series">
-            </div>
-            <button id="my_submit_btn" type="button">Καταχώρηση</button>
-            <button id="submit_btn" style="display: none;" type="submit">submit</button>
-        </form>
-        <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>
     <script>
@@ -62,7 +85,12 @@
         $(".create_div").hide();
         $("#my_submit_btn").hide();
         $("#back_btn").click(function(){
-            window.location ="/client-profile?id=<%= clientId %>";
+            if("<%= user.type %>" == "admin"){
+                window.location ="/client-profile?id=<%= companyId %>";
+            }
+            else{
+                window.location ="/";
+            }
         });
         $(".create_menu_btn").click(function(){
             var type = $(this).attr("id");
@@ -73,9 +101,20 @@
 
             $(".required").attr('required', false);
             $(".required."+type).attr('required', true);
+
+            $(".create_menu_btn").removeClass("selected");
+    
+            $(this).addClass("selected");
             
         });
         $("#my_submit_btn").click(my_submit);
+
+
+        var  create = '';
+        if (window.location.search) {
+            create = new URLSearchParams(window.location.search).get('create');
+            $("#"+create).click();
+        }
         
         function my_submit(){
             var type = $('#create_type').val();

@@ -11,6 +11,8 @@ const Node = require(path_constants.schemas.two.node);
 const Notification = require(path_constants.schemas.two.notification);
 const Report = require(path_constants.schemas.two.report);
 const User = require(path_constants.schemas.two.user);
+const Item = require(path_constants.schemas.two.item);
+
 
 
 
@@ -23,6 +25,10 @@ const generalFunctions = require("../../GeneralFunctions");
 router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
     try{
         if(generalFunctions.checkAccessRigts(req,res)){
+            var compnay = "";
+            if(req.user.type != 'admin'){
+                compnay = req.user.company
+            }
             var list_items = [];
             var column_titles = [];
             if(req.query.searchfor == "companys"){
@@ -39,10 +45,21 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                 }));
                 column_titles = ["First Name","Last Name","Reg Date","Status"]
             }
+            else if (req.query.searchfor == "items"){
+                list_items = await Item.find({companyID : compnay});
+
+                console.log(list_items)
+                list_items = list_items.map(item => ({
+                    data :[ item.title,item.description, formatDate(item.registrationDate), item.active, item.price_r, item.price_w, item.discount_r, item.discount_w]
+                }));
+                column_titles = ["Title","Description","Reg Date","Status","Prece Retail","Discount Retail","Prece Wholesale","Discount Wholesale"]
+
+            }
             
             var data = {
                 user: req.user,
                 list_items : list_items,
+                notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}),
                 column_titles : column_titles
             };
             res.render(path_constants.pages.list.view(), data)

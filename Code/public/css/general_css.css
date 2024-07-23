@@ -18,6 +18,8 @@ body{
     display: grid;
     gap: 20px;
     grid-template-columns: 90px auto;
+    /*grid-template-columns: 200px auto;*/
+
 }
 
 #header{
@@ -31,8 +33,6 @@ body{
     height: 10vh;
     padding: 0px 5% ;
 }
-
-
 #footer{
     margin-top: auto;
     position: relative;
@@ -45,8 +45,6 @@ body{
     z-index: 1;
     height: 10vh;
 }
-
-
 
 #footer_text{
     padding: 15px;
@@ -86,6 +84,10 @@ body{
 
 #sidebar_div>div{
     margin-top: 20px;
+    /*----*/
+    display: grid;
+    grid-template-columns: 100px 100px;
+    gap:0px;
 }
 
 #sidebar_div>div>button{
@@ -118,11 +120,41 @@ body{
     box-shadow: -10px 7px 15px -1px black;
 }
 
+#sidebar_div>div>.sub_side_menu_div{
+    /*background-color:  rgb(66, 63, 63);*/
+    background-color: red;
+    /*margin: 15px 15px 15px 10px;*/
+    margin: 15px 0px 0px 0px;
+    position: relative;
+    z-index: 2;
+    top: 40px;
+    visibility: hidden ;
+}
+#sidebar_div>div>div>button{
+    display: block;
+    width: 100%;
+}
+
 #sidebar_div>div>button>img{
     width:40px;
     margin: 10px ;
 }
 
+#sidebar_div>div>.clicked{
+    width: 90px;
+    height: 80px;
+    margin: 15px 15px 15px 20px;
+    box-shadow: -3px 3px 5px black;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    box-shadow: -10px 7px 15px -1px black;
+}
+
 #sidebar_div>div>button:hover img{
+    margin: 2px 5px 4px 5px;
+}
+
+#sidebar_div>div>.clicked img{
     margin: 2px 5px 4px 5px;
 }

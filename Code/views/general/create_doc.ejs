@@ -8,6 +8,7 @@
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
             <!--CSS-->
             <link rel="stylesheet" href="general_css.css">
+            <link rel="stylesheet" href="create_css.css">
             <!--Header-->
             <%- include('../partials/header'); %>
     </head>
@@ -16,9 +17,22 @@
             <%- include('../partials/sidebar'); %>
             <div>
                 <h1 id="list_header"></h1>
-                <form action="/create-boc" method="POST" >
+                <form action="/create-boc" method="POST" class="create_form">
                     <input type="text" id="doc_type" name="doc_type">
                     <input type="date" id="doc_date" name="doc_date">
+                    <div class="customer_div">
+                        <label>Customer</label>
+                        <input type="text">
+                        <select>
+                            <option value="0">-</option>
+                            <% list_items.forEach(function(list_item) { %>
+                                <option value="<%= list_item.id %>"><%= list_item.firstName %> <%= list_item.lastName %></option>
+                            <% }); %>
+
+                        </select>
+                        <button>Search</button>
+
+                    </div>
                     <button type="submit">Register</button>
                 </form>
             </div>
@@ -42,6 +56,8 @@
 
             }   
             $("#doc_type").val(type);
+
+            $("#doc_date").val(new Date().toISOString().split('T')[0]);
 
             $("#back_btn").click(function(){
                 window.location ="/";

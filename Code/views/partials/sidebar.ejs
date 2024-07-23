@@ -12,39 +12,88 @@
 </body>
 </html-->
 
+<!--ajax-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+// Define the handle_click function globally
+    function handle_click(event,link) {
+        if ($(event).hasClass("clicked")) {
+            location.href = link;
+        } else {
+            myrightclick($(event))        
+        }
+    }
+
+    function myrightclick(clickedElement) {
+        // Hide all sub menu divs
+        $('.sub_side_menu_div').css('visibility', 'hidden');
+        
+        // Remove 'clicked' class from all buttons
+        $('.main_side_menubtn').removeClass('clicked');
+        
+        // Add 'clicked' class to the clicked button
+        clickedElement.addClass('clicked');
+        
+        // Show the corresponding sub menu div
+        var index = $('.main_side_menubtn').index(clickedElement);
+        $('.sub_side_menu_div').eq(index).css('visibility', 'visible');
+    }
+
+    $(document).ready(function() {
+        // You can also add jQuery-based event handlers here if needed
+    });
+</script>
+
+
 <div id="sidebar_div">
     <div>
         <%if(user.type == 'admin'){%>
-            <button onclick="location.href='/list?searchfor=companys'">
+            <button class="main_side_menubtn" onclick="handle_click(this,'/list?searchfor=companys')">
                 <img src="https://img.icons8.com/ios-filled/100/FFFFFF/client-company.png" alt="client-company"/>
                 Companys
             </button>
-            <button  onclick="location.href='/list?searchfor=users'">
+            <button class="main_side_menubtn" onclick="handle_click(this,'/list?searchfor=users')">
                 <img src="https://img.icons8.com/external-basicons-solid-edtgraphics/50/FFFFFF/external-Users-users-basicons-solid-edtgraphics-4.png">
                 Users
             </button>
-            <button  onclick="location.href='/report-list-page'">
+            <button class="main_side_menubtn" onclick="handle_click(this,'/report-list-page')">
                 <img src="https://img.icons8.com/wired/64/FFFFFF/siren.png">
                 Reports
             </button>
             <% }
         else{%>  
-            <button onclick="location.href='/create-boc?type=buy'">
-                <img src="img1.png">
+            <button class="main_side_menubtn" onclick="handle_click(this,'/create-boc?type=buy')">
+                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" >
                 Buying
             </button>
-            <button onclick="location.href='/create-boc?type=sale'">
-                <img src="img2.png">
+            <div class="sub_side_menu_div">
+                <button>View</button>
+                <button onclick="location.href = '/create-doc?type=buy';">Crate</button>
+            </div>
+            <button class="main_side_menubtn" onclick="handle_click(this,'/create-boc?type=sale')">
+                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/cash-register.png">
                 Sales
             </button>
-            <button id="buy_sidebar_btn">
-                <img src="img3.png">
-                Buying
+            <div class="sub_side_menu_div">
+                <button>View</button>
+                <button onclick="location.href = '/create-doc?type=sale';">Crate</button>
+            </div>
+            <button class="main_side_menubtn" onclick="handle_click(this,'/')">
+                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/user-male-circle.png">
+                Persons
             </button>
-            <button id="sell_sidebar_btn">
-                <img src="img4.png">
-                Shalles
+            <div class="sub_side_menu_div">
+                <button>View</button>
+                <button onclick="location.href = '/create?create=person';">Crate</button>
+            </div>
+            <button class="main_side_menubtn" onclick="handle_click(this,'/')">
+                <img src="https://img.icons8.com/external-vitaliy-gorbachev-lineal-vitaly-gorbachev/60/FFFFFF/external-warehouse-food-delivery-vitaliy-gorbachev-lineal-vitaly-gorbachev.png">
+                Warehouse
             </button>
+            <div class="sub_side_menu_div">
+                <button onclick="location.href = 'list?searchfor=items';">View</button>
+                <button onclick="location.href = '/create?create=item';">Crate</button>
+            </div>
 
             <% }%> 
     </div>

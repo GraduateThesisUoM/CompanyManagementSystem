@@ -4,6 +4,8 @@ const path_constants = require('./constantsPaths');
 //Libraries
 const bcrypt = require('bcrypt');
 
+var mongoose = require('mongoose');
+
 //Models
 const Client  = require(path_constants.schemas.one.client);
 const Warehouse  = require(path_constants.schemas.one.warehouse);
@@ -13,6 +15,8 @@ const Accountant  = require(path_constants.schemas.one.accountant);
 const User = require(path_constants.schemas.one.user);
 const Series = require(path_constants.schemas.one.series);
 const Report = require(path_constants.schemas.one.report);
+const Person = require(path_constants.schemas.one.person);
+
 
 //function checkAccessRigts(req, data ,res){
 function checkAccessRigts(req){
@@ -68,7 +72,7 @@ async function create_user(text,company,cOwner){
   
     console.log("User " + text + " Created");  
     return user;
-  }
+}
 
 async function create_company(name,logo,signupcode){
     const company = new Company({
@@ -195,5 +199,33 @@ async function createReport(userid,reportedid,reportreason,reporttext){
     }
 }
 
+async function create_person(f_name,l_name,email,vat,phone,company){
+    const person = new Person({
+      type: 'user',
+      firstName: f_name,
+      lastName: l_name,
+      email: email,
+      afm: vat,
+      phone: phone,
+      company: company
 
-module.exports = { checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,createSeries,createReport};
+    });
+  
+    await person.save();
+  
+    console.log("Person " + f_name + " " + l_name + " Created");  
+    return person;
+}
+
+async function drop_collection(collection_name){
+    try {
+        const Collection = mongoose.model(collection_name);
+          await Collection.collection.drop();
+          console.log("Collection "+collection_name+" deleted successfully.");
+      } catch (error) {
+          console.error("Error deleting collection "+collection_name+":", error);
+      }
+}
+module.exports = {
+    checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,
+    createSeries,createReport,create_person,drop_collection};

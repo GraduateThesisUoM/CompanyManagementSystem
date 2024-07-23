@@ -18,6 +18,7 @@ const schemas = {
     item : "././Schemas/Item",
     warehouse : "././Schemas/Warehouse",
     node : "././Schemas/Node",
+    person : "././Schemas/Person",
     review : "././Schemas/Review"
   },
   two:{
@@ -31,6 +32,7 @@ const schemas = {
     item : "../../Schemas/Item",
     warehouse : "../../Schemas/Warehouse",
     node : "../../Schemas/Node",
+    person : "../../Schemas/Person",
     review : "../../Schemas/Review"
   }
 };
@@ -161,7 +163,7 @@ const pages = {
     }}
   },
   create_doc:{
-    url : "/create-boc",
+    url : "/create-doc",
     file: routes.general+"CreateDocRoutes.js",
     view : function() { {
       return views_folders.general+"create_doc.ejs"
