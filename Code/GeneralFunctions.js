@@ -199,9 +199,9 @@ async function createReport(userid,reportedid,reportreason,reporttext){
     }
 }
 
-async function create_person(f_name,l_name,email,vat,phone,company){
+async function create_person(type,f_name,l_name,email,vat,phone,company){
     const person = new Person({
-      type: 'user',
+      type: type,
       firstName: f_name,
       lastName: l_name,
       email: email,

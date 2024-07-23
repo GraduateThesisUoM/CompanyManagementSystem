@@ -21,7 +21,14 @@ const generalFunctions = require("../../GeneralFunctions");
 
 router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
     try{
-        list_items = await Person.find({company: req.user.company});
+        var person = "";
+        if(req.query.type=="buy"){
+            person = "supplier"
+        }
+        else{
+            person = "customer"
+        }
+        list_items = await Person.find({company: req.user.company,type:person});
         console.log(list_items);
         list_items = list_items.map(item => ({
             id:item._id,

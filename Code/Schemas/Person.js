@@ -9,6 +9,11 @@ const PersonSchema = new mongoose.Schema({
         required: false,
         default: null
       },
+      type:{
+        type: String,
+        enum: ['supplier', 'customer'],
+        required: true
+      },
       registrationDate: { type: Date, default: Date.now , required: true},
       firstName: { type: String, required: true },
       lastName: { type: String, required: true },
@@ -20,7 +25,7 @@ const PersonSchema = new mongoose.Schema({
         enum: ['active', 'baned', 'deleted'],
         required: true,
         default: 'active'
-      },
+      }
     });
 
 module.exports = mongoose.model("persons", PersonSchema)
