@@ -22,17 +22,51 @@
                     <input type="date" id="doc_date" name="doc_date">
                     <div class="customer_div">
                         <label>Customer</label>
-                        <input type="text">
                         <select>
                             <option value="0">-</option>
-                            <% list_items.forEach(function(list_item) { %>
-                                <option value="<%= list_item.id %>"><%= list_item.firstName %> <%= list_item.lastName %></option>
+                            <% persons.forEach(function(person) { %>
+                                <option value="<%= person.id %>"><%= person.firstName %> <%= person.lastName %></option>
                             <% }); %>
-
                         </select>
-                        <button>Search</button>
-
                     </div>
+
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>A/A</th>
+                                    <th>Title</th>
+                                    <th>Quotity</th>
+                                    <th>Tax</th>
+                                    <th>Discount</th>
+                                    <th>Price</th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>
+                                            <select>
+                                                <% items.forEach(function(item,index) { %>
+                                                    <option value="<%=item._id%>"><%=item.title%></option>
+                                                <% })%>
+                                            </select>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                              </tbody>
+                        </table>
+
                     <button type="submit">Register</button>
                 </form>
             </div>
