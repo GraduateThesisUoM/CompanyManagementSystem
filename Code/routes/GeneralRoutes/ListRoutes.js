@@ -55,6 +55,7 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                 column_titles = ["Title","Description","Reg Date","Status","Prece Retail","Discount Retail","Prece Wholesale","Discount Wholesale"]
 
             }
+        
             
             var data = {
                 user: req.user,

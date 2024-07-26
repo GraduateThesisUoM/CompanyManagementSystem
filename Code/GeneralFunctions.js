@@ -16,6 +16,8 @@ const User = require(path_constants.schemas.one.user);
 const Series = require(path_constants.schemas.one.series);
 const Report = require(path_constants.schemas.one.report);
 const Person = require(path_constants.schemas.one.person);
+const Document = require(path_constants.schemas.one.document);
+
 
 
 //function checkAccessRigts(req, data ,res){
@@ -217,6 +219,28 @@ async function create_person(type,f_name,l_name,email,vat,phone,company){
     return person;
 }
 
+async function create_doc(data){
+    try {
+        // Create a new document instance
+        const newDocument = new Document({
+            company: data.company,
+            sender: data.sender,
+            receiver: data.receiver,
+            type: data.type,
+            generalDiscount: data.generalDiscount,
+            invoiceData: data.invoiceData,
+            registrationDate: data.registrationDate
+        });
+
+        // Save the document to the database
+        await newDocument.save();
+        console.log('Document saved successfully');
+        return newDocument;
+    } catch (error) {
+        console.error('Error saving document:', error);
+    }
+}
+
 async function drop_collection(collection_name){
     try {
         const Collection = mongoose.model(collection_name);
@@ -228,4 +252,4 @@ async function drop_collection(collection_name){
 }
 module.exports = {
     checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,
-    createSeries,createReport,create_person,drop_collection};
+    createSeries,createReport,create_person,drop_collection,create_doc};

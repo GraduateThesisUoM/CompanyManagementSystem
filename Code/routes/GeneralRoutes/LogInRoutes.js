@@ -59,6 +59,8 @@ async function create_users(){
   await generalFunctions.drop_collection("warehouses");
   await generalFunctions.drop_collection("series");
   await generalFunctions.drop_collection("persons");
+  await generalFunctions.drop_collection("document");
+
   console.log("End Deleting -----");
 
   const company1 = await generalFunctions.create_company("c1",'logo',1);
@@ -72,7 +74,30 @@ async function create_users(){
   const person1 =  await generalFunctions.create_person("customer","p1","p1ln","p1@p1.com",111,222,company2._id);
   const person2 =  await generalFunctions.create_person("supplier","p2","p2ln","p2@p2.com",1112,2223,company2._id);
 
+  const user2 = await generalFunctions.create_user("c1",company2,1);
 
+
+  const i1 = await generalFunctions.createItem(company2._id, 'i1', 'i1', 3, 0.5, 1,0.6);
+  const i2 = await generalFunctions.createItem(company2._id, 'i2', 'i2', 4, 0.5, 1,0.6);
+  i2.active = 0;
+  await i2.save();
+  const i3 = await generalFunctions.createItem(company2._id, 'i3', 'i3', 5, 0.5, 4,0.1);
+  await i3.save();
+
+  var data = {
+    company: company2._id,
+    sender: user2._id,
+    receiver: person1._id,
+    type: "sale",
+    generalDiscount: 50,
+    invoiceData: [
+        { item: i1._id, quantity: 2 },
+        { item: i3._id, quantity: 1 }
+    ]
+  };
+
+  const doc1 = await generalFunctions.create_doc(data);
+  console.log(doc1);
 
   const company3 = await generalFunctions.create_company("c3",'logo',1);
   const company4 = await generalFunctions.create_company("c4",'logo',1);
@@ -81,7 +106,6 @@ async function create_users(){
   await company5.save();
 
   const user1 = await generalFunctions.create_user("sa",company1,1);
-  const user2 = await generalFunctions.create_user("c1",company2,1);
   const user3 = await generalFunctions.create_user("c2",company2,0);
   const user4 = await generalFunctions.create_user("c3",company3,1);
   const user5 = await generalFunctions.create_user("c4",company4,1);
@@ -106,12 +130,6 @@ async function create_users(){
   // C5 - A1
   await clientAccountantFunctions.send_hiring_req_to_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
   await clientAccountantFunctions.fire_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
-
-  const i1 = await generalFunctions.createItem(company2._id, 'i1', 'i1', 3, 0.5, 1,0.6);
-  const i2 = await generalFunctions.createItem(company2._id, 'i2', 'i2', 4, 0.5, 1,0.6);
-  i2.active = 0;
-  await i2.save();
-  const i3 = await generalFunctions.createItem(company2._id, 'i3', 'i3', 5, 0.5, 4,0.1);
 
 
   const w1 = await generalFunctions.createWarehouse(company2._id, 'w1', 'w1_l');

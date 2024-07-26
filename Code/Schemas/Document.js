@@ -2,23 +2,25 @@ const mongoose = require('mongoose');
 
 // Define the invoice schema
 const DocumentSchema = new mongoose.Schema({
-  companyID: { type: Number, required: true },
-  senderID: { type: Number, required: true },
-  receiverID: { type: Number, required: true },
-  invoiceData: {
-    type: Object,
-    required: true,
-    properties: {
-      type: { type: String, required: true },
-      paymentMethod: { type: String, required: true }
-    }
-  },
-  registrationDate: { type: Date, default: Date.now },
-  lines: {
-    type: [[mongoose.Schema.Types.Mixed]], // Array of arrays of any type
+  company: { type: String, required: true },
+  sender: { type: String, required: true },
+  receiver: { type: String, required: true },
+  type: {
+    type: String,
+    enum: ['buy', 'sale'],
     required: true
-  }
+  },
+  generalDiscount: { type: Number, required: true },
+
+  invoiceData: {
+    type: [{
+      item: { type: String, required: true },
+      quantity: { type: Number, required: true }
+    }],
+    required: true
+  },
+  registrationDate: { type: Date, default: Date.now }
 });
 
 // Export the invoice schema
-module.exports = DocumentSchema;
+module.exports = mongoose.model("document", DocumentSchema)

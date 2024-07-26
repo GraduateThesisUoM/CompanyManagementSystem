@@ -19,7 +19,8 @@ const schemas = {
     warehouse : "././Schemas/Warehouse",
     node : "././Schemas/Node",
     person : "././Schemas/Person",
-    review : "././Schemas/Review"
+    review : "././Schemas/Review",
+    document : "././Schemas/Document"
   },
   two:{
     user : "../../Schemas/User",
@@ -33,7 +34,8 @@ const schemas = {
     warehouse : "../../Schemas/Warehouse",
     node : "../../Schemas/Node",
     person : "../../Schemas/Person",
-    review : "../../Schemas/Review"
+    review : "../../Schemas/Review",
+    document : "../../Schemas/Document"
   }
 };
 
