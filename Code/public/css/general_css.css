@@ -10,21 +10,29 @@ body{
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    padding: 0px;
+    margin: 0px;
 }
 
+.has_sidebar{
+    display: grid;
+    gap: 20px;
+    grid-template-columns: 90px auto;
+    /*grid-template-columns: 200px auto;*/
+
+}
 
 #header{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     background-color: greenyellow;
-    width: 100%;
+    width: 90%;
     top: 0;
     left: 0;
-    
+    height: 10vh;
+    padding: 0px 5% ;
 }
-
-
 #footer{
     margin-top: auto;
     position: relative;
@@ -34,6 +42,8 @@ body{
     background-color: green;
     color: white;
     text-align: center;
+    z-index: 1;
+    height: 10vh;
 }
 
 #footer_text{
@@ -59,4 +69,92 @@ body{
 
 .checkbox_conatainer{
     display: flex;
+}
+
+#sidebar_div{
+    height: 100vh;
+    background-color: rgb(170, 170, 170);
+    position: relative;
+    
+    display: flex;
+    flex-direction: column;
+    height: 100vh; /* Full viewport height */
+    justify-content: space-between;
+}
+
+#sidebar_div>div{
+    margin-top: 20px;
+    /*----*/
+    display: grid;
+    grid-template-columns: 100px 100px;
+    gap:0px;
+}
+
+#sidebar_div>div>button{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 70px;
+    height: 70px;
+    border: none;
+    background-color:  rgb(66, 63, 63);
+    border-radius: 15px;
+    margin: 15px 15px 15px 10px;
+    padding: 5px 10px;
+    transition: 0.3s;
+    box-shadow: -3px 3px 7px black;
+    color: transparent;
+    font-size: 0;
+    text-align: center;
+}
+
+#sidebar_div>div>button:hover{
+    width: 90px;
+    height: 80px;
+    margin: 15px 15px 15px 20px;
+    box-shadow: -3px 3px 5px black;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    box-shadow: -10px 7px 15px -1px black;
+}
+
+#sidebar_div>div>.sub_side_menu_div{
+    /*background-color:  rgb(66, 63, 63);*/
+    background-color: red;
+    /*margin: 15px 15px 15px 10px;*/
+    margin: 15px 0px 0px 0px;
+    position: relative;
+    z-index: 2;
+    top: 40px;
+    visibility: hidden ;
+}
+#sidebar_div>div>div>button{
+    display: block;
+    width: 100%;
+}
+
+#sidebar_div>div>button>img{
+    width:40px;
+    margin: 10px ;
+}
+
+#sidebar_div>div>.clicked{
+    width: 90px;
+    height: 80px;
+    margin: 15px 15px 15px 20px;
+    box-shadow: -3px 3px 5px black;
+    font-size: 10px;
+    font-weight: bold;
+    color: white;
+    box-shadow: -10px 7px 15px -1px black;
+}
+
+#sidebar_div>div>button:hover img{
+    margin: 2px 5px 4px 5px;
+}
+
+#sidebar_div>div>.clicked img{
+    margin: 2px 5px 4px 5px;
 }

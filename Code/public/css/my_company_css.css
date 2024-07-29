@@ -1,0 +1,17 @@
+#company_logo{
+    height: auto;
+    width: 150px;
+    object-fit: cover;
+}
+
+.div_display_license{
+    display:grid;
+    gap: 10px;
+}
+.div_display_license.data_section{
+    grid-template-columns: 150px 50px;
+}
+.div_display_license.btn_section{
+    grid-template-columns: 100px 100px;
+}
+

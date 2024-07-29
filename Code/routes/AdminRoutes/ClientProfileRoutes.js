@@ -16,21 +16,27 @@ const Authentication = require("../../AuthenticationFunctions");
 
 /*--------   CLIENT PROFILE */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
-    const accountants_client = await Company.findOne({_id:req.query.id});
-    const clients_requests = await Request.find({receiver_id:req.user._id, sender_id: accountants_client._id, status: 'pending'});
+  try{
+      const accountants_client = await Company.findOne({_id:req.query.id});
+      const clients_requests = await Request.find({receiver_id:req.user._id, sender_id: accountants_client._id, status: 'pending'});
 
-    var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: accountants_client._id, type:"accountant"});
-    if (accountant_review == null){
-      accountant_review = new Review({
-        reviewer_id: req.user._id,
-        reviewed_id: accountants_client._id,
-        rating: -1,
-        registrationDate: ''
-      });
-    }
-  
-    res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review, clients_requests : clients_requests, 
-      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+      var accountant_review = await Review.findOne({reviewer_id: req.user._id, reviewed_id: accountants_client._id, type:"accountant"});
+      if (accountant_review == null){
+        accountant_review = new Review({
+          reviewer_id: req.user._id,
+          reviewed_id: accountants_client._id,
+          rating: -1,
+          registrationDate: ''
+        });
+      }
+      req.session.selected_client = accountants_client;
+    
+      res.render('accountant_pages/client_profile.ejs', {selected_client : accountants_client ,user : req.user , review : accountant_review, clients_requests : clients_requests, 
+        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+  }
+  catch(e){
+    res.redirect('/error?origin_page=/&error=err');
+  }
 });
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {

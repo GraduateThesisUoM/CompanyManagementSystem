@@ -21,6 +21,10 @@
         <a href="/transactor-list?type=supplier"> Suppliers</a>
         <a href="/transactor-list?type=customer"> Customers</a>
         <button id="test">HIIIIII</button>
+        <div id="pages-div" name="pages-div">
+            <a href="clients">client list</a>
+            <a href="/request-history">request history</a>
+        </div>
         <div>
             <h2>Pending Requests</h2>
             <div id="pending_requests_div" >
@@ -65,10 +69,6 @@
                 </table>
                 <button id="more_rejected_requests_btn">More ...</button>
             </div>
-        </div>
-        <div id="pages-div" name="pages-div">
-            <a href="clients">client list</a>
-            <a href="/request-history">request history</a>
         </div>
     </body>
     <%- include('../partials/footer'); %>
@@ -146,10 +146,10 @@
 
 
             try {
-                requests_pending = JSON.parse(`<%- JSON.stringify(requests_pending) %>`);
-                requests_viewed = JSON.parse(`<%- JSON.stringify(requests_viewed) %>`);
-                requests_rejected = JSON.parse(`<%- JSON.stringify(requests_rejected) %>`);
-                requests_executed = JSON.parse(`<%- JSON.stringify(requests_executed) %>`);
+                requests_pending = JSON.parse(`<%- JSON.stringify(nodes_pending) %>`);
+                requests_viewed = JSON.parse(`<%- JSON.stringify(nodes_viewed) %>`);
+                requests_rejected = JSON.parse(`<%- JSON.stringify(nodes_rejected) %>`);
+                requests_executed = JSON.parse(`<%- JSON.stringify(nodes_executed) %>`);
             } catch (error) {
                 console.error("Error parsing JSON:", error);
             }
@@ -170,9 +170,11 @@
 
             requests_pending.forEach(request => {
                 const row = $("<tr>").css("background-color", "lime").attr("id", "row_pendign_"+pending_count);
-
                 const cell_type = $("<td>").text(request.type);
-                const cell_title = $("<td>").text(request.title);
+                var cell_title = $("<td>").text(request.title);
+                if(request.type == "relationship"){
+                    cell_title = $("<td>").text(request.type2);
+                }
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
                 const cell_due_date = $("<td>").text(request.due_date);
@@ -196,8 +198,10 @@
                 const row = $("<tr>").attr("id", "row_pendign_"+pending_count);
 
                 const cell_type = $("<td>").text(request.type);
-                const cell_title = $("<td>").text(request.title);
-                const date = new Date(request.registrationDate);
+                var cell_title = $("<td>").text(request.title);
+                if(request.type == "relationship"){
+                    cell_title = $("<td>").text(request.type2);
+                }                const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
                 const cell_due_date = $("<td>").text(request.due_date);
                 const cell_actions = $("<td>");
@@ -220,7 +224,10 @@
                 const row = $("<tr>").attr("id", "row_executed_"+executed_count);
 
                 const cell_type = $("<td>").text(request.type);
-                const cell_title = $("<td>").text(request.title);
+                var cell_title = $("<td>").text(request.title);
+                if(request.type == "relationship"){
+                    cell_title = $("<td>").text(request.type2);
+                }
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
                 const cell_due_date = $("<td>").text(request.due_date);
@@ -244,7 +251,10 @@
                 const row = $("<tr>").attr("id", "row_rejected_" + rejected_count);
 
                 const cell_type = $("<td>").text(request.type);
-                const cell_title = $("<td>").text(request.title);
+                var cell_title = $("<td>").text(request.title);
+                if(request.type == "relationship"){
+                    cell_title = $("<td>").text(request.type2);
+                }
                 const date = new Date(request.registrationDate);
                 const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
                 const cell_due_date = $("<td>").text(request.due_date);

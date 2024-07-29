@@ -9,6 +9,12 @@ const Notification = require("../../Schemas/Notification");
 //Authentication Function
 const Authentication = require("../../AuthenticationFunctions");
 
+//Get General Functions
+const generalFunctions = require("../../GeneralFunctions");
+
+const path_constants = require('../../constantsPaths');
+
+
 /*--------   REPORT USER */
 router.get('/user', Authentication.checkAuthenticated, async (req, res) => {
     try{
@@ -27,14 +33,15 @@ router.post('/user', Authentication.checkAuthenticated, async (req,res)=> {
       if(req.body.report_user_radio === "Other"){
         report_reason = req.body.report_title;
       }
-  
-      const newReport = new Report({ //report constructor
+      const newReport = generalFunctions.createReport(req.user._id,req.query.id,report_reason,req.body.report_textarea);
+
+      /*const newReport = new Report({ //report constructor
         reporter_id: req.user._id, //reporter id
         reported_id: req.query.id, //reported id
         reason: report_reason, //reason for report (taken from a radio in report page or inserted by the user)
         status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
         text: req.body.report_textarea //report text-details
-      });
+      });*/
   
       await newReport.save();
       res.redirect("back");
@@ -60,13 +67,15 @@ router.get('/general', Authentication.checkAuthenticated, async (req, res) => {
 router.post('/general', Authentication.checkAuthenticated, async (req,res)=> {
   
     try{
-      const newReport = new Report({ //report constructor
+      const newReport = generalFunctions.createReport(req.user._id,req.user._id,req.body.report_title_area,req.body.report_textarea);
+
+      /*const newReport = new Report({ //report constructor
         reporter_id: req.user._id, //reporter id
         reported_id: req.user.id, //same as above
         reason: req.body.report_title_area, //reason for report
         status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
         text: req.body.report_textarea //report text-details
-      });
+      });*/
   
       await newReport.save();
       res.redirect("back");

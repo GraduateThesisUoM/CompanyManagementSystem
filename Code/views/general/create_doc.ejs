@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create</title>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css">
+    <link rel="stylesheet" href="create_css.css">
+    <!--Header-->
+    <%- include('../partials/header'); %>
+</head>
+<style>
+    table {
+        border-collapse: collapse;
+        border: 2px solid rgb(140, 140, 140);
+        width: 95%;
+    }
+    th, td {
+        border-collapse: collapse;
+        border: 2px solid rgb(140, 140, 140);
+        text-align: center;
+    }
+</style>
+<body>
+    <div class="has_sidebar">
+        <%- include('../partials/sidebar'); %>
+        <div>
+            <h1 id="list_header"></h1>
+            <form action="/create-boc" method="POST" class="create_form">
+                <input type="text" id="doc_type" name="doc_type">
+                <input type="date" id="doc_date" name="doc_date">
+                <div class="customer_div">
+                    <label id="from_label"></label>
+                    <select>
+                        <option value="0">-</option>
+                        <% persons.forEach(function(person) { %>
+                            <option value="<%= person.id %>"><%= person.firstName %> <%= person.lastName %></option>
+                        <% }); %>
+                    </select>
+                </div>
+                <label for="wholesale_retail">Type : </label>
+                <select id="wholesale_retail">
+                    <option value="0">wholesale</option>
+                    <option value="1">Retale</option>
+                </select>
+                <div >Discount : <input id="general_discount" type="number" value=0> %</div>
+                <div> Discount Amount : <span id="total_discount_amount">0</span> €</div>
+                <div> Total Cost : <span id="total_cost">0.00</span> €</div>
+                <input id="num_of_rows" name="num_of_rows">
+                <table id="doc_table">
+                    <thead>
+                        <tr>
+                            <th>A/A</th>
+                            <th>Title</th>
+                            <th>Quantity</th>
+                            <th>Tax</th>
+                            <th>Discount</th>
+                            <th>Price of Unit</th>
+                            <th>Total Price</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+
+                <button type="submit" id="submit_btn">Register</button>
+            </form>
+        </div>
+    </div>
+
+</body>
+<script>
+    // Render items array into JavaScript
+    const items = JSON.parse(`<%- JSON.stringify(items) %>`);
+
+
+    $(document).ready(function(){
+        var type = "";
+
+        if (window.location.search) {
+            type = new URLSearchParams(window.location.search).get('type');
+            if(type =='buy'){
+                $("#list_header").html('Create Buy Document');
+                $('#wholesale_retail').prop('disabled', true);
+                $("#from_label").html('Buying from &nbsp&nbsp');
+                
+            }
+            else if(type =='sale'){
+                $("#list_header").html('Create Sales Document');
+                $("#from_label").html('Customer&nbsp&nbsp');
+
+            }
+        }   
+        $("#doc_type").val(type);
+        $("#doc_date").val(new Date().toISOString().split('T')[0]);
+
+        $("#back_btn").click(function(){
+            window.location ="/";
+        });
+
+        addNewRow();
+
+        function populateSelect(selectElement) {
+            selectElement.append('<option value="-"></option>');
+            items.forEach(function(item) {
+                selectElement.append('<option value="' + item._id + '">' + item.title + '</option>');
+            });
+        }
+
+        function addNewRow() {
+            var rowCount = $('#doc_table tbody tr').length;
+            $('#num_of_rows').val(rowCount);
+            var newRow = `<tr id='row${rowCount}'>
+                                <td>${rowCount + 1}</td>
+                                <td>
+                                    <select name="doc_line_item_${rowCount}" class="doc_line_select"></select>
+                                </td>
+                                <td><input id='quontity_${rowCount}' class='quontity_of_line' type='number' value=1></td>
+                                <td></td>
+                                <td id='discount_${rowCount}'></td>
+                                <td id='price_of_unit_${rowCount}'></td>
+                                <td id='total_price_of_line_${rowCount}' class='total_price_of_line'></td>
+                                <td><button type="button" class="remove_row" disabled>Remove</button></td>
+                            </tr>`;
+            $('#doc_table tbody').append(newRow);
+            populateSelect($(`#doc_table tbody tr:last .doc_line_select`));
+            $('#quontity_'+rowCount).css('display', 'none');
+
+            if(rowCount == 0){
+                $("#submit_btn").prop('disabled', true);
+            }
+            else{
+                $("#submit_btn").prop('disabled', false);
+            }
+        }
+
+        $(document).on('change', '.doc_line_select', function(){
+            var index = $(this).closest('tr').index();
+            if($('.doc_line_select').eq(index).val() != "-"){
+                $('#wholesale_retail').prop('disabled', true);
+
+                $('.remove_row').eq(index).prop('disabled', false);
+
+                $('#quontity_'+index).css('display', 'inline-block');
+                $('#price_of_unit_'+index).html(get_price(get_item_index_from_id(index)));
+                $('#discount_'+index).html(get_discount(get_item_index_from_id(index)));
+
+
+                if($(this).closest('tr').is(':last-child')){
+                    addNewRow();
+                }
+            }
+            else{
+                removeRow(index)
+            }
+
+            change_quantity(index);
+        });
+
+        $(document).on('focusin', '.quontity_of_line', function() {
+            // Store the current value on focus
+            $(this).data('oldValue', $(this).val());
+        });
+
+        $(document).on('input', '.quontity_of_line', function(){
+            var newValue = $(this).val();
+            var oldValue = $(this).data('oldValue');
+            var index = $(this).closest('tr').index();
+
+            if (newValue <= 0) {
+                alert("Quantity must be greater than 0");
+                // Revert to old value
+                $(this).val(oldValue);
+            } else {
+                change_quantity(index);
+                // Update the stored old value
+                $(this).data('oldValue', newValue);
+            }
+        });
+
+        $(document).on('focusin', '#general_discount', function() {
+            // Store the current value on focus
+            $(this).data('oldValue', $(this).val());
+        
+        });
+
+        $(document).on('change', '#general_discount', function(){
+            var message = "You can not insert discount < 0"
+            if($(this).val() < 0 || $(this).val() > 100){
+                if($(this).val() > 100){
+                    message = "You can not insert discount > 100"
+                }
+                alert(message);
+                $(this).val($(this).data('oldValue'))
+            }
+        });
+
+        $(document).on('click', '.remove_row', function(){
+            removeRow( $(this).closest('tr').index())
+        });
+
+        function get_item_index_from_id(index){
+            for(let i=0;i<items.length;i++){
+                if(items[i]._id == $('.doc_line_select').eq(index).val()){
+                    return i;
+                }
+            };
+        }
+
+        function get_price(index){
+            if($('#wholesale_retail').val()==="0"){
+                return items[index].price_w.toFixed(2);
+            }
+            else{
+                return items[index].price_r.toFixed(2);
+            }
+        }
+
+        function get_discount(index){
+            if($('#wholesale_retail').val()==="0"){
+                return items[index].discount_w;
+            }
+            else{
+                return items[index].discount_r;
+            }
+        }
+
+        function change_quantity(index){
+            var total = 0;
+            if($('#quontity_'+index).val() > 0){
+                total = $('#quontity_'+index).val()*$('#price_of_unit_'+index).html();
+                total = total - (total*$('#discount_'+index).html())
+            }
+            
+            $('#total_price_of_line_'+index).html(total.toFixed(2));
+
+            $('#total_cost').html(caluculate_total_cost());
+        }
+
+        function caluculate_total_cost() {
+            var total = 0;
+            $('.total_price_of_line').each(function() {
+                var linePrice = parseFloat($(this).text()) || 0;
+                total += linePrice;
+            });
+            // Display the total cost somewhere in your HTML
+            return total.toFixed(2);
+        }
+
+        function removeRow(index){
+            $('#row' + index).remove();
+
+            // Update row indices
+            $('#doc_table tbody tr').each(function(i) {
+                $(this).attr('id', 'row' + i);
+                $(this).find('td:first').text(i + 1);
+                $(this).find('.remove_row').attr('onclick', 'removeRow(' + i + ')');
+                $(this).find('.quontity_of_line').attr('id', 'quontity_' + i);
+                $(this).find('#discount_' + i).attr('id', 'discount_' + i);
+                $(this).find('#price_of_unit_' + i).attr('id', 'price_of_unit_' + i);
+                $(this).find('#total_price_of_line_' + i).attr('id', 'total_price_of_line_' + i);
+            });
+
+            $('#total_cost').html(caluculate_total_cost());
+            $('#num_of_rows').val($('#num_of_rows').val()-1);
+            if($('#num_of_rows').val() == 0){
+                $("#submit_btn").prop('disabled', true);
+            }
+            else{
+                $("#submit_btn").prop('disabled', false);
+            }
+        }
+    });
+</script>
+<%- include('../partials/footer'); %>
+</html>

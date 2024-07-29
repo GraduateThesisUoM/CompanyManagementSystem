@@ -1,17 +1,47 @@
+const Item = require("./Schemas/Item");
+const Warehouse = require("./Schemas/Warehouse");
+
 const folders ={
   css: "./public/css",
   img: "./public/imgs"
 };
 
 const schemas = {
-  user : "../../Schemas/User",
-  notification : "../../Schemas/Notification",
-  company : "../../Schemas/Company",
-  client : "../../Schemas/Client"
+  one :{
+    user : "././Schemas/User",
+    notification : "././Schemas/Notification",
+    company : "././Schemas/Company",
+    client : "././Schemas/Client",
+    report : "././Schemas/Report",
+    series : "././Schemas/Series",
+    accountant : "././Schemas/Accountant",
+    item : "././Schemas/Item",
+    warehouse : "././Schemas/Warehouse",
+    node : "././Schemas/Node",
+    person : "././Schemas/Person",
+    review : "././Schemas/Review",
+    document : "././Schemas/Document"
+  },
+  two:{
+    user : "../../Schemas/User",
+    notification : "../../Schemas/Notification",
+    company : "../../Schemas/Company",
+    client : "../../Schemas/Client",
+    report : "../../Schemas/Report",
+    series : "../../Schemas/Series",
+    accountant : "../../Schemas/Accountant",
+    item : "../../Schemas/Item",
+    warehouse : "../../Schemas/Warehouse",
+    node : "../../Schemas/Node",
+    person : "../../Schemas/Person",
+    review : "../../Schemas/Review",
+    document : "../../Schemas/Document"
+  }
 };
 
 const url_param = {
-  param_1 : 'access_denied'
+  param_1 : 'access_denied',
+  param_2 : 'need_to_pick_client'
 };
 
 const routes_folder = "./routes"
@@ -28,7 +58,8 @@ const views_folders= {
   accountant : "accountant_pages/",
   user : "user_pages/",
   admin : "admin_pages/",
-  general : views_folder + "/"
+  general : "general/",
+  all : views_folder + "/"
 };
 
 const pages = {
@@ -57,7 +88,7 @@ const pages = {
     url : "/log-in",
     file: routes.general+"LogInRoutes.js",
     view : function(type) { {
-      return views_folders.general+"log_in.ejs"
+      return views_folders.all+"log_in.ejs"
     }}
   },
   sign_up :{
@@ -105,11 +136,55 @@ const pages = {
     file: routes.general+"LogOutRoutes.js",
     view : ""
   },
+  create :{
+    url : "/create",
+    file: routes.general+"CreateRoutes.js",
+    view : function() { {
+      return views_folders.general+"create.ejs"
+    }}
+  },
+  search:{
+    url : "/search",
+    file: routes.general+"SearchRoutes.js",
+    view : function() { {
+      return views_folders.general+"search.ejs"
+    }}
+  },
+  filters:{
+    url : "/search-filters",
+    file: routes.general+"SearchFiltersRoutes.js",
+    view : function() { {
+      return views_folders.general+"searchfilters.ejs"
+    }}
+  },
+  list :{
+    url : "/list",
+    file: routes.general+"ListRoutes.js",
+    view : function() { {
+      return views_folders.general+"list.ejs"
+    }}
+  },
+  create_doc:{
+    url : "/create-doc",
+    file: routes.general+"CreateDocRoutes.js",
+    view : function() { {
+      return views_folders.general+"create_doc.ejs"
+    }}
+  },
   //User
   my_accountant :{
     url : "/my-accountant",
     file: routes.user+"MyAccountantRoutes.js",
-    view : ""
+    view : function() { {
+      return views_folders.user+"my_accountant.ejs"
+    }}
+  },
+  my_company :{
+    url : "/my-company",
+    file: routes.user+"MyCompanyRoutes.js",
+    view : function() { {
+      return views_folders.user+"my_company.ejs"
+    }}
   },
   my_accountant_rate :{
     url : "/my-accountant-rate",

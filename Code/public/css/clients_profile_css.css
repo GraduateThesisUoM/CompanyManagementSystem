@@ -26,8 +26,12 @@
 .badge{
   width: fit-content;
   background-color: gray;
+  padding: 5px;
 }
 
 .badge > h3{
   text-align: center;
+  background-color: white;
+  margin: 0px;
+  padding: 0px;
 }

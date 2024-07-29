@@ -93,6 +93,9 @@ app.use(path_constants.pages.preview_accountant.url, require(path_constants.page
 //clients
 app.use(path_constants.pages.clients.url, require(path_constants.pages.clients.file));
 
+//create
+app.use(path_constants.pages.create.url, require(path_constants.pages.create.file));
+
 //request_history
 app.use(path_constants.pages.request_history.url, require(path_constants.pages.request_history.file));
 
@@ -135,13 +138,26 @@ app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.s
 //self_accountant_register
 app.use(path_constants.pages.self_accountant_register.url, require(path_constants.pages.self_accountant_register.file));
 
-const CreateRoutes = require("./routes/CreateRoutes.js");
-const SocketInit = require('./SocketIO.js');
-app.use("/create", CreateRoutes);
+//search
+app.use(path_constants.pages.search.url, require(path_constants.pages.search.file));
+
+//filters
+app.use(path_constants.pages.filters.url, require(path_constants.pages.filters.file));
+
+//change_ban_status
 app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));
 
 //pickclientcompany
 app.use(path_constants.pages.pickclientcompany.url, require(path_constants.pages.pickclientcompany.file));
+
+//my_company
+app.use(path_constants.pages.my_company.url, require(path_constants.pages.my_company.file));
+
+//list
+app.use(path_constants.pages.list.url, require(path_constants.pages.list.file));
+
+//create doc
+app.use(path_constants.pages.create_doc.url, require(path_constants.pages.create_doc.file));
 
 const http = require('http').createServer(app);
 socketIO(http);

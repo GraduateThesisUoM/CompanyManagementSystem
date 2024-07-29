@@ -1,0 +1,8 @@
+.create_form> .customer_div{
+    display: flex;
+    justify-content: flex-start;
+}
+
+.create_form> .customer_div > select{
+    width: 100px
+}

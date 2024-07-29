@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Search</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="search_filters_css.css">
+        <!--Header-->
+        <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <h1>Search</h1>
+        <button type="button" id="filter_type_warehouse" name="filter_type_warehouse" class="search_type_select">Warehouse</button>
+        <button type="button" id="filter_type_item" name="filter_type_item" class="search_type_select">Item</button>
+        <button type="button" id="filter_type_series" name="filter_type_series" class="search_type_select">Series</button>
+        <form action="/search-filters" method="POST" class="filter_form" id ='search_filters'>
+            <div class="filter_column">
+                <input type="text" id="filter_type_input" name="filter_type_input" style="display: none;">
+                <label for="filter_reg_date_from">Registration Date From : </label>
+                <label for="filter_id">Id : </label>
+                <label for="filter_title">Title : </label>
+                <div >
+                    <div class="reverse_order">
+                        <button id="filter_active_no"  class="filter_active filter_active_btn">No</button>
+                        <button  id="filter_active_yes" class="filter_active filter_active_btn">Yes</button>
+                        <label for="filter_active_value"class="filter_active left_text">Active   </label>
+                    </div>
+                    <input style="display: none;" type="number" id="filter_active_value" name="filter_active_value" value=-1>
+                </div>
+                <button id="submit_btn" type="submit" style="display: none">submit</button>
+            </div>
+            <div class="filter_column">
+                <input type="date" id="filter_reg_date_from" name="filter_reg_date_from">
+                <input type="text" id="filter_id" name="filter_id">
+                <input type="text" id="filter_title" name="filter_title">
+            </div>
+            <div class="filter_column">
+                <label for="filter_reg_date_to"> To : </label>
+            </div>
+            <div class="filter_column">
+                <input type="date" id="filter_reg_date_to" name="filter_reg_date_to">
+            </div>
+        </form>
+        <button id="click_sub_btn">Search</button>
+        <button id="back_btn">Πίσω</button>
+
+        <div id="results_main_div">
+            <div id="results_title_row" class = "results_row">
+                <div class="results_title_div">A/A</div>
+                <div class="results_title_div">Id</div>
+                <div class="results_title_div">Title</div>
+                <div class="results_title_div">Registration Date</div>
+                <div class="results_title_div">Active</div>
+            </div>
+            <div id="results_data_div">
+
+            </div>
+        </div>
+    </body>
+    <%- include('../partials/footer'); %>
+    <script>
+    $(document).ready(function(){
+
+        $("#search_filters").css('display', 'none');
+        $("#click_sub_btn").css('display', 'none');
+
+        $("#back_btn").click(function(){
+            window.location ="/client-profile?id=<%= clientId %>";
+        });
+
+        $("#click_sub_btn").click(function(){
+            $("#submit_btn").click();
+        });
+
+        $(".filter_active").click(function(){
+            event.preventDefault();
+            $(".filter_active").removeClass("cliked");
+            if($(this).attr('id') == 'filter_active_yes'){
+                if($("#filter_active_value").val() == 1){
+                    $("#filter_active_value").val(-1);
+                }
+                else{
+                    $("#filter_active_value").val(1);
+                    $("#filter_active_yes").addClass("cliked");
+                }
+            }
+            else{
+                if($("#filter_active_value").val() == 0){
+                    $("#filter_active_value").val(-1);
+                }
+                else{
+                    $("#filter_active_value").val(0);
+                    $("#filter_active_no").addClass("cliked");
+                }
+            }
+        });
+
+        $(".search_type_select").click(function(){
+            $("#search_filters").css('display', 'grid');
+            $("#click_sub_btn").css('display', 'block');
+            $("#filter_type_input").val(this.id);
+            $(".search_type_select").removeClass("selected");
+            $(this).addClass("selected");
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('type')) {
+            $('#'+urlParams.get('type')).click();
+        }
+        if (urlParams.has('active')) {
+            $('.filter_active')[urlParams.get('active')].click();
+        }
+        if (urlParams.has('title')) {
+            $('#filter_title').val(urlParams.get('title'));
+        }
+        if (urlParams.has('fromdate')) {
+            $('#filter_reg_date_from').val(urlParams.get('fromdate'));
+        }
+        if (urlParams.has('todate')) {
+            $('#filter_reg_date_to').val(urlParams.get('todate'));
+        }
+        if (urlParams.has('id')) {
+            $('#filter_id').val(urlParams.get('id'));
+        }
+
+        var searchResults = JSON.parse(`<%- JSON.stringify(results) %>`);
+        const results_data_div = $("#results_data_div");
+        if (searchResults.length > 0) {
+            var counter = 1;
+            for (const result of searchResults) {
+                // Create a div for each result
+                const resultDiv = $("<div class='results_row'></div>");
+                resultDiv.append(`<div>${counter}</div>`);
+                resultDiv.append(`<div>${result._id}</div>`);
+                resultDiv.append(`<div>${result.title}</div>`);
+                resultDiv.append(`<div>${new Date(result.registrationDate).toLocaleDateString()}</div>`);
+                resultDiv.append(`<div>${result.active}</div>`);
+                // Append each result div to the results_data_div
+                results_data_div.append(resultDiv);
+
+                counter = counter
+            }
+        }
+    });
+    
+    </script>
+</html>

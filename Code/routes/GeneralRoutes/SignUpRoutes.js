@@ -14,6 +14,9 @@ const Authentication = require("../../AuthenticationFunctions");
 
 const clientAccountantFunctions = require("../../ClientAccountantFunctions");
 
+//Get General Functions
+const generalFunctions = require("../../GeneralFunctions");
+
 
 /*--------   SING UP */
 router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
@@ -31,12 +34,7 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
         var company;
         if(req.body.companyNewExisting == '0'){
           //New Company
-          company = new Company({
-            name : req.body.companyName,
-            //logo : req.body.companyLogo,
-            logo : "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
-            signupcode : generateRandomCode(6)
-          });
+          company =  create_company(name,logo,generateRandomCode(6));
           await company.save();
         }
         else{
@@ -57,7 +55,7 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
           newUser.companyOwner = 1;
         }
         else{
-          company.users_num = company.users_num + 1;
+          company.license.used = company.license.used + 1;
           await company.save();
         }
         // Save the new user to the database

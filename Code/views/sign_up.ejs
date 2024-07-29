@@ -184,18 +184,16 @@
               break;
             }
           }
-
           if(company_index > -1){
             if ((companies_list[company_index].name != $("#companyName").val()) || (companies_list[company_index].signupcode != $("#companyRegisterCode").val())){
               alert("Company Name and Registration Code does not match");
               $("#companyName").val("").focus();
               all_checks_ok = false;
             }
-            else if(companies_list[company_index].users_num == companies_list[company_index].license_num){
+            else if(companies_list[company_index].license.used == companies_list[company_index].license.bought){
               alert("Ther are no empy sport for new user, by more");
               all_checks_ok = false;
             }
-
           }
         }
         else if($('#companyNewExisting').val()=="-1" && isAdmin == false){

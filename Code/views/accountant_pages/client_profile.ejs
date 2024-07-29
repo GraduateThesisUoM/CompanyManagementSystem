@@ -18,11 +18,14 @@
 <body>
 
     <div id="general-client-info" name="general-client-info">
-        <h2><%= selected_client.firstName %> <%= selected_client.lastName %></h2>
+        <h2><%= selected_client.name %></h2>
         <div class="badge">
             <img src="<%= selected_client.logo %>" id="company_logo">
             <h3> <%= selected_client.name %></h3>
         </div>
+        <button id="create_page_btn">+</button>
+        <button id="search_page_btn">Search</button>
+
     </div>
 
     <div id="client-transactions-div" name="client-transactions-div">
@@ -93,6 +96,13 @@
 
         $("#back_btn").click(function(){
             window.location = "/clients"
+        });
+
+        $("#create_page_btn").click(function(){
+            window.location = "/create"
+        });
+        $("#search_page_btn").click(function(){
+            window.location = "/search-filters"
         });
 
         var starButtons = $(".star_btn");

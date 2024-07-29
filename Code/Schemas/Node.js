@@ -18,7 +18,7 @@ const NodeShema = new mongoose.Schema({
     default:'other'
   },
   text: { type: String},
-  next:{ type: String},
+  next:{ type: String,default:'-'},
   due_date: { type: String},
   status: {
     type: String,
