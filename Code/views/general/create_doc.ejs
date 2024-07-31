@@ -267,18 +267,26 @@
 
         $(document).on('change', '#customer_id', allow_submit);
 
-        $(document).on('input', '.general_discount', function(){
-            if($(this).attr('id') == 'general_discount_amount'){
-                $('#total_cost').html($('#total_after_Tax').html()- $('#general_discount_amount').val())
-            }
-            else{
-                $('#general_discount_amount').val(
+        $(document).on('input', '.general_discount', function() {
+            let totalAfterTax = parseFloat($('#total_after_Tax').html()) || 0;
 
-                    $('#total_after_Tax').html()- ($('#total_after_Tax').html()*($('#general_discount').val()/100))
-                )
-                $('#total_cost').html($('#total_after_Tax').html()- $('#general_discount_amount').val())
+            if ($(this).attr('id') === 'general_discount_amount') {
+                let discountAmount = parseFloat($(this).val()) || 0;
+                let totalCost = totalAfterTax - discountAmount;
+                $('#total_cost').html(totalCost.toFixed(2));
+
+                let discountPercentage = (discountAmount / totalAfterTax) * 100;
+                $('#general_discount').val(discountPercentage.toFixed(2));
+            } else {
+                let discountPercentage = parseFloat($(this).val()) || 0;
+                let discountAmount = totalAfterTax * (discountPercentage / 100);
+                $('#general_discount_amount').val(discountAmount.toFixed(2));
+
+                let totalCost = totalAfterTax - discountAmount;
+                $('#total_cost').html(totalCost.toFixed(2));
             }
         });
+
 
         function get_item_index_from_id(index){
             for(let i=0;i<items.length;i++){
@@ -351,20 +359,17 @@
                 after_tax += line_after_tax;
             });
 
-            //let generalDiscount = parseFloat($('#general_discount').val()) || 0;
+            $('#total_value').html(total.toFixed(2));
 
-            /*total = total * (generalDiscount / 100);
+            $('#total_disc').html(disc_amnt.toFixed(2));
 
-            $('#total_discount_amount').html(total)*/
+            $('#total_after_disc').html((total - disc_amnt).toFixed(2));
 
-            //total = (total - (total * (generalDiscount / 100))).toFixed(2);
-            $('#total_value').html(total);
+            $('#total_after_Tax').html(after_tax.toFixed(2));
 
-            $('#total_disc').html(disc_amnt);
+            var totalCost = after_tax - $('#general_discount_amount').val();
 
-            $('#total_after_disc').html(total - disc_amnt);
-
-            $('#total_after_Tax').html(after_tax);
+            $('#total_cost').html(totalCost.toFixed(2));
         }
 
         function retail_wholesale() {
