@@ -140,19 +140,21 @@ async function createWarehouse(companyID, title, location){
     }
 }
 
-async function createItem(companyID, title, description, price_r, discount_r, price_w,discount_w){
+async function createItem(data){
     try{
         const item = new Item({
-            companyID: companyID,
-            title :title,
-            description : description,
-            price_r :price_r,
-            price_w :price_w,
-            discount_r :discount_r,
-            discount_w :discount_w
+            companyID: data.companyID,
+            title :data.title,
+            description : data.description,
+            price_r :data.price_r,
+            price_w :data.price_w,
+            discount_r :data.discount_r,
+            discount_w :data.discount_w,
+            tax_r :data.tax_r,
+            tax_w :data.tax_w
         });
 
-        console.log("item "+title+" created");
+        console.log("item "+data.title+" created");
         await item.save();
         
         return item;
@@ -229,7 +231,6 @@ async function create_doc(data){
             type: data.type,
             generalDiscount: data.generalDiscount,
             invoiceData: data.invoiceData,
-            registrationDate: data.registrationDate
         });
 
         // Save the document to the database

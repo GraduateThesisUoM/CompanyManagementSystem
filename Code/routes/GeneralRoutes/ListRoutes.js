@@ -12,7 +12,8 @@ const Notification = require(path_constants.schemas.two.notification);
 const Report = require(path_constants.schemas.two.report);
 const User = require(path_constants.schemas.two.user);
 const Item = require(path_constants.schemas.two.item);
-
+const Person = require(path_constants.schemas.two.item);
+const Document = require(path_constants.schemas.two.document);
 
 
 
@@ -48,11 +49,25 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
             else if (req.query.searchfor == "items"){
                 list_items = await Item.find({companyID : compnay});
 
-                console.log(list_items)
                 list_items = list_items.map(item => ({
                     data :[ item.title,item.description, formatDate(item.registrationDate), item.active, item.price_r, item.price_w, item.discount_r, item.discount_w]
                 }));
                 column_titles = ["Title","Description","Reg Date","Status","Prece Retail","Discount Retail","Prece Wholesale","Discount Wholesale"]
+            }
+            else if (req.query.searchfor == "docs"){
+                //list_items = await Document.find({company : compnay,type:req.query.doctype});
+                list_items = await Document.find({company : compnay});
+                var persons = await Person.find({company : compnay});
+                
+                console.log(persons)
+                list_items = list_items.map(async item => ({
+                    data :[ formatDate(item.registrationDate), item.receiver,0.0, item.generalDiscount]
+                }));
+                let column2= 'Customer'
+                if(req.query.doctype == 'buy'){
+                    column2 =  'Supplier'
+                }
+                column_titles = ["Reg Date",column2,"Price", "Discount"]
 
             }
         

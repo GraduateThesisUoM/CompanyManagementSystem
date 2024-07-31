@@ -76,28 +76,60 @@ async function create_users(){
 
   const user2 = await generalFunctions.create_user("c1",company2,1);
 
-
-  const i1 = await generalFunctions.createItem(company2._id, 'i1', 'i1', 3, 0.5, 1,0.6);
-  const i2 = await generalFunctions.createItem(company2._id, 'i2', 'i2', 4, 0.5, 1,0.6);
+  var data = {
+    companyID: company2._id,
+    title : 'i1',
+    description : 'i1',
+    price_r :100,
+    price_w :10,
+    discount_r :10,
+    discount_w :3,
+    tax_r :24,
+    tax_w :0
+  }
+  const i1 = await generalFunctions.createItem(data);
+  data = {
+    companyID: company2._id,
+    title : 'i2',
+    description : 'i2',
+    price_r :200,
+    price_w :20,
+    discount_r :20,
+    discount_w :60,
+    tax_r :10,
+    tax_w :0
+  }
+  const i2 = await generalFunctions.createItem(data);
   i2.active = 0;
   await i2.save();
-  const i3 = await generalFunctions.createItem(company2._id, 'i3', 'i3', 5, 0.5, 4,0.1);
+  data = {
+    companyID: company2._id,
+    title : 'i3',
+    description : 'i3',
+    price_r :100,
+    price_w :50,
+    discount_r :10,
+    discount_w :20,
+    tax_r :20,
+    tax_w :10
+  }
+  const i3 = await generalFunctions.createItem(data);
   await i3.save();
 
-  var data = {
+  data = {
     company: company2._id,
     sender: user2._id,
     receiver: person1._id,
     type: "sale",
     generalDiscount: 50,
     invoiceData: [
-        { item: i1._id, quantity: 2 },
-        { item: i3._id, quantity: 1 }
+      { item: i1._id, quantity: 2 },
+      { item: i1._id },
+      { item: i1._id, quantity: 2, price: 45 }
     ]
   };
 
   const doc1 = await generalFunctions.create_doc(data);
-  console.log(doc1);
 
   const company3 = await generalFunctions.create_company("c3",'logo',1);
   const company4 = await generalFunctions.create_company("c4",'logo',1);
