@@ -13,6 +13,8 @@ const Report = require(path_constants.schemas.two.report);
 const User = require(path_constants.schemas.two.user);
 const Person = require(path_constants.schemas.two.person);
 const Item = require(path_constants.schemas.two.item);
+const Series = require(path_constants.schemas.two.series);
+
 
 
 //Authentication Functions
@@ -33,11 +35,13 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
 
         var list_items = await Item.find({companyID: req.user.company,active:1});
 
+        var list_series = await Series.find({companyID: req.user.company,active:1,type:req.query.type});
 
         var data = {
             user: req.user,
             persons:list_persons,
             items:list_items,
+            series:list_series,
             notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})
         };
         res.render(path_constants.pages.create_doc.view(), data);
@@ -50,30 +54,21 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
 
 router.post('/', async (req, res) => {
     try {
-        // Log each form field individually
-        console.log('Document Type:', req.body.doc_type);
-        console.log('Document Date:', req.body.doc_date);
-        console.log('Customer ID:', req.body.customer_id);
-        console.log('Wholesale/Retail:', req.body.wholesale_retail);
-        console.log('General Discount:', req.body.general_discount);
-        console.log('Number of Rows:', req.body.num_of_rows);
-
         const lines_of_doc = {};
-        const labels = ['lineItem','tax','quontity','discount','price_of_unit','total_price_of_line'];
         for (let i = 0; i < req.body.num_of_rows; i++) {
             const quontity = req.body[`quontity_${i}`];
             const tax = req.body[`tax_${i}`];
             const lineItem = req.body[`doc_line_item_${i}`];
             const discount = req.body[`discount_${i}`];
             const price_of_unit = req.body[`price_of_unit_${i}`];
-            const total_price_of_line = price_of_unit - (price_of_unit*(discount/100));
-            lines_of_doc[i] = { quontity,tax, lineItem,discount,price_of_unit,total_price_of_line};
+            lines_of_doc[i] = { quontity,tax, lineItem,discount,price_of_unit};
         }
         const data = {
             company: req.user.company,
             sender: req.user._id,
             receiver: req.body.customer_id,
             type: req.body.doc_type,
+            series: req.body.doc_series,
             generalDiscount: req.body.general_discount,
             invoiceData: lines_of_doc
         }

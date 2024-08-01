@@ -73,7 +73,9 @@
                 <div class="customer_div">
                     <label id="from_label"></label>
                     <select name="customer_id" id="customer_id">
-                        <option value="0">-</option>
+                        <% if (persons.length > 1) { %>
+                            <option value="0">-</option>
+                        <% } %>
                         <% persons.forEach(function(person) { %>
                             <option value="<%= person.id %>"><%= person.firstName %> <%= person.lastName %></option>
                         <% }); %>
@@ -83,6 +85,16 @@
                 <select id="wholesale_retail" name="wholesale_retail">
                     <option value="0">wholesale</option>
                     <option value="1">Retale</option>
+                </select>
+                <br>
+                <label for="doc_series">Series : </label>
+                <select id="doc_series" name="doc_series">
+                    <% if (series.length > 1) { %>
+                        <option value="0">-</option>
+                    <% } %>
+                    <% series.forEach(function(s) { %>
+                        <option value="<%= s._id %>"><%= s.title %></option>
+                    <% }); %>
                 </select>
                 <div> Total Value : <span id="total_value">0.00</span> €</div>
                 <div> Total Discounts : <span id="total_disc">0.00</span> €</div>
@@ -116,15 +128,14 @@
                     </tbody>
                 </table>
 
-                <button type="submit" id="submit_btn">Register</button>
             </form>
+            <button id="submit_btn">Register</button>
             <button id="clear">Clear</button>
         </div>
     </div>
 
 </body>
 <script>
-    // Render items array into JavaScript
     const items = JSON.parse(`<%- JSON.stringify(items) %>`);
 
     $(document).ready(function(){
@@ -150,7 +161,7 @@
             window.location ="/";
         });
 
-        addNewRow();
+        addNewRow(0);
 
         function populateSelect(selectElement) {
             selectElement.append('<option value="-"></option>');
@@ -159,40 +170,39 @@
             });
         }
 
-        function addNewRow() {
-            var rowCount = $('#doc_table tbody tr').length;
-            $('#num_of_rows').val(rowCount);
-            var newRow = `<tr id='row${rowCount}'>
-                                <td>${rowCount + 1}</td>
+        function addNewRow(index) {
+            $('#num_of_rows').val(index);
+            var newRow = `<tr id='row${index}'>
+                                <td>${index + 1}</td>
                                 <td id='item_column'>
-                                    <select name="doc_line_item_${rowCount}" class="doc_line_select"></select>
+                                    <select name="doc_line_item_${index}" class="doc_line_select"></select>
                                 </td>
                                 <td class = 'column'>
                                     <div>
-                                        <input id='quontity_${rowCount}' name='quontity_${rowCount}' class='input' type='number' value=1 min="1" max="100" required><span id='qty_${rowCount}'></span></div></td>
+                                        <input id='quontity_${index}' name='quontity_${index}' class='input' type='number' value=1 min="1" max="100" required><span id='qty_${index}'></span></div></td>
                                 <td class = 'column'>
-                                    <div><input id='tax_${rowCount}' name='tax_${rowCount}' type='number' class='input' min="0" max="100" required><span>&nbsp%</span></div></td>
+                                    <div><input id='tax_${index}' name='tax_${index}' type='number' class='input' min="0" max="100" required><span>&nbsp%</span></div></td>
                                 <td class = 'column'>
-                                    <div><input id='discount_${rowCount}' name='discount_${rowCount}' class='discount input disc_amnt' type='number' min="0" required><span>€</span></div></td>
+                                    <div><input id='discount_${index}' name='discount_${index}' class='discount input disc_amnt' type='number' min="0" required><span>€</span></div></td>
                                 <td class = 'column'>
-                                    <div><input id='discount_p_${rowCount}' name='discount_p_${rowCount}' class='discount input' type='number' min="0" max="100" required><span>&nbsp%</span></div></td>
+                                    <div><input id='discount_p_${index}' name='discount_p_${index}' class='discount input' type='number' min="0" max="100" required><span>&nbsp%</span></div></td>
                                 <td class = 'column'>
-                                    <div><input id='price_of_unit_${rowCount}' name='price_of_unit_${rowCount}' class='input' type='number' min="0" required><span>€</span></div></td>
+                                    <div><input id='price_of_unit_${index}' name='price_of_unit_${index}' class='input' type='number' min="0" required><span>€</span></div></td>
                                 <td class = 'column'>
                                     <div>
-                                        <div id='total_price_of_line_${rowCount}' name='total_price_of_line_${rowCount}' class='total_price_of_line'></div>
+                                        <div id='total_price_of_line_${index}' name='total_price_of_line_${index}' class='total_price_of_line'></div>
                                         <span>&nbsp€</span>
                                     </div>
                                 </td>
                                 <td class = 'column'>
                                     <div>
-                                        <div id='total_price_of_line_after_disc_${rowCount}' name='total_price_of_line_after_disc_${rowCount}' class='total_price_of_line_after_disc'></div>
+                                        <div id='total_price_of_line_after_disc_${index}' name='total_price_of_line_after_disc_${index}' class='total_price_of_line_after_disc'></div>
                                         <span>&nbsp€</span>
                                      </div>
                                 </td>
                                 <td class = 'column'>
                                     <div>
-                                        <div id='final_price_of_line_${rowCount}' name='final_price_of_line_${rowCount}' class='final_price_of_line'></div>
+                                        <div id='final_price_of_line_${index}' name='final_price_of_line_${index}' class='final_price_of_line'></div>
                                         <span>&nbsp€</span>
                                      </div>
                                 </td>
@@ -202,12 +212,11 @@
                             </tr>`;
             $('#doc_table tbody').append(newRow);
             populateSelect($(`#doc_table tbody tr:last .doc_line_select`));
-            $('#quontity_'+rowCount).css('visibility', 'hidden');
-            $('#tax_'+rowCount).css('visibility', 'hidden');
-            $('#discount_'+rowCount).css('visibility', 'hidden');
-            $('#discount_p_'+rowCount).css('visibility', 'hidden');
-            $('#price_of_unit_'+rowCount).css('visibility', 'hidden');
-
+            $('#quontity_'+index).css('visibility', 'hidden');
+            $('#tax_'+index).css('visibility', 'hidden');
+            $('#discount_'+index).css('visibility', 'hidden');
+            $('#discount_p_'+index).css('visibility', 'hidden');
+            $('#price_of_unit_'+index).css('visibility', 'hidden');
 
             allow_submit();
         }
@@ -215,7 +224,6 @@
         $(document).on('change', '.doc_line_select', function(){
             var index = $(this).closest('tr').index();
             if($('.doc_line_select').eq(index).val() != "-"){
-                //$('#wholesale_retail').prop('disabled', true);
 
                 $('.remove_row').eq(index).prop('disabled', false);
 
@@ -229,18 +237,24 @@
                 
                 
                 if($(this).closest('tr').is(':last-child')){
-                    addNewRow();
+                    addNewRow(index+1);
                 }
             }
             else{
-                removeRow(index)
+                removeRow(index,false)
             }
         });
 
         $(document).on('change', '#wholesale_retail', retail_wholesale)
 
+        $(document).on('click', '#submit_btn', function(){
+            removeRow($('#num_of_rows').val(),true);
+            $('#create_doc_form').submit();
+        });
+
+
         $(document).on('click', '.remove_row', function(){
-            removeRow( $(this).closest('tr').index())
+            removeRow( $(this).closest('tr').index(),false)
         });
 
         $(document).on('input', '.input', function(){
@@ -266,6 +280,9 @@
         });
 
         $(document).on('change', '#customer_id', allow_submit);
+
+        $(document).on('change', '#doc_series', allow_submit);
+
 
         $(document).on('input', '.general_discount', function() {
             let totalAfterTax = parseFloat($('#total_after_Tax').html()) || 0;
@@ -384,7 +401,7 @@
             });
         }
 
-        function removeRow(index){
+        function removeRow(index,submit){
             $('#row' + index).remove();
 
             // Update row indices
@@ -398,12 +415,14 @@
             });
 
             calculate_total_cost();
-            $('#num_of_rows').val($('#num_of_rows').val()-1);
+            if(!submit){
+                $('#num_of_rows').val($('#num_of_rows').val()-1);
+            }
             allow_submit();
         }
 
         function allow_submit(){
-            if($('#num_of_rows').val() == 0 || $('select[name="customer_id"]').val() == 0){
+            if($('#num_of_rows').val() == 0 || $('select[name="customer_id"]').val() == 0 || $('select[name="doc_series"]').val() == 0){
                 $("#submit_btn").prop('disabled', true);
             }
             else{

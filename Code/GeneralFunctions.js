@@ -164,17 +164,18 @@ async function createItem(data){
     }
 }
 
-async function createSeries(companyID, title){
+async function createSeries(data){
     try{
         const seies = new Series({
-            companyID: companyID,
-            title :title
+            companyID: data.companyID,
+            title :data.title,
+            acronym : data.acronym,
+            type : data.type
         });
-        //show reqested license
         
         await seies.save();
         
-        console.log("seies "+title+" created");
+        console.log("seies "+data.title+" created");
 
         return seies;
         
@@ -223,12 +224,16 @@ async function create_person(type,f_name,l_name,email,vat,phone,company){
 
 async function create_doc(data){
     try {
-        // Create a new document instance
+        var series = await Series.findOne({_id: data.series});
+        series.count = series.count + 1;
+
         const newDocument = new Document({
             company: data.company,
             sender: data.sender,
             receiver: data.receiver,
+            series: data.series,
             type: data.type,
+            doc_num : series.count,
             generalDiscount: data.generalDiscount,
             invoiceData: data.invoiceData,
         });
@@ -236,6 +241,10 @@ async function create_doc(data){
         // Save the document to the database
         await newDocument.save();
         console.log('Document saved successfully');
+
+        
+        await series.save();
+
         return newDocument;
     } catch (error) {
         console.error('Error saving document:', error);

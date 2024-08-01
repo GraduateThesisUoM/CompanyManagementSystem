@@ -11,6 +11,12 @@
       <% if (messages.error) { %>
         <%= messages.error %>
       <% } %>
+      <a href="http://localhost:3000/log-in?fast_log_in=1">a1 1</a>
+        <a href="http://localhost:3000/log-in?fast_log_in=2">C1 2</a>
+        <a href="http://localhost:3000/log-in?fast_log_in=3">c2 3</a>
+        <a href="http://localhost:3000/log-in?fast_log_in=4">ad1 4</a>
+        <a href="http://localhost:3000/log-in?restartdb=true">restart db</a>
+
          <form class="display_block" action="/log-in" method="POST" >
             <h1>Σύνδεση</h1>
             <label for="email">Email</label>

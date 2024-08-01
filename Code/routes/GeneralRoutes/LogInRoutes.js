@@ -73,6 +73,7 @@ async function create_users(){
 
   const person1 =  await generalFunctions.create_person("customer","p1","p1ln","p1@p1.com",111,222,company2._id);
   const person2 =  await generalFunctions.create_person("supplier","p2","p2ln","p2@p2.com",1112,2223,company2._id);
+  const person3 =  await generalFunctions.create_person("customer","p3","p3ln","p3@p3.com",33,333,company2._id);
 
   const user2 = await generalFunctions.create_user("c1",company2,1);
 
@@ -117,11 +118,27 @@ async function create_users(){
   await i3.save();
 
   data = {
+    companyID: company2._id,
+    title :'series1b',
+    acronym : 'S1',
+    type : 'buy'
+  }
+  const s1 = await generalFunctions.createSeries(data);
+  data = {
+    companyID: company2._id,
+    title :'series2s',
+    acronym : 'S2',
+    type : 'sale'
+  }
+  const s2 = await generalFunctions.createSeries(data);
+
+  data = {
     company: company2._id,
     sender: user2._id,
     receiver: person1._id,
     type: "sale",
     generalDiscount: 50,
+    series: s2._id,
     invoiceData: [
       { item: i1._id, quantity: 2 },
       { item: i1._id },
@@ -130,6 +147,20 @@ async function create_users(){
   };
 
   const doc1 = await generalFunctions.create_doc(data);
+
+  data = {
+    company: company2._id,
+    sender: user2._id,
+    receiver: person1._id,
+    type: "sale",
+    generalDiscount: 0,
+    series: s2._id,
+    invoiceData: [
+      { item: i1._id, quantity: 2 }
+    ]
+  };
+
+  const doc2 = await generalFunctions.create_doc(data);
 
   const company3 = await generalFunctions.create_company("c3",'logo',1);
   const company4 = await generalFunctions.create_company("c4",'logo',1);
@@ -169,11 +200,7 @@ async function create_users(){
   w2.active = 0;
   w2.registrationDate = '2024-06-10T18:22:57.852+00:00';
   await w2.save();
-
-  const s1 = await generalFunctions.createSeries(company2._id, 's1');
-  const s2 = await generalFunctions.createSeries(company2._id, 's2');
-  s2.active = 0;
-  await s2.save();
+  
 
 
   console.log("----------   END ");

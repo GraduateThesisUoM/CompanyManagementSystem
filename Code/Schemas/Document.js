@@ -7,10 +7,14 @@ const DocumentSchema = new mongoose.Schema({
   receiver: { type: String, required: true },
   type: { type: String, required: true },
   generalDiscount: { type: Number, required: true },
-
+  series: { type: String, required: true },
+  doc_num:{ type: Number, required: true },
+  printed : {
+    type: Number,
+    enum: [0, 1],
+    default: 1},
   invoiceData: {
     type: mongoose.Schema.Types.Mixed,
-    /*required: true*/
   },
   registrationDate: { type: Date, default: Date.now }
 });

@@ -45,6 +45,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try{
         var company = "";
+        var data = {};
         if(req.user.type == 'admin'){
             company = req.session.selected_client._id;
         }
@@ -61,7 +62,13 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
             console.log(item);
         }
         else if(req.body.create_type == 'series'){
-            const series = await generalFunctions.createSeries(company, req.body.series_title);
+            data = {
+                companyID: company._id,
+                title :req.body.series_title,
+                acronym : req.body.series_acronym,
+                type : req.body.series_type
+            }
+            const series = await generalFunctions.createSeries(data);
             console.log(series);
         }
         else if(req.body.create_type == 'person'){

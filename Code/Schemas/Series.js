@@ -5,6 +5,9 @@ const SeriesSchema = new mongoose.Schema({
     registrationDate: { type: Date, default: Date.now , required: true},
     companyID: { type: String, required: true },
     title: { type: String, required: true },
+    acronym: { type: String, required: true },
+    type : { type: String, required: true },
+    count: { type: Number, required: true ,default:0},
     active: {
         type: Number,
         enum: [0, 1],
