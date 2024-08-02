@@ -260,6 +260,7 @@ async function drop_collection(collection_name){
           console.error("Error deleting collection "+collection_name+":", error);
       }
 }
+
 module.exports = {
     checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,
     createSeries,createReport,create_person,drop_collection,create_doc};

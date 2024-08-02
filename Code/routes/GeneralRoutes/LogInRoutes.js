@@ -162,6 +162,20 @@ async function create_users(){
 
   const doc2 = await generalFunctions.create_doc(data);
 
+  data = {
+    company: company2._id,
+    sender: user2._id,
+    receiver: person2._id,
+    type: "buy",
+    generalDiscount: 20,
+    series: s1._id,
+    invoiceData: [
+      { item: i1._id, quantity: 9 }
+    ]
+  };
+
+  const doc3 = await generalFunctions.create_doc(data);
+
   const company3 = await generalFunctions.create_company("c3",'logo',1);
   const company4 = await generalFunctions.create_company("c4",'logo',1);
   const company5 = await generalFunctions.create_company("c5",'logo',1);
