@@ -29,8 +29,17 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
     try{
         if(generalFunctions.checkAccessRigts(req,res)){
             var company = "";
+            var doc_data = {
+                company : '',
+                doc : '',
+                series: '',
+                person1: '',
+                doc_line_num :0
+
+            };
             if(req.user.type != 'admin'){
                 company = req.user.company
+
             }
             var list_items = [];
             var column_titles = [];
@@ -65,7 +74,6 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                     person_type = 'customer'
                 }
                 var list_persons = await Person.find({company : company,type:person_type});
-                console.log(list_persons)
 
                 const seriesMap = new Map(list_series.map(series => [series._id.toString(), series.acronym]));
                 const personsMap = new Map(list_persons.map(person => [person._id.toString(), `${person.firstName} ${person.lastName}`]));
@@ -75,7 +83,20 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                     data: [item._id,`${seriesMap.get(item.series.toString())}-${item.doc_num}`,formatDate(item.registrationDate),personsMap.get(item.receiver.toString())]
                 }));
                 column_titles = ["ID","Doc", "Reg Date",person_type]
-
+                if(req.query.printdoc){
+                    var document = await Document.findOne({_id: req.query.printdoc});
+                    document.sealed = 1;
+                    await document.save();
+                    console.log(document.invoiceData.length)
+                    var series = await Series.findOne({_id: document.series});
+                    doc_data = {
+                        company : await Company.findOne({_id: company}),
+                        doc : document,
+                        series : series.acronym,
+                        person1 : await Person.findOne({_id: document.receiver}),
+                        doc_line_num :document.invoiceData.length
+                    }
+                }
             }
         
             var data = {
@@ -83,7 +104,8 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                 list_items : list_items,
                 notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}),
                 column_titles : column_titles,
-                searchfor : req.query.searchfor
+                searchfor : req.query.searchfor,
+                doc_data :doc_data
             };
             res.render(path_constants.pages.list.view(), data)
           }

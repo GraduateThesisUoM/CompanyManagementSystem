@@ -101,8 +101,6 @@ async function create_users(){
     tax_w :0
   }
   const i2 = await generalFunctions.createItem(data);
-  i2.active = 0;
-  await i2.save();
   data = {
     companyID: company2._id,
     title : 'i3',
@@ -137,14 +135,13 @@ async function create_users(){
     sender: user2._id,
     receiver: person1._id,
     type: "sale",
-    generalDiscount: 50,
     series: s2._id,
+    generalDiscount: 10,
     invoiceData: [
-      { item: i1._id, quantity: 2 },
-      { item: i1._id },
-      { item: i1._id, quantity: 2, price: 45 }
-    ]
-  };
+        { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+        { quantity: 1, tax: 5, item: i3._id, discount: 0, price_of_unit: 30 }
+      ]
+};
 
   const doc1 = await generalFunctions.create_doc(data);
 
@@ -153,12 +150,13 @@ async function create_users(){
     sender: user2._id,
     receiver: person1._id,
     type: "sale",
-    generalDiscount: 0,
     series: s2._id,
+    generalDiscount: 10,
     invoiceData: [
-      { item: i1._id, quantity: 2 }
-    ]
-  };
+        { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+        { quantity: 1, tax: 5, item: i2._id, discount: 0, price_of_unit: 30 }
+      ]
+};
 
   const doc2 = await generalFunctions.create_doc(data);
 
@@ -167,12 +165,38 @@ async function create_users(){
     sender: user2._id,
     receiver: person2._id,
     type: "buy",
-    generalDiscount: 20,
     series: s1._id,
+    generalDiscount: 10,
     invoiceData: [
-      { item: i1._id, quantity: 9 }
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 2, tax: 5, item: i1._id, discount: 1, price_of_unit: 20 },
+      { quantity: 1, tax: 5, item: i2._id, discount: 0, price_of_unit: 30 }
     ]
-  };
+};
 
   const doc3 = await generalFunctions.create_doc(data);
 

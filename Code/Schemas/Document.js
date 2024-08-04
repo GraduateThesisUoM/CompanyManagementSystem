@@ -9,10 +9,10 @@ const DocumentSchema = new mongoose.Schema({
   generalDiscount: { type: Number, required: true },
   series: { type: String, required: true },
   doc_num:{ type: Number, required: true },
-  printed : {
+  sealed : {
     type: Number,
     enum: [0, 1],
-    default: 1},
+    default: 0},
   invoiceData: {
     type: mongoose.Schema.Types.Mixed,
   },

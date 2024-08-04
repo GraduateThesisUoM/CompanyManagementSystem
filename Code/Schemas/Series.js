@@ -8,6 +8,10 @@ const SeriesSchema = new mongoose.Schema({
     acronym: { type: String, required: true },
     type : { type: String, required: true },
     count: { type: Number, required: true ,default:0},
+    sealed : {
+      type: Number,
+      enum: [0, 1],
+      default: 0},
     active: {
         type: Number,
         enum: [0, 1],

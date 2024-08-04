@@ -1,23 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>List</title>
-        <!--ajax-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <!--CSS-->
-        <link rel="stylesheet" href="general_css.css">
-        <!--Header-->
-        <%- include('../partials/header'); %>
-    </head>
-    <style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List</title>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css">
+    <!--Header-->
+    <%- include('../partials/header'); %>
+</head>
+<style>
     table {
         border-collapse: collapse;
         border: 2px solid rgb(140, 140, 140);
         width: 95%;
     }
-    th, td {
+
+    th,
+    td {
         border-collapse: collapse;
         border: 2px solid rgb(140, 140, 140);
         text-align: center;
@@ -28,338 +31,503 @@
         display: flex;
         justify-content: center;
     }
+
     #td_button_container {
         display: grid;
         grid-template-columns: auto auto auto;
         gap: 10px;
     }
+
     #td_button_container>div {
         padding: 10px;
-        transition: transform 0.2s; /* Smooth transition for scaling */
+        transition: transform 0.2s;
+        /* Smooth transition for scaling */
     }
+
     #td_button_container>div>button {
         border: none;
-        padding: 5px; /* Increase padding for better appearance */
+        padding: 5px;
+        /* Increase padding for better appearance */
         cursor: pointer;
-        width: 100%; /* Ensure buttons take full div width */
+        width: 100%;
+        /* Ensure buttons take full div width */
         transition: 0.35s;
         border-radius: 10px;
     }
+
     #td_button_container>div>button:hover {
-        transform: scale(1.1); /* Scale up the button on hover */
+        transform: scale(1.1);
+        /* Scale up the button on hover */
         box-shadow: 3px 3px 10px black;
     }
+
     #td_button_container>div>.btn2 {
         background-color: red;
         color: white;
     }
+
     #td_button_container>div>.btn3 {
         background-color: rgb(71, 71, 71);
         color: white;
     }
+
     #td_button_container>div>.btn1 {
         background-color: rgb(110, 152, 231);
         color: white;
     }
-    </style>
-    <body>
-        <div class="has_sidebar">
-            <%- include('../partials/sidebar'); %>
+</style>
+
+<body>
+    <div class="has_sidebar">
+        <%- include('../partials/sidebar'); %>
             <div>
                 <h1 id="list_header"></h1>
-                <div>Tottal Number Of <span id="span_number_of">companys</span> : <%=list_items.length%></div>
+                <div>Tottal Number Of <span id="span_number_of">companys</span> : <%=list_items.length%>
+                </div>
                 <div id="table_container">
                     <table>
-                          <thead>
+                        <thead>
                             <tr>
                                 <th>A/A</th>
                                 <% column_titles.forEach(function(column_title, index) { %>
-                                    <% if (searchfor == 'docs' && index > 0) { %>
-                                        <th><%= column_title %></th>
-                                    <% } %>
-                                <% }); %>
-                                
-                                <th></th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            <tr>
-                                <%if(list_items.length == 0){%>
-                                    <% for (let i = 0; i <= column_titles.length; i++) { %>
-                                        <% if (searchfor == 'docs' && i > 0) { %>
-                                            <th>-</th>
+                                    <% if (searchfor=='docs' && index> 0) { %>
+                                        <th>
+                                            <%= column_title %>
+                                        </th>
                                         <% } %>
-                                    <% } %>
-                                <%}
-                                else{
-                                    list_items.forEach(function(list_item, index) { %>
-                                        <tr>
-                                            <td><%= index + 1 %></td>
-                                            <% for (let i = 0; i < list_item.data.length; i++) { %>
-                                                <% if (searchfor !== 'docs') { %>
-                                                    <td><%= list_item.data[i] %></td>
-                                                <% } else if (i > 0) { %>
-                                                    <td><%= list_item.data[i] %></td>
-                                                <% } %>
-                                            <% } %>
-                                            
-                                            <td>
-                                                <div id="td_button_container">
-                                                    <div><button class="btn1" data-id="<%= list_item.data[0] %>">View</button></div>
-                                                    <div><button class="btn2" data-id="<%= list_item.data[0] %>">Delete</button></div>
-                                                    <div><button class="btn3" data-id="<%= list_item.data[0] %>">Block</button></div>
-                                                </div>
-                                            </td>
+                                            <% }); %>
 
-                                        </tr>
-                                    <% });
-                                }%>
+                                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <%if(list_items.length==0){%>
+                                    <% for (let i=0; i <=column_titles.length; i++) { %>
+                                        <% if (searchfor=='docs' && i> 0) { %>
+                                            <th>-</th>
+                                            <% } %>
+                                                <% } %>
+                                                    <%} else{ list_items.forEach(function(list_item, index) { %>
+                            <tr>
+                                <td>
+                                    <%= index + 1 %>
+                                </td>
+                                <% for (let i=0; i < list_item.data.length; i++) { %>
+                                    <% if (searchfor !=='docs' || (searchfor==='docs' && i> 0)) { %>
+                                        <td id="cell_<%= index %>_<%= i %>">
+                                            <%= list_item.data[i] %>
+                                        </td>
+                                        <% } %>
+                                            <% } %>
+
+                                                <td>
+                                                    <div id="td_button_container">
+                                                        <div><button class="btn1"
+                                                                data-id="<%= list_item.data[0] %>">View</button></div>
+                                                        <div><button class="btn2"
+                                                                data-id="<%= list_item.data[0] %>">Delete</button></div>
+                                                        <div><button class="btn3"
+                                                                data-id="<%= list_item.data[0] %>">Block</button></div>
+                                                    </div>
+                                                </td>
 
                             </tr>
-                          </tbody>
+                            <% }); }%>
+
+                                </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
-        </div>
-        <iframe id="print-frame" style="display:none;"></iframe>
+    </div>
+    <iframe id="print-frame" style="display:none;"></iframe>
 
-    </body>
-    <%- include('../partials/footer'); %>
-    <!--script type = "text/javascript" src="../../JSFrontEndFunctions.js"></script-->  
+</body>
+<%- include('../partials/footer'); %>
+    <!--script type = "text/javascript" src="../../JSFrontEndFunctions.js"></script-->
     <script>
-    $(document).ready(function(){
-        var  searchfor = '';
-        if (window.location.search) {
-            searchfor = new URLSearchParams(window.location.search).get('searchfor');
-            if(searchfor =='companys'){
-                $("#list_header").html('Companys List');
-                $("#span_number_of").html('companys');
+        $(document).ready(function () {
+            var rows_written = 0;
+            var total_doc_rows = '<%=doc_data.doc_line_num%>';
+            var brake_page = 24;
+            const queryString = new URL(window.location.href).search;
+            const params = new URLSearchParams(queryString);
+            var searchfor = '';
+            var type = '';
+            var printdoc = ""
+
+            if (queryString.length > 0) {
+                searchfor = params.get('searchfor');
+                $("#span_number_of").html(searchfor);
+                type = type = params.get('type');
+                printdoc = type = params.get('printdoc');
+                if (searchfor == 'companys') {
+                    $("#list_header").html('Companys List');
+                }
+                else if (searchfor == 'users') {
+                    $("#list_header").html('Users List');
+                }
+                else if (searchfor == 'docs') {
+                    $('.btn3').text('Print')
+                    $('.btn3').click(print_doc);
+                    type = new URLSearchParams(window.location.search).get('type');
+                    $("#type").val(type);
+                    if (params.has('printdoc')) {
+                        var data = {
+                            company_name: '<%=doc_data.company.name%>',
+                            date: formatDate(new Date('<%=doc_data.doc.registrationDate%>')),
+                            doc: JSON.parse(`<%- JSON.stringify(doc_data.doc) %>`),
+                            series: '<%=doc_data.series%>',
+                            person1: JSON.parse(`<%- JSON.stringify(doc_data.person1) %>`),
+                            company: JSON.parse(`<%- JSON.stringify(doc_data.company) %>`)
+                        }
+
+                        print_form(data);
+                    }
+                }
+                $("#searchfor").val(searchfor);
+
+                $('.btn1').click(print_doc)
+                $('.btn2').click(print_doc)
             }
-            else if(searchfor =='users'){
-                $("#list_header").html('Users List');
-                $("#span_number_of").html('users');
+
+            $("#back_btn").click(function () {
+                window.location = "/";
+            });
+
+            function print_doc() {
+                var index = $(this).closest('tr').find('td:first').text() - 1;
+                var doc_id = $(".btn1").eq(index - 1).data('id')
+                if(confirm('After this point editing will not be possible, you want to continue')){
+                    window.location = "/list?searchfor=" + searchfor + "&type=" + type + "&printdoc=" + doc_id;
+                }
             }
-            else if(searchfor =='docs'){
-                $('.btn3').text('Print')
-                $('.btn3').click(print_doc)
+
+            function view_doc() {
+                var index = $(this).closest('tr').find('td:first').text() - 1;
+                alert($(".btn1").eq(index - 1).data('id'));
             }
 
-            $('.btn1').click(print_doc)
-            $('.btn2').click(print_doc)
-        }
-        
-        $("#back_btn").click(function(){
-            window.location ="/";
-        });
+            function delete_doc() {
+                var index = $(this).closest('tr').find('td:first').text() - 1;
+                alert($(".btn1").eq(index - 1).data('id'));
+            }
 
-        function print_doc(){
-            var index = $(this).closest('tr').find('td:first').text() -1;
-            alert($(".btn1").eq(index-1).data('id'));
-            print_form();
+            function block() {
+                var index = $(this).closest('tr').find('td:first').text() - 1;
+                alert($(".btn1").eq(index - 1).data('id'));
+            }
 
-        }
-        function view_doc(){
-            var index = $(this).closest('tr').find('td:first').text() -1;
-            alert($(".btn1").eq(index-1).data('id'));
-        }
-        function delete_doc(){
-            var index = $(this).closest('tr').find('td:first').text() -1;
-            alert($(".btn1").eq(index-1).data('id'));
-        }
-        function block(){
-            var index = $(this).closest('tr').find('td:first').text() -1;
-            alert($(".btn1").eq(index-1).data('id'));
-        }
+            function print_form(data) {
+                var iframe = document.getElementById('print-frame');
+                var doc = iframe.contentWindow.document;
 
-        function print_form() {
-            var iframe = document.getElementById('print-frame');
-            var doc = iframe.contentWindow.document;
+                var css = `
+                <style>
+                    @media print {
+                        @page {
+                            margin: 0;
+                        }
+                        body {
+                            margin: 0;
+                            padding: 0;
+                        }
+                        #print-frame {
+                            display: none;
+                        }
+                    }
+                    html, body {
+                        height: 100%;
+                        margin: 0;
+                    }
+                    body {
+                        display: flex;
+                        flex-direction: column;
+                        height: 100%;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    #main_body {
+                        display: flex;
+                        flex-direction: column;
+                        height: 100%;
+                        margin: 10px;
+                    }
+                    #type {
+                        background-color: black;
+                        width: 100%;
+                        text-indent: 20px;
+                        font-size: 40px;
+                        font-weight: bold;
+                        color: white;
+                        margin: 0;
+                    }
+                    #doc_num {
+                        text-align: right;
+                        display: flex;
+                        justify-content: right;
+                        align-items: center;
+                        margin: 0;
+                    }
+                    #doc_num > span {
+                        margin-right: 20px;
+                    }
+                    table {
+                        border-collapse: collapse;
+                        border: 2px solid rgb(140, 140, 140);
+                        width: 100%;
+                    }
+                    th, td {
+                        border-collapse: collapse;
+                        border: 2px solid rgb(140, 140, 140);
+                        text-align: center;
+                    }
+                    table > tbody > tr > td > div {
+                        display: grid;
+                        grid-template-columns: 70% 30%;
+                    }
+                    .doc_header > div {
+                        display: grid;
+                        grid-template-columns: 40% 60%;
+                        margin: 0;
+                        padding: 0;
+                    }
+                    .doc_header > div > div {
+                        width: 100%;
+                        font-size: 20px;
+                        padding: 10px 0;
+                    }
+                    hr {
+                        border: none;
+                        height: 1px;
+                        background-color: black;
+                        margin: 10px 0;
+                    }
+                    #persons_data {
+                        display: grid;
+                        grid-template-columns: 49% 49%;
+                        gap: 2%;
+                        margin-bottom : 20px;
+                    }
+                    #persons_data > div > div {
+                        display: grid;
+                        grid-template-columns: 50% 50%;
+                    }
+                    #company_name {
+                        margin: 10px;
+                    }
+                    #company_logo {
+                        height: auto;
+                        width: 150px;
+                        object-fit: cover;
+                        margin-bottom: 10px;
+                    }
+                    .from_footer {
+                        margin: 10px 0px;
+                        text-align: left;
+                        display: grid;
+                        grid-template-columns: auto auto auto;
+                    }
+                    .container{
+                        flex: 1;
+                    }
+                </style>`;
 
                 var form = `
-                    <!DOCTYPE html>
+                <!DOCTYPE html>
                     <html>
                     <head>
                         <meta http-equiv="cache-control" content="no-cache">
                         <meta http-equiv="Pragma" content="no-cache">
                         <meta http-equiv="Expires" content="-1">
                         <title>Title</title>
-                        <style>
-                            @media print {
-                                @page {
-                                    margin: 0;
-                                }
-                                body {
-                                    margin: 0;
-                                    padding: 0;
-                                }
-                                #print-frame {
-                                    display: none;
-                                }
-                                /* Hide elements you don’t want to print */
-                                header, footer {
-                                    display: none;
-                                }
-                            }
-                            #type {
-                                background-color: black;
-                                width: 100%;
-                                text-indent: 20px;
-                                font-size: 40px;
-                                font-weight: bold;
-                                color: white;
-                                margin-top: 50px;
-                            }
-                            #doc_num {
-                                text-align: right;
-                                display: flex;
-                                justify-content: right;
-                                align-items: center;
-                            }
-                            #doc_num > span {
-                                margin-right: 20px;
-                            }
-                            table {
-                                border-collapse: collapse;
-                                border: 2px solid rgb(140, 140, 140);
-                                width: 100%;
-                            }
-                            th, td {
-                                border-collapse: collapse;
-                                border: 2px solid rgb(140, 140, 140);
-                                text-align: center;
-                            }
-                            table > tbody > tr > td > div {
-                                display: grid;
-                                grid-template-columns: 70% 30%;
-                            }
-                            header {
-                                display: grid;
-                                grid-template-columns: 40% 60%;
-                            }
-                            header > div {
-                                width: 100%;
-                                font-size: 20px;
-                                margin-top: 50px;
-                            }
-                            body {
-                                margin: 0;
-                                padding: 0;
-                            }
-                            hr {
-                                width: 50%;
-                                border: none;
-                                height: 1.5px;
-                                background-color: black;
-                                margin: 10px 0;
-                            }
-                            #persons_data {
-                                display: grid;
-                                grid-template-columns: 49% 49%;
-                                gap: 2%
-                            }
-                            #persons_data > div > div {
-                                display: grid;
-                                grid-template-columns: 50% 50%;
-                            }
-                            #main_body{
-                                margin: 10px;
-                            }
-                            #company_name
-                            {
-                                margin: 10px;
-                            }
-                        </style>
-                    </head>
-                    <body>
-                        <header>
-                            <div id="type">Invoice</div>
-                            <div id="doc_num">No. <span>9999</span></div>
-                        </header>
-                        <div id='company_name'>Company Name</div>
-                        <hr>
-                        <div id='main_body'>
-                            <div>DD/MM/YYYY</div>
-                            <div id="persons_data">
-                                <div>
-                                    <div>Bill To</div>
-                                    <div>
-                                        <div>Customer Name</div>
-                                        <div>Name</div>
-                                        <div>Email:</div>
-                                        <div>xxx@xxx.com</div>
-                                        <div>VAT:</div>
-                                        <div>999 999 999</div>
-                                        <div>Phone:</div>
-                                        <div>222 333 22</div>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div>Bill To</div>
-                                    <div>
-                                        <div>Customer Name</div>
-                                        <div>Name</div>
-                                        <div>Email:</div>
-                                        <div>xxx@xxx.com</div>
-                                        <div>VAT:</div>
-                                        <div>999 999 999</div>
-                                        <div>Phone:</div>
-                                        <div>222 333 22</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th>A/A</th>
-                                        <th>Title</th>
-                                        <th>Qty</th>
-                                        <th>Tax</th>
-                                        <th>Discount</th>
-                                        <th>Discount %</th>
-                                        <th>U/P</th>
-                                        <th>Value</th>
-                                        <th>Price After Discount</th>
-                                        <th>Final Price</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Title</td>
-                                        <td>1</td>
-                                        <td>&nbsp;%</td>
-                                        <td>0&nbsp;€</td>
-                                        <td>0&nbsp;%</td>
-                                        <td>95</td>
-                                        <td>95</td>
-                                        <td>90</td>
-                                        <td>100</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <div>
-                                <div>Wholesale / Retail</div>
-                                <div>Total Value: <span id="total_value">0.00</span> €</div>
-                                <div>Total Discounts: <span id="total_disc">0.00</span> €</div>
-                                <div>Total Price after Discounts: <span id="total_after_disc">0.00</span> €</div>
-                                <div>Total Price after Tax: <span id="total_after_tax">0.00</span> €</div>
-                                <br>
-                                <div>Discount: <span>0.00</span> %</div>
-                                <div>Discount Amount: <span>0.00</span> €</div>
-                                <div>Total Cost: <span id="total_cost">0.00</span> €</div>
-                            </div>
-                        </div>
-                    </body>
-                    </html>`;
+                        `+ css + `
+                    </head><body>` +create_form_body(data) +`</body></html>
+
+                `;
                 doc.open();
                 doc.write(form);
                 doc.close();
 
-                // Trigger the print dialog
                 iframe.contentWindow.focus();
                 iframe.contentWindow.print();
-        }       
-    });
-    
+            }
+
+            function create_form_body(data){
+                var body = '';
+                while (true) {
+                body = body +`
+                ` + create_header(data) +` <hr>
+                    <div id='main_body'>
+                        <div>${data.date}</div>
+                        <div id="persons_data">
+                            <div>`+create_doc_person(true, 'Bill To', 'Customer', data.person1)+`</div>
+                            <div>`+create_doc_person(false, 'Bill From', 'Company', data.company)+`</div>
+                        </div>`+create_container(data);
+                    if (rows_written == total_doc_rows) {
+                        break;
+                    }
+                }
+                return body;
+            }
+
+            function create_header(data) {
+                var header = `
+                <div class='doc_header'>
+                    <img id="company_logo" src="https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg" alt="Company Logo">
+                    <div>
+                        <div id="type">Invoice</div>
+                        <div id="doc_num">No. <span>${data.series}${data.doc.doc_num}</span></div>
+                    </div>
+                </div>`;
+
+                return header;
+            }
+
+            function create_container(data){
+                var container =`
+                <div class="container">`+create_doc_table(data.doc)+`</div>`+create_doc_footer(data.doc)+`</div>`;
+                return container;
+            }
+
+            function formatDate(date) {
+                // Ensure the input is a valid Date object
+                if (!(date instanceof Date)) {
+                    throw new Error('Invalid date object');
+                }
+
+                // Extract day, month, year, hours, and minutes
+                const day = String(date.getDate()).padStart(2, '0');
+                const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+                const year = date.getFullYear();
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+
+                // Format into DD/MM/YYYY HH:MM
+                return `${day}/${month}/${year} ${hours}:${minutes}`;
+            }
+
+            function create_doc_table(data) {
+                var table =  `<table>
+                        <thead>
+                            <tr>
+                                <th>A/A</th>
+                                <th>Title</th>
+                                <th>Qty</th>
+                                <th>Tax</th>
+                                <th>Discount</th>
+                                <th>Discount %</th>
+                                <th>U/P</th>
+                                <th>Value</th>
+                                <th>Price After Discount</th>
+                                <th>Final Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                    for (let i = rows_written; i < data.invoiceData.length; i++) {
+                        let value = data.invoiceData[i].quantity * data.invoiceData[i].price_of_unit;
+                        let disc_p = (data.invoiceData[i].discount * 100) / value;
+                        let p_after_d = value - data.invoiceData[i].discount;
+                        let final_p = p_after_d + (p_after_d * (data.invoiceData[i].tax / 100));
+                        table = table + `
+                            <tr>
+                                <td>${i + 1}</td>
+                                <td>Title</td>
+                                <td>${data.invoiceData[i].quantity}</td>
+                                <td>${data.invoiceData[i].tax}&nbsp;%</td>
+                                <td>${data.invoiceData[i].discount.toFixed(2)}&nbsp;€</td>
+                                <td>${disc_p}&nbsp;%</td>
+                                <td>${data.invoiceData[i].price_of_unit.toFixed(2)}&nbsp;€</td>
+                                <td>${value.toFixed(2)}&nbsp;€</td>
+                                <td>${p_after_d.toFixed(2)}&nbsp;€</td>
+                                <td>${final_p.toFixed(2)}&nbsp;€</td>
+                            </tr>`;
+                        rows_written = rows_written + 1;
+                        if (i == brake_page) {
+                            brake_page = brake_page + brake_page;
+                            break;
+                        }
+                    }
+                    rows_written = rows_written
+
+                    table = table + `</tbody></table>`;
+                return table;
+            }
+
+            function create_doc_footer(data) {
+                var total_cost = 0;
+                var total_value = 0;
+                var total_d = 0;
+                var total_price_after_t = 0;
+
+                data.invoiceData.forEach(function (line, index) {
+                    let value = line.quantity * line.price_of_unit;
+                    let p_after_d = value - line.discount;
+                    let final_p = p_after_d + (p_after_d * (line.tax / 100));
+
+                    total_value = total_value + value;
+                    total_d = total_d + line.discount;
+                    total_price_after_t = total_price_after_t + final_p;
+                });
+
+                let total_price_after_d = total_value - total_d;
+                let total_d_p = (data.generalDiscount * 100) / total_price_after_t;
+                total_cost = total_price_after_t - data.generalDiscount;
+
+
+                var footer = `
+                <br>
+                <hr>
+                <div class='from_footer'>
+                    <div>Total Value: ${total_value.toFixed(2)} €</div>
+                    <div>Total Discounts: ${total_d.toFixed(2)} €</div>
+                    <div>Total Price after Discounts: ${total_price_after_d.toFixed(2)} €</div>
+                    <div>Total Price after Tax: ${total_price_after_t.toFixed(2)} €</div>
+                    <div>Discount: ${total_d_p.toFixed(1)} %</div>
+                    <div>Discount Amount: ${data.generalDiscount.toFixed(2)} €</div>
+                    <div style='font-weight:bold'>Total Cost: ${total_cost.toFixed(2)} €</div>
+                </div>`;
+                return footer;
+            }
+
+            function create_doc_person(client, header, person_title, data) {
+                var person = ''
+                if (client) {
+                    var person = `<div>${header}</div>
+                <div>
+                    <div>${person_title} Name</div>
+                    <div>${data.firstName} ${data.lastName}</div>
+                    <div>Email:</div>
+                    <div>${data.email || 'no email'}</div>
+                    <div>VAT:</div>
+                    <div>${data.afm || 'no AFM'}</div>
+                    <div>Phone:</div>
+                    <div>${data.phone || 'no phone'}</div>
+                </div>`;
+                    return person;
+                }
+                var person = `<div>${header}</div>
+                <div>
+                    <div>${person_title} Name</div>
+                    <div>${data.name}</div>
+                    <div>Email:</div>
+                    <div>${data.email || 'no email'}</div>
+                    <div>AFM:</div>
+                    <div>${data.afm || 'no AFM'}</div>
+                    <div>Phone:</div>
+                    <div>${data.phone || 'no phone'}</div>
+                </div>`;
+                return person;
+            }
+            
+
+            window.addEventListener('afterprint', function () {
+                alert("Printing is completed.");
+        });
+        
+        });
+
     </script>
+
 </html>
