@@ -1,40 +1,62 @@
 <div id="sidebar_div">
     <div>
         <div>
-            <button class="main_side_menubtn user">
-                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying"/>
-                Buying
-            </button>
-            <button class="main_side_menubtn user">
-                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying"/>
-                Sales
-            </button>
-            <button class="main_side_menubtn user">
-                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying"/>
-                Persons
-            </button>
-            <button class="main_side_menubtn user">
-                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying"/>
-                View
-            </button>
-            <button class="main_side_menubtn user">
-                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying"/>
-                Manage
-            </button>
+            <% if(user.type == 'admin') { %>
+                <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=companys'">
+                    <img src="https://img.icons8.com/ios-filled/100/FFFFFF/client-company.png" alt="client-company"/>
+                    Companys
+                </button>
+                <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=users'">
+                    <img src="https://img.icons8.com/external-basicons-solid-edtgraphics/50/FFFFFF/external-Users-users-basicons-solid-edtgraphics-4.png" alt="users"/>
+                    Users
+                </button>
+                <button class="main_side_menubtn" onclick="location.href = '/report-list-page'">
+                    <img src="https://img.icons8.com/wired/64/FFFFFF/siren.png" alt="reports"/>
+                    Reports
+                </button>
+            <% } else { %>
+    
+                <button class="main_side_menubtn user sidebar_btn">
+                    <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying"/>
+                    Buying
+                </button>
+                <button class="main_side_menubtn user sidebar_btn">
+                    <img src="https://img.icons8.com/ios-filled/100/FFFFFF/cash-register.png" alt="sales"/>
+                    Sales
+                </button>
+                <button class="main_side_menubtn user sidebar_btn">
+                    <img src="https://img.icons8.com/pastel-glyph/64/FFFFFF/box--v1.png" alt="warehouse"/>
+                    Warehouse
+                </button>
+            <% } %>
         </div>
         <div id='column_two_menu_div'>
             <div class="sub_side_menu_div">
                 <button onclick="location.href = 'list?searchfor=docs&type=buy';">View Docs</button>
                 <button onclick="location.href = '/create-doc?type=buy';">Create Docs</button>
                 <button onclick="location.href = 'list?searchfor=series&type=buy';">View Series</button>
-                <button onclick="location.href = '/create?create=series';">Create Series</button>
+                <button onclick="location.href = '/create?create=series&type=buy';">Create Series</button>
                 <button onclick="location.href = 'list?searchfor=persons&type=buy';">View Persons</button>
-                <button onclick="location.href = '/create?create=persons';">Create Persons</button>
+                <button onclick="location.href = '/create?create=persons&type=buy';">Create Persons</button>
+            </div>
+            <div class="sub_side_menu_div">
+                <button onclick="location.href = 'list?searchfor=docs&type=sale';">View Docs</button>
+                <button onclick="location.href = '/create-doc?type=sale';">Create Docs</button>
+                <button onclick="location.href = 'list?searchfor=series&type=sale';">View Series</button>
+                <button onclick="location.href = '/create?create=series&type=sale';">Create Series</button>
+                <button onclick="location.href = 'list?searchfor=persons&type=sale';">View Persons</button>
+                <button onclick="location.href = '/create?create=persons&type=sale';">Create Persons</button>
+            </div>
+            <div class="sub_side_menu_div">
+                <button onclick="location.href = '/create?create=warehouses';">Create Warehouses</button>
+                <button onclick="location.href = 'list?searchfor=warehouses&type=sale';">View Warehouses</button>
+                <button onclick="location.href = '/create?create=items';">Create Items</button>
+                <button onclick="location.href = 'list?searchfor=warehouses&type=sale';">View Items</button>
             </div>
         </div>
     </div>
     <div>
-        <button id="back_btn">
+        <button id="back_btn" class="main_side_menubtn">
             <img src="https://img.icons8.com/sf-black/64/FFFFFF/back.png" alt="back"/>
         </button>
     </div>
@@ -43,26 +65,28 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
+        $(".sub_side_menu_div").hide();
         $(".main_side_menubtn.user").click(function() {
+            var index = $(".main_side_menubtn.user").index(this);
+            var down = index
+
+            $(".sub_side_menu_div").hide();
+            $(".sub_side_menu_div").eq(index).show();
+                let top = 45 + index*85
+                $("#column_two_menu_div").css("top", top+"px");
             if (!$(this).hasClass('clicked')) {
-                // Hide all sub menu divs
                 $('.sub_side_menu_div').css('visibility', 'hidden');
                 
-                // Remove 'clicked' class from all buttons
                 $('.main_side_menubtn').removeClass('clicked');
 
-                // Add 'clicked' class to the clicked button
                 $(this).addClass('clicked');
                 
-                // Show the corresponding sub menu div
                 var index = $('.main_side_menubtn').index($(this));
                 $('.sub_side_menu_div').eq(index).css('visibility', 'visible');
             }
             else{
-                // Hide all sub menu divs
                 $('.sub_side_menu_div').css('visibility', 'hidden');
                 
-                // Remove 'clicked' class from all buttons
                 $('.main_side_menubtn').removeClass('clicked');
             }
         });

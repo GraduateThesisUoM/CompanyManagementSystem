@@ -72,8 +72,16 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
             console.log(series);
         }
         else if(req.body.create_type == 'person'){
-            const person = await generalFunctions.create_person(req.body.person_type,req.body.person_firstName,req.body.person_lastName,req.body.person_email,req.body.person_vat,
-                req.body.person_phone,req.user.company)
+            let data = {
+                type: req.query.type,
+                firstName: req.body.person_firstName,
+                lastName: req.body.person_lastName,
+                email: req.body.person_email,
+                afm: req.body.person_vat,
+                phone: req.body.person_phone,
+                company: company
+              }
+            const person = await generalFunctions.create_person(data)
             console.log(person);
         }
         res.redirect('/create');

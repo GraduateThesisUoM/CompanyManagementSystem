@@ -77,13 +77,14 @@ body{
     position: relative;
     display: flex;
     flex-direction: column;
-    height: 100vh;
     justify-content: space-between;
 }
 
 #sidebar_div>div{
     margin-top: 20px;
     display: flex;
+}
+#sidebar_div>div>div{
 }
 
 .main_side_menubtn{
@@ -123,7 +124,7 @@ body{
     height: 80px;
     margin: 15px 15px 15px 20px;
     box-shadow: -3px 3px 5px black;
-    font-size: 10px;
+    font-size: 12px;
     font-weight: bold;
     color: white;
     box-shadow: -10px 7px 15px -1px black;
@@ -138,17 +139,15 @@ body{
 .sub_side_menu_div{
     width: 170px;
     display: block;
+    background-color:red;
 }
 
-
 #column_two_menu_div{
-    background-color:red;
     margin-left:10px;
     position: relative;
     z-index: 2;
-    top: 50px;
+    top: 100px;
     left: -35px;
     width: 170px;
-    display: block;
 }
 

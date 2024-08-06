@@ -71,9 +71,9 @@ async function create_users(){
   company2.license.bought = 2;
   await company2.save();
 
-  const person1 =  await generalFunctions.create_person("customer","p1","p1ln","p1@p1.com",111,222,company2._id);
-  const person2 =  await generalFunctions.create_person("supplier","p2","p2ln","p2@p2.com",1112,2223,company2._id);
-  const person3 =  await generalFunctions.create_person("customer","p3","p3ln","p3@p3.com",33,333,company2._id);
+  const person1 =  await generalFunctions.create_person("sale","p1","p1ln","p1@p1.com",111,222,company2._id);
+  const person2 =  await generalFunctions.create_person("buy","p2","p2ln","p2@p2.com",1112,2223,company2._id);
+  const person3 =  await generalFunctions.create_person("sale","p3","p3ln","p3@p3.com",33,333,company2._id);
 
   const user2 = await generalFunctions.create_user("c1",company2,1);
 

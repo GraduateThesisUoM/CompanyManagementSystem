@@ -204,21 +204,20 @@ async function createReport(userid,reportedid,reportreason,reporttext){
     }
 }
 
-async function create_person(type,f_name,l_name,email,vat,phone,company){
+async function create_person(data){
     const person = new Person({
-      type: type,
-      firstName: f_name,
-      lastName: l_name,
-      email: email,
-      afm: vat,
-      phone: phone,
-      company: company
-
+      type: data.type,
+      firstName: data.f_name,
+      lastName: data.l_name,
+      email: data.email,
+      afm: data.vat,
+      phone: data.phone,
+      company: data.company
     });
   
     await person.save();
   
-    console.log("Person " + f_name + " " + l_name + " Created");  
+    console.log("Person " + data.f_name + " " + data.l_name + " Created");  
     return person;
 }
 

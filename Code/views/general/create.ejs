@@ -22,21 +22,27 @@
             <div>
                 <h1>Create</h1>
                 <div id="create_menu">
-                    <button class = "create_menu_btn" id="warehouse">Αποθήκη</button>
+                    <button class = "create_menu_btn" id="warehouses">Αποθήκη</button>
                     <button class = "create_menu_btn" id="items">Είδος</button>
                     <button class = "create_menu_btn" id="series">Σειρά</button>
                     <button class = "create_menu_btn" id="persons">Άτομο</button>
                 </div>
-                <form action="/create" method="POST" >
+                <form action="/create" method="POST" id="create_form">
+                    <label for="type">Type : </label>
+                    <select name="type" id="type">
+                        <option value="-">-</option>
+                        <option value="buy">Supplier</option>
+                        <option value="sale">Customer</option>
+                    </select>
                     <input type="text" id="create_type"  name="create_type">
-                    <div id = 'warehouse_div' class="create_div">
+                    <div id = 'warehouses_div' class="create_div">
                         <label for="warehouse_title">Title : </label>
                         <input type="text" id="warehouse_title" name="warehouse_title" class="required warehouse">
                         <br>
                         <label for="warehouse_address">Address : </label>
                         <input type="text" id="warehouse_address" name="warehouse_address" class="required warehouse">
                     </div>
-                    <div id = 'item_div' class="create_div">
+                    <div id = 'items_div' class="create_div">
                         <label for="item_title">Title : </label>
                         <input type="text" id="item_title" name="item_title" class="required item">
                         <br>
@@ -67,12 +73,7 @@
                             <option value="sale">Sales</option>
                         </select>
                     </div>
-                    <div id ='person_div' class="create_div">
-                        <label for="person_type">Type : </label>
-                        <select name="person_type" class="required person">
-                            <option value="supplier">Supplier</option>
-                            <option value="customer">Customer</option>
-                        </select>
+                    <div id ='persons_div' class="create_div">
                         <label for="person_firstName">First Name : </label>
                         <input type="text" id="person_firstName" name="person_firstName"  class="required person">
                         <label for="person_lastName">Last Name : </label>
@@ -86,7 +87,6 @@
 
                     </div>
                     <button id="my_submit_btn" type="button">Καταχώρηση</button>
-                    <button id="submit_btn" style="display: none;" type="submit">submit</button>
                 </form>
             </div>
         </div>
@@ -94,6 +94,27 @@
     <%- include('../partials/footer'); %>
     <script>
     $(document).ready(function(){
+        const queryString = new URL(window.location.href).search;
+        const params = new URLSearchParams(queryString);
+        var type = '';
+        var  create = '';
+
+        if (queryString.length > 0) {
+            if (params.has('type')) {
+                type = params.get('type');
+                $("#type").hide();
+                $("#type").val(type);
+            }
+            if (params.has('create')) {
+                create = params.get('create');
+                $("#"+create).click();
+                //$("#my_submit_btn").hide();
+            }
+            else{
+                alert("EROR");
+            }
+        }
+
         $(".create_div").hide();
         $("#my_submit_btn").hide();
         $("#back_btn").click(function(){
@@ -122,7 +143,7 @@
         $("#my_submit_btn").click(my_submit);
 
 
-        var  create = '';
+        
         if (window.location.search) {
             create = new URLSearchParams(window.location.search).get('create');
             $("#"+create).click();
@@ -136,7 +157,7 @@
                 get_other_value('item_price_w_disc','item_price_r_disc');
                 get_other_value('item_price_2_disc','item_price_w_disc');
             }
-            $("#submit_btn").click();
+            $("#create_form").submit();
         }
 
         function get_other_value(id1,id2){
