@@ -6,7 +6,7 @@ const ItemSchema = new mongoose.Schema({
     companyID: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
-
+    type : { type: String, required: true ,default:'-'},
     active: {
         type: Number,
         enum: [0, 1],

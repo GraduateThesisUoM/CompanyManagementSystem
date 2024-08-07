@@ -3,7 +3,8 @@ const Warehouse = require("./Schemas/Warehouse");
 
 const folders ={
   css: "./public/css",
-  img: "./public/imgs"
+  img: "./public/imgs",
+  js: "./public/js"
 };
 
 const schemas = {

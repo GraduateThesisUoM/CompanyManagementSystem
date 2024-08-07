@@ -57,46 +57,45 @@ function checkAccessRigts(req){
     }
 }
 
-async function create_user(text,company,cOwner){
+async function create_user(data){
     const user = new Client({
-      type: 'user',
-      firstName: text+'_fn',
-      lastName: text+'_ln',
-      password: await bcrypt.hash('1', 10),
-      email: text+"@"+text,
-      afm: text+'_afm',
-      mydatakey: text+'_mdk',
-      company: company._id,
-      companyOwner :cOwner
+        type: data.type,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        email: data.email,
+        afm: data.afm,
+        mydatakey: data.mydatakey,
+        company: data.company,
+        companyOwner :data.cOwner
     });
   
     await user.save();
   
-    console.log("User " + text + " Created");  
+    console.log("User " + user.firstName + " " + user.lastName + " Created");  
     return user;
 }
 
-async function create_company(name,logo,signupcode){
+async function create_company(data){
     const company = new Company({
-        name : name,
-        //logo : logo,
-        logo : "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
-        signupcode : signupcode
+        name : data.name,
+        logo : data.logo,
+        signupcode : data.signupcode
     });
     await company.save();
     console.log("company " + company.name + " Created");
     return company
 }
 
-async function create_accountant(text){
+async function create_accountant(data){
     const newAccountant = new Accountant({
-        type: 'accountant',
-        firstName: text+'_fn',
-        lastName: text+'_ln',
-        password: await bcrypt.hash('1', 10),
-        email: text+"@"+text,
-        afm: text+'_afm',
-        mydatakey: text+'_mdk'
+        type: data.type,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        email: data.email,
+        afm: data.afm,
+        mydatakey: data.mydatakey
     });
 
     await newAccountant.save();
@@ -106,13 +105,13 @@ async function create_accountant(text){
     return newAccountant;
 }
 
-async function create_admin(text){
+async function create_admin(data){
     const NewAdmin = new User({
-      type: 'admin',
-      firstName: text+"_fn",
-      lastName: text+"_ln",
-      password: await bcrypt.hash('1', 10),
-      email: text+"@"+text
+      type: data.type,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      password: data.password,
+      email: data.email
     });
     await NewAdmin.save();
     console.log("Admin " + NewAdmin.firstName + " Created");
@@ -120,18 +119,18 @@ async function create_admin(text){
     return NewAdmin;
 }
 
-async function createWarehouse(companyID, title, location){
+async function createWarehouse(data){
     try{
         const warehouse = new Warehouse({
-            companyID: companyID,
-            title :title,
-            location : location
+            companyID: data.companyID,
+            title : data.title,
+            location : data.location
         });
         
         await warehouse.save();
         
         //console.log(warehouse);
-        console.log("warehouse"+title+" created");
+        console.log("warehouse"+ warehouse.title+" created");
         
         return warehouse;
     }
@@ -154,7 +153,7 @@ async function createItem(data){
             tax_w :data.tax_w
         });
 
-        console.log("item "+data.title+" created");
+        console.log("item "+item.title+" created");
         await item.save();
         
         return item;
@@ -170,12 +169,13 @@ async function createSeries(data){
             companyID: data.companyID,
             title :data.title,
             acronym : data.acronym,
-            type : data.type
+            type : data.type,
+            sealed : data.sealed
         });
         
         await seies.save();
         
-        console.log("seies "+data.title+" created");
+        console.log("seies "+seies.title+" created");
 
         return seies;
         
@@ -207,17 +207,17 @@ async function createReport(userid,reportedid,reportreason,reporttext){
 async function create_person(data){
     const person = new Person({
       type: data.type,
-      firstName: data.f_name,
-      lastName: data.l_name,
+      firstName: data.firstName,
+      lastName: data.lastName,
       email: data.email,
-      afm: data.vat,
+      afm: data.afm,
       phone: data.phone,
       company: data.company
     });
   
     await person.save();
   
-    console.log("Person " + data.f_name + " " + data.l_name + " Created");  
+    console.log("Person " + person.f_name + " " + person.l_name + " Created");  
     return person;
 }
 

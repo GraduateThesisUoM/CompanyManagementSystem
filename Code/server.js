@@ -35,6 +35,7 @@ app.use(methodOverride('_method'));
 
 app.use(express.static(path_constants.folders.css));
 app.use(express.static(path_constants.folders.img));
+app.use(express.static(path_constants.folders.js));
 
 //Routes
 app.use(path_constants.pages.index.url, require(path_constants.pages.index.file));

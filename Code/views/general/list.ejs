@@ -145,12 +145,10 @@
 
 </body>
 <%- include('../partials/footer'); %>
-    <!--script type = "text/javascript" src="../../JSFrontEndFunctions.js"></script-->
+    <script type = "text/javascript" src="JSFrontEndFunctions.js"></script>
     <script>
         $(document).ready(function () {
-            var rows_written = 0;
             var total_doc_rows = '<%=doc_data.doc_line_num%>';
-            var brake_page = 24;
             const queryString = new URL(window.location.href).search;
             const params = new URLSearchParams(queryString);
             var searchfor = '';
@@ -180,7 +178,8 @@
                             doc: JSON.parse(`<%- JSON.stringify(doc_data.doc) %>`),
                             series: '<%=doc_data.series%>',
                             person1: JSON.parse(`<%- JSON.stringify(doc_data.person1) %>`),
-                            company: JSON.parse(`<%- JSON.stringify(doc_data.company) %>`)
+                            company: JSON.parse(`<%- JSON.stringify(doc_data.company) %>`),
+                            total_doc_rows: total_doc_rows
                         }
 
                         print_form(data);
@@ -219,6 +218,20 @@
                 alert($(".btn1").eq(index - 1).data('id'));
             }
 
+            function print_form(data) {
+                var iframe = document.getElementById('print-frame');
+                var doc = iframe.contentWindow.document;
+
+                var form = create_form(data);
+                doc.open();
+                doc.write(form);
+                doc.close();
+
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+            }
+
+            /*
             function print_form(data) {
                 var iframe = document.getElementById('print-frame');
                 var doc = iframe.contentWindow.document;
@@ -520,11 +533,7 @@
                 </div>`;
                 return person;
             }
-            
-
-            window.addEventListener('afterprint', function () {
-                alert("Printing is completed.");
-        });
+            */
         
         });
 
