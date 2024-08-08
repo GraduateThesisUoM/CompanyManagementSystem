@@ -310,14 +310,16 @@ async function create_users(){
     companyID: company2._id,
     title :'series1b',
     acronym : 'S1',
-    type : 'buy'
+    type : 'buy',
+    sealed : 1
   }
   const s1 = await generalFunctions.createSeries(data);
   data = {
     companyID: company2._id,
     title :'series2s',
     acronym : 'S2',
-    type : 'sale'
+    type : 'sale',
+    sealed : 0
   }
   const s2 = await generalFunctions.createSeries(data);
 

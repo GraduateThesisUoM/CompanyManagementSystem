@@ -134,7 +134,7 @@ function create_form_body(data) {
 
     while (rows_written < data.total_doc_rows) {
         create_doc_table_var = create_doc_table(data.doc,rows_written);
-        body += create_header(data) + `<hr>
+        body += create_header(data) + `
         <div class="main_body">
             <div>${data.date}</div>
             <div id="persons_data">

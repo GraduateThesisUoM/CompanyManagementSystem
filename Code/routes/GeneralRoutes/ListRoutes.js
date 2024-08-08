@@ -6,17 +6,12 @@ const path_constants = require('../../constantsPaths');
 
 //Models
 const Company  = require(path_constants.schemas.two.company);
-const Accountant  = require(path_constants.schemas.two.accountant);
-const Node = require(path_constants.schemas.two.node);
 const Notification = require(path_constants.schemas.two.notification);
-const Report = require(path_constants.schemas.two.report);
 const User = require(path_constants.schemas.two.user);
 const Item = require(path_constants.schemas.two.item);
 const Person = require(path_constants.schemas.two.person);
 const Document = require(path_constants.schemas.two.document);
 const Series = require(path_constants.schemas.two.series);
-
-
 
 
 //Authentication Functions
@@ -73,7 +68,7 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                 if(req.query.type == 'sale'){
                     person_type = 'customer'
                 }
-                var list_persons = await Person.find({company : company,type:person_type});
+                var list_persons = await Person.find({company : company,type:req.query.type});
 
                 const seriesMap = new Map(list_series.map(series => [series._id.toString(), series.acronym]));
                 const personsMap = new Map(list_persons.map(person => [person._id.toString(), `${person.firstName} ${person.lastName}`]));
@@ -85,10 +80,12 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                 column_titles = ["ID","Doc", "Reg Date",person_type]
                 if(req.query.printdoc){
                     var document = await Document.findOne({_id: req.query.printdoc});
-                    document.sealed = 1;
-                    await document.save();
-                    console.log(document.invoiceData.length)
                     var series = await Series.findOne({_id: document.series});
+                    if(series.sealed == 1){
+                        document.sealed = 1;
+                        await document.save();
+                    }
+                    
                     doc_data = {
                         company : await Company.findOne({_id: company}),
                         doc : document,
@@ -102,7 +99,7 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
             var data = {
                 user: req.user,
                 list_items : list_items,
-                notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}),
+                notification_list: await Notification.find({$and:[{user_id: req.user._id} , {status: "unread"}]}),
                 column_titles : column_titles,
                 searchfor : req.query.searchfor,
                 doc_data :doc_data

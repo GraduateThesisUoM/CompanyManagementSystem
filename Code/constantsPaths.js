@@ -172,6 +172,13 @@ const pages = {
       return views_folders.general+"create_doc.ejs"
     }}
   },
+  view:{
+    url : "/view",
+    file: routes.general+"ViewRoutes.js",
+    view : function() { {
+      return views_folders.general+"view.ejs"
+    }}
+  },
   //User
   my_accountant :{
     url : "/my-accountant",

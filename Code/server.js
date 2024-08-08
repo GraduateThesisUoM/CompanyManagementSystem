@@ -159,6 +159,10 @@ app.use(path_constants.pages.list.url, require(path_constants.pages.list.file));
 //create doc
 app.use(path_constants.pages.create_doc.url, require(path_constants.pages.create_doc.file));
 
+//view
+app.use(path_constants.pages.view.url, require(path_constants.pages.view.file));
+
+
 const http = require('http').createServer(app);
 const socketIO = require('socket.io')(http);
 
