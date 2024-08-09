@@ -17,20 +17,26 @@
     <div class="has_sidebar">
         <%- include('../partials/sidebar'); %>
         <div>
-            <%if (data.firstName) {%>
-                <div>title</div>
-            <%}%>
-            fff
+            <% if (isParamsEmpty) { %> 
+                <div>ERROR: No elements selected</div>
+            <% } else { %>
+                <% titles.forEach(function(title, index) { %>
+                    <div><%= title %> <%= data[index] %></div>
+                <% }); %>
+            <% } %>
+            <button>Delete</button>
+            <button>Active/InActive</button>
         </div>
+    </div>
 </body>
 <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function () {
             
 
-            /*$("#back_btn").click(function () {
+            $("#back_btn").click(function () {
                 window.location = "/";
-            });*/
+            });
 
         });
 

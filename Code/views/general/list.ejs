@@ -90,7 +90,7 @@
                             <tr>
                                 <th>A/A</th>
                                 <% column_titles.forEach(function(column_title, index) { %>
-                                    <% if (searchfor=='docs' && index> 0) { %>
+                                    <% if (column_title != 'ID' ){ %>
                                         <th>
                                             <%= column_title %>
                                         </th>
@@ -104,17 +104,17 @@
                             <tr>
                                 <%if(list_items.length==0){%>
                                     <% for (let i=0; i <=column_titles.length; i++) { %>
-                                        <% if (searchfor=='docs' && i> 0) { %>
+                                        <% if (column_titles[i] != 'ID') { %>
                                             <th>-</th>
-                                            <% } %>
-                                                <% } %>
-                                                    <%} else{ list_items.forEach(function(list_item, index) { %>
+                                        <% } %>
+                                    <% } %>
+                                <%} else{ list_items.forEach(function(list_item, index) { %>
                             <tr>
                                 <td>
                                     <%= index + 1 %>
                                 </td>
                                 <% for (let i=0; i < list_item.data.length; i++) { %>
-                                    <% if (searchfor !=='docs' || (searchfor==='docs' && i> 0)) { %>
+                                    <% if (column_titles[i] != 'ID') { %>
                                         <td id="cell_<%= index %>_<%= i %>">
                                             <%= list_item.data[i] %>
                                         </td>
@@ -204,9 +204,9 @@
             }
 
             function view_doc() {
-                /*var index = $(this).closest('tr').find('td:first').text() - 1;
-                alert($(".btn1").eq(index - 1).data('id'));*/
-                window.location = "/view";
+                var index = $(this).closest('tr').find('td:first').text() - 1;
+                let id = $(".btn1").eq(index - 1).data('id');
+                window.location = "/view?type="+searchfor+"&id="+id;
             }
 
             function delete_doc() {

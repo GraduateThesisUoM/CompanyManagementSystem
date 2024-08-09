@@ -1,6 +1,3 @@
-const Item = require("./Schemas/Item");
-const Warehouse = require("./Schemas/Warehouse");
-
 const folders ={
   css: "./public/css",
   img: "./public/imgs",

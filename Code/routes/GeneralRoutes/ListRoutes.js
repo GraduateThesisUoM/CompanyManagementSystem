@@ -12,6 +12,7 @@ const Item = require(path_constants.schemas.two.item);
 const Person = require(path_constants.schemas.two.person);
 const Document = require(path_constants.schemas.two.document);
 const Series = require(path_constants.schemas.two.series);
+const Warehouse = require(path_constants.schemas.two.warehouse);
 
 
 //Authentication Functions
@@ -94,6 +95,26 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                         doc_line_num :document.invoiceData.length
                     }
                 }
+            }
+            else if (req.query.searchfor == "warehouses"){
+                list_items = await Warehouse.find({companyID : company});
+                list_items = list_items.map(item => ({
+                    data :[ item._id,item.title, item.location, formatDate(item.registrationDate), item.active]
+                }));
+                column_titles = ["ID","Title","location", "Reg Date","Status"]
+            }else if (req.query.searchfor == "series"){
+                list_items = await Series.find({companyID : company,type:req.query.type});
+                list_items = list_items.map(item => ({
+                    data :[ item._id,item.title, item.acronym,item.type,item.count,item.sealed, formatDate(item.registrationDate), item.active]
+                }));
+                column_titles = ["ID","Title","Acronym","Type","Count","Sealed", "Reg Date","Status"]
+            }
+            else if (req.query.searchfor == 'persons'){
+                list_items = await Person.find({company : company,type:req.query.type});
+                list_items = list_items.map(item => ({
+                    data :[ item._id,item.type, item.firstName, item.lastName, item.email, item.phone, item.afm, item.account_status, formatDate(item.registrationDate)]
+                }));
+                column_titles = ["ID","Type","firstName","lastName","email","phone", "afm","Status", "Reg Date"];
             }
         
             var data = {
