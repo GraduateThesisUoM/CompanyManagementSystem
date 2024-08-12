@@ -20,11 +20,13 @@ const PersonSchema = new mongoose.Schema({
       email: { type: String, required: true },
       phone: { type: String, required: true },
       afm: { type: String, required: false },
-      account_status : {
-        type: String,
-        enum: ['active', 'baned', 'deleted'],
-        required: true,
-        default: 'active'
+      active: {
+        type: Number,
+        enum: [0, 1, 2],
+        //1 active
+        //0 disabled
+        //2 delete
+        default: 1
       }
     });
 

@@ -8,11 +8,14 @@ const UserSchema = new mongoose.Schema({
   lastName: { type: String, required: true },
   email: { type: String, required: true },
   password: { type: String, required: true },
-  account_status : {
-    type: String,
-    enum: ['active', 'baned', 'deleted'],
-    required: true,
-    default: 'active'
+  active: {
+    type: Number,
+    enum: [0, 1, 2],
+    //1 active
+    //0 disabled
+    //2 delete
+    //3 baned
+    default: 1
   },
 
 
