@@ -260,6 +260,10 @@ async function drop_collection(collection_name){
       }
 }
 
+async function delete_deactivate(input,type){
+
+}
+
 module.exports = {
     checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,
-    createSeries,createReport,create_person,drop_collection,create_doc};
+    createSeries,createReport,create_person,drop_collection,create_doc,delete_deactivate};

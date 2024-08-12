@@ -53,15 +53,6 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                 }));
                 column_titles = ["First Name","Last Name","Reg Date","Status"]
             }
-            else if (req.query.searchfor == "items"){
-                
-                list_items = await Item.find({companyID : company});
-
-                list_items = list_items.map(item => ({
-                    data :[ item.title,item.description, formatDate(item.registrationDate), item.active, item.price_r, item.price_w, item.discount_r, item.discount_w]
-                }));
-                column_titles = ["Title","Description","Reg Date","Status","Prece Retail","Discount Retail","Prece Wholesale","Discount Wholesale"]
-            }
             else if (req.query.searchfor == "docs"){
                 list_items = await Document.find({company : company,type:req.query.type});
                 var list_series = await Series.find({companyID : company,type:req.query.type});
@@ -116,6 +107,13 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
                 }));
                 column_titles = ["ID","Type","firstName","lastName","email","phone", "afm","Status", "Reg Date"];
             }
+            else if (req.query.searchfor == 'items'){
+                list_items = await Item.find({companyID : company});
+                list_items = list_items.map(item => ({
+                    data :[ item._id,item.title,formatDate(item.registrationDate),total_price(item.price_r, item.discount_r, item.tax_r), total_price(item.price_w, item.discount_w, item.tax_w), item.active]
+                }));
+                column_titles = ["ID","Title","Reg Date", "Price Retail", "Price Wholesale" ,"Status"];
+            }
         
             var data = {
                 user: req.user,
@@ -146,6 +144,11 @@ const formatDate = (dateString) => {
     const minutes = String(date.getMinutes()).padStart(2, '0');
     return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
+
+const total_price = (price, discount , tax)=>{
+    var total = price - discount;
+    return total + (total *(tax/100));
+}
 
 async function getSeriesIndexById(seriesPromise, id) {
     try {

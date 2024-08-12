@@ -85,6 +85,11 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         ]
                         data.titles = ["Type","firstName","lastName","email","phone", "afm","Status", "Reg Date"];
                     }
+                    else if (type == 'items'){
+                        obj = await Item.findOne({_id : id});
+                        data.data = [ obj.title,obj.description ,formatDate(obj.registrationDate), obj.unit_of_measurement,obj.price_r,obj.price_w,obj.discount_r,obj.discount_w,obj.tax_r,obj.tax_w, obj.active]
+                        data.titles = ["Title", "Description","Reg Date", "Unit of Peasurement", "Price Retail", "Price Wholesale", "Discount Retail", "Discount Wholesale" , "Tax Retail", "Tax Wholesale","Status"];
+                    }
                 }
                 else{
                     console.log("ERROR")

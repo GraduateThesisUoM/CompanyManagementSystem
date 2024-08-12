@@ -270,11 +270,10 @@ async function create_users(){
     companyID: company2._id,
     title : 'i1',
     description : 'i1',
-    title : 'sale',
     price_r :100,
-    price_w :10,
+    price_w :50,
     discount_r :10,
-    discount_w :3,
+    discount_w :15,
     tax_r :24,
     tax_w :0
   }
@@ -283,21 +282,20 @@ async function create_users(){
     companyID: company2._id,
     title : 'i2',
     description : 'i2',
-    title : 'buy',
     price_r :200,
-    price_w :20,
+    price_w :100,
     discount_r :20,
-    discount_w :60,
+    discount_w :10,
     tax_r :10,
-    tax_w :0
+    tax_w :5
   }
   const i2 = await generalFunctions.createItem(data);
   data = {
     companyID: company2._id,
     title : 'i3',
     description : 'i3',
-    price_r :100,
-    price_w :50,
+    price_r :500,
+    price_w :200,
     discount_r :10,
     discount_w :20,
     tax_r :20,
