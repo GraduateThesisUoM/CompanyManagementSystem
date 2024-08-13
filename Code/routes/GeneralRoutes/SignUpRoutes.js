@@ -41,13 +41,23 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
             /*logo : req.body.logo,
             signupcode : req.body.signupcode*/
           }
-          company =  generalFunctions.create_company(data);
+          company = await generalFunctions.create_company(data);
         }
         else{
           //Existing Company
           company = await Company.findOne({name:req.body.companyName, signupcode:req.body.companyRegisterCode});
         }
-        const newUser = new Client({
+        console.log(company)
+        var companyOwner = 0;
+        console.log(req.body.companyNewExisting)
+        if(req.body.companyNewExisting == '0'){
+          companyOwner = 1;
+        }
+        else{
+          company.license.used = company.license.used + 1;
+          await company.save();
+        }
+        var data = {
           type: req.body.account_type,
           firstName: req.body.firstName,
           lastName: req.body.lastName,
@@ -55,17 +65,16 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
           email: req.body.email,
           afm: req.body.afm,
           mydatakey: req.body.mydatakey,
-          company: company._id
-        });
-        if(req.body.companyNewExisting == '0'){
-          newUser.companyOwner = 1;
-        }
-        else{
-          company.license.used = company.license.used + 1;
-          await company.save();
-        }
+          company: company._id,
+          companyOwner: companyOwner
+        };
+
+        var newUser = await  generalFunctions.create_user(data);
+        
+        
         // Save the new user to the database
-      await newUser.save();
+      
+      console.log(newUser);
 
       if (req.body.self_accountant == "true"){
         clientAccountantFunctions.send_hiring_req_to_accountant(company._id,newUser._id,company._id);

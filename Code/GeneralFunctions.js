@@ -84,7 +84,7 @@ async function create_user(data){
         afm: data.afm,
         mydatakey: data.mydatakey,
         company: data.company,
-        companyOwner :data.cOwner
+        companyOwner :data.companyOwner
     });
   
     await user.save();
