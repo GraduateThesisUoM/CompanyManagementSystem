@@ -12,7 +12,7 @@ const ItemSchema = new mongoose.Schema({
       enum: [0, 1, 2],
       //1 active
       //0 disabled
-      //2 delete
+      //2 deleted
       default: 1
     },
       unit_of_measurement : { type: String, required: true, default: 'pcs'},

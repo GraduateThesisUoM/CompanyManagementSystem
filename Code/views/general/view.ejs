@@ -27,6 +27,7 @@
             <form action="/view?type=item2" method="POST" id="view_form">
                 <input type="text" name="action" id="action">
             </form>
+            <div id="message_div"><span id="message_span"></span> has been deleted</div>
             <button id="btn1">Delete</button>
             <button id="btn2"></button>
         </div>
@@ -35,6 +36,9 @@
 <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function () {
+            $("#view_form").hide();
+            $("#message_div").hide();
+
             const params = new URLSearchParams(window.location.search);
             var queryParams = {};
             for (const [key, value] of params.entries()) {
@@ -61,12 +65,14 @@
                 var btn_1_var = 'disabled';
             }
             else if(delete_deactivate == 2){
-                $("#btn1").attr('disabled', true);
-                $("#btn2").attr('disabled', true);
+                $("#btn1").hide();
+                $("#btn2").hide();
+                $("#message_div").show();
+                $("#message_span").text(queryParams.type);
             }
 
             $("#back_btn").click(function () {
-                window.location = "/";
+                window.location = "/list?searchfor=items&type=-";
             });
 
             $("#btn1").click(function () {

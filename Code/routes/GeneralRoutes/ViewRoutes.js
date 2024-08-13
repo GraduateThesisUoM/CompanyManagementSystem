@@ -108,27 +108,27 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 
     });
 
-    router.post('/', async (req, res) => {
-        try {
-            const isParamsEmpty = Object.keys(req.query).length === 0;
-
-            if (isParamsEmpty) {
-                console.log("ERROR ViewRoutes 2");
-                return res.redirect('/error?origin_page=/&error=' + encodeURIComponent("Query parameters are missing"));
-            }
-    
-            if (req.query.type && req.query.id) {
-                await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);
-                return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
-            } else {
-                console.log("ERROR ViewRoutes 1");
-                return res.redirect('/error?origin_page=/&error=' + encodeURIComponent("Type or ID is missing"));
-            }
-        } catch (e) {
-            console.error(e);
-            return res.redirect('/error?origin_page=/&error=' + encodeURIComponent(e.message));
+router.post('/', async (req, res) => {
+    try {
+        const isParamsEmpty = Object.keys(req.query).length === 0;
+        console.log(req.query)
+        if (isParamsEmpty) {
+            console.log("ERROR ViewRoutes 2");
+            return res.redirect('/error?origin_page=/&error=' + encodeURIComponent("Query parameters are missing"));
         }
-    });
+
+        if (req.query.type && req.query.id) {
+            await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);
+            return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
+        } else {
+            console.log("ERROR ViewRoutes 1");
+            return res.redirect('/error?origin_page=/&error=' + encodeURIComponent("Type or ID is missing"));
+        }
+    } catch (e) {
+        console.error(e);
+        return res.redirect('/error?origin_page=/&error=' + encodeURIComponent(e.message));
+    }
+});
     
 
 
