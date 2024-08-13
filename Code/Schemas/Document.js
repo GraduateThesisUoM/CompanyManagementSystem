@@ -16,6 +16,15 @@ const DocumentSchema = new mongoose.Schema({
   invoiceData: {
     type: mongoose.Schema.Types.Mixed,
   },
+  active: {
+    type: Number,
+    enum: [0, 1, 2],
+    //1 active
+    //0 disabled
+    //2 delete
+    //3 baned
+    default: 1
+  },
   registrationDate: { type: Date, default: Date.now }
 });
 

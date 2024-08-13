@@ -8,10 +8,13 @@ const ItemSchema = new mongoose.Schema({
     description: { type: String, required: true },
     type : { type: String, required: true ,default:'-'},
     active: {
-        type: Number,
-        enum: [0, 1],
-        default: 1
-      },
+      type: Number,
+      enum: [0, 1, 2],
+      //1 active
+      //0 disabled
+      //2 deleted
+      default: 1
+    },
       unit_of_measurement : { type: String, required: true, default: 'pcs'},
       price_r: { type: Number, required: true,default: 0 },
       price_w: { type: Number, required: true,default: 0 },
