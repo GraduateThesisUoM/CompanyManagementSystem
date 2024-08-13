@@ -34,8 +34,14 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
         var company;
         if(req.body.companyNewExisting == '0'){
           //New Company
-          company =  create_company(name,logo,generateRandomCode(6));
-          await company.save();
+          var data = {
+            name : req.body.companyName,
+            logo : "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
+            signupcode : 1
+            /*logo : req.body.logo,
+            signupcode : req.body.signupcode*/
+          }
+          company =  generalFunctions.create_company(data);
         }
         else{
           //Existing Company
