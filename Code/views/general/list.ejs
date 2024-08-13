@@ -1,141 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>List</title>
-        <!--ajax-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <!--CSS-->
-        <link rel="stylesheet" href="general_css.css">
-        <!--Header-->
-        <%- include('../partials/header'); %>
-    </head>
-    <style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List</title>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css">
+    <!--Header-->
+    <%- include('../partials/header'); %>
+</head>
+<style>
     table {
         border-collapse: collapse;
         border: 2px solid rgb(140, 140, 140);
         width: 95%;
     }
-    th, td {
+
+    th,
+    td {
         border-collapse: collapse;
         border: 2px solid rgb(140, 140, 140);
         text-align: center;
     }
+
     #table_container {
         width: 100%;
         display: flex;
         justify-content: center;
     }
+
     #td_button_container {
         display: grid;
         grid-template-columns: auto auto auto;
         gap: 10px;
     }
+
     #td_button_container>div {
         padding: 10px;
-        transition: transform 0.2s; /* Smooth transition for scaling */
+        transition: transform 0.2s;
+        /* Smooth transition for scaling */
     }
+
     #td_button_container>div>button {
         border: none;
-        padding: 5px; /* Increase padding for better appearance */
+        padding: 5px;
+        /* Increase padding for better appearance */
         cursor: pointer;
-        width: 100%; /* Ensure buttons take full div width */
+        width: 100%;
+        /* Ensure buttons take full div width */
         transition: 0.35s;
         border-radius: 10px;
     }
+
     #td_button_container>div>button:hover {
-        transform: scale(1.1); /* Scale up the button on hover */
+        transform: scale(1.1);
+        /* Scale up the button on hover */
         box-shadow: 3px 3px 10px black;
     }
-    #td_button_container>div>.delete {
+
+    #td_button_container>div>.btn2 {
         background-color: red;
         color: white;
     }
-    #td_button_container>div>.block {
+
+    #td_button_container>div>.btn3 {
         background-color: rgb(71, 71, 71);
         color: white;
     }
-    #td_button_container>div>.view {
+
+    #td_button_container>div>.btn1 {
         background-color: rgb(110, 152, 231);
         color: white;
     }
-    </style>
-    <body>
-        <div class="has_sidebar">
-            <%- include('../partials/sidebar'); %>
+</style>
+
+<body>
+    <div class="has_sidebar">
+        <%- include('../partials/sidebar'); %>
             <div>
                 <h1 id="list_header"></h1>
-                <div>Tottal Number Of <span id="span_number_of">companys</span> : <%=list_items.length%></div>
+                <div>Tottal Number Of <span id="span_number_of">companys</span> : <%=list_items.length%>
+                </div>
                 <div id="table_container">
                     <table>
-                          <thead>
+                        <thead>
                             <tr>
                                 <th>A/A</th>
                                 <% column_titles.forEach(function(column_title, index) { %>
-                                    <th><%=column_title%></th>
-                                <% });%>
-                                <th></th>
+                                    <% if (column_title != 'ID' ){ %>
+                                        <th>
+                                            <%= column_title %>
+                                        </th>
+                                        <% } %>
+                                            <% }); %>
+
+                                                <th></th>
                             </tr>
-                          </thead>
-                          <tbody>
+                        </thead>
+                        <tbody>
                             <tr>
-                                <%if(list_items.length == 0){%>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                    <td>-</td>
-                                <%}
-                                else{
-                                    list_items.forEach(function(list_item, index) { %>
-                                        <tr>
-                                            <td><%= index + 1 %></td>
-                                            <% for (let key in list_item.data) { %>
-                                                <td><%= list_item.data[key] %></td>
+                                <%if(list_items.length==0){%>
+                                    <% for (let i=0; i <=column_titles.length; i++) { %>
+                                        <% if (column_titles[i] != 'ID') { %>
+                                            <th>-</th>
+                                        <% } %>
+                                    <% } %>
+                                <%} else{ list_items.forEach(function(list_item, index) { %>
+                            <tr>
+                                <td>
+                                    <%= index + 1 %>
+                                </td>
+                                <% for (let i=0; i < list_item.data.length; i++) { %>
+                                    <% if (column_titles[i] != 'ID') { %>
+                                        <td id="cell_<%= index %>_<%= i %>">
+                                            <%= list_item.data[i] %>
+                                        </td>
+                                        <% } %>
                                             <% } %>
-                                            
-                                            <td>
-                                                <div id="td_button_container">
-                                                    <div><button class="view">View</button></div>
-                                                    <div><button class="delete">Delete</button></div>
-                                                    <div><button class="block">Block</button></div>
-                                                </div>
-                                            </td>
 
-                                        </tr>
-                                    <% });
-                                }%>
+                                                <td>
+                                                    <div id="td_button_container">
+                                                        <div><button class="btn1"
+                                                                data-id="<%= list_item.data[0] %>">View</button></div>
+                                                        <div><button class="btn2"
+                                                                data-id="<%= list_item.data[0] %>">Delete</button></div>
+                                                        <div><button class="btn3"
+                                                                data-id="<%= list_item.data[0] %>">Block</button></div>
+                                                    </div>
+                                                </td>
 
                             </tr>
-                          </tbody>
+                            <% }); }%>
+
+                                </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
-        </div>
-        
-    </body>
-    <%- include('../partials/footer'); %>
+    </div>
+    <iframe id="print-frame" style="display:none;"></iframe>
+
+</body>
+<%- include('../partials/footer'); %>
+    <script type = "text/javascript" src="JSFrontEndFunctions.js"></script>
     <script>
-    $(document).ready(function(){
-        var  searchfor = '';
-        if (window.location.search) {
-            searchfor = new URLSearchParams(window.location.search).get('searchfor');
-            if(searchfor =='companys'){
-                $("#list_header").html('Companys List');
-                $("#span_number_of").html('companys');
+        $(document).ready(function () {
+            var total_doc_rows = '<%=doc_data.doc_line_num%>';
+            const queryString = new URL(window.location.href).search;
+            const params = new URLSearchParams(queryString);
+            var searchfor = '';
+            var type = '';
+            var printdoc = ""
+
+            if (queryString.length > 0) {
+                searchfor = params.get('searchfor');
+                $("#span_number_of").html(searchfor);
+                type = type = params.get('type');
+                printdoc = type = params.get('printdoc');
+                if (searchfor == 'companys') {
+                    $("#list_header").html('Companys List');
+                }
+                else if (searchfor == 'users') {
+                    $("#list_header").html('Users List');
+                }
+                else if (searchfor == 'docs') {
+                    $('.btn3').text('Print')
+                    $('.btn3').click(print_doc);
+                    type = new URLSearchParams(window.location.search).get('type');
+                    $("#type").val(type);
+                    if (params.has('printdoc')) {
+                        var data = {
+                            company_name: '<%=doc_data.company.name%>',
+                            date: formatDate(new Date('<%=doc_data.doc.registrationDate%>')),
+                            doc: JSON.parse(`<%- JSON.stringify(doc_data.doc) %>`),
+                            series: '<%=doc_data.series%>',
+                            person1: JSON.parse(`<%- JSON.stringify(doc_data.person1) %>`),
+                            company: JSON.parse(`<%- JSON.stringify(doc_data.company) %>`),
+                            total_doc_rows: total_doc_rows
+                        }
+
+                        print_form(data);
+                    }
+                }
+                $("#searchfor").val(searchfor);
+
+                $('.btn1').click(view_doc)
+                //$('.btn2').click(print_doc)
             }
-            if(searchfor =='users'){
-                $("#list_header").html('Users List');
-                $("#span_number_of").html('users');
+
+            $("#back_btn").click(function () {
+                window.location = "/";
+            });
+
+            function print_doc() {
+                var index = $(this).closest('tr').find('td:first').text() - 1;
+                var doc_id = $(".btn1").eq(index - 1).data('id')
+                if(confirm('After this point editing will not be possible, you want to continue')){
+                    window.location = "/list?searchfor=" + searchfor + "&type=" + type + "&printdoc=" + doc_id;
+                }
             }
-        }
+
+            function view_doc() {
+                var index = $(this).closest('tr').find('td:first').text() - 1;
+                let id = $(".btn1").eq(index - 1).data('id');
+                window.location = "/view?type="+searchfor+"&id="+id;
+            }
+
+            function delete_doc() {
+                var index = $(this).closest('tr').find('td:first').text() - 1;
+                alert($(".btn1").eq(index - 1).data('id'));
+            }
+
+            function block() {
+                var index = $(this).closest('tr').find('td:first').text() - 1;
+                alert($(".btn1").eq(index - 1).data('id'));
+            }
+
+            function print_form(data) {
+                var iframe = document.getElementById('print-frame');
+                var doc = iframe.contentWindow.document;
+
+                var form = create_form(data);
+                doc.open();
+                doc.write(form);
+                doc.close();
+
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+            }
         
-        $("#back_btn").click(function(){
-            window.location ="/";
         });
 
-        
-    });
-    
     </script>
+
 </html>

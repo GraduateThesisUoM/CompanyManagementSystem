@@ -36,6 +36,7 @@ app.use(methodOverride('_method'));
 
 app.use(express.static(path_constants.folders.css));
 app.use(express.static(path_constants.folders.img));
+app.use(express.static(path_constants.folders.js));
 
 //Routes
 app.use(path_constants.pages.index.url, require(path_constants.pages.index.file));
@@ -158,6 +159,10 @@ app.use(path_constants.pages.list.url, require(path_constants.pages.list.file));
 
 //create doc
 app.use(path_constants.pages.create_doc.url, require(path_constants.pages.create_doc.file));
+
+//view
+app.use(path_constants.pages.view.url, require(path_constants.pages.view.file));
+
 
 const http = require('http').createServer(app);
 socketIO(http);

@@ -11,7 +11,7 @@ const PersonSchema = new mongoose.Schema({
       },
       type:{
         type: String,
-        enum: ['supplier', 'customer'],
+        enum: ['sale', 'buy'],
         required: true
       },
       registrationDate: { type: Date, default: Date.now , required: true},

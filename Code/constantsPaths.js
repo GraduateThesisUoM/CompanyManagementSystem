@@ -1,9 +1,7 @@
-const Item = require("./Schemas/Item");
-const Warehouse = require("./Schemas/Warehouse");
-
 const folders ={
   css: "./public/css",
-  img: "./public/imgs"
+  img: "./public/imgs",
+  js: "./public/js"
 };
 
 const schemas = {
@@ -169,6 +167,13 @@ const pages = {
     file: routes.general+"CreateDocRoutes.js",
     view : function() { {
       return views_folders.general+"create_doc.ejs"
+    }}
+  },
+  view:{
+    url : "/view",
+    file: routes.general+"ViewRoutes.js",
+    view : function() { {
+      return views_folders.general+"view.ejs"
     }}
   },
   //User

@@ -57,46 +57,45 @@ function checkAccessRigts(req){
     }
 }
 
-async function create_user(text,company,cOwner){
+async function create_user(data){
     const user = new Client({
-      type: 'user',
-      firstName: text+'_fn',
-      lastName: text+'_ln',
-      password: await bcrypt.hash('1', 10),
-      email: text+"@"+text,
-      afm: text+'_afm',
-      mydatakey: text+'_mdk',
-      company: company._id,
-      companyOwner :cOwner
+        type: data.type,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        email: data.email,
+        afm: data.afm,
+        mydatakey: data.mydatakey,
+        company: data.company,
+        companyOwner :data.cOwner
     });
   
     await user.save();
   
-    console.log("User " + text + " Created");  
+    console.log("User " + user.firstName + " " + user.lastName + " Created");  
     return user;
 }
 
-async function create_company(name,logo,signupcode){
+async function create_company(data){
     const company = new Company({
-        name : name,
-        //logo : logo,
-        logo : "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
-        signupcode : signupcode
+        name : data.name,
+        logo : data.logo,
+        signupcode : data.signupcode
     });
     await company.save();
     console.log("company " + company.name + " Created");
     return company
 }
 
-async function create_accountant(text){
+async function create_accountant(data){
     const newAccountant = new Accountant({
-        type: 'accountant',
-        firstName: text+'_fn',
-        lastName: text+'_ln',
-        password: await bcrypt.hash('1', 10),
-        email: text+"@"+text,
-        afm: text+'_afm',
-        mydatakey: text+'_mdk'
+        type: data.type,
+        firstName: data.firstName,
+        lastName: data.lastName,
+        password: data.password,
+        email: data.email,
+        afm: data.afm,
+        mydatakey: data.mydatakey
     });
 
     await newAccountant.save();
@@ -106,13 +105,13 @@ async function create_accountant(text){
     return newAccountant;
 }
 
-async function create_admin(text){
+async function create_admin(data){
     const NewAdmin = new User({
-      type: 'admin',
-      firstName: text+"_fn",
-      lastName: text+"_ln",
-      password: await bcrypt.hash('1', 10),
-      email: text+"@"+text
+      type: data.type,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      password: data.password,
+      email: data.email
     });
     await NewAdmin.save();
     console.log("Admin " + NewAdmin.firstName + " Created");
@@ -120,18 +119,18 @@ async function create_admin(text){
     return NewAdmin;
 }
 
-async function createWarehouse(companyID, title, location){
+async function createWarehouse(data){
     try{
         const warehouse = new Warehouse({
-            companyID: companyID,
-            title :title,
-            location : location
+            companyID: data.companyID,
+            title : data.title,
+            location : data.location
         });
         
         await warehouse.save();
         
         //console.log(warehouse);
-        console.log("warehouse"+title+" created");
+        console.log("warehouse"+ warehouse.title+" created");
         
         return warehouse;
     }
@@ -140,19 +139,21 @@ async function createWarehouse(companyID, title, location){
     }
 }
 
-async function createItem(companyID, title, description, price_r, discount_r, price_w,discount_w){
+async function createItem(data){
     try{
         const item = new Item({
-            companyID: companyID,
-            title :title,
-            description : description,
-            price_r :price_r,
-            price_w :price_w,
-            discount_r :discount_r,
-            discount_w :discount_w
+            companyID: data.companyID,
+            title :data.title,
+            description : data.description,
+            price_r :data.price_r,
+            price_w :data.price_w,
+            discount_r :data.discount_r,
+            discount_w :data.discount_w,
+            tax_r :data.tax_r,
+            tax_w :data.tax_w
         });
 
-        console.log("item "+title+" created");
+        console.log("item "+item.title+" created");
         await item.save();
         
         return item;
@@ -162,17 +163,19 @@ async function createItem(companyID, title, description, price_r, discount_r, pr
     }
 }
 
-async function createSeries(companyID, title){
+async function createSeries(data){
     try{
         const seies = new Series({
-            companyID: companyID,
-            title :title
+            companyID: data.companyID,
+            title :data.title,
+            acronym : data.acronym,
+            type : data.type,
+            sealed : data.sealed
         });
-        //show reqested license
         
         await seies.save();
         
-        console.log("seies "+title+" created");
+        console.log("seies "+seies.title+" created");
 
         return seies;
         
@@ -201,40 +204,46 @@ async function createReport(userid,reportedid,reportreason,reporttext){
     }
 }
 
-async function create_person(type,f_name,l_name,email,vat,phone,company){
+async function create_person(data){
     const person = new Person({
-      type: type,
-      firstName: f_name,
-      lastName: l_name,
-      email: email,
-      afm: vat,
-      phone: phone,
-      company: company
-
+      type: data.type,
+      firstName: data.firstName,
+      lastName: data.lastName,
+      email: data.email,
+      afm: data.afm,
+      phone: data.phone,
+      company: data.company
     });
   
     await person.save();
   
-    console.log("Person " + f_name + " " + l_name + " Created");  
+    console.log("Person " + person.f_name + " " + person.l_name + " Created");  
     return person;
 }
 
 async function create_doc(data){
     try {
-        // Create a new document instance
+        var series = await Series.findOne({_id: data.series});
+        series.count = series.count + 1;
+
         const newDocument = new Document({
             company: data.company,
             sender: data.sender,
             receiver: data.receiver,
+            series: data.series,
             type: data.type,
+            doc_num : series.count,
             generalDiscount: data.generalDiscount,
             invoiceData: data.invoiceData,
-            registrationDate: data.registrationDate
         });
 
         // Save the document to the database
         await newDocument.save();
         console.log('Document saved successfully');
+
+        
+        await series.save();
+
         return newDocument;
     } catch (error) {
         console.error('Error saving document:', error);
@@ -250,6 +259,11 @@ async function drop_collection(collection_name){
           console.error("Error deleting collection "+collection_name+":", error);
       }
 }
+
+async function delete_deactivate(input,type){
+
+}
+
 module.exports = {
     checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,
-    createSeries,createReport,create_person,drop_collection,create_doc};
+    createSeries,createReport,create_person,drop_collection,create_doc,delete_deactivate};

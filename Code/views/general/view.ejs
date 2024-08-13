@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View</title>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css">
+    <!--Header-->
+    <%- include('../partials/header'); %>
+</head>
+
+<body>
+    <div class="has_sidebar">
+        <%- include('../partials/sidebar'); %>
+        <div>
+            <% if (isParamsEmpty) { %> 
+                <div>ERROR: No elements selected</div>
+            <% } else { %>
+                <% titles.forEach(function(title, index) { %>
+                    <div><%= title %> <%= data[index] %></div>
+                <% }); %>
+            <% } %>
+            <button>Delete</button>
+            <button>Active/InActive</button>
+        </div>
+    </div>
+</body>
+<%- include('../partials/footer'); %>
+    <script>
+        $(document).ready(function () {
+            
+
+            $("#back_btn").click(function () {
+                window.location = "/";
+            });
+
+        });
+
+    </script>
+
+</html>

@@ -1,106 +1,101 @@
-<!--DOCTYPE html>
-<html lang="en">
-<head>
-</head>
-<body style="display: flex;width: 150px;height: 100%;left: 0;overflow-x: hidden;flex-direction: column;align-items: flex-start;">
-    <ul>
-        <a href="/transactor-list?type=supplier">Suppliers</a>
-        <a href="/transactor-list?type=customer">Customers</a>
-        <button id="buy_sidebar_btn">Αγωρές</button>
-        <button id="sell_sidebar_btn">Πωλήσεις</button>
-    </ul>
-</body>
-</html-->
-
-<!--ajax-->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-<script>
-// Define the handle_click function globally
-    function handle_click(event,link) {
-        if ($(event).hasClass("clicked")) {
-            location.href = link;
-        } else {
-            myrightclick($(event))        
-        }
-    }
-
-    function myrightclick(clickedElement) {
-        // Hide all sub menu divs
-        $('.sub_side_menu_div').css('visibility', 'hidden');
-        
-        // Remove 'clicked' class from all buttons
-        $('.main_side_menubtn').removeClass('clicked');
-        
-        // Add 'clicked' class to the clicked button
-        clickedElement.addClass('clicked');
-        
-        // Show the corresponding sub menu div
-        var index = $('.main_side_menubtn').index(clickedElement);
-        $('.sub_side_menu_div').eq(index).css('visibility', 'visible');
-    }
-
-    $(document).ready(function() {
-        // You can also add jQuery-based event handlers here if needed
-    });
-</script>
-
-
 <div id="sidebar_div">
     <div>
-        <%if(user.type == 'admin'){%>
-            <button class="main_side_menubtn" onclick="handle_click(this,'/list?searchfor=companys')">
-                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/client-company.png" alt="client-company"/>
-                Companys
-            </button>
-            <button class="main_side_menubtn" onclick="handle_click(this,'/list?searchfor=users')">
-                <img src="https://img.icons8.com/external-basicons-solid-edtgraphics/50/FFFFFF/external-Users-users-basicons-solid-edtgraphics-4.png">
-                Users
-            </button>
-            <button class="main_side_menubtn" onclick="handle_click(this,'/report-list-page')">
-                <img src="https://img.icons8.com/wired/64/FFFFFF/siren.png">
-                Reports
-            </button>
-            <% }
-        else{%>  
-            <button class="main_side_menubtn" onclick="handle_click(this,'/create-boc?type=buy')">
-                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" >
-                Buying
-            </button>
+        <div>
+            <% if(user.type == 'admin') { %>
+                <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=companys'">
+                    <img src="https://img.icons8.com/ios-filled/100/FFFFFF/client-company.png" alt="client-company"/>
+                    Companys
+                </button>
+                <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=users'">
+                    <img src="https://img.icons8.com/external-basicons-solid-edtgraphics/50/FFFFFF/external-Users-users-basicons-solid-edtgraphics-4.png" alt="users"/>
+                    Users
+                </button>
+                <button class="main_side_menubtn" onclick="location.href = '/report-list-page'">
+                    <img src="https://img.icons8.com/wired/64/FFFFFF/siren.png" alt="reports"/>
+                    Reports
+                </button>
+            <% } else { %>
+    
+                <button class="main_side_menubtn user sidebar_btn">
+                    <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying"/>
+                    Buying
+                </button>
+                <button class="main_side_menubtn user sidebar_btn">
+                    <img src="https://img.icons8.com/ios-filled/100/FFFFFF/cash-register.png" alt="sales"/>
+                    Sales
+                </button>
+                <button class="main_side_menubtn user sidebar_btn">
+                    <img src="https://img.icons8.com/pastel-glyph/64/FFFFFF/box--v1.png" alt="warehouse"/>
+                    Warehouse
+                </button>
+            <% } %>
+        </div>
+        <div id='column_two_menu_div'>
             <div class="sub_side_menu_div">
-                <button>View</button>
-                <button onclick="location.href = '/create-doc?type=buy';">Crate</button>
+                <button onclick="location.href = 'list?searchfor=docs&type=buy';">View Docs</button>
+                <button onclick="location.href = '/create-doc?type=buy';">Create Docs</button>
+                <button onclick="location.href = 'list?searchfor=series&type=buy';">View Series</button>
+                <button onclick="location.href = '/create?create=series&type=buy';">Create Series</button>
+                <button onclick="location.href = 'list?searchfor=persons&type=buy';">View Persons</button>
+                <button onclick="location.href = '/create?create=persons&type=buy';">Create Persons</button>
             </div>
-            <button class="main_side_menubtn" onclick="handle_click(this,'/create-boc?type=sale')">
-                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/cash-register.png">
-                Sales
-            </button>
             <div class="sub_side_menu_div">
-                <button>View</button>
-                <button onclick="location.href = '/create-doc?type=sale';">Crate</button>
+                <button onclick="location.href = 'list?searchfor=docs&type=sale';">View Docs</button>
+                <button onclick="location.href = '/create-doc?type=sale';">Create Docs</button>
+                <button onclick="location.href = 'list?searchfor=series&type=sale';">View Series</button>
+                <button onclick="location.href = '/create?create=series&type=sale';">Create Series</button>
+                <button onclick="location.href = 'list?searchfor=persons&type=sale';">View Persons</button>
+                <button onclick="location.href = '/create?create=persons&type=sale';">Create Persons</button>
             </div>
-            <button class="main_side_menubtn" onclick="handle_click(this,'/')">
-                <img src="https://img.icons8.com/ios-filled/100/FFFFFF/user-male-circle.png">
-                Persons
-            </button>
             <div class="sub_side_menu_div">
-                <button>View</button>
-                <button onclick="location.href = '/create?create=person';">Crate</button>
+                <button onclick="location.href = '/create?create=warehouses';">Create Warehouses</button>
+                <button onclick="location.href = 'list?searchfor=warehouses&type=sale';">View Warehouses</button>
+                <button onclick="location.href = '/create?create=items';">Create Items</button>
+                <button onclick="location.href = 'list?searchfor=items&type=-';">View Items</button>
             </div>
-            <button class="main_side_menubtn" onclick="handle_click(this,'/')">
-                <img src="https://img.icons8.com/external-vitaliy-gorbachev-lineal-vitaly-gorbachev/60/FFFFFF/external-warehouse-food-delivery-vitaliy-gorbachev-lineal-vitaly-gorbachev.png">
-                Warehouse
-            </button>
-            <div class="sub_side_menu_div">
-                <button onclick="location.href = 'list?searchfor=items';">View</button>
-                <button onclick="location.href = '/create?create=item';">Crate</button>
-            </div>
-
-            <% }%> 
+        </div>
     </div>
     <div>
-        <button  id="back_btn">
-            <img src="https://img.icons8.com/sf-black/64/FFFFFF/back.png">
+        <button id="back_btn" class="main_side_menubtn">
+            <img src="https://img.icons8.com/sf-black/64/FFFFFF/back.png" alt="back"/>
         </button>
     </div>
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $(".sub_side_menu_div").hide();
+        $(".main_side_menubtn.user").click(function() {
+            var index = $(".main_side_menubtn.user").index(this);
+            var down = index
+
+            $(".sub_side_menu_div").hide();
+            $(".sub_side_menu_div").eq(index).show();
+                let top = 45 + index*85
+                $("#column_two_menu_div").css("top", top+"px");
+            if (!$(this).hasClass('clicked')) {
+                $('.sub_side_menu_div').css('visibility', 'hidden');
+                
+                $('.main_side_menubtn').removeClass('clicked');
+
+                $(this).addClass('clicked');
+                
+                var index = $('.main_side_menubtn').index($(this));
+                $('.sub_side_menu_div').eq(index).css('visibility', 'visible');
+            }
+            else{
+                $('.sub_side_menu_div').css('visibility', 'hidden');
+                
+                $('.main_side_menubtn').removeClass('clicked');
+            }
+        });
+        function handle_click(event,link) {
+            if ($(event).hasClass("clicked")) {
+                location.href = link;
+            } else {
+                myrightclick($(event))        
+            }
+        }
+    });
+</script>

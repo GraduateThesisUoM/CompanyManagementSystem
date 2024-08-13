@@ -75,22 +75,17 @@ body{
     height: 100vh;
     background-color: rgb(170, 170, 170);
     position: relative;
-    
     display: flex;
     flex-direction: column;
-    height: 100vh; /* Full viewport height */
     justify-content: space-between;
 }
 
 #sidebar_div>div{
     margin-top: 20px;
-    /*----*/
-    display: grid;
-    grid-template-columns: 100px 100px;
-    gap:0px;
+    display: flex;
 }
 
-#sidebar_div>div>button{
+.main_side_menubtn{
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -107,9 +102,10 @@ body{
     color: transparent;
     font-size: 0;
     text-align: center;
+
 }
 
-#sidebar_div>div>button:hover{
+.main_side_menubtn.clicked{
     width: 90px;
     height: 80px;
     margin: 15px 15px 15px 20px;
@@ -120,41 +116,36 @@ body{
     box-shadow: -10px 7px 15px -1px black;
 }
 
-#sidebar_div>div>.sub_side_menu_div{
-    /*background-color:  rgb(66, 63, 63);*/
-    background-color: red;
-    /*margin: 15px 15px 15px 10px;*/
-    margin: 15px 0px 0px 0px;
-    position: relative;
-    z-index: 2;
-    top: 40px;
-    visibility: hidden ;
-}
-#sidebar_div>div>div>button{
-    display: block;
-    width: 100%;
+
+.main_side_menubtn:hover{
+    width: 90px;
+    height: 80px;
+    margin: 15px 15px 15px 20px;
+    box-shadow: -3px 3px 5px black;
+    font-size: 12px;
+    font-weight: bold;
+    color: white;
+    box-shadow: -10px 7px 15px -1px black;
 }
 
-#sidebar_div>div>button>img{
+.main_side_menubtn>img{
     width:40px;
     margin: 10px ;
 }
 
-#sidebar_div>div>.clicked{
-    width: 90px;
-    height: 80px;
-    margin: 15px 15px 15px 20px;
-    box-shadow: -3px 3px 5px black;
-    font-size: 10px;
-    font-weight: bold;
-    color: white;
-    box-shadow: -10px 7px 15px -1px black;
+
+.sub_side_menu_div{
+    width: 170px;
+    display: block;
+    background-color:red;
 }
 
-#sidebar_div>div>button:hover img{
-    margin: 2px 5px 4px 5px;
+#column_two_menu_div{
+    margin-left:10px;
+    position: relative;
+    z-index: 2;
+    top: 100px;
+    left: -35px;
+    width: 170px;
 }
 
-#sidebar_div>div>.clicked img{
-    margin: 2px 5px 4px 5px;
-}

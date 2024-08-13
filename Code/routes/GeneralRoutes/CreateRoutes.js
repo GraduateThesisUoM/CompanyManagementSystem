@@ -45,6 +45,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try{
         var company = "";
+        var data = {};
         if(req.user.type == 'admin'){
             company = req.session.selected_client._id;
         }
@@ -56,17 +57,45 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
             const warehouse = await generalFunctions.createWarehouse(company, req.body.warehouse_title,req.body.warehouse_address);
             console.log(warehouse);
         }
-        else if(req.body.create_type == 'item'){
-            const item = await generalFunctions.createItem(company, req.body.item_title,req.body.item_description,req.body.item_price_r,req.body.item_price_r_disc,req.body.item_price_w,req.body.item_price_w_disc);
+        else if(req.body.create_type == 'items'){
+            data = {
+                companyID: company._id,
+                title : req.body.items_title,
+                description : req.body.items_description,
+                price_r : req.body.items_price_r,
+                price_w :req.body.items_price_w,
+                discount_r : req.body.items_price_r_disc,
+                discount_w : req.body.items_price_w_disc,
+                tax_r : req.body.items_tax_w,
+                tax_w : req.body.items_tax_w
+            }
+            const item = await generalFunctions.createItem(data);
             console.log(item);
         }
         else if(req.body.create_type == 'series'){
-            const series = await generalFunctions.createSeries(company, req.body.series_title);
+            const isSealed = req.body.series_sealed === 'on' ? 1 : 0;
+            console.log(isSealed);
+            data = {
+                companyID: company._id,
+                title :req.body.series_title,
+                acronym : req.body.series_acronym,
+                type : req.body.series_type,
+                sealed : isSealed
+            }
+            const series = await generalFunctions.createSeries(data);
             console.log(series);
         }
         else if(req.body.create_type == 'person'){
-            const person = await generalFunctions.create_person(req.body.person_type,req.body.person_firstName,req.body.person_lastName,req.body.person_email,req.body.person_vat,
-                req.body.person_phone,req.user.company)
+            data = {
+                type: req.query.type,
+                firstName: req.body.person_firstName,
+                lastName: req.body.person_lastName,
+                email: req.body.person_email,
+                afm: req.body.person_vat,
+                phone: req.body.person_phone,
+                company: company
+              }
+            const person = await generalFunctions.create_person(data)
             console.log(person);
         }
         res.redirect('/create');

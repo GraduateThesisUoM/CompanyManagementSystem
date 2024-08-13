@@ -22,50 +22,60 @@
             <div>
                 <h1>Create</h1>
                 <div id="create_menu">
-                    <button class = "create_menu_btn" id="warehouse">Αποθήκη</button>
-                    <button class = "create_menu_btn" id="item">Είδος</button>
+                    <button class = "create_menu_btn" id="warehouses">Αποθήκη</button>
+                    <button class = "create_menu_btn" id="items">Είδος</button>
                     <button class = "create_menu_btn" id="series">Σειρά</button>
-                    <button class = "create_menu_btn" id="person">Άτομο</button>
+                    <button class = "create_menu_btn" id="persons">Άτομο</button>
                 </div>
-                <form action="/create" method="POST" >
+                <form action="/create" method="POST" id="create_form">
                     <input type="text" id="create_type"  name="create_type">
-                    <div id = 'warehouse_div' class="create_div">
+                    <div id = 'warehouses_div' class="create_div">
                         <label for="warehouse_title">Title : </label>
                         <input type="text" id="warehouse_title" name="warehouse_title" class="required warehouse">
                         <br>
                         <label for="warehouse_address">Address : </label>
                         <input type="text" id="warehouse_address" name="warehouse_address" class="required warehouse">
                     </div>
-                    <div id = 'item_div' class="create_div">
-                        <label for="item_title">Title : </label>
-                        <input type="text" id="item_title" name="item_title" class="required item">
+                    <div id = 'items_div' class="create_div">
+                        <label for="items_title">Title : </label>
+                        <input type="text" id="items_title" name="items_title" class="required items">
                         <br>
-                        <label for="item_description">Description : </label>
+                        <label for="items_description">Description : </label>
                         <br>
-                        <textarea id = "item_description" name = "item_description" class="required item"></textarea>
+                        <textarea id = "items_description" name = "items_description" class="required items"></textarea>
                         <br>
-                        <label for="item_price_r">Price Retail : </label>
-                        <input type="number" id="item_price_r" name="item_price_r">
+                        <label for="items_price_r">Price Retail : </label>
+                        <input type="number" id="items_price_r" name="items_price_r" min="0.01" value="0.01" class="required items">
                         <br>
-                        <label for="item_price_r_disc">Discount for Retail : </label>
-                        <input type="number" id="item_price_r_disc" name="item_price_r_disc">
+                        <div>
+                            Discount for Retail : <input type="number" id="items_price_r_disc" name="items_price_r_disc" min="0" value="0" class="required items disc retale" > €<br>
+                            Discount for Retail : <input type="number" id="items_price_r_disc_p" name="items_price_r_disc_p" min="0" value="0" max = "100" class="required items percent retale"> %
+                        </div>                        
+                        <label for="items_tax_r">Tax for Retail : </label>
+                        <input type="number" id="items_tax_r" name="items_tax_r" min="0" max = "100" class="required items" min="0" value="0" max = "100" class="required items">
                         <br>
-                        <label for="item_price_w">Price Wholesale : </label>
-                        <input type="number" id="item_price_w" name="item_price_w">
-                        <br>
-                        <label for="item_price_w_disc">Discount for Wholesale : </label>
-                        <input type="number" id="item_price_w_disc" name="item_price_w_disc">
+                        <label for="items_price_w">Price Wholesale : </label>
+                        <input type="number" id="items_price_w" name="items_price_w" min="0.01" value="0.01" max = "100" class="required items">
+                        <div>
+                            Discount for Wholesale : <input type="number" id="items_price_w_disc" name="items_price_w_disc" min="0" value="0" class="required items disc wholesale"> €<br>
+                            Discount for Wholesale : <input type="number" id="items_price_w_disc_p" name="items_price_w_disc_p" min="0" value="0" max = "100" class="required items percent wholesale"> %
+                        </div>  
+                        <label for="items_tax_w">Tax for Wholesale : </label>
+                        <input type="number" id="items_tax_w" name="items_tax_w" min="0" max = "100" class="required items" min="0" value="0" max = "100" class="required items">
                     </div>
                     <div id ='series_div' class="create_div">
                         <label for="series_title">Title : </label>
                         <input type="text" id="series_title" name="series_title"  class="required series">
-                    </div>
-                    <div id ='person_div' class="person_div">
-                        <label for="person_type">Type : </label>
-                        <select name="person_type" class="required person">
-                            <option value="supplier">Supplier</option>
-                            <option value="customer">Customer</option>
+                        <label for="series_acronym">Acronym : </label>
+                        <input type="text" id="series_acronym" name="series_acronym"  class="required series">
+                        <label for="series_type">Type : </label>
+                        <select name="series_type"  class="required series">
+                            <option value="buy">Buy</option>
+                            <option value="sale">Sales</option>
                         </select>
+                        <div>Loked : <input type="checkbox" name="series_sealed"></div>
+                    </div>
+                    <div id ='persons_div' class="create_div">
                         <label for="person_firstName">First Name : </label>
                         <input type="text" id="person_firstName" name="person_firstName"  class="required person">
                         <label for="person_lastName">Last Name : </label>
@@ -76,17 +86,31 @@
                         <input type="number" id="person_phone" name="person_phone"  class="required person">
                         <label for="person_vat">VAT : </label>
                         <input type="number" id="person_vat" name="person_vat"  class="person">
-
                     </div>
-                    <button id="my_submit_btn" type="button">Καταχώρηση</button>
-                    <button id="submit_btn" style="display: none;" type="submit">submit</button>
+                    <button id="submit_btn" style="display: none;" type="submit">Καταχώρfηση</button>
                 </form>
+                <button id="my_submit_btn" type="button">Καταχώρηση</button>
             </div>
         </div>
     </body>
     <%- include('../partials/footer'); %>
     <script>
     $(document).ready(function(){
+        const queryString = new URL(window.location.href).search;
+        const params = new URLSearchParams(queryString);
+        var type = '';
+        var  create = '';
+
+        if (queryString.length > 0) {
+            if (params.has('create')) {
+                create = params.get('create');
+                $("#"+create).click();
+            }
+            else{
+                alert("EROR");
+            }
+        }
+
         $(".create_div").hide();
         $("#my_submit_btn").hide();
         $("#back_btn").click(function(){
@@ -105,7 +129,8 @@
             $("#my_submit_btn").show();
 
             $(".required").attr('required', false);
-            $(".required."+type).attr('required', true);
+            $(".required." + type).attr('required', true);
+            
 
             $(".create_menu_btn").removeClass("selected");
     
@@ -115,7 +140,7 @@
         $("#my_submit_btn").click(my_submit);
 
 
-        var  create = '';
+        
         if (window.location.search) {
             create = new URLSearchParams(window.location.search).get('create');
             $("#"+create).click();
@@ -123,22 +148,43 @@
         
         function my_submit(){
             var type = $('#create_type').val();
-            if(type == 'item'){
-                get_other_value('item_price_w','item_price_r');
-                get_other_value('item_price_r','item_price_w');
-                get_other_value('item_price_w_disc','item_price_r_disc');
-                get_other_value('item_price_2_disc','item_price_w_disc');
+            if(type == 'items'){
+                get_other_value('items_price_w','items_price_r');
+                get_other_value('items_price_r','items_price_w');
+                get_other_value('items_price_w_disc','items_price_r_disc');
+                get_other_value('items_price_2_disc','items_price_w_disc');
+                get_other_value('items_tax_r','items_tax_w');
             }
             $("#submit_btn").click();
         }
 
-        function get_other_value(id1,id2){
-            if($('#'+id1).val() == "" || $('#'+id1).val() == 0){
-                    if($('#'+id2).val() != "" && $('#'+id2).val() > 0){
-                        $('#'+id1).val($('#'+id2).val());
-                    }
-                }
+        function calculatePercent(event) {
+            var disc = $(event.target).val();
+            var price = 0;
+            if ($(event.target).hasClass('retale')) {
+                price = $("#items_price_r").val();
+                $(".percent").eq(0).val((100*disc)/price)
+            }
+            else{
+                price = $("#items_price_w").val();
+                $(".percent").eq(1).val((100*disc)/price)
+            }
         }
+        function calculateDiscount(event) {
+            var disc = $(event.target).val();
+            var price = 0;
+            if ($(event.target).hasClass('retale')) {
+                price = $("#items_price_r").val();
+                $(".disc").eq(0).val(price*(disc/100))
+            }
+            else{
+                price = $("#items_price_w").val();
+                $(".disc").eq(1).val(price*(disc/100))
+            }
+        }
+
+        $('.disc').on('input', calculatePercent);
+        $('.percent').on('input', calculateDiscount);
     });
     
     </script>
