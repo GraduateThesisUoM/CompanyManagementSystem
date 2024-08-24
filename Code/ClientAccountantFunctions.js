@@ -152,7 +152,7 @@ async function relationship_accept_reject(companyId,action){
         const relationshipNode = await Node.findOne({_id:company.accountant});
         relationshipNode.status = action;
         await relationshipNode.save();
-        console.log(action+" done");
+        console.log(action+" done"); 
     }
     catch(e){
         console.log(e)

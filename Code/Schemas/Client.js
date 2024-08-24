@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const User = require('./User');
 
-// Define the additional properties for the accountant schema
+// Define the additional properties for the Client schema
 const ClientSchema = new mongoose.Schema({
   company : {
     type: mongoose.Schema.Types.ObjectId,
@@ -16,8 +16,8 @@ const ClientSchema = new mongoose.Schema({
   }
 });
 
-// Merge the Accountant schema with the User schema
+// Merge the Client schema with the User schema
 const Client = User.discriminator('client', ClientSchema);
 
-// Export the model for the Accountant schema
+// Export the model for the Client schema
 module.exports = Client;

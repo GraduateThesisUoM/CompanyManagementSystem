@@ -202,16 +202,16 @@ async function createSeries(data){
     }
 }
 
-async function createReport(userid,reportedid,reportreason,reporttext){
+async function createReport(userID,reportedID,reportReason,reportText){
     try{
         const newReport = new Report({ //report constructor
-            reporter_id: userid, //reporter id
-            reported_id: reportedid, //reported id
-            reason: reportreason, //reason for report (taken from a radio in report page or inserted by the user)
-            text: reporttext //report text-details
+            reporter_id: userID, //reporter id
+            reported_id: reportedID, //reported id
+            reason: reportReason, //reason for report (taken from a radio in report page or inserted by the user)
+            text: reportText //report text-details
           });
 
-        console.log("Report for "+reportreason+" created");
+        console.log("Report for "+reportReason+" created");
         await newReport.save();
 
         return newReport;
