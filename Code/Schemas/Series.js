@@ -13,10 +13,13 @@ const SeriesSchema = new mongoose.Schema({
       enum: [0, 1],
       default: 0},
     active: {
-        type: Number,
-        enum: [0, 1],
-        default: 1
-      }
+      type: Number,
+      enum: [0, 1, 2],
+      //1 active
+      //0 disabled
+      //2 delete
+      default: 1
+    }
 });
 
 // Export the transaction schema

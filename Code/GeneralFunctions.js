@@ -17,8 +17,25 @@ const Series = require(path_constants.schemas.one.series);
 const Report = require(path_constants.schemas.one.report);
 const Person = require(path_constants.schemas.one.person);
 const Document = require(path_constants.schemas.one.document);
+const Notification = require(path_constants.schemas.one.notification);
+const Node = require(path_constants.schemas.one.node);
+const Review = require(path_constants.schemas.one.review);
 
-
+const schemaMap = {
+    'users' : User,
+    'notifications' : Notification,
+    'companys': Company,
+    'clients': Client,
+    'reports': Report,
+    'series': Series,
+    'items': Item,
+    'warehouses': Warehouse,
+    'persons': Person,
+    'accountants': Accountant,
+    'nodes': Node,
+    'reviews': Review,
+    'documents': Document
+  };
 
 //function checkAccessRigts(req, data ,res){
 function checkAccessRigts(req){
@@ -67,7 +84,7 @@ async function create_user(data){
         afm: data.afm,
         mydatakey: data.mydatakey,
         company: data.company,
-        companyOwner :data.cOwner
+        companyOwner :data.companyOwner
     });
   
     await user.save();
@@ -260,8 +277,32 @@ async function drop_collection(collection_name){
       }
 }
 
-async function delete_deactivate(input,type){
+async function delete_deactivate(data,schema,action){
+    try{
+        var obj = await get_obj_by_id(data,schema);
+        if(action == 'delete'){
+            obj.active = 2;
+        }
+        else if(action == 'activate'){
+            obj.active = 1;
+        }
+        else{
+            obj.active = 0;
+        }
+        console.log(obj)
+        await obj.save();
+    }
+    catch(e){
+        console.log(e);
+    }
+}
 
+async function get_obj_by_id(data,schema){
+    const Model = schemaMap[schema];
+    if (!Model) {
+        throw new Error(`Schema ${schema} not found`);
+    }
+    return await Model.findOne(data);
 }
 
 module.exports = {

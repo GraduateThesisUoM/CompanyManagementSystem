@@ -115,20 +115,15 @@
                                 </td>
                                 <% for (let i=0; i < list_item.data.length; i++) { %>
                                     <% if (column_titles[i] != 'ID') { %>
-                                        <td id="cell_<%= index %>_<%= i %>">
-                                            <%= list_item.data[i] %>
-                                        </td>
-                                        <% } %>
+                                        <td id="cell_<%= i %>_<%= index %>"><%= list_item.data[i] %></td>
+                                    <% }%>
                                             <% } %>
 
                                                 <td>
                                                     <div id="td_button_container">
-                                                        <div><button class="btn1"
-                                                                data-id="<%= list_item.data[0] %>">View</button></div>
-                                                        <div><button class="btn2"
-                                                                data-id="<%= list_item.data[0] %>">Delete</button></div>
-                                                        <div><button class="btn3"
-                                                                data-id="<%= list_item.data[0] %>">Block</button></div>
+                                                        <div><button class="btn1" data-id="<%= list_item.data[0] %>">View</button></div>
+                                                        <div><button class="btn2" data-id="<%= list_item.data[0] %>">Delete</button></div>
+                                                        <div><button class="btn3" data-id="<%= list_item.data[0] %>">Block</button></div>
                                                     </div>
                                                 </td>
 
@@ -204,9 +199,7 @@
             }
 
             function view_doc() {
-                var index = $(this).closest('tr').find('td:first').text() - 1;
-                let id = $(".btn1").eq(index - 1).data('id');
-                window.location = "/view?type="+searchfor+"&id="+id;
+                window.location = "/view?type="+searchfor+"&id="+$(this).data('id');
             }
 
             function delete_doc() {

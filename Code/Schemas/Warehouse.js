@@ -7,10 +7,14 @@ const WarehouseSchema = new mongoose.Schema({
     title: { type: String, required: true },
     location: { type: String, required: true },
     active: {
-        type: Number,
-        enum: [0, 1],
-        default: 1
-      },
+      type: Number,
+      enum: [0, 1, 2],
+      //1 active
+      //0 disabled
+      //2 delete
+      //3 baned
+      default: 1
+    },
     full: {
       type: Number,
       enum: [0, 1],
