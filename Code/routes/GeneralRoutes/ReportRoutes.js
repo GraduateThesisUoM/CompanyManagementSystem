@@ -67,18 +67,9 @@ router.get('/general', Authentication.checkAuthenticated, async (req, res) => {
 router.post('/general', Authentication.checkAuthenticated, async (req,res)=> {
   
     try{
-      const newReport = generalFunctions.createReport(req.user._id,req.user._id,req.body.report_title_area,req.body.report_textarea);
+      generalFunctions.createReport(req.user._id,req.user._id,req.body.report_title_area,req.body.report_textarea);
+      res.redirect("//localhost:3000");
 
-      /*const newReport = new Report({ //report constructor
-        reporter_id: req.user._id, //reporter id
-        reported_id: req.user.id, //same as above
-        reason: req.body.report_title_area, //reason for report
-        status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
-        text: req.body.report_textarea //report text-details
-      });*/
-  
-      await newReport.save();
-      res.redirect("back");
     }
     catch (err) {
       console.error('Error creating general report:', err);
