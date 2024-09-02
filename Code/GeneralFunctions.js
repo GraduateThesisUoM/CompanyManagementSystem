@@ -37,7 +37,7 @@ const schemaMap = {
     'documents': Document
   };
 
-//function checkAccessRigts(req, data ,res){
+//function checkAccessRights(req, data ,res){
 function checkAccessRigts(req){
     try{
         var file_path = "";

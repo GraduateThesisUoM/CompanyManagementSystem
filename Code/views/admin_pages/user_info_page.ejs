@@ -10,13 +10,28 @@
 </head>
 <body>
     <div id="user-info-admin-div" name="user-info-admin-div">
-        <h1><%= user_profile.firstName; %> <%= user_profile.lastName; %></h1>
-        <h2>Email: <%= user_profile.email; %></h2>
-        <h2>User type: <%= user_profile.type; %></h2>
-        <h2>User status: <%= user_profile.account_status; %></h2>
+        <h1><%= target_user.firstName; %> <%= target_user.lastName; %></h1>
+        <h2>Email: <%= target_user.email; %></h2>
+        <h2>User type: <%= target_user.type; %></h2>
+        <%  var status = "";
+            if(target_user.active == 1) {
+                status = "Active";
+            }
+            else if(target_user.active == 0){
+                status = "Disabled";
+            }
+            else if(target_user.active == 2){
+                status = "Deleted";
+            }
+            else {
+                status = "Banned";
+            }
 
-        <form action="/change-ban-status?id=<%=user_profile._id%>"  method="POST">
-            <% if(user_profile.account_status === "banned"){ %>
+        %>
+        <h2>User status: <%= status; %></h2>
+
+        <form action="/change-ban-status?id=<%=target_user._id%>"  method="POST">
+            <% if(target_user.active === 3){ %>
                 <input type="submit" id="change_ban_status_button" name="change_ban_status_button" value="Unban">
             <% }else{ %>
                 <input type="submit" id="change_ban_status_button" name="change_ban_status_button" value="Ban">
@@ -48,13 +63,13 @@
     </div>
     <hr>
     <div id="relationships-admin-div" name="relationships-admin-div">
-        <% if(user_profile.type == "accountant" && user_profile.clients.length > 0){ %>
+        <% if(target_user.type == "accountant" && list_of_clients.length > 0){ %>
             <h2>Clients</h2>
-            <% for(var i=0;i < user_list.length;i++){ 
-                for(var j=0;j < user_profile.clients.length ;j++){
-                    if(user_list[i].id == user_profile.clients[j].id && user_profile.clients[j].status != "pending"){ %>
-                        <a href="/user-profile?id=<%=user_list[i].id%>"><%=user_list[i].firstName%> <%=user_list[i].lastName%></a>
-                        <form action="/remove-relationship?id_user=<%=user_list[i].id%>&id_acc=<%=user_profile._id%>"  method="POST">
+            <% for(var i=0;i < company_list.length;i++){ 
+                for(var j=0;j < list_of_clients.length ;j++){
+                    if(company_list[i]._id == list_of_clients[j]._id ){ %>
+                        <a href="#"><%=company_list[i].name%></a> 
+                        <form action="/remove-relationship?id_user=<%=user_list[i].id%>&id_acc=<%=target_user._id%>"  method="POST">
                             <input type="submit" id="remove_relationship_button" name="remove_relationship_button" value="Remove">
                         </form>
                         <br>
@@ -62,25 +77,27 @@
                 } 
             }
         }
-        else if(user_profile.type == "user" && user_profile.myaccountant.status == "assigned"){%>
+        else if(target_user.type == "user" && target_company.accountant != "not_assigned"){%>
             <h2>Accountant</h2>
             <%for(var i=0;i < user_list.length ;i++){
-                if(user_list[i].id == user_profile.myaccountant.id){ %>
-                    <a href="/user-profile?id=<%=user_list[i].id%>"><%=user_list[i].firstName%> <%=user_list[i].lastName%></a>
-                    <form action="/remove-relationship?id_user=<%=user_profile._id%>&id_acc=<%=user_list[i]._id%>"  method="POST">
+                console.log(target_company.accountant);
+                if(user_list[i].id == target_company.accountant){ %>
+                    
+                    <a href="/user-profile?id=<%=target_company.accountant%>"><%=user_list[i].firstName%></a>
+                    <form action="/remove-relationship?id_user=<%=target_user._id%>&id_acc=<%=user_list[i]._id%>"  method="POST">
                         <input type="submit" id="remove_relationship_button" name="remove_relationship_button" value="Remove">
                     </form>
                     <br>
                 <%}
             }
         }
-        else if(user_profile.type == "user" && user_profile.myaccountant.status == "self_accountant"){%>
+        else if(target_user.type == "user" && target_user.myaccountant.status == "self_accountant"){%>
             <h2>Accountant</h2>
             <span>This user is a self-accountant</span>
         <%}
-        else if(user_profile.type == "user" && user_profile.myaccountant.status == "pending"){%>
+        else if(target_user.type == "user" && target_company.accountant == "not_assigned"){%>
             <h2>Accountant</h2>
-            <span>This user has an application pending</span>
+            <span>This user's company has no accountant</span>
         <%}%>
     </div>
 

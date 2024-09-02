@@ -10,11 +10,11 @@ const UserSchema = new mongoose.Schema({
   password: { type: String, required: true },
   active: {
     type: Number,
-    enum: [0, 1, 2],
+    enum: [0, 1, 2, 3],
     //1 active
     //0 disabled
-    //2 delete
-    //3 baned
+    //2 deleted
+    //3 banned
     default: 1
   },
 
