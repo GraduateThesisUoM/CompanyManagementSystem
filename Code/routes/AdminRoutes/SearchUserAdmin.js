@@ -11,14 +11,14 @@ router.post('/', async (req, res) => {
       let payload = req.body.payload.trim();
   
       if(req.body.type === 'everyone'){
-        var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
-        var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
-        var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, account_status: req.body.status}).exec();
+        var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, active: req.body.status}).exec();
+        var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, active: req.body.status}).exec();
+        var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, active: req.body.status}).exec();
       }
       else{
-        var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
-        var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
-        var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, account_status: req.body.status}).exec();
+        var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, active: req.body.status}).exec();
+        var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, active: req.body.status}).exec();
+        var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, active: req.body.status}).exec();
       }
     
     

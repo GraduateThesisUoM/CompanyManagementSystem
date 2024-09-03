@@ -118,10 +118,10 @@
             const searchResults = document.getElementById('search-results');
             let match = e.value.match(/^[a-zA-Z1-9 ]*/);
             let match2 = e.value.match(/\s*/);
-            var status = "active";
+            var status = 1;
 
             if($('#statusCheckbox').is(':checked')){
-                status = "banned";
+                status = 3;
             }
             var userType = $("input[type=radio][name=userTypeSelection]:checked").val();
             

@@ -26,7 +26,7 @@ router.get('/', Authentication.checkAuthenticated, async (req,res)=>{
         else if(target_user.type == "user"){ // check if target user is an accountant so we can pass client list as a parameter
             var target_company = await Company.find({_id: target_user.company});
         }
-            
+            console.log(target_company.accountant);
             res.render('admin_pages/user_info_page.ejs', {user: req.user ,target_user : await User.findOne({_id: req.query.id}),
             target_company: target_company,
             reports_for_user: await Report.find({$and:[{reported_id: req.query.id}, {reporter_id: {$ne:req.query.id}}, {status: "pending"}]}),
