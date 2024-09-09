@@ -19,17 +19,25 @@ const generalFunctions = require("../../GeneralFunctions");
 
 /*--------   ACCOUNTANT PREVIEW */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
-  const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
-  const company = await Company.findOne(_id=req.user.company);
-  const company_node = await Node.findOne({_id:company.accountant});
-
-  const data = { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) }
-
-    generalFunctions.checkAccessRigts(req.user,'user_pages/preview_accountant.ejs',data,res);
-
-  /*res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });*/
+  try{
+    if(generalFunctions.checkAccessRigts(req)){
+      const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
+      const company = await Company.findOne(_id=req.user.company);
+      const company_node = await Node.findOne({_id:company.accountant});
+    
+      const data = { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
+        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) }
+    
+        generalFunctions.checkAccessRigts(req.user,'user_pages/preview_accountant.ejs',data,res);
+    
+      res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
+        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });  
+    }
+  }
+  catch(e){
+    console.error('Error on create page:', e);
+    res.redirect('/error?origin_page=/preview-accountant&error='+e);
+  }
 });
 
 

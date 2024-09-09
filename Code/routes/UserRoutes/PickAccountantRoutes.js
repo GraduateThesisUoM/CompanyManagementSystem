@@ -48,8 +48,10 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
+      console.log("FFFFFFFFFFFFFFFFFFFFFFFFFFF");
       const accountant = await Accountant.findOne({_id:req.body.accountant_id});
       req.session.accountant = accountant;
+      console.log(req.session.accountant );
       res.redirect('/preview-accountant');
     }
     catch (err) {
