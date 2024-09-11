@@ -12,14 +12,17 @@ function initialize(passport, getUserByEmail, getUserById) {
         }        
         try {
           if (await bcrypt.compare(password, user.password)) {
-            if (user.status == 'baned') {
-              return done(null, false, { message: 'baned' })
+            if (user.status == '0') {
+              return done(null, false, { message: 'disabled' })
             }
-            if (user.status == 'deleted') {
+            if (user.status == '1') {
+              return done(null, user)
+            }
+            if (user.status == '2') {
               return done(null, false, { message: 'deleted' })
             }
-            else{
-              return done(null, user)
+            if (user.status == '3') {
+              return done(null, false, { message: 'banned' })
             }
           } else {
             return done(null, false, { message: 'Password incorrect' })
