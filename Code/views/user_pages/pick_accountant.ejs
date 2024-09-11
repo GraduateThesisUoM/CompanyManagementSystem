@@ -18,9 +18,9 @@
             <button style="display: none;" type="submit" id="self_accountant_submit_btn">Αυτοδιαχείριση λογιστικών</button>
             </form>
         <form action="/pick-accountant" method="POST">
-        <input style="display:none" name="accountant_id" id="accountant_id">
+        <input style="" name="accountant_id" id="accountant_id">
 
-        <button style="display:none" type="submit" id="accountant_id_submit_btn">Submit</button>
+        <button style="" type="submit" id="accountant_id_submit_btn">Submit</button>
         </form>
 
         <div id="accountan_table">
@@ -79,7 +79,7 @@
 
                     const buttonElement = $("<button>").text("Προφίλ").addClass("accountant_button").click(function() {
                         $("#accountant_id").val(accountant._id);
-                        $("#accountant_id_submit_btn").click();
+                        //$("#accountant_id_submit_btn").click();
                     });
                     // Append the button element as a child of the accountantElement
                     accountantElement.append(buttonElement);

@@ -130,7 +130,7 @@ async function create_users(){
     afm: '987654321',
     mydatakey: 'key654321',
     company: company2,
-    companyOwner :0
+    companyOwner :1
   }
   const user2 = await generalFunctions.create_user(data);
 
@@ -182,7 +182,7 @@ async function create_users(){
     afm: '998877665',
     mydatakey: 'key321456',
     company: company5,
-    companyOwner: 0
+    companyOwner: 1
   }
   const user6 = await generalFunctions.create_user(data);
 

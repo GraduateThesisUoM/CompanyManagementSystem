@@ -80,8 +80,8 @@
         else if(target_user.type == "user" && target_company.accountant != "not_assigned"){%>
             <h2>Accountant</h2>
             <%for(var i=0;i < user_list.length ;i++){
-                console.log(target_user.type);
-                if(user_list[i].id == target_company.accountant){ %>
+                <!--console.log(target_user.type);-->
+                if(user_list[i]._id == accountant){ %>
                     
                     <a href="/user-profile?id=<%=target_company.accountant%>"><%=user_list[i].firstName%></a>
                     <form action="/remove-relationship?id_user=<%=target_user._id%>&id_acc=<%=user_list[i]._id%>"  method="POST">
