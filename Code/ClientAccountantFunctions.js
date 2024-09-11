@@ -1,9 +1,16 @@
 express = require("express");
+const path_constants = require('././constantsPaths');
+
 //Models
-const Accountant  = require("./Schemas/Accountant");
-const Company  = require("./Schemas/Company");
-const Node = require("./Schemas/Node");
-const Client  = require("./Schemas/Client");
+const Accountant  = require(path_constants.schemas.one.accountant);
+const Company  = require(path_constants.schemas.one.company);
+const Node  = require(path_constants.schemas.one.node);
+const Notification  = require(path_constants.schemas.one.notification);
+
+
+const generalFunctions = require(path_constants.generalFunctions_folder.one);
+
+
 
 async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
     // check if a notification of the same type exists for user
@@ -12,17 +19,23 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
     try{
         const company = await Company.findOne({_id:companyId});
 
+        const last_accountant_node = await Node.findOne({company_id:company._id,type2:"hiring",status: { $in: ['executed', 'viewed', 'pending'] }});
+        const company_node = await create_node(company._id,senderId,accountantId,'relationship','hiring');
+
+
         if(company.accountant != "not_assigned"){
             
-            const company_nodes = await Node.find({company_id:company._id,type:"request",status: { $in: ['viewed', 'pending'] }});
+            const company_nodes = await Node.find({company_id:company._id,type2:"request",status: { $in: ['viewed', 'pending'] }});
 
         
-            const last_accountant_node = await Node.find({company_id:company._id,type:"hiring",status: 'executed'});
+            company_node = await create_node(company._id,senderId,accountantId,'relationship','hiring');
+
+            last_accountant_node.next = company_node._id;
             last_accountant_node.status = 'canceled';
             await last_accountant_node.save();
 
             company_nodes.forEach(async node => {
-                node.next = company_node;
+                node.next = company_node._id;
                 node.status = 'canceled';
                 await node.save();
             });
@@ -31,14 +44,22 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
             console.log('send_hiring_req_to_accountant has no accountant')
         }
 
-        const company_node = await create_node(company._id,senderId,accountantId,'relationship','hiring');
-        /*console.log(company_node)*/
-
         company.accountant = company_node._id;
         await company.save();
 
 
         console.log("Hiring Node Created");
+
+        var notifications = await Notification.find({user_id:senderId,relevant_user_id:accountantId,type:'hiring-notification',status:'unread'});
+        console.log('notification : '+notifications.length)
+        if(notifications.length > 0){
+            notifications.forEach(async notification => {
+                notification.status = 'canceled';
+                await notification.save();
+            });
+        }
+        generalFunctions.create_notification(senderId, accountantId, companyId, companyId, 'hiring-notification');
+
     }
     catch(e){
         console.log(e)

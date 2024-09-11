@@ -44,6 +44,9 @@ const url_param = {
 
 const routes_folder = "./routes"
 const views_folder = "./views"
+const generalFunctions_folder = {one:"././GeneralFunctions",two:"../../GeneralFunctions"};
+const clientAccountantFunctions_folder = {one:"././ClientAccountantFunctions",two:"../../ClientAccountantFunctions"};
+
 
 const routes = {
   general : routes_folder+"/GeneralRoutes/",
@@ -311,4 +314,4 @@ const pages = {
 
 
 
-module.exports = { folders,pages, routes ,schemas,url_param};
+module.exports = { folders,pages, routes ,schemas,url_param,generalFunctions_folder,clientAccountantFunctions_folder};

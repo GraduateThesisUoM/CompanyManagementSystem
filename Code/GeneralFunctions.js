@@ -305,6 +305,35 @@ async function get_obj_by_id(data,schema){
     return await Model.findOne(data);
 }
 
+async function create_notification(userID, relevantUserID, companyID, relevantCompanyID, notificationType){
+    // check if a notification of the same type exists for user
+    var exist_check = await Notification.findOne({$and: [{user_id: userID}, {type: notificationType}, {company_id: companyID}, {status: "unread"}]});
+
+    // if not
+    if(exist_check == null){
+        const newNotification = new Notification({ //Notification constructor
+            user_id: userID,
+            relevant_user_id: relevantUserID,
+            company_id: companyID,
+            relevant_company_id: relevantCompanyID,
+            type: notificationType,
+            status: "unread",
+        });
+        await newNotification.save();
+    }
+}
+
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
+
 module.exports = {
     checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,
-    createSeries,createReport,create_person,drop_collection,create_doc,delete_deactivate};
+    createSeries,createReport,create_person,drop_collection,create_doc,delete_deactivate,create_notification,
+    formatDate};

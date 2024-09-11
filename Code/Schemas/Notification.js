@@ -7,7 +7,12 @@ const NotificationSchema = new mongoose.Schema({
   company_id: {type: mongoose.Schema.Types.ObjectId, required: true },
   relevant_company_id: {type: mongoose.Schema.Types.ObjectId, required: true },
   type: { type: String, required: true },
-  status: {type: String, required: true},
+  status: {
+    type: String,
+    enum: ['unread','canceled'],
+    required: true,
+    default:'other'
+  },
   registrationDate: { type: Date, default: Date.now , required: true},
 });
 

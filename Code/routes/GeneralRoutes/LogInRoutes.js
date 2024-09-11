@@ -9,6 +9,8 @@ var mongoose = require('mongoose');
 //File with the paths
 const path_constants = require('../../constantsPaths');
 
+
+
 const passport = require('passport');
 
 const Accountant  = require(path_constants.schemas.two.accountant);
@@ -18,16 +20,14 @@ const Client  = require(path_constants.schemas.two.client);
 const Company  = require(path_constants.schemas.two.company);
 const User = require(path_constants.schemas.two.user);
 const Item  = require(path_constants.schemas.two.item);
-
-
 const Notification = require(path_constants.schemas.two.notification);
+//Get General Functions
 
-const clientAccountantFunctions = require("../../ClientAccountantFunctions");
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
 
 //Authentication Functions
 const Authentication = require("../../AuthenticationFunctions");
-//Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
 
 /*--------   LOG IN */
 router.get('/', Authentication.checkNotAuthenticated, (req, res) => {
@@ -60,6 +60,8 @@ async function create_users(){
   await generalFunctions.drop_collection("series");
   await generalFunctions.drop_collection("persons");
   await generalFunctions.drop_collection("document");
+  await generalFunctions.drop_collection("Notification");
+
 
   console.log("End Deleting -----");
 
@@ -229,9 +231,11 @@ async function create_users(){
   await clientAccountantFunctions.relationship_accept_reject(company3._id,'rejected')
   // C4 - A1
   await clientAccountantFunctions.send_hiring_req_to_accountant(company4._id,user5._id,accountant1._id,'relationship','hiring');
+  await clientAccountantFunctions.send_hiring_req_to_accountant(company4._id,user5._id,accountant1._id,'relationship','hiring');
+
   // C5 - A1
-  await clientAccountantFunctions.send_hiring_req_to_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
-  await clientAccountantFunctions.fire_accountant(company5._id,user5._id,accountant1._id,'relationship','hiring');
+  await clientAccountantFunctions.send_hiring_req_to_accountant(company5._id,user6._id,accountant1._id,'relationship','hiring');
+  await clientAccountantFunctions.fire_accountant(company5._id,user6._id,accountant1._id,'relationship','hiring');
 
   data = {
     type: "sale",
