@@ -34,9 +34,9 @@ router.post('/', Authentication.checkAuthenticated, async (req,res)=> {
     try{
       const company = await Company.findOne({_id:req.user.company});
       
-      create_notification(company.companyaccountant.id, req.user._id, "firing-accountant-notification");
+      //create_notification(company.accountant.id, req.user._id, "firing-accountant-notification");
 
-      clientAccountantFunctions(company._id,req.user._id, company._id);
+      clientAccountantFunctions.send_hiring_req_to_accountant(company._id,req.user._id, company._id);
 
       res.redirect("/my-accountant")
     }

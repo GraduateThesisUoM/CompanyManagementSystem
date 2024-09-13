@@ -17,7 +17,14 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       const accountants = await Accountant.find({}); // Fetch all accountants from the database
       accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
       const company = await Company.findOne({_id:req.user.company});
-      const company_node = await Node.findOne({_id:company.accountant});
+      console.log("Pick Accountant  Company:"+company)
+      var company_node = await Node.findOne({_id:company.accountant});
+      console.log("Pick Accountant  Company Node:"+company_node)
+      if (company_node == null){
+        company_node = {
+          company_id: company._id
+        }
+      }
   
       const ratings = [];
   

@@ -14,6 +14,9 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
         <h1>Ο Λογιστής Μου</h1>
         <p>
             First Name : <%= accountant.firstName %><br>
@@ -101,8 +104,10 @@
             <button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button>
             <button type="button" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
         </form>
+        <button type="button" onclick="window.location = '/pick-accountant'">Προβολή Λογιστών</button>
         
-        <button id="back_btn">Πίσω</button>
+    </div>
+</div>
     </body>
     <%- include('../partials/footer'); %>
     <script>

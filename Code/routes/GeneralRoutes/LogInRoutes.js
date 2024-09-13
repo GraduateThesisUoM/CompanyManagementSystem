@@ -231,7 +231,6 @@ async function create_users(){
   await clientAccountantFunctions.relationship_accept_reject(company3._id,'rejected')
   // C4 - A1
   await clientAccountantFunctions.send_hiring_req_to_accountant(company4._id,user5._id,accountant1._id,'relationship','hiring');
-  await clientAccountantFunctions.send_hiring_req_to_accountant(company4._id,user5._id,accountant1._id,'relationship','hiring');
 
   // C5 - A1
   await clientAccountantFunctions.send_hiring_req_to_accountant(company5._id,user6._id,accountant1._id,'relationship','hiring');

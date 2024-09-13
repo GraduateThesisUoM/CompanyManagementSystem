@@ -27,9 +27,6 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
             
             const company_nodes = await Node.find({company_id:company._id,type2:"request",status: { $in: ['viewed', 'pending'] }});
 
-        
-            company_node = await create_node(company._id,senderId,accountantId,'relationship','hiring');
-
             last_accountant_node.next = company_node._id;
             last_accountant_node.status = 'canceled';
             await last_accountant_node.save();
@@ -58,7 +55,7 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
                 await notification.save();
             });
         }
-        generalFunctions.create_notification(senderId, accountantId, companyId, companyId, 'hiring-notification');
+        generalFunctions.create_notification(senderId, accountantId, companyId, accountantId, 'hiring-notification');
 
     }
     catch(e){

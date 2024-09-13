@@ -12,28 +12,32 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>Επιλογή Λογιστή</h1>
-        <form action="/self-accountant-register" method="POST">
-            <button type="button" id="self_accountant_btn">Αυτοδιαχείριση λογιστικών</button>
-            <button style="display: none;" type="submit" id="self_accountant_submit_btn">Αυτοδιαχείριση λογιστικών</button>
-            </form>
-        <form action="/pick-accountant" method="POST">
-        <input style="" name="accountant_id" id="accountant_id">
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1>Επιλογή Λογιστή</h1>
+                <form action="/self-accountant-register" method="POST">
+                    <button type="button" id="self_accountant_btn">Αυτοδιαχείριση λογιστικών</button>
+                    <button style="display: none;" type="submit" id="self_accountant_submit_btn">Αυτοδιαχείριση λογιστικών</button>
+                    </form>
+                <form action="/pick-accountant" method="POST">
+                <input style="display: none;" name="accountant_id" id="accountant_id">
 
-        <button style="" type="submit" id="accountant_id_submit_btn">Submit</button>
-        </form>
+                <button style="display: none;" type="submit" id="accountant_id_submit_btn">Submit</button>
+                </form>
 
-        <div id="accountan_table">
+                <div id="accountan_table">
+                </div>
+
+            </div>
         </div>
-
-        <button id="back_btn">Πίσω</button>
     </body>
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
             if('<%=company_node.company_id%>' == '<%=company_node.receiver_id%>'){
-                $("#self_accountant_btn").prop("disabled", true);
-            }
+                    $("#self_accountant_btn").prop("disabled", true);
+                }
 
             if (window.location.search.includes("?")) {
                 const urlParams = new URLSearchParams(window.location.search);
@@ -79,7 +83,7 @@
 
                     const buttonElement = $("<button>").text("Προφίλ").addClass("accountant_button").click(function() {
                         $("#accountant_id").val(accountant._id);
-                        //$("#accountant_id_submit_btn").click();
+                        $("#accountant_id_submit_btn").click();
                     });
                     // Append the button element as a child of the accountantElement
                     accountantElement.append(buttonElement);

@@ -47,7 +47,7 @@ router.get('/', Authentication.checkNotAuthenticated, async (req, res) => {
           //Existing Company
           company = await Company.findOne({name:req.body.companyName, signupcode:req.body.companyRegisterCode});
         }
-        console.log(company)
+        console.log("Company : " + company)
         var companyOwner = 0;
         console.log(req.body.companyNewExisting)
         if(req.body.companyNewExisting == '0'){

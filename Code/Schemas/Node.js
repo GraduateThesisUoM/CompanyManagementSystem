@@ -22,7 +22,7 @@ const NodeShema = new mongoose.Schema({
   due_date: { type: String},
   status: {
     type: String,
-    enum: ['viewed', 'executed', 'pending', 'rejected','canceled'],
+    enum: ['viewed', 'executed', 'pending', 'rejected','canceled','temp'],
     required: true,
     default: 'pending',
   },

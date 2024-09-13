@@ -9,7 +9,7 @@ const NotificationSchema = new mongoose.Schema({
   type: { type: String, required: true },
   status: {
     type: String,
-    enum: ['unread','canceled'],
+    enum: ['unread','canceled','read'],
     required: true,
     default:'other'
   },

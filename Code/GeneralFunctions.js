@@ -308,6 +308,10 @@ async function get_obj_by_id(data,schema){
 async function create_notification(userID, relevantUserID, companyID, relevantCompanyID, notificationType){
     // check if a notification of the same type exists for user
     var exist_check = await Notification.findOne({$and: [{user_id: userID}, {type: notificationType}, {company_id: companyID}, {status: "unread"}]});
+    var stus = "unread"
+    if(companyID == relevantCompanyID){
+        stus = "read"
+    }
 
     // if not
     if(exist_check == null){
@@ -317,7 +321,7 @@ async function create_notification(userID, relevantUserID, companyID, relevantCo
             company_id: companyID,
             relevant_company_id: relevantCompanyID,
             type: notificationType,
-            status: "unread",
+            status: stus,
         });
         await newNotification.save();
     }
