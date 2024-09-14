@@ -3,18 +3,22 @@ const router = express.Router();
 
 var mongoose = require('mongoose');
 
-//Models
-const Accountant  = require("../../Schemas/Accountant");;
-const Review  = require("../../Schemas/Review");
-const Node = require("../../Schemas/Node");
-const Company = require("../../Schemas/Company");
+//File with the paths
+const path_constants = require('../../constantsPaths');
 
-const Notification = require("../../Schemas/Notification");
+//Models
+const Accountant = require(path_constants.schemas.two.accountant);
+const Review = require(path_constants.schemas.two.review);
+const Node = require(path_constants.schemas.two.node);
+const Company = require(path_constants.schemas.two.company);
+const Notification = require(path_constants.schemas.two.notification);
 
 //Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
 //Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
+const generalFunctions = require( path_constants.generalFunctions_folder.two);
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
+
 
 /*--------    ΜΥ ACCOUNTΑΝΤ */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
@@ -134,6 +138,24 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       console.error('Error updating user data:', err);
       res.redirect('/error?origin_page=my-accountant&error='+err);
     }
+});
+
+router.post('/', Authentication.checkAuthenticated, async (req, res) => {
+  try {
+    const company = await Company.findOne({_id:req.user.company});
+    const company_node = await Node.findOne({_id:company.accountant});
+    
+    
+    //const accountant = await Accountant.findOne({_id:req.session.accountant._id});
+
+    clientAccountantFunctions.fire_accountant(company._id,req.user._id,company_node.receiver_id);
+
+    res.redirect('/my-accountant');
+  }
+  catch (err) {
+    console.error('Error updating user data:', err);
+    res.redirect('/error?origin_page=pick-accountant&error='+err);
+  }
 });
 
 module.exports = router;

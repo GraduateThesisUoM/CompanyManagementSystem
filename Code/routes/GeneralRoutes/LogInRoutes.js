@@ -9,8 +9,6 @@ var mongoose = require('mongoose');
 //File with the paths
 const path_constants = require('../../constantsPaths');
 
-
-
 const passport = require('passport');
 
 const Accountant  = require(path_constants.schemas.two.accountant);

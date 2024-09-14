@@ -130,9 +130,6 @@ app.use(path_constants.pages.delete_account.url, require(path_constants.pages.de
 //logout
 app.use(path_constants.pages.logout.url, require(path_constants.pages.logout.file));
 
-//remove_accountant
-app.use(path_constants.pages.remove_accountant.url, require(path_constants.pages.remove_accountant.file));
-
 //self_accountant
 app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.self_accountant.file));
 

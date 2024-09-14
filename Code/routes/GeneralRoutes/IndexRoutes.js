@@ -13,11 +13,11 @@ const Notification = require(path_constants.schemas.two.notification);
 const Company  = require(path_constants.schemas.two.company);
 
 //Authentication Function
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
 //Get clients Function
-const clientAccountantFunctions = require("../../ClientAccountantFunctions");
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
 //Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {

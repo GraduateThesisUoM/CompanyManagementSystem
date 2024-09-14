@@ -7,6 +7,7 @@ const NotificationSchema = new mongoose.Schema({
   company_id: {type: mongoose.Schema.Types.ObjectId, required: true },
   relevant_company_id: {type: mongoose.Schema.Types.ObjectId, required: true },
   type: { type: String, required: true },
+  //hiring-notification / firing-notification / cancel-hiring-req-notification
   status: {
     type: String,
     enum: ['unread','canceled','read'],

@@ -99,9 +99,9 @@
                 </div>
             
         </div>
-        <form action="/remove_accountant"  method="POST">
-            <input type="hidden" name="accountant_id" value="<%=accountant._id%>">
-            <button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button>
+        <form id="my_accountant_form" action="/my-accountant"  method="POST">
+            <!--input type="hidden" name="accountant_id" value="<%=accountant._id%>"-->
+            <!--button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button-->
             <button type="button" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
         </form>
         <button type="button" onclick="window.location = '/pick-accountant'">Προβολή Λογιστών</button>
@@ -136,7 +136,8 @@
 
             $("#remove_accountant_btn").click(function(){
                 if (confirm("Αν απολύσετε τον λογιστή σας όλα τα εκκρεμή αιτήματα θα ακυρωθούν.") == true) {
-                    $("#remove_accountant_sbt").click();
+
+                    $("#my_accountant_form").submit();
                 }
             });
 

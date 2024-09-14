@@ -1,15 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
+const path_constants = require('../../constantsPaths');
+
+
 //Models
-const Accountant  = require("../../Schemas/Accountant");
-const Review  = require("../../Schemas/Review");
-const Notification = require("../../Schemas/Notification");
-const Company  = require("../../Schemas/Company");
-const Node  = require("../../Schemas/Node");
+const Accountant = require(path_constants.schemas.two.accountant);
+const Review = require(path_constants.schemas.two.review);
+const Notification = require(path_constants.schemas.two.notification);
+const Company = require(path_constants.schemas.two.company);
+const Node = require(path_constants.schemas.two.node);
 
 //Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
 
 /*--------   PICK ACCOUNTANT */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {

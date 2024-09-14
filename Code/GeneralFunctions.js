@@ -93,6 +93,46 @@ async function create_user(data){
     return user;
 }
 
+async function create_node(companyId,senderId,receiverId,type,type2){
+    var text = '';
+    due_date='';
+    const company = await Company.findOne({_id:companyId});
+    console.log("XX"+receiverId);
+    console.log({
+        company_id: company._id,
+        sender_id: senderId,
+        receiver_id:receiverId,
+        type: type,
+        type2: type2
+    })
+
+    var new_node= new Node({
+        company_id: company._id,
+        sender_id: senderId,
+        receiver_id:receiverId,
+        type: type,
+        type2: type2
+    });
+
+    if(type == 'relationship' ){
+        if(new_node.company_id == new_node.receiver_id && type2 =='hiring'){
+            new_node.status = 'executed'
+        }
+        else if(type2 == 'firing'){
+            new_node.status = 'executed'
+        }
+    }
+    else if(type == 'request'){
+        new_node.text = text;
+        new_node.due_date = due_date;
+    }
+
+    await new_node.save();
+
+    return new_node;
+
+}
+
 async function create_company(data){
     const company = new Company({
         name : data.name,
@@ -340,4 +380,4 @@ const formatDate = (dateString) => {
 module.exports = {
     checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,
     createSeries,createReport,create_person,drop_collection,create_doc,delete_deactivate,create_notification,
-    formatDate};
+    formatDate,create_node};
