@@ -9,16 +9,16 @@ const User = require("../../Schemas/User");
 router.post('/', async (req, res) => {
     try{
       let payload = req.body.payload.trim();
-  
+      console.log(req.body.type);
       if(req.body.type === 'everyone'){
-        var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, active: req.body.status}).exec();
-        var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, active: req.body.status}).exec();
-        var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, active: req.body.status}).exec();
+        var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, status: req.body.status}).exec();
+        var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, status: req.body.status}).exec();
+        var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: {$ne: 'admin'}, status: req.body.status}).exec();
       }
       else{
-        var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, active: req.body.status}).exec();
-        var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, active: req.body.status}).exec();
-        var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, active: req.body.status}).exec();
+        var resultByFname = await User.find({firstName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, status: req.body.status}).exec();
+        var resultByLname = await User.find({lastName: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, status: req.body.status}).exec();
+        var resultByEmail = await User.find({email: {$regex: new RegExp('^'+payload+'.*','i')}, type: req.body.type, status: req.body.status}).exec();
       }
     
     
