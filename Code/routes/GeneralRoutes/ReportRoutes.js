@@ -1,10 +1,13 @@
 const express = require("express");
 const router = express.Router();
 router.use(express.static('./public/css'));
+const mongoose = require('mongoose');
 
 //Models
 const Report = require("../../Schemas/Report");
 const Notification = require("../../Schemas/Notification");
+const Company = require("../../Schemas/Company");
+const User = require("../../Schemas/User");
 
 //Authentication Function
 const Authentication = require("../../AuthenticationFunctions");
@@ -18,8 +21,8 @@ const path_constants = require('../../constantsPaths');
 /*--------   REPORT USER */
 router.get('/user', Authentication.checkAuthenticated, async (req, res) => {
     try{
-      res.render('general/report_user.ejs', {user: req.user, 
-        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+      res.render('general/report_user.ejs', {user: req.user, company_users: await User.find({ company: new mongoose.Types.ObjectId(req.query.cid) }),
+              notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
     }
     catch (err) {
       console.error('Error loading report user page:', err);
@@ -33,24 +36,49 @@ router.post('/user', Authentication.checkAuthenticated, async (req,res)=> {
       if(req.body.report_user_radio === "Other"){
         report_reason = req.body.report_title;
       }
-      const newReport = generalFunctions.createReport(req.user._id,req.query.id,report_reason,req.body.report_textarea);
-
-      /*const newReport = new Report({ //report constructor
-        reporter_id: req.user._id, //reporter id
-        reported_id: req.query.id, //reported id
-        reason: report_reason, //reason for report (taken from a radio in report page or inserted by the user)
-        status: "pending", //report status (always starts as pending until admin reviews or dismisses it)
-        text: req.body.report_textarea //report text-details
-      });*/
-  
-      await newReport.save();
-      res.redirect("back");
+      var reported_id = req.body.company_users_select;
+      if(reported_id == "no_selection"){ //if no user is selected to report, report company owner
+        var company_owner = await User.findOne({$and:[{company: new mongoose.Types.ObjectId(req.query.cid)} , {companyOwner: 1}]});
+        reported_id = company_owner._id
+        console.log(reported_id);
+      }
+      generalFunctions.createReport(req.user._id,reported_id,report_reason,req.body.report_textarea);
+      res.redirect("/");
     }
     catch (err) {
       console.error('Error creating report:', err);
       res.redirect('/error?origin_page=report-user&error=' + err);
     }
 });
+
+/*--------   REPORT ACCOUNTANT */
+router.get('/accountant', Authentication.checkAuthenticated, async (req, res) => {
+  try{
+    res.render('general/report_user.ejs', {user: req.user, 
+      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+  }
+  catch (err) {
+    console.error('Error loading report user page:', err);
+    res.redirect('/error?origin_page=report-user&error=' + err);
+  }
+});
+
+router.post('/accountant', Authentication.checkAuthenticated, async (req,res)=> {
+  try{
+    let report_reason = req.body.report_user_radio;
+    if(req.body.report_user_radio === "Other"){
+      report_reason = req.body.report_title;
+    }
+    generalFunctions.createReport(req.user._id,req.query.uid,report_reason,req.body.report_textarea);
+    res.redirect("/");
+  }
+  catch (err) {
+    console.error('Error creating report:', err);
+    res.redirect('/error?origin_page=report-user&error=' + err);
+  }
+});
+
+
 
 /*--------   GENERAL REPORT */
 router.get('/general', Authentication.checkAuthenticated, async (req, res) => {
