@@ -53,8 +53,10 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
   try {
     const company = await Company.findOne({_id:req.user.company});
     const company_node = await Node.findOne({_id:company.accountant});
+    console.log(company_node);
+
     
-    if(company.accountant !="not_assigned" && company_node.status !="fired"){
+    if(company.accountant !="not_assigned" && company_node.status !="fired" && 2 ==3){
 
       clientAccountantFunctions.fire_accountant(company._id,req.user._id)
     }
@@ -68,7 +70,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       
     }
     else if(req.body.user_action == "sent_request"){
-      console.log("Sent accountant request");
+      console.log("Sent accountant request "+accountant._id);
 
       await clientAccountantFunctions.send_hiring_req_to_accountant(company._id,req.user._id, accountant._id);
       

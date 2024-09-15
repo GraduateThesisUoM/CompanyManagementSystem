@@ -14,22 +14,20 @@ const generalFunctions = require(path_constants.generalFunctions_folder.one);
 
 async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
     // check if a notification of the same type exists for user
-    
     try{
         const company = await Company.findOne({_id:companyId});
+        console.log(accountantId);
 
-        const last_accountant_node = await Node.findOne({company_id:company._id,type2:"hiring",status: { $in: ['executed', 'viewed', 'pending'] }});
+        const last_accountant_node = await Node.findOne({company_id:company._id,receiver_id:accountantId,type2:"hiring",status: { $in: ['executed', 'viewed', 'pending'] }});
         console.log("fffffffffffffffffffff")
-
-        console.log(accountantId)
-        const company_node = await generalFunctions.create_node(company._id,senderId,'22222','relationship','hiring');
-
+        const company_node = await generalFunctions.create_node(company._id,senderId,accountantId,'relationship','hiring');
+        console.log(company_node);
 
         if(company.accountant != "not_assigned"){
             
             const company_nodes = await Node.find({company_id:company._id,type2:"request",status: { $in: ['viewed', 'pending'] }});
 
-            last_accountant_node.next = company_node._id;
+            last_accountant_node.next = company_node._id.toSting();
             last_accountant_node.status = 'canceled';
             await last_accountant_node.save();
 
