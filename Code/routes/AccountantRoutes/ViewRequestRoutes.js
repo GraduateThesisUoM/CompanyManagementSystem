@@ -1,8 +1,9 @@
 const express = require("express");
 const router = express.Router();
 
-const path_constants = require('./constantsPaths');
+const path_constants = require('../../constantsPaths');
 const generalFunctions = require(path_constants.generalFunctions_folder.two);
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
 
 
 //Models
@@ -10,15 +11,6 @@ const Client  = require(path_constants.schemas.two.client);
 const Node  = require(path_constants.schemas.two.node);
 const Notification  = require(path_constants.schemas.two.notification);
 const Company  = require(path_constants.schemas.two.company);
-
-//Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
-
-//Create Notification Function
-const create_notification = require("../../CreateNotification");
-
-//Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
 
 //GET REQUEST
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {

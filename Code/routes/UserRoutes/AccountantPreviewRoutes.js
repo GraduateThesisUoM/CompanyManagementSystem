@@ -14,9 +14,9 @@ const Node = require(path_constants.schemas.two.node);
 const Authentication = require(path_constants.authenticationFunctions_folder.two);
 
 //Create Notification Function
-const clientAccountantFunctions = require("../../ClientAccountantFunctions");
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
 //Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 /*--------   ACCOUNTANT PREVIEW */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {

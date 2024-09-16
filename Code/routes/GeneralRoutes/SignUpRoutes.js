@@ -3,19 +3,17 @@ const router = express.Router();
 
 const bcrypt = require('bcrypt');
 
+const path_constants = require('../../constantsPaths');
+
 //Models
-const User = require("../../Schemas/User");
-const Accountant  = require("../../Schemas/Accountant");
-const Client  = require("../../Schemas/Client");
-const Company  = require("../../Schemas/Company");
+const User = require(path_constants.schemas.two.user);
+const Accountant = require(path_constants.schemas.two.accountant);
+const Company = require(path_constants.schemas.two.company);
 
 //Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
-
-const clientAccountantFunctions = require("../../ClientAccountantFunctions");
-
-//Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
+const generalFunctions = require( path_constants.generalFunctions_folder.two);
 
 
 /*--------   SING UP */

@@ -1,19 +1,16 @@
 const express = require("express");
 const router = express.Router();
+const path_constants = require('../../constantsPaths');
+
 
 //Models
-const Accountant  = require("../../Schemas/Accountant");
-const Notification = require("../../Schemas/Notification");
-const Client  = require("../../Schemas/Client");
-const Company  = require("../../Schemas/Company");
-const Request = require("../../Schemas/Node");
-
-
+const Notification  = require(path_constants.schemas.two.notification);
+const Company  = require(path_constants.schemas.two.company);
 
 //Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
-const create_notification = require("../../CreateNotification");
-const clientAccountantFunctions =require("../../ClientAccountantFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
 
 /*--------   Self0 ACCOUNTANT */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
