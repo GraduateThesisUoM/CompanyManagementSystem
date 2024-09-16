@@ -128,6 +128,13 @@
             if(urlParams.get('message')=="rating_submitted_successfully"){
                 alert("Η αξιολόγηση καταχωρήθηκε με επιτυχία");
             }
+
+        }
+        if (urlParams.has('refresh')) {
+
+            if(urlParams.get('refresh')=="true"){
+                window.location = "/my-accountant"
+            }
         }
 
             $("#back_btn").click(function(){

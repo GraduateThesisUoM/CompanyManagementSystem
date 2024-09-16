@@ -66,7 +66,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     if(req.body.user_action == "cancel_request"){
 
       console.log("Cancel accountant request");
-      clientAccountantFunctions.cancel_hiring_req_to_accountant(company._id,req.user._id,accountant._id,);
+      clientAccountantFunctions.cancel_hiring_req_to_accountant(company._id,req.user._id);
       
     }
     else if(req.body.user_action == "sent_request"){

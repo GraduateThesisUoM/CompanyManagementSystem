@@ -18,16 +18,22 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
         const company = await Company.findOne({_id:companyId});
         console.log(accountantId);
 
-        const last_accountant_node = await Node.findOne({company_id:company._id,receiver_id:accountantId,type2:"hiring",status: { $in: ['executed', 'viewed', 'pending'] }});
+        var last_accountant_node = await Node.findOne({company_id:company._id,type2:"hiring",status: { $in: ['executed', 'viewed', 'pending'] }});
+        
+        console.log(last_accountant_node);
         console.log("fffffffffffffffffffff")
         const company_node = await generalFunctions.create_node(company._id,senderId,accountantId,'relationship','hiring');
         console.log(company_node);
 
-        if(company.accountant != "not_assigned"){
+        if(last_accountant_node == null){
+            console.log('send_hiring_req_to_accountant has no accountant')
+
+        }
+        else{
             
             const company_nodes = await Node.find({company_id:company._id,type2:"request",status: { $in: ['viewed', 'pending'] }});
 
-            last_accountant_node.next = company_node._id.toSting();
+            last_accountant_node.next = company_node._id;
             last_accountant_node.status = 'canceled';
             await last_accountant_node.save();
 
@@ -36,9 +42,6 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
                 node.status = 'canceled';
                 await node.save();
             });
-        }
-        else{
-            console.log('send_hiring_req_to_accountant has no accountant')
         }
 
         company.accountant = company_node._id;
@@ -63,17 +66,11 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
     }
 }
 
-async function cancel_hiring_req_to_accountant(companyId,senderId, accountantId){
+async function cancel_hiring_req_to_accountant(companyId, accountantId){
     try{
         const company = await Company.findOne({_id:companyId});
         const company_node = await Node.findOne({_id:company.accountant});
-        const new_company_node = await generalFunctions.create_node(company._id,senderId,accountantId,'relationship','firing');
 
-
-        company.accountant = new_company_node._id;
-        await company.save();
-
-        company_node.next = new_company_node._id;
         company_node.status = 'canceled';
 
         await company_node.save();

@@ -2,9 +2,9 @@ const mongoose = require('mongoose');
 
 // Define the report schema
 const NodeShema = new mongoose.Schema({
-  company_id: { type: String, required: true },
-  sender_id: { type: String, required: true },
-  receiver_id: { type: String, required: true },
+  company_id: { type: mongoose.Schema.Types.ObjectId, required: true  },
+  sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  receiver_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   type: {
     type: String,
     enum: ['relationship','response','request','node'],
@@ -18,11 +18,10 @@ const NodeShema = new mongoose.Schema({
     default:'other'
   },
   text: { type: String},
-  next:{ type: String,default:'-'},
-  due_date: { type: String},
+  next:{ type: mongoose.Schema.Types.ObjectId,required: false},
   status: {
     type: String,
-    enum: ['viewed', 'executed', 'pending', 'rejected','canceled','temp'],
+    enum: ['viewed', 'executed', 'pending', 'rejected','canceled'],
     required: true,
     default: 'pending',
   },

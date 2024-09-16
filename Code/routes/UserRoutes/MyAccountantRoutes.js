@@ -30,7 +30,10 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         const company_accountant_node = await Node.findOne({_id:company.accountant});
         console.log(company_accountant_node)
 
-        if(company_accountant_node == null ){
+        if(company_accountant_node == null ||
+          (company_accountant_node.type2 != 'hiring' && company_accountant_node.status != 'canceled') ||
+          (company_accountant_node.type2 != 'firing' && company_accountant_node.status != 'executed')
+        ){
           if(req.user.companyOwner == 1){
             res.redirect('pick-accountant');
           }
@@ -150,7 +153,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
 
     clientAccountantFunctions.fire_accountant(company._id,req.user._id,company_node.receiver_id);
 
-    res.redirect('/my-accountant');
+    res.redirect('/my-accountant?refresh=true');
   }
   catch (err) {
     console.error('Error updating user data:', err);

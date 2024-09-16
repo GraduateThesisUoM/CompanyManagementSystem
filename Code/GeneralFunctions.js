@@ -93,17 +93,18 @@ async function create_user(data){
     return user;
 }
 
-async function create_node(companyId,senderId,receiverId,type,type2,text = '',due_date=''){
+async function create_node(companyId,senderId,receiverId,type,type2,text = ''){
     var status = 'pending';
-    
     if(type == 'relationship' ){
-        if(companyId == receiverId && type2 =='hiring'){
+        if(companyId.equals(receiverId) && type2 =='hiring'){
             status = 'executed'
         }
         else if(type2 == 'firing'){
             status = 'executed'
         }
     }
+    console.log("Node status set to: " + status);
+
 
     const new_node= new Node({
         company_id: companyId,
@@ -113,7 +114,6 @@ async function create_node(companyId,senderId,receiverId,type,type2,text = '',du
         type2: type2,
         status:status,
         text:text,
-        due_date:due_date
     });
 
     await new_node.save();
