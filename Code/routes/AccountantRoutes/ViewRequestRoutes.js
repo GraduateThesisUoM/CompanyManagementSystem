@@ -1,12 +1,15 @@
 const express = require("express");
 const router = express.Router();
 
-//Models
-const Client  = require("../../Schemas/Client");
-const Request = require("../../Schemas/Node");
-const Notification = require("../../Schemas/Notification");
-const Company  = require("../../Schemas/Company");
+const path_constants = require('./constantsPaths');
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
+
+//Models
+const Client  = require(path_constants.schemas.two.client);
+const Node  = require(path_constants.schemas.two.node);
+const Notification  = require(path_constants.schemas.two.notification);
+const Company  = require(path_constants.schemas.two.company);
 
 //Authentication Functions
 const Authentication = require("../../AuthenticationFunctions");
@@ -19,26 +22,34 @@ const generalFunctions = require("../../GeneralFunctions");
 
 //GET REQUEST
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
-    const request = await Request.findOne({ _id : req.query.req_id});
-    if( request.status == "pending"){
-      request.status = 'viewed';
-      request.save();
+  try {
+    if(generalFunctions.checkAccessRigts(req,res)){
+      const node = await Node.findOne({ _id : req.query.req_id});
+      if( node.status == "pending"){
+        node.status = 'viewed';
+        node.save();
+      }
+      const accountants_client = await Client.findOne({ _id : request.sender_id});
+      const accountants_client_company = await Company.findOne({ _id : request.company_id});
+
+      const data = {
+        user : req.user,
+        request : request,
+        company:accountants_client_company,
+        accountants_client : accountants_client, 
+        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})
+      }
+      res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, company:accountants_client_company, accountants_client : accountants_client, 
+      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
     }
-    const accountants_client = await Client.findOne({ _id : request.sender_id});
-    const accountants_client_company = await Company.findOne({ _id : request.company_id});
-
-    const data = {
-      user : req.user,
-      request : request,
-      company:accountants_client_company,
-      accountants_client : accountants_client, 
-      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})
+    else{
+      res.redirect('/error?origin_page=my-accountant&error=acces denid');
     }
-
-    //generalFunctions.checkAccessRigts(req.user,'accountant_pages/view_request.ejs',data,res);
-
-    res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, company:accountants_client_company, accountants_client : accountants_client, 
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+  }
+  catch (err) {
+    console.error('Error :', err);
+    res.redirect('/error?origin_page=my-accountant&error='+err);
+  }
 });
 
 //POST REQUEST
@@ -58,8 +69,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       }
       
       request.save();
-
-      create_notification(request.sender_id, req.user.id, "assignments-status-notification");
+      generalFunctions.create_notification(request.sender_id, req.user.id, "assignments-status-notification");
       res.redirect('/');
     }
     catch (err) {

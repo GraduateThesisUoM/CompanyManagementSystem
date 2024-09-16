@@ -1,9 +1,6 @@
 //File with the paths
 const path_constants = require('./constantsPaths');
 
-//Libraries
-const bcrypt = require('bcrypt');
-
 var mongoose = require('mongoose');
 
 //Models
