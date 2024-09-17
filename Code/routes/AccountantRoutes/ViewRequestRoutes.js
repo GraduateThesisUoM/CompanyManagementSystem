@@ -21,18 +21,17 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         node.status = 'viewed';
         node.save();
       }
-      const accountants_client = await Client.findOne({ _id : request.sender_id});
-      const accountants_client_company = await Company.findOne({ _id : request.company_id});
+      const accountants_client = await Client.findOne({ _id : node.sender_id});
+      const accountants_client_company = await Company.findOne({ _id : node.company_id});
 
       const data = {
         user : req.user,
-        request : request,
+        request : node,
         company:accountants_client_company,
         accountants_client : accountants_client, 
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})
       }
-      res.render('accountant_pages/view_request.ejs',{user : req.user, request : request, company:accountants_client_company, accountants_client : accountants_client, 
-      notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+      res.render('accountant_pages/view_request.ejs',data);
     }
     else{
       res.redirect('/error?origin_page=my-accountant&error=acces denid');
@@ -48,16 +47,13 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
       const action = req.body.action; 
-      const request = await Request.findOne({ _id : req.body.request_id});
-      request.status = action;
-      if(request.type == 'hiring'){
-        const company = await Company({ _id : request.company_id});
-        company.companyaccountant.status = action;
-        company.save();
-
+      const node = await Node.findOne({ _id : req.body.request_id});
+      node.status = action;
+      if(node.type == 'hiring'){
+        request.response = req.body.response;
       }
       else{
-        request.response = req.body.response;
+        
       }
       
       request.save();

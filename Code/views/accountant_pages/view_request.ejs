@@ -16,23 +16,30 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>View Request</h1>
-        <div>Όνομα Εταιρίας : <%= company.name %></div>
-        <div>Όνομα Αποστολέα : <%= accountants_client.firstName %> <%= accountants_client.lastName %></div>
-        <div>Κατηγωρία Αιτίματος : <%= request.type %></div>
-        <div id = "no_due_date">Due Date : <%= request.due_date %></div>
-        <div>Τίτλος : <%= request.title %></div>
-        <div id="div_text">Κείμενο : <%= request.text %></div>
-        <button id="reject_btn">Reject</button>
-        <button id="execute_btn">Execute</button>
-        <p id="sended_resonse">You haven't sent a response</p>
-        <form action="/view-request" method="POST">
-            <textarea name="response" id="response"></textarea>
-            <input style="display: none;" name="action" id="action">
-            <input style="display: none;" name="request_id" id="request_id" value="<%= request._id %>">
-            <button style="display: none;" type="submit" id="request_submit_btn">Submit</button>
-        </form>
-        <button id="back_btn">Πίσω</button>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1>View Request</h1>
+                <div>Όνομα Εταιρίας : <%= company.name %></div>
+                <div>Όνομα Αποστολέα : <%= accountants_client.firstName %> <%= accountants_client.lastName %></div>
+                <div>Κατηγωρία Αιτίματος : <%= request.type %></div>
+                
+                <%if(request.text != ''){ %>
+                    <div id="div_text">Κείμενο : <%= request.text %></div>
+                <%} %>
+                <button id="reject_btn">Reject</button>
+                <button id="execute_btn">Execute</button>
+                <p id="sended_resonse">You haven't sent a response</p>
+                <form action="/view-request" method="POST">
+                    <%if(request.type != 'relationship'){ %>
+                        <textarea name="response" id="response"></textarea>
+                    <%} %>
+                    <input style="display: none;" name="action" id="action">
+                    <input style="display: none;" name="request_id" id="request_id" value="<%= request._id %>">
+                    <button style="display: none;" type="submit" id="request_submit_btn">Submit</button>
+                </form>
+            </div>
+        </div>
     </body>
     <%- include('../partials/footer'); %>
     <script>
@@ -74,7 +81,6 @@
             }
             if("<%= request.due_date %>" == "no due date" ){
                 $("#execute_btn").html("Accept");
-                $("#no_due_date").css("display", "none");
                 $("#div_text").css("display", "none");
             }
         });

@@ -22,7 +22,12 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
         
         console.log(last_accountant_node);
         console.log("fffffffffffffffffffff")
-        const company_node = await generalFunctions.create_node(company._id,senderId,accountantId,'relationship','hiring');
+        const company_node = await generalFunctions.create_node({
+            company_id : company._id,
+            sender_id : senderId,
+            receiver_id : accountantId,
+            type : 'relationship',
+            type2 : 'hiring'});
         console.log(company_node);
 
         if(last_accountant_node == null){
@@ -90,13 +95,17 @@ async function fire_accountant(companyId,senderId,accountantId){
     try{
         const company = await Company.findOne({_id:companyId});
         const company_node = await Node.findOne({_id:company.accountant});
-        const new_company_node = await generalFunctions.create_node(company._id,senderId,accountantId,'relationship','firing');
-
+        //const new_company_node = await generalFunctions.create_node(company._id,senderId,accountantId,'relationship','firing');
+            
+        const new_company_node = generalFunctions.node_reply({
+            target_node : company_node,
+            text : ''
+        });
 
         company.accountant = new_company_node._id;
         await company.save();
 
-        company_node.next = new_company_node._id;
+        //company_node.next = new_company_node._id;
         company_node.status = 'canceled';
 
         await company_node.save();

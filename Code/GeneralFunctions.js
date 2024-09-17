@@ -90,13 +90,13 @@ async function create_user(data){
     return user;
 }
 
-async function create_node(companyId,senderId,receiverId,type,type2,text = ''){
+async function create_node(data){
     var status = 'pending';
-    if(type == 'relationship' ){
-        if(companyId.equals(receiverId) && type2 =='hiring'){
+    if(data.type == 'relationship' ){
+        if(data.company_id.equals(data.receiver_id) && data.type2 =='hiring'){
             status = 'executed'
         }
-        else if(type2 == 'firing'){
+        else if(data.type2 == 'firing'){
             status = 'executed'
         }
     }
@@ -104,19 +104,39 @@ async function create_node(companyId,senderId,receiverId,type,type2,text = ''){
 
 
     const new_node= new Node({
-        company_id: companyId,
-        sender_id: senderId,
-        receiver_id:receiverId,
-        type: type,
-        type2: type2,
-        status:status,
-        text:text,
+        company_id: data.company_id,
+        sender_id: data.sender_id,
+        receiver_id:data.receiver_id,
+        type: data.type,
+        type2: data.type2,
+        status:data.status,
+        text:data.text,
     });
 
     await new_node.save();
 
     return new_node;
 
+}
+
+async function node_reply(data){
+    console.log(data)
+    console.log("XXXXXXXXxx")
+    const target_node = await Node.findOne({ _id : data.target_node._id});
+    const reply_node = await create_node({
+        company_id : target_node.company_id,
+        sender_id : target_node.sender_id,
+        receiver_id : target_node.receiver_id,
+        type : target_node.type,
+        type2 : target_node.type2,
+        text : data.text
+    }
+    );
+    
+    target_node.next = reply_node._id;
+    await target_node.save();
+
+    return reply_node;
 }
 
 async function create_company(data){
@@ -366,4 +386,4 @@ const formatDate = (dateString) => {
 module.exports = {
     checkAccessRigts, createWarehouse, createItem, create_user,create_admin,create_accountant,create_company,
     createSeries,createReport,create_person,drop_collection,create_doc,delete_deactivate,create_notification,
-    formatDate,create_node};
+    formatDate,create_node,node_reply};
