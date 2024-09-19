@@ -27,11 +27,12 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     //add something to get the requests that happen while away
     //add more filters
     const nodes_pending = await Node.find({receiver_id:req.user._id, status : "pending" });
+    console.log(nodes_pending)
     const nodes_viewed = await Node.find({receiver_id:req.user._id, status :  "viewed"});
     const nodes_rejected = await Node.find({receiver_id:req.user._id, status :  "rejected"});
     const nodes_executed = await Node.find({receiver_id:req.user._id, status : "executed"});
-    const clients = await Client.find({type: 'user'});
-
+    const clients = await clientAccountantFunctions.fetchClients(req.user._id,'all');
+      console.log(clients)
     data = {user : req.user,
       nodes_pending : nodes_pending,
       nodes_viewed : nodes_viewed,

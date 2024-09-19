@@ -99,6 +99,7 @@ async function fire_accountant(companyId,senderId,accountantId){
             
         const new_company_node = generalFunctions.node_reply({
             target_node : company_node,
+            reply: 'firing',
             text : ''
         });
 
@@ -131,17 +132,17 @@ async function fetchClients(accountantId,select){
         var clients = [];
         var clients_Nodes;
         if(select == 'all'){
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: { $in: ['executed','pending', 'rejected'] }, next : "-" });
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: { $in: ['executed','pending', 'rejected'] }, next: { $exists: false } });
             
         }
         else if(select == 'fired'){
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'firing', status: 'executed', next : "-"  });
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'firing', status: 'executed', next: { $exists: false }  });
         }
         else if(select == 'curent'){
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: 'executed', next : "-"  });
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: 'executed', next: { $exists: false }  });
         }
         else{
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: select , next : "-"});
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: select , next: { $exists: false }});
         }
 
         for (let client of clients_Nodes) {

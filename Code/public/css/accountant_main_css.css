@@ -16,3 +16,12 @@
   padding: 8px; /* Add some padding for better readability */
   text-align: left; /* Align text to the left within td elements */
 }
+
+
+.column1,.column2,.column3,.column4,.column5,.column6{
+  width: 10%;
+}
+.column6{
+  width: 5%;
+}
+
