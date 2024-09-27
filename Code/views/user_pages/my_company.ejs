@@ -27,6 +27,7 @@
                 </form>
 
                 <form action="/my-company/change-company-status" method="POST"></form>
+                    <div>Company on/of</div>
                     <button type="submit">submit</button>
                 </form>
 
@@ -64,6 +65,13 @@
 
        $(document).ready(function(){
             const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('message')) {
+            if(urlParams.get('message')=="data-updated"){
+                alert("Company Data Updated");
+            }
+
+        }
+       
             var requested_license = parseInt('<%= company.license.requested %>');
             var remove_license = 0;;
 

@@ -98,7 +98,7 @@ router.post('/edit-company', Authentication.checkAuthenticated, async (req, res)
     company.name=req.body.new_company_name;
     company.logo=req.body.new_company_logo;
     await company.save()
-    res.redirect('/my-company?message=Company Data Updated');
+    res.redirect('/my-company?message=data-updated');
 
   }
     catch(e){
