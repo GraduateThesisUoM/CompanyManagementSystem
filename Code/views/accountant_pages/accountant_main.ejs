@@ -19,60 +19,65 @@
     <%- include('../partials/header'); %>
   </head>
   <body>
-    <h1>Accountant main page</h1>
-    <h2>Welcome <%= user.firstName %> <%= user.lastName %></h2>
-    <a href="/transactor-list?type=supplier"> Suppliers</a>
-    <a href="/transactor-list?type=customer"> Customers</a>
-    <div id="pages-div" name="pages-div">
-      <a href="clients">client list</a>
-      <a href="/request-history">request history</a>
-    </div>
-    <div>
-      <h2>Pending Requests</h2>
-      <div id="pending_requests_div">
-        <table id="pending_requests_table" class="requests_record_table">
-          <tr>
-            <th class="column1">Type</th>
-            <th class="column2">Title</th>
-            <th class="column3">Registration Date</th>
-            <th class="column4">Due Date</th>
-            <th class="column5">Company</th>
-            <th class="column6"></th>
-          </tr>
-        </table>
-        <button id="more_pending_requests_btn">More ...</button>
-      </div>
-    </div>
-    <div>
-      <h2>Executed Requests</h2>
-      <div id="executed_requests_div">
-        <table id="executed_requests_table" class="requests_record_table">
-          <tr>
-            <th class="column1">Type</th>
-            <th class="column2">Title</th>
-            <th class="column3">Registration Date</th>
-            <th class="column4">Due Date</th>
-            <th class="column5">Company</th>
-            <th class="column6"></th>
-          </tr>
-        </table>
-        <button id="more_executed_requests_btn">More ...</button>
-      </div>
-    </div>
-    <div>
-      <h2>Rejected Requests</h2>
-      <div id="rejected_requests_div">
-        <table id="rejected_requests_table" class="requests_record_table">
-          <tr>
-            <th class="column1">Type</th>
-            <th class="column2">Title</th>
-            <th class="column3">Registration Date</th>
-            <th class="column4">Due Date</th>
-            <th class="column5">Company</th>
-            <th class="column6"></th>
-          </tr>
-        </table>
-        <button id="more_rejected_requests_btn">More ...</button>
+    <div class="has_sidebar">
+      <%- include('../partials/sidebar'); %>
+      <div>
+        <h1>Accountant main page</h1>
+        <h2>Welcome <%= user.firstName %> <%= user.lastName %></h2>
+        <a href="/transactor-list?type=supplier"> Suppliers</a>
+        <a href="/transactor-list?type=customer"> Customers</a>
+        <div id="pages-div" name="pages-div">
+          <a href="clients">client list</a>
+          <a href="/request-history">request history</a>
+        </div>
+        <div>
+          <h2>Pending Requests</h2>
+          <div id="pending_requests_div">
+            <table id="pending_requests_table" class="requests_record_table">
+              <tr>
+                <th class="column1">Type</th>
+                <th class="column2">Title</th>
+                <th class="column3">Registration Date</th>
+                <th class="column4">Due Date</th>
+                <th class="column5">Company</th>
+                <th class="column6"></th>
+              </tr>
+            </table>
+            <button id="more_pending_requests_btn">More ...</button>
+          </div>
+        </div>
+        <div>
+          <h2>Executed Requests</h2>
+          <div id="executed_requests_div">
+            <table id="executed_requests_table" class="requests_record_table">
+              <tr>
+                <th class="column1">Type</th>
+                <th class="column2">Title</th>
+                <th class="column3">Registration Date</th>
+                <th class="column4">Due Date</th>
+                <th class="column5">Company</th>
+                <th class="column6"></th>
+              </tr>
+            </table>
+            <button id="more_executed_requests_btn">More ...</button>
+          </div>
+        </div>
+        <div>
+          <h2>Rejected Requests</h2>
+          <div id="rejected_requests_div">
+            <table id="rejected_requests_table" class="requests_record_table">
+              <tr>
+                <th class="column1">Type</th>
+                <th class="column2">Title</th>
+                <th class="column3">Registration Date</th>
+                <th class="column4">Due Date</th>
+                <th class="column5">Company</th>
+                <th class="column6"></th>
+              </tr>
+            </table>
+            <button id="more_rejected_requests_btn">More ...</button>
+          </div>
+        </div>
       </div>
     </div>
   </body>

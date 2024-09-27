@@ -48,7 +48,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
         newReview = review;
       }
 
-      create_notification(users_accountant._id, req.user._id, "review-notification");
+      await create_notification(users_accountant._id, req.user._id,company._id,users_accountant._id, "review-notification");
   
       await newReview.save();
       console.log('Review created or updated successfully');

@@ -2,16 +2,17 @@ const express = require("express");
 const router = express.Router();
 
 var mongoose = require('mongoose');
-
+const path_constants = require('../../constantsPaths');
 
 //Models
-const Node = require("../../Schemas/Node");
-const Accountant = require("../../Schemas/Accountant");
-const Company = require("../../Schemas/Company");
+const Node = require(path_constants.schemas.two.node);
+const Accountant = require(path_constants.schemas.two.accountant);
+const Company = require(path_constants.schemas.two.company);
 
-
-//Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
+//Get General Functions
+const generalFunctions = require( path_constants.generalFunctions_folder.two);
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
@@ -20,7 +21,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
 
       const users_accountant = await Accountant.findOne({_id:company_accountant_node.receiver_id});
 
-      const newNode = new Node({
+      const newNode =await generalFunctions.create_node({
         company_id: company._id,
         sender_id: req.user._id,
         receiver_id: users_accountant._id,
@@ -29,12 +30,10 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
         title: req.body.request_title,
         text: req.body.request_text,
         due_date : req.body.request_due_date
+        
       });
 
-      if(req.body.request_due_date != ""){
-        newNode.due_date = req.body.request_due_date;
-      }
-      newNode.save();
+
       
       console.log('Reuest created successfully');
       res.redirect('/my-accountant');

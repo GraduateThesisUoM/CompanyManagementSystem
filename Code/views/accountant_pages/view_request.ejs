@@ -24,19 +24,21 @@
                 <div>Όνομα Αποστολέα : <%= accountants_client.firstName %> <%= accountants_client.lastName %></div>
                 <div>Κατηγωρία Αιτίματος : <%= request.type %></div>
                 
-                <%if(request.text != ''){ %>
-                    <div id="div_text">Κείμενο : <%= request.text %></div>
-                <%} %>
                 <button id="reject_btn">Reject</button>
                 <button id="execute_btn">Execute</button>
-                <p id="sended_resonse">You haven't sent a response</p>
-                <form action="/view-request" method="POST">
+                <p id="sended_resonse">
+                    <%if(request.text == null){ %>
+                        You haven't sent a response
+                    <%}else{%>
+                        Response : <%=request.text%>
+                    <%} %>
+                </p>
+                <form action="/view-request" method="POST" id="request_response_form">
                     <%if(request.type != 'relationship'){ %>
                         <textarea name="response" id="response"></textarea>
                     <%} %>
                     <input style="display: none;" name="action" id="action">
                     <input style="display: none;" name="request_id" id="request_id" value="<%= request._id %>">
-                    <button style="display: none;" type="submit" id="request_submit_btn">Submit</button>
                 </form>
             </div>
         </div>
@@ -59,11 +61,11 @@
 
             $("#reject_btn").click(function() {
                 $("#action").val("rejected")
-                $("#request_submit_btn").click();
+                $("#request_response_form").submit();
             });
             $("#execute_btn").click(function() {
                 $("#action").val("executed");
-                $("#request_submit_btn").click();
+                $("#request_response_form").submit();
             });
             if("<%= request.status %>" == "executed" || "<%= request.status %>" == "rejected"){
                 $("#reject_btn").hide();
@@ -77,11 +79,9 @@
             if("<%= request.type %>" == "hiring" ){
                 $("#execute_btn").html("Accept");
                 $("#response").css("display", "none");
-                $("#div_text").css("display", "none");
             }
             if("<%= request.due_date %>" == "no due date" ){
                 $("#execute_btn").html("Accept");
-                $("#div_text").css("display", "none");
             }
         });
 

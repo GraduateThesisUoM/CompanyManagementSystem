@@ -92,6 +92,8 @@ async function create_user(data){
 
 async function create_node(data){
     var status = 'pending';
+    var new_data = {};
+    console.log(data)
     if(data.type == 'relationship' ){
         if(data.company_id.equals(data.receiver_id) && data.type2 =='hiring'){
             status = 'executed'
@@ -99,20 +101,31 @@ async function create_node(data){
         else if(data.reply == 'firing'){
             status = 'executed'
         }
+        new_data = {
+            company_id: data.company_id,
+            sender_id: data.sender_id,
+            receiver_id:data.receiver_id,
+            type: data.type,
+            type2: data.type2,
+            status:status
+        }
     }
-    console.log("data.type: " + data.type);
-    console.log("Node status set to: " + status);
+    else if(data.type == 'request' ){
+        new_data = {
+            company_id: data.company_id,
+            sender_id: data.sender_id,
+            receiver_id:data.receiver_id,
+            type: data.type,
+            type2: data.type2,
+            status:status,
+            text:data.text,
+            title:data.title,
+            due_date:data.due_date,
+        }
+    }
+    console.log(new_data)
 
-
-    const new_node= new Node({
-        company_id: data.company_id,
-        sender_id: data.sender_id,
-        receiver_id:data.receiver_id,
-        type: data.type,
-        type2: data.type2,
-        status:data.status,
-        text:data.text,
-    });
+    const new_node= new Node(new_data);
 
     await new_node.save();
 

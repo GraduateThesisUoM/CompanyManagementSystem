@@ -7,7 +7,7 @@ const CompanySchema = new mongoose.Schema({
   registrationDate: { type: Date, default: Date.now , required: true},
   name: { type: String, required: true },
   logo: { type: String, required: false ,default:"https://i.pinimg.com/originals/ec/d9/c2/ecd9c2e8ed0dbbc96ac472a965e4afda.jpg"},
-  active: {
+  status: {
     type: Number,
     enum: [0, 1],
     //1 active

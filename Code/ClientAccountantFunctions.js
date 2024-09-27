@@ -20,7 +20,6 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
 
         var last_accountant_node = await Node.findOne({company_id:company._id,type2:"hiring",status: { $in: ['executed', 'viewed', 'pending'] }});
         
-        console.log(last_accountant_node);
         console.log("fffffffffffffffffffff")
         const company_node = await generalFunctions.create_node({
             company_id : company._id,
@@ -63,7 +62,9 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
                 await notification.save();
             });
         }
-        generalFunctions.create_notification(senderId, accountantId, companyId, accountantId, 'hiring-notification');
+        if(companyId != accountantId){
+            generalFunctions.create_notification(senderId, accountantId, companyId, accountantId, 'hiring-notification');
+        }
 
     }
     catch(e){

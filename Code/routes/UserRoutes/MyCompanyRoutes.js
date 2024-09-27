@@ -92,5 +92,37 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
 
 });
 
+router.post('/edit-company', Authentication.checkAuthenticated, async (req, res) => {
+  try{
+    const company = await Company.findOne({_id:req.user.company});
+    company.name=req.body.new_company_name;
+    company.logo=req.body.new_company_logo;
+    await company.save()
+    res.redirect('/my-company?message=Company Data Updated');
+
+  }
+    catch(e){
+      console.error(e);
+      res.redirect('/error?origin_page=my-company&error='+e);
+  
+    }
+});
+
+/*router.post('/change-company-status', Authentication.checkAuthenticated, async (req, res) => {
+  try{
+    const company = await Company.findOne({_id:req.user.company});
+    company.name=req.body.new_company_name;
+    company.logo=req.body.new_company_logo;
+    await company.save()
+    res.redirect('/my-company?message=Company Data Updated');
+
+  }
+    catch(e){
+      console.error(e);
+      res.redirect('/error?origin_page=my-company&error='+e);
+  
+    }
+});*/
+
 
 module.exports = router;

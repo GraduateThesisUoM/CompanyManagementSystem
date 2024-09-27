@@ -71,15 +71,14 @@
                     </form>
                 </div>
                 <div id="new_request">
-                    <form action="/my-accountant-requests" method="POST">
+                    <form action="/my-accountant-requests" method="POST" id="send_request_form">
                         <h3>New Request</h3>
                         <div>
                             <label for="request_type">Type : </label>
                             <select name = 'request_type' id = 'request_type'>
-                                <option value="" disabled selected>...</option>
+                                <option value="general">General</option>
                                 <option value="request1">Something_1</option>
                                 <option value="request2">Something_2</option>
-                                <option value="other">Other</option>
                             </select>
                         </div>
                         
@@ -94,7 +93,7 @@
                         </div>
                         
                         <textarea name="request_text" id="request_text"></textarea></br>
-                        <button id="submit_from_request_btn" type="submit">Submit</button>
+                        <button id="submit_from_request_btn" type="button">Submit</button>
                     </form>
                 </div>
             
@@ -260,6 +259,25 @@
                 }
             }
             
+        });
+
+        $("#submit_from_request_btn").click(function() {
+            let today = new Date();
+            // Format today's date as DD-MM-YYYY
+            today = today.getFullYear() + '-' +
+            (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
+             today.getDate().toString().padStart(2, '0') ;
+
+             let dueDate = $("#request_due_date").val();
+            //let dueDate = new Date(dueDateValue);
+
+            // Compare the due date with today
+            if (dueDate < today && dueDate != "") {
+                alert("The due date is before today.");
+            }
+            else{
+                $("#send_request_form").submit();
+            }
         });
 
     </script>

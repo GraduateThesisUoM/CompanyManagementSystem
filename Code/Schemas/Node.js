@@ -13,11 +13,13 @@ const NodeShema = new mongoose.Schema({
   },
   type2: {
     type: String,
-    enum: ['hiring','firing','response','request1','request2','other'],
+    enum: ['hiring','firing','response','request1','request2','general'],
     required: true,
-    default:'other'
+    default:'general'
   },
   text: { type: String},
+  title: { type: String},
+  due_date: { type: Date},
   next:{ type: mongoose.Schema.Types.ObjectId,required: false},
   status: {
     type: String,

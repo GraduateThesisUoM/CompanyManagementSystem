@@ -19,7 +19,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       const node = await Node.findOne({ _id : req.query.req_id});
       if( node.status == "pending"){
         node.status = 'viewed';
-        node.save();
+        await node.save();
       }
       const accountants_client = await Client.findOne({ _id : node.sender_id});
       const accountants_client_company = await Company.findOne({ _id : node.company_id});
@@ -49,15 +49,14 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       const action = req.body.action; 
       const node = await Node.findOne({ _id : req.body.request_id});
       node.status = action;
-      if(node.type == 'hiring'){
-        request.response = req.body.response;
-      }
-      else{
-        
+      if(node.type != 'hiring'){
+        node.text = req.body.response;
       }
       
-      request.save();
-      generalFunctions.create_notification(request.sender_id, req.user.id, "assignments-status-notification");
+      
+      await node.save();
+      await generalFunctions.create_notification(node.sender_id, req.user.id,node.company_id,req.user.id, "assignments-status-notification");
+
       res.redirect('/');
     }
     catch (err) {
