@@ -67,8 +67,7 @@ async function create_users() {
   console.log("End Deleting -----");
 
   var data = {};
-  var logo =
-      "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
+  var logo = "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
     data = {
       name: "Innovatech Solutions Ltd",
       logo: logo,
@@ -90,7 +89,7 @@ async function create_users() {
 
   data = {
     name: "Innovatech Solutions Ltd",
-    logo: logo,
+    logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQymDTbUOKArqHkb0KEuc9ztv0xbMcooDVrvXmYLLKqxBID8WPjMYr0oPABPRtd2HK1YpA',
     signupcode: 1,
   };
   const company3 = await generalFunctions.create_company(data);
@@ -108,7 +107,7 @@ async function create_users() {
     signupcode: 1,
   };
   const company5 = await generalFunctions.create_company(data);
-  company5.status = "disabled";
+  company5.status = 0;
   await company5.save();
 
   data = {

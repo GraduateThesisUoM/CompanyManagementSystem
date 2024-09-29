@@ -1,6 +1,11 @@
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+
+const path_constants = require('./constantsPaths');
+const Company = require('./Schemas/Company');
+
 const connectDB = require('./db');
+
 connectDB();
 
 function initialize(passport, getUserByEmail, getUserById) {
@@ -16,6 +21,17 @@ function initialize(passport, getUserByEmail, getUserById) {
               return done(null, false, { message: 'disabled' })
             }
             if (user.status == '1') {
+              if(user.type == 'user' ){
+                if(user.companyOwner == 0){
+                  const company = await Company.findOne({_id:user.company})
+                  if(company.status == 1){
+                    return done(null, user)
+                  }
+                  else{
+                    return done(null, false, { message: 'company is not acive' })
+                  }
+                }
+              }
               return done(null, user)
             }
             if (user.status == '2') {

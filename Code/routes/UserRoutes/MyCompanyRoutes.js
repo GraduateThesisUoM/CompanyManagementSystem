@@ -108,13 +108,12 @@ router.post('/edit-company', Authentication.checkAuthenticated, async (req, res)
     }
 });
 
-/*router.post('/change-company-status', Authentication.checkAuthenticated, async (req, res) => {
+router.post('/change-company-status', Authentication.checkAuthenticated, async (req, res) => {
   try{
     const company = await Company.findOne({_id:req.user.company});
-    company.name=req.body.new_company_name;
-    company.logo=req.body.new_company_logo;
+    company.status=Math.abs(company.status-1);
     await company.save()
-    res.redirect('/my-company?message=Company Data Updated');
+    res.redirect('/my-company?message=company-status-'+Math.abs(company.status-1));
 
   }
     catch(e){
@@ -122,7 +121,7 @@ router.post('/edit-company', Authentication.checkAuthenticated, async (req, res)
       res.redirect('/error?origin_page=my-company&error='+e);
   
     }
-});*/
+});
 
 
 module.exports = router;

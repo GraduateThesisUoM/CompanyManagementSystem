@@ -26,12 +26,16 @@
                     <button type="submit">submit</button>
                 </form>
 
-                <form action="/my-company/change-company-status" method="POST"></form>
+                <form action="/my-company/change-company-status" method="POST">
                     <div>Company on/of</div>
-                    <button type="submit">submit</button>
+                    <button type="submit">Company on/of</button>
                 </form>
+                <%if(company.logo == "" || company.logo == null){ %>
+                    <img src="https://www.smartmoneymatch.com/images/company-logo.png.pagespeed.ce.-9qAfcmVqF.png" id="company_logo">
+                <%}else{ %>
+                    <img src="<%= company.logo %>" id="company_logo">
 
-                <img src="<%= company.logo %>" id="company_logo">
+                <%} %>
                 <form action="/my-company" method="POST">
                     <div class="div_display_license data_section">
                         <div>Διαθέσημες Άδιες</div>
@@ -69,7 +73,12 @@
             if(urlParams.get('message')=="data-updated"){
                 alert("Company Data Updated");
             }
-
+            if(urlParams.get('message')=="company-status-1"){
+                alert("Company Status Active");
+            }
+            if(urlParams.get('message')=="company-status-0"){
+                alert("Company Status Deactivated");
+            }
         }
        
             var requested_license = parseInt('<%= company.license.requested %>');
