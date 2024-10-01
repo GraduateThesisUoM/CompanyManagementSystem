@@ -20,7 +20,7 @@ router.post('/', Authentication.checkAuthenticated, async (req,res)=>{
       }
     
       //update the status of the user
-      await User.updateOne({_id: req.query.id}, [{$set:{active: status_value }}]);
+      await User.updateOne({_id: req.query.id}, [{$set:{status: status_value }}]);
       res.redirect('back');
     }
     catch (err) {

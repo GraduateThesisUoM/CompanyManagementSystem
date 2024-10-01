@@ -14,13 +14,13 @@
         <h2>Email: <%= target_user.email; %></h2>
         <h2>User type: <%= target_user.type; %></h2>
         <%  var status = "";
-            if(target_user.active == 1) {
+            if(target_user.status == 1) {
                 status = "Active";
             }
-            else if(target_user.active == 0){
+            else if(target_user.status == 0){
                 status = "Disabled";
             }
-            else if(target_user.active == 2){
+            else if(target_user.status == 2){
                 status = "Deleted";
             }
             else {
@@ -31,7 +31,7 @@
         <h2>User status: <%= status; %></h2>
 
         <form action="/change-ban-status?id=<%=target_user._id%>"  method="POST">
-            <% if(target_user.active === 3){ %>
+            <% if(target_user.status == 3){ %>
                 <input type="submit" id="change_ban_status_button" name="change_ban_status_button" value="Unban">
             <% }else{ %>
                 <input type="submit" id="change_ban_status_button" name="change_ban_status_button" value="Ban">
