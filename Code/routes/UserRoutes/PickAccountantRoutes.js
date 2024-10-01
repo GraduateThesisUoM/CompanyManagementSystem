@@ -16,7 +16,9 @@ const Authentication = require(path_constants.authenticationFunctions_folder.two
 
 /*--------   PICK ACCOUNTANT */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
-    try {
+  try {
+    const access = generalFunctions.checkAccessRigts(req,res);
+    if(access.response){
       const accountants = await Accountant.find({}); // Fetch all accountants from the database
       accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
       const company = await Company.findOne({_id:req.user.company});
@@ -50,9 +52,14 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   
       res.render('user_pages/pick_accountant.ejs', { user: req.user,company:company,company_node:company_node, accountants: accountants, ratings: ratings,
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+
+    }
+    else{
+      res.redirect('/error?error='+access.error);
+    }
     } catch (err) {
       console.error('Error fetching accountants:', err);
-      res.redirect('/error?origin_page=pick-accountant&error=' + err);
+      res.redirect('/error?error=' + err);
     }
 });
   

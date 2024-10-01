@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 //File with the paths
-const path_constants = require('../../constantsPaths');
+const path_constants = require("../../constantsPaths");
 
 //Models
 const Notification = require(path_constants.schemas.two.notification);
@@ -12,11 +12,26 @@ const Client = require(path_constants.schemas.two.client);
 const Authentication = require("../../AuthenticationFunctions");
 
 /*--------   WORKING */
-router.get('/', Authentication.checkAuthenticated, async (req, res) => {
-  const clients = await Client.find({}); // Fetch all accountants from the database
-  clients.sort((a, b) => a.firstName.localeCompare(b.firstName));
+router.get("/", Authentication.checkAuthenticated, async (req, res) => {
+  try {
+    const access = generalFunctions.checkAccessRigts(req, res);
+    if (access.response) {
+      const clients = await Client.find({}); // Fetch all accountants from the database
+      clients.sort((a, b) => a.firstName.localeCompare(b.firstName));
 
-  res.render('accountant_pages/create_page.ejs', {user: req.user, clients: clients,
-    notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+      res.render("accountant_pages/create_page.ejs", {
+        user: req.user,
+        clients: clients,
+        notification_list: await Notification.find({
+          $and: [{ user_id: req.user.id }, { status: "unread" }],
+        }),
+      });
+    } else {
+      res.redirect("/error?error=" + access.error);
+    }
+  } catch (err) {
+    console.error("Error :", err);
+    res.redirect("/error?error=" + err);
+  }
 });
 module.exports = router;

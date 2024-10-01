@@ -10,18 +10,14 @@
     <body>
         <h1>Σφάλμα</h1>
          <div id="error"></div>
-        <button id="ok_button">OK</button>
+        <button onclick="history.back()">OK</button>
+
     </body>
     <script>
         $(document).ready(function(){
             const urlParams = new URLSearchParams(window.location.search);
-            const origin_page = urlParams.get("origin_page");
             const error = urlParams.get("error");
             $("#error").text(error);
-
-            $("#ok_button").click(function(){
-                window.location =origin_page
-            });
         });
       </script>
 </html>

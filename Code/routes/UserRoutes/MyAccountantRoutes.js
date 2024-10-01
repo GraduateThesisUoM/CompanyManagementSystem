@@ -23,7 +23,8 @@ const clientAccountantFunctions = require(path_constants.clientAccountantFunctio
 /*--------    ΜΥ ACCOUNTΑΝΤ */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
-      if(generalFunctions.checkAccessRigts(req,res)){
+      const access = generalFunctions.checkAccessRigts(req,res);
+      if(access.response){
 
         const company = await Company.findOne({_id:req.user.company});
         console.log(company)
@@ -87,12 +88,12 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         }
       }
       else{
-        res.redirect('/error?origin_page=my-accountant&error=acces denid');
+        res.redirect('/error?error='+access.error);
       }
     }
     catch (err) {
       console.error('Error updating user data:', err);
-      res.redirect('/error?origin_page=my-accountant&error='+err);
+      res.redirect('/error?error='+err);
     }
 });
 

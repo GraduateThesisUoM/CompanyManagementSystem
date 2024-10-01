@@ -39,7 +39,7 @@ router.post('/', Authentication.checkAuthenticated, async (req,res)=> {
     }
     catch (err) {
       console.error('Error creating report:', err);
-      res.redirect('/error?origin_page=self-accountant-register&error=' + err);
+      res.redirect('/error?error=' + err);
     }
 });
 

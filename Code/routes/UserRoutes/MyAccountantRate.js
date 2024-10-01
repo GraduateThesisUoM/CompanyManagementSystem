@@ -55,7 +55,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       res.redirect('/my-accountant?message=rating_submitted_successfully');
     } catch (err) {
       console.error('Error updating user data:', err);
-      res.redirect('/error?origin_page=my-accountant&error=' + err);
+      res.redirect('/error?error=' + err);
     }
 });
 

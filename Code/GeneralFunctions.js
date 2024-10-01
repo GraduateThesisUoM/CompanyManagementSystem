@@ -34,9 +34,20 @@ const schemaMap = {
     'documents': Document
   };
 
+const disabled_company_accesable_pages = ['/my-accountant','/fff']
+const company_owner_accesable_pages = ['/my-company']
+
 //function checkAccessRights(req, data ,res){
 function checkAccessRigts(req){
+    
     try{
+        //console.log("TEST-----------------------");
+        console.log(req);
+        if (disabled_company_accesable_pages.includes(req.originalUrl)) {
+            console.log("Access denied: This page is restricted.");
+            return { response :false, error : "Access denied: This page is restricted"};
+        }
+
         var file_path = "";
         // Iterate over each key-value pair in the pages object
         for (const [page, pageData] of Object.entries(path_constants.pages)) {
@@ -48,6 +59,9 @@ function checkAccessRigts(req){
         var page_user_type = "general";
         if( file_path.startsWith(path_constants.routes.user)){
             page_user_type = "user";
+            if(req.user.companyOwner == 0 && company_owner_accesable_pages.includes(req.originalUrl)){
+                return { response :false, error : "Access Denied insufficient rights"};
+            }
         }
         else if( file_path.startsWith(path_constants.routes.accountant)){
             page_user_type = "accountant";
@@ -57,17 +71,21 @@ function checkAccessRigts(req){
         }
         else{
             //console.log("access granted");
-            return true;
+            return { response :true, error : "Access Granted"};
+            //return true;
         }
         if(page_user_type == req.user.type){
             //console.log("access granted");
-            return true;
+            return { response :true, error : "Access Granted"};
+            //return true;
         }
-        return true
+        return { response :true, error : "Access Granted"};
     }
     catch(e){
         console.log(e)
-        return false;
+        //return false;
+        return { response :false, error : e};
+
     }
 }
 
@@ -134,7 +152,6 @@ async function create_node(data){
 }
 
 async function node_reply(data){
-    console.log("XXXXXXXXxx");
     const target_node = await Node.findOne({ _id : data.target_node._id});
     var status = 'pending';
     if(target_node.type == 'relationship' && data.reply == 'firing' ){

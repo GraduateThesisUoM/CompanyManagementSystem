@@ -21,7 +21,8 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 /*--------   ACCOUNTANT PREVIEW */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   try{
-    if(generalFunctions.checkAccessRigts(req)){
+    const access = generalFunctions.checkAccessRigts(req,res);
+    if(access.response){
       const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
       const company = await Company.findOne(_id=req.user.company);
       var company_node = await Node.findOne({_id:company.accountant});
@@ -37,13 +38,16 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     
         generalFunctions.checkAccessRigts(req.user,'user_pages/preview_accountant.ejs',data,res);
     
-      res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
+        res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });  
+    }
+    else{
+      res.redirect('/error?error='+access.error);
     }
   }
   catch(e){
     console.error('Error on create page:', e);
-    res.redirect('/error?origin_page=/preview-accountant&error='+e);
+    res.redirect('/error?error='+e);
   }
 });
 
