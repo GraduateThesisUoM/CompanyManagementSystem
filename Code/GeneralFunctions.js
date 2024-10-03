@@ -42,11 +42,10 @@ function checkAccessRigts(req){
     
     try{
         //console.log("TEST-----------------------");
-        console.log(req);
-        if (disabled_company_accesable_pages.includes(req.originalUrl)) {
+        /*if (disabled_company_accesable_pages.includes(req.originalUrl)) {
             console.log("Access denied: This page is restricted.");
             return { response :false, error : "Access denied: This page is restricted"};
-        }
+        }*/
 
         var file_path = "";
         // Iterate over each key-value pair in the pages object
@@ -60,7 +59,7 @@ function checkAccessRigts(req){
         if( file_path.startsWith(path_constants.routes.user)){
             page_user_type = "user";
             if(req.user.companyOwner == 0 && company_owner_accesable_pages.includes(req.originalUrl)){
-                return { response :false, error : "Access Denied insufficient rights"};
+                return { response :false, error : "Access Denied insufficient rights2"};
             }
         }
         else if( file_path.startsWith(path_constants.routes.accountant)){

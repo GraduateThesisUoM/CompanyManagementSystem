@@ -67,6 +67,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       } else if (req.user.type == "user") {
         //index for users
         const company = await Company.findOne({ _id: req.user.company });
+        req.session.company = company;
         data = {
           user: req.user,
           company: company,
@@ -83,7 +84,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           pending_reports: await Report.find({ status: "pending" }),
         };
       }
-      console.log(req.user)
+
       res.render(path_constants.pages.index.view(req.user.type), data);
     } else {
       res.redirect("/error?error=" + access.error);
