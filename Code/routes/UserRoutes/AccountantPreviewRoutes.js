@@ -1,42 +1,53 @@
 const express = require("express");
 const router = express.Router();
 
+const path_constants = require('../../constantsPaths');
+
 //Models
-const Accountant  = require("../../Schemas/Accountant");
-const Review  = require("../../Schemas/Review");
-const Notification = require("../../Schemas/Notification");
-const Company  = require("../../Schemas/Company");
-const Node = require("../../Schemas/Node");
+const Accountant = require(path_constants.schemas.two.accountant);
+const Review = require(path_constants.schemas.two.review);
+const Notification = require(path_constants.schemas.two.notification);
+const Company = require(path_constants.schemas.two.company);
+const Node = require(path_constants.schemas.two.node);
 
 //Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
 
 //Create Notification Function
-const create_notification = require("../../CreateNotification");
-const clientAccountantFunctions = require("../../ClientAccountantFunctions");
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
 //Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 /*--------   ACCOUNTANT PREVIEW */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   try{
-    if(generalFunctions.checkAccessRigts(req)){
+    const access = generalFunctions.checkAccessRigts(req,res);
+    if(access.response){
       const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
       const company = await Company.findOne(_id=req.user.company);
-      const company_node = await Node.findOne({_id:company.accountant});
+      var company_node = await Node.findOne({_id:company.accountant});
+      if(company_node == null){
+        company_node = {
+          receiver_id: req.session.accountant._id,
+          status:'temp'
+        }
+      }
     
       const data = { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) }
     
         generalFunctions.checkAccessRigts(req.user,'user_pages/preview_accountant.ejs',data,res);
     
-      res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
+        res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });  
+    }
+    else{
+      res.redirect('/error?error='+access.error);
     }
   }
   catch(e){
     console.error('Error on create page:', e);
-    res.redirect('/error?origin_page=/preview-accountant&error='+e);
+    res.redirect('/error?error='+e);
   }
 });
 
@@ -46,36 +57,26 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
   try {
     const company = await Company.findOne({_id:req.user.company});
     const company_node = await Node.findOne({_id:company.accountant});
+    console.log(company_node);
+
     
-    if(company.accountant !="not_assigned" && company_node.status !="fired"){
+    if(company.accountant !="not_assigned" && company_node.status !="fired" && 2 ==3){
 
       clientAccountantFunctions.fire_accountant(company._id,req.user._id)
     }
-    
-    const accountant = await Accountant.findOne({_id:req.session.accountant._id});
+    console.log(req.session.accountant._id)
+    var accountant = await Accountant.findOne({_id:req.session.accountant._id});
 
     if(req.body.user_action == "cancel_request"){
-      console.log("Cancel accountant request");
-      company.companyaccountant.id = 'not_assigned';
-      company.companyaccountant.status = "not_assigned";
-      await company.save();
 
-      const hiring_request = await Request.findOne({sender_id:company._id,receiver_id:accountant._id,type:'hiring',status:'pending'});
-      hiring_request.status = "canceled";
-      await hiring_request.save();
+      console.log("Cancel accountant request");
+      clientAccountantFunctions.cancel_hiring_req_to_accountant(company._id,req.user._id);
+      
     }
     else if(req.body.user_action == "sent_request"){
-      console.log("Sent accountant request");
-      /*accountant.clients.push({id: req.user._id, status: "pending"});
-      await accountant.save();*/
+      console.log("Sent accountant request "+accountant._id);
 
-      /*company.companyaccountant = accountant._id;
-      company.companyaccountant.status = "pending";
-      await company.save();*/
-
-      //create_notification(company.companyaccountant.id, req.user._id, "hiring-request-notification");
-
-      clientAccountantFunctions.send_hiring_req_to_accountant(company._id,req.user._id, accountant._id);
+      await clientAccountantFunctions.send_hiring_req_to_accountant(company._id,req.user._id, accountant._id);
       
     } 
     await req.user.save();

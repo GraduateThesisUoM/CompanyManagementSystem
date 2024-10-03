@@ -25,7 +25,8 @@ const Warehouse = require(path_constants.schemas.two.warehouse);
 
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     try{
-        if(generalFunctions.checkAccessRigts(req,res)){
+        const access = generalFunctions.checkAccessRigts(req,res);
+        if(access.response){
             var company;
             var obj;
 
@@ -99,11 +100,11 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             res.render(path_constants.pages.view.view(), data);
         }
         else{
-          res.redirect('/error?origin_page=my-company&error=acces denid');
+            res.redirect('/error?error='+access.error);
         }
     }catch (err) {
         console.error('Error saving user:', err);
-        res.redirect('/error?origin_page=view&error='+err);
+        res.redirect('/error?error='+err);
       }
 
     });

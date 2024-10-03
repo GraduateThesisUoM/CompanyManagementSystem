@@ -48,14 +48,14 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
         newReview = review;
       }
 
-      create_notification(users_accountant._id, req.user._id, "review-notification");
+      await create_notification(users_accountant._id, req.user._id,company._id,users_accountant._id, "review-notification");
   
       await newReview.save();
       console.log('Review created or updated successfully');
       res.redirect('/my-accountant?message=rating_submitted_successfully');
     } catch (err) {
       console.error('Error updating user data:', err);
-      res.redirect('/error?origin_page=my-accountant&error=' + err);
+      res.redirect('/error?error=' + err);
     }
 });
 

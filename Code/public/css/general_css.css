@@ -149,3 +149,10 @@ body{
     width: 170px;
 }
 
+#back_btn{
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2;
+}
+

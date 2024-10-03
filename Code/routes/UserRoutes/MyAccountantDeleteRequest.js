@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
+const path_constants = require('../../constantsPaths');
+
+
 //Models
 const Request = require("../../Schemas/Node");
 
 //Authentication Function
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
@@ -21,7 +24,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       }
     } catch (err) {
       console.error('Error updating user data:', err);
-      res.redirect('/error?origin_page=my-accountant&error=' + err);
+      res.redirect('/error?error=' + err);
     }
 });
 

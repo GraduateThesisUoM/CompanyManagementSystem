@@ -21,8 +21,9 @@ const Company  = require(path_constants.schemas.two.company);
 
 /*--------   CLIENTS */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
-  try{
-    if(generalFunctions.checkAccessRigts(req,req.user,res)){
+  try {
+    const access = generalFunctions.checkAccessRigts(req, res);
+    if (access.response) {
       const clients_active = await clientAccountantFunctions.fetchClients(req.user._id,"curent");
       const clients_former = await clientAccountantFunctions.fetchClients(req.user._id,"fired");
       if(clients_active.length + clients_former.length == 0){
@@ -37,13 +38,13 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       });
     }
     else{
-      res.redirect('/error?origin_page=/&error='+path_constants.url_param.param_1);
+      res.redirect('/error?error='+access.error);
     }
+  } catch (err) {
+    console.error("Error :", err);
+    res.redirect("/error?error=" + err);
   }
-  catch(err){
-    console.error(err);
-      res.redirect('/error?origin_page=clients&error='+err);
-  }
+
    
 });
 

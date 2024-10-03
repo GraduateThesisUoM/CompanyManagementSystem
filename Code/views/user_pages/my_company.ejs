@@ -14,42 +14,73 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1><%= company.name %></h1>
-        <img src="<%= company.logo %>" id="company_logo">
-        <form action="/my-company" method="POST">
-            <div class="div_display_license data_section">
-                <div>Διαθέσημες Άδιες</div>
-                <div id="bought_license"></div>
-                <div>Άδιες Σε χρήση</div>
-                <div id="used_licenses"></div>
-                <div>Άδιες Σε Αναμονή</div>
-                <input type="number" id="requested_license" name="requested_license" value='' readonly>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1><%= company.name %></h1>
+                <form action="/my-company/edit-company" method="POST">
+                    <input type="text" value="<%= company.name %>" name="new_company_name">
+                    <br>
+                    <input type="text" value="<%= company.logo %>" name="new_company_logo">
+
+                    <button type="submit">submit</button>
+                </form>
+
+                <form action="/my-company/change-company-status" method="POST">
+                    <div>Company on/of</div>
+                    <button type="submit">Company on/of</button>
+                </form>
+                <%if(company.logo == "" || company.logo == null){ %>
+                    <img src="https://www.smartmoneymatch.com/images/company-logo.png.pagespeed.ce.-9qAfcmVqF.png" id="company_logo">
+                <%}else{ %>
+                    <img src="<%= company.logo %>" id="company_logo">
+
+                <%} %>
+                <form action="/my-company" method="POST">
+                    <div class="div_display_license data_section">
+                        <div>Διαθέσημες Άδιες</div>
+                        <div id="bought_license"></div>
+                        <div>Άδιες Σε χρήση</div>
+                        <div id="used_licenses"></div>
+                        <div>Άδιες Σε Αναμονή</div>
+                        <input type="number" id="requested_license" name="requested_license" value='' readonly>
+                    </div>
+                    <div class="div_display_license btn_section">
+                        <button id="add_license">+</button>
+                        <button id="subtract_license">-</button>
+                    </div>
+                    <div class="div_display_license data_section">
+                        <div>Αφαίρεση Άδειας</div>
+                        <input type="number" id="remove_license" name="remove_license" value='' readonly>
+                    </div>
+                    <div class="div_display_license btn_section">
+                        <button id="add_remove_license">+</button>
+                        <button id="subtract_remove_license">-</button>
+                    </div>
+                    <button id="casel_license_requests">Ακύρωση Αιμάτων</button>
+                    <br>
+                    <button id = "submit_btn"type = "submit">Υποβολή</button>
+                </form>
             </div>
-            <div class="div_display_license btn_section">
-                <button id="add_license">+</button>
-                <button id="subtract_license">-</button>
-            </div>
-            <div class="div_display_license data_section">
-                <div>Αφαίρεση Άδειας</div>
-                <input type="number" id="remove_license" name="remove_license" value='' readonly>
-            </div>
-            <div class="div_display_license btn_section">
-                <button id="add_remove_license">+</button>
-                <button id="subtract_remove_license">-</button>
-            </div>
-            <button id="casel_license_requests">Ακύρωση Αιμάτων</button>
-            <br>
-            <button id = "submit_btn"type = "submit">Υποβολή</button>
-        </form>
-        
-        
-        <button id="back_btn">Πίσω</button>
+        </div>
     </body>
     <%- include('../partials/footer'); %>
     <script>
 
        $(document).ready(function(){
             const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.has('message')) {
+            if(urlParams.get('message')=="data-updated"){
+                alert("Company Data Updated");
+            }
+            if(urlParams.get('message')=="company-status-1"){
+                alert("Company Status Active");
+            }
+            if(urlParams.get('message')=="company-status-0"){
+                alert("Company Status Deactivated");
+            }
+        }
+       
             var requested_license = parseInt('<%= company.license.requested %>');
             var remove_license = 0;;
 

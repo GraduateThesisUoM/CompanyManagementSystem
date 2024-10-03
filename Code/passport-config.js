@@ -1,6 +1,11 @@
 const LocalStrategy = require('passport-local').Strategy;
 const bcrypt = require('bcrypt');
+
+const path_constants = require('./constantsPaths');
+const Company = require('./Schemas/Company');
+
 const connectDB = require('./db');
+
 connectDB();
 
 function initialize(passport, getUserByEmail, getUserById) {
@@ -12,14 +17,28 @@ function initialize(passport, getUserByEmail, getUserById) {
         }        
         try {
           if (await bcrypt.compare(password, user.password)) {
-            if (user.status == 'baned') {
-              return done(null, false, { message: 'baned' })
+            if (user.status == '0') {
+              return done(null, false, { message: 'disabled' })
             }
-            if (user.status == 'deleted') {
+            if (user.status == '1') {
+              if(user.type == 'user' ){
+                if(user.companyOwner == 0){
+                  const company = await Company.findOne({_id:user.company})
+                  if(company.status == 1){
+                    return done(null, user)
+                  }
+                  else{
+                    return done(null, false, { message: 'company is not acive' })
+                  }
+                }
+              }
+              return done(null, user)
+            }
+            if (user.status == '2') {
               return done(null, false, { message: 'deleted' })
             }
-            else{
-              return done(null, user)
+            if (user.status == '3') {
+              return done(null, false, { message: 'banned' })
             }
           } else {
             return done(null, false, { message: 'Password incorrect' })

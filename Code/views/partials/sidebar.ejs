@@ -30,8 +30,8 @@
                 </button>
             <% } %>
         </div>
-        <div id='column_two_menu_div'>
-            <div class="sub_side_menu_div">
+        <div id='column_two_menu_div' >
+            <div class="sub_side_menu_div" style="display: none;">
                 <button onclick="location.href = 'list?searchfor=docs&type=buy';">View Docs</button>
                 <button onclick="location.href = '/create-doc?type=buy';">Create Docs</button>
                 <button onclick="location.href = 'list?searchfor=series&type=buy';">View Series</button>
@@ -39,7 +39,7 @@
                 <button onclick="location.href = 'list?searchfor=persons&type=buy';">View Persons</button>
                 <button onclick="location.href = '/create?create=persons&type=buy';">Create Persons</button>
             </div>
-            <div class="sub_side_menu_div">
+            <div class="sub_side_menu_div" style="display: none;">
                 <button onclick="location.href = 'list?searchfor=docs&type=sale';">View Docs</button>
                 <button onclick="location.href = '/create-doc?type=sale';">Create Docs</button>
                 <button onclick="location.href = 'list?searchfor=series&type=sale';">View Series</button>
@@ -47,7 +47,7 @@
                 <button onclick="location.href = 'list?searchfor=persons&type=sale';">View Persons</button>
                 <button onclick="location.href = '/create?create=persons&type=sale';">Create Persons</button>
             </div>
-            <div class="sub_side_menu_div">
+            <div class="sub_side_menu_div" style="display: none;">
                 <button onclick="location.href = '/create?create=warehouses';">Create Warehouses</button>
                 <button onclick="location.href = 'list?searchfor=warehouses&type=sale';">View Warehouses</button>
                 <button onclick="location.href = '/create?create=items';">Create Items</button>
@@ -65,27 +65,33 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
     $(document).ready(function() {
-        $(".sub_side_menu_div").hide();
+        /*$(".sub_side_menu_div").hide();*/
+
         $(".main_side_menubtn.user").click(function() {
             var index = $(".main_side_menubtn.user").index(this);
             var down = index
 
-            $(".sub_side_menu_div").hide();
-            $(".sub_side_menu_div").eq(index).show();
+            /*$(".sub_side_menu_div").hide();
+            $(".sub_side_menu_div").eq(index).show();*/
+            $('.sub_side_menu_div').css('display', 'none');
+            $('.sub_side_menu_div').eq(index).css('display', 'block');
+
                 let top = 45 + index*85
                 $("#column_two_menu_div").css("top", top+"px");
             if (!$(this).hasClass('clicked')) {
-                $('.sub_side_menu_div').css('visibility', 'hidden');
+                /*$('.sub_side_menu_div').css('visibility', 'hidden');*/
+                $('.sub_side_menu_div').css('display', 'none');
+
                 
                 $('.main_side_menubtn').removeClass('clicked');
 
                 $(this).addClass('clicked');
                 
                 var index = $('.main_side_menubtn').index($(this));
-                $('.sub_side_menu_div').eq(index).css('visibility', 'visible');
+                $('.sub_side_menu_div').eq(index).css('display', 'block');
             }
             else{
-                $('.sub_side_menu_div').css('visibility', 'hidden');
+                $('.sub_side_menu_div').css('display', 'none');
                 
                 $('.main_side_menubtn').removeClass('clicked');
             }

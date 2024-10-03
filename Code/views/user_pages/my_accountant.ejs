@@ -14,6 +14,9 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
         <h1>Ο Λογιστής Μου</h1>
         <p>
             First Name : <%= accountant.firstName %><br>
@@ -68,15 +71,14 @@
                     </form>
                 </div>
                 <div id="new_request">
-                    <form action="/my-accountant-requests" method="POST">
+                    <form action="/my-accountant-requests" method="POST" id="send_request_form">
                         <h3>New Request</h3>
                         <div>
                             <label for="request_type">Type : </label>
                             <select name = 'request_type' id = 'request_type'>
-                                <option value="" disabled selected>...</option>
+                                <option value="general">General</option>
                                 <option value="request1">Something_1</option>
                                 <option value="request2">Something_2</option>
-                                <option value="other">Other</option>
                             </select>
                         </div>
                         
@@ -91,18 +93,20 @@
                         </div>
                         
                         <textarea name="request_text" id="request_text"></textarea></br>
-                        <button id="submit_from_request_btn" type="submit">Submit</button>
+                        <button id="submit_from_request_btn" type="button">Submit</button>
                     </form>
                 </div>
             
         </div>
-        <form action="/remove_accountant"  method="POST">
-            <input type="hidden" name="accountant_id" value="<%=accountant._id%>">
-            <button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button>
+        <form id="my_accountant_form" action="/my-accountant"  method="POST">
+            <!--input type="hidden" name="accountant_id" value="<%=accountant._id%>"-->
+            <!--button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button-->
             <button type="button" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
         </form>
+        <button type="button" onclick="window.location = '/pick-accountant'">Προβολή Λογιστών</button>
         
-        <button id="back_btn">Πίσω</button>
+    </div>
+</div>
     </body>
     <%- include('../partials/footer'); %>
     <script>
@@ -123,6 +127,13 @@
             if(urlParams.get('message')=="rating_submitted_successfully"){
                 alert("Η αξιολόγηση καταχωρήθηκε με επιτυχία");
             }
+
+        }
+        if (urlParams.has('refresh')) {
+
+            if(urlParams.get('refresh')=="true"){
+                window.location = "/my-accountant"
+            }
         }
 
             $("#back_btn").click(function(){
@@ -131,7 +142,8 @@
 
             $("#remove_accountant_btn").click(function(){
                 if (confirm("Αν απολύσετε τον λογιστή σας όλα τα εκκρεμή αιτήματα θα ακυρωθούν.") == true) {
-                    $("#remove_accountant_sbt").click();
+
+                    $("#my_accountant_form").submit();
                 }
             });
 
@@ -247,6 +259,25 @@
                 }
             }
             
+        });
+
+        $("#submit_from_request_btn").click(function() {
+            let today = new Date();
+            // Format today's date as DD-MM-YYYY
+            today = today.getFullYear() + '-' +
+            (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
+             today.getDate().toString().padStart(2, '0') ;
+
+             let dueDate = $("#request_due_date").val();
+            //let dueDate = new Date(dueDateValue);
+
+            // Compare the due date with today
+            if (dueDate < today && dueDate != "") {
+                alert("The due date is before today.");
+            }
+            else{
+                $("#send_request_form").submit();
+            }
         });
 
     </script>

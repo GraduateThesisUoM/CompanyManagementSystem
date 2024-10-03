@@ -26,9 +26,10 @@
     <script>
         $(document).ready(function(){
             $("#my_accountant").click(function(){
-                if('<%= company.accountant%>' == 'not_assigned' || '<%= user.companyOwner %>' == '0'){
-                    alert("You need elevated rights to hire an accountant");
+                if('<%= user.companyOwner %>' == '0'){
+                    alert("You do not have an accountant elevated rights to hire an accountant");
                 }
+                
                 else{
                     window.location ="my-accountant"
                 }

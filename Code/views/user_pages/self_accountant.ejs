@@ -14,12 +14,13 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>Τα Λογιστικά μου</h1>
-
-
-        <button type="button" id="get_accountant">Προβολή Λογιστών</button>
-        
-        <button id="back_btn">Πίσω</button>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1>Τα Λογιστικά μου</h1>
+                <button type="button" id="get_accountant">Προβολή Λογιστών</button>
+            </div>
+        </div>
     </body>
     <%- include('../partials/footer'); %>
     <script>

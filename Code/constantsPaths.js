@@ -44,6 +44,10 @@ const url_param = {
 
 const routes_folder = "./routes"
 const views_folder = "./views"
+const generalFunctions_folder = {one:"././GeneralFunctions",two:"../../GeneralFunctions"};
+const clientAccountantFunctions_folder = {one:"././ClientAccountantFunctions",two:"../../ClientAccountantFunctions"};
+const authenticationFunctions_folder = {one:"././AuthenticationFunctions",two:"../../AuthenticationFunctions"};
+
 
 const routes = {
   general : routes_folder+"/GeneralRoutes/",
@@ -216,11 +220,6 @@ const pages = {
     file: routes.user+"AccountantPreviewRoutes.js",
     view : ""
   },
-  remove_accountant :{
-    url : "/remove-accountant",
-    file: routes.user+"RemoveAccountant.js",
-    view : ""
-  },
   self_accountant :{
     url : "/self-accountant",
     file: routes.user+"SelfAccountantRoutes.js",
@@ -311,4 +310,6 @@ const pages = {
 
 
 
-module.exports = { folders,pages, routes ,schemas,url_param};
+module.exports = { folders,pages, routes ,schemas,url_param,
+  generalFunctions_folder,clientAccountantFunctions_folder,
+  authenticationFunctions_folder};

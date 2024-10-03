@@ -14,19 +14,23 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>Request History</h1>
-        <div id="requests_div" >
-            <table id="requests_table" class="requests_table">
-                <tr> <!-- This is a table row -->
-                    <th>Type</th> <!-- Table header cell -->
-                    <th>Title</th>
-                    <th>Registration Date</th>
-                    <th>Due Date</th>
-                    <th>Status</th>
-                </tr>
-            </table>
+        <div class="has_sidebar"></div>
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1>Request History</h1>
+                <div id="requests_div" >
+                    <table id="requests_table" class="requests_table">
+                        <tr> <!-- This is a table row -->
+                            <th>Type</th> <!-- Table header cell -->
+                            <th>Title</th>
+                            <th>Registration Date</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
         </div>
-
     </body>
     <%- include('../partials/footer'); %>
     <script>

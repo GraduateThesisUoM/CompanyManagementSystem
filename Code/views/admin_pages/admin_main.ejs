@@ -50,9 +50,9 @@
                     <% 
                         var reporter = null;
                         var company_name = null;
-                        for(var j=0;j < user_list.length;j++){
-                            if(user_list[j].id == pending_reports[i].reporter_id){
-                                reporter = user_list[j];
+                        for(var j=0;j < company_list.length;j++){
+                            if(company_list[j].id == pending_reports[i].reporter_id){
+                                reporter = company_list[j];
                                 if(reporter.type == "user"){
                                     for(var y=0;y < company_list.length; y++){
                                         if(reporter.company == company_list[y].id){
@@ -73,7 +73,7 @@
                         }
                         
                     %>
-                    <span>Reported by: <a href="/user-profile?id=<%=pending_reports[i].reporter_id%>"><%= reporter.firstName %> <%= reporter.lastName %> / <%= company_name%></a></span>
+                    <span>Reported by: <a href="/user-profile?id=<%=pending_reports[i].reporter_id%>"><%= reporter.name%></a></span>
                     <br>
                     <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- pending_reports[i]._id %>','<%- pending_reports[i].reason %>', '<%- pending_reports[i].text %>', '<%- pending_reports[i].registrationDate %>')">Details</button>
                     <br>

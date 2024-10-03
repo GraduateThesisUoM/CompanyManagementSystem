@@ -1,311 +1,371 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Main Page</title>
-        <!-- fontawesome for icons -->
-        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
-        <!--ajax-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <!--CSS-->
-        <link rel="stylesheet" href="general_css.css">
-        <link rel="stylesheet" href="accountant_main_css.css">
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <%- include('../partials/header'); %>
-    </head>
-    <body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Page</title>
+    <!-- fontawesome for icons -->
+    <script
+      src="https://kit.fontawesome.com/d2c306d566.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css" />
+    <link rel="stylesheet" href="accountant_main_css.css" />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <%- include('../partials/header'); %>
+  </head>
+  <body>
+    <div class="has_sidebar">
+      <%- include('../partials/sidebar'); %>
+      <div>
         <h1>Accountant main page</h1>
         <h2>Welcome <%= user.firstName %> <%= user.lastName %></h2>
         <a href="/transactor-list?type=supplier"> Suppliers</a>
         <a href="/transactor-list?type=customer"> Customers</a>
         <div id="pages-div" name="pages-div">
-            <a href="clients">client list</a>
-            <a href="/request-history">request history</a>
+          <a href="clients">client list</a>
+          <a href="/request-history">request history</a>
         </div>
         <div>
-            <h2>Pending Requests</h2>
-            <div id="pending_requests_div" >
-                <table id="pending_requests_table" class="requests_record_table">
-                    <tr> <!-- This is a table row -->
-                        <th>Type</th> <!-- Table header cell -->
-                        <th>Title</th>
-                        <th>Registration Date</th>
-                        <th>Due Date</th>
-                        <th> </th>
-                    </tr>
-                </table>
-                <button id="more_pending_requests_btn">More ...</button>
-            </div>
+          <h2>Pending Requests</h2>
+          <div id="pending_requests_div">
+            <table id="pending_requests_table" class="requests_record_table">
+              <tr>
+                <th class="column1">Type</th>
+                <th class="column2">Title</th>
+                <th class="column3">Registration Date</th>
+                <th class="column4">Due Date</th>
+                <th class="column5">Company</th>
+                <th class="column6"></th>
+              </tr>
+            </table>
+            <button id="more_pending_requests_btn">More ...</button>
+          </div>
         </div>
         <div>
-            <h2>Executed Requests</h2>
-            <div id="executed_requests_div" >
-                <table id="executed_requests_table" class="requests_record_table">
-                    <tr> <!-- This is a table row -->
-                        <th>Type</th> <!-- Table header cell -->
-                        <th>Title</th>
-                        <th>Registration Date</th>
-                        <th>Due Date</th>
-                        <th> </th>
-                    </tr>
-                </table>
-                <button id="more_executed_requests_btn">More ...</button>
-            </div>
+          <h2>Executed Requests</h2>
+          <div id="executed_requests_div">
+            <table id="executed_requests_table" class="requests_record_table">
+              <tr>
+                <th class="column1">Type</th>
+                <th class="column2">Title</th>
+                <th class="column3">Registration Date</th>
+                <th class="column4">Due Date</th>
+                <th class="column5">Company</th>
+                <th class="column6"></th>
+              </tr>
+            </table>
+            <button id="more_executed_requests_btn">More ...</button>
+          </div>
         </div>
         <div>
-            <h2>Rejected Requests</h2>
-            <div id="rejected_requests_div" >
-                <table id="rejected_requests_table" class="requests_record_table">
-                    <tr> <!-- This is a table row -->
-                        <th>Type</th> <!-- Table header cell -->
-                        <th>Title</th>
-                        <th>Registration Date</th>
-                        <th>Due Date</th>
-                        <th> </th>
-                    </tr>
-                </table>
-                <button id="more_rejected_requests_btn">More ...</button>
-            </div>
+          <h2>Rejected Requests</h2>
+          <div id="rejected_requests_div">
+            <table id="rejected_requests_table" class="requests_record_table">
+              <tr>
+                <th class="column1">Type</th>
+                <th class="column2">Title</th>
+                <th class="column3">Registration Date</th>
+                <th class="column4">Due Date</th>
+                <th class="column5">Company</th>
+                <th class="column6"></th>
+              </tr>
+            </table>
+            <button id="more_rejected_requests_btn">More ...</button>
+          </div>
         </div>
-    </body>
-    <%- include('../partials/footer'); %>
-    <script>
-        const visible_request_num = 5;
-        var request_pendign_table_expanded = false;
-        var request_executed_table_expanded = false;
-        var request_rejected_table_expanded = false;
+      </div>
+    </div>
+  </body>
+  <%- include('../partials/footer'); %>
+  <script>
+    const visible_request_num = 5;
+    var request_pendign_table_expanded = false;
+    var request_executed_table_expanded = false;
+    var request_rejected_table_expanded = false;
 
-        const timestamp_options = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        };
+    const timestamp_options = {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    };
 
-        var requests_pending;
-        var requests_viewed;
-        var requests_rejected;
-        var requests_executed;
-        var clients;
-        var request_sender_div = "";
+    var requests_pending;
+    var requests_viewed;
+    var requests_rejected;
+    var requests_executed;
+    var clients;
+    var request_sender_div = "";
 
-        $(document).ready(function(){
+    $(document).ready(function () {
+      $("#more_pending_requests_btn").click(function () {
+        request_pendign_table_expanded = !request_pendign_table_expanded;
+        if (request_pendign_table_expanded) {
+          $("#more_pending_requests_btn").text("Less...");
+          for (let i = visible_request_num; i <= pending_count; i++) {
+            $("#row_pendign_" + i).show();
+          }
+        } else {
+          $("#more_pending_requests_btn").text("More...");
+          for (let i = visible_request_num; i <= pending_count; i++) {
+            $("#row_pendign_" + i).hide();
+          }
+        }
+      });
 
-            $("#more_pending_requests_btn").click(function(){
-                request_pendign_table_expanded = !request_pendign_table_expanded;
-                if(request_pendign_table_expanded){
-                    $("#more_pending_requests_btn").text("Less...");
-                    for (let i = visible_request_num; i <= pending_count; i++) {
-                        $("#row_pendign_"+i).show();
-                    }
-                }
-                else{
-                    $("#more_pending_requests_btn").text("More...");
-                    for (let i = visible_request_num; i <= pending_count; i++) {
-                        $("#row_pendign_"+i).hide();
-                    }
-                }
-            });
+      $("#more_executed_requests_btn").click(function () {
+        request_executed_table_expanded = !request_executed_table_expanded;
+        if (request_executed_table_expanded) {
+          $("#more_executed_requests_btn").text("Less...");
+          for (let i = visible_request_num; i <= executed_count; i++) {
+            $("#row_executed_" + i).show();
+          }
+        } else {
+          $("#more_executed_requests_btn").text("More...");
+          for (let i = visible_request_num; i <= executed_count; i++) {
+            $("#row_executed_" + i).hide();
+          }
+        }
+      });
 
-            $("#more_executed_requests_btn").click(function(){
-                request_executed_table_expanded = !request_executed_table_expanded;
-                if(request_executed_table_expanded){
-                    $("#more_executed_requests_btn").text("Less...");
-                    for (let i = visible_request_num; i <= executed_count; i++) {
-                        $("#row_executed_"+i).show();
-                    }
-                }
-                else{
-                    $("#more_executed_requests_btn").text("More...");
-                    for (let i = visible_request_num; i <= executed_count; i++) {
-                        $("#row_executed_"+i).hide();
-                    }
-                }
-            });
+      $("#more_rejected_requests_btn").click(function () {
+        request_rejected_table_expanded = !request_rejected_table_expanded;
+        if (request_rejected_table_expanded) {
+          $("#more_rejected_requests_btn").text("Less...");
+          for (let i = visible_request_num; i <= rejected_count; i++) {
+            $("#row_rejected_" + i).show();
+          }
+        } else {
+          $("#more_rejected_requests_btn").text("More...");
+          for (let i = visible_request_num; i <= rejected_count; i++) {
+            $("#row_rejected_" + i).hide();
+          }
+        }
+      });
 
-            $("#more_rejected_requests_btn").click(function(){
-                request_rejected_table_expanded = !request_rejected_table_expanded;
-                if(request_rejected_table_expanded){
-                    $("#more_rejected_requests_btn").text("Less...");
-                    for (let i = visible_request_num; i <= rejected_count; i++) {
-                        $("#row_rejected_"+i).show();
-                    }
-                }
-                else{
-                    $("#more_rejected_requests_btn").text("More...");
-                    for (let i = visible_request_num; i <= rejected_count; i++) {
-                        $("#row_rejected_"+i).hide();
-                    }
-                }
-            });
+      try {
+        requests_pending = JSON.parse(`<%- JSON.stringify(nodes_pending) %>`);
+        requests_viewed = JSON.parse(`<%- JSON.stringify(nodes_viewed) %>`);
+        requests_rejected = JSON.parse(`<%- JSON.stringify(nodes_rejected) %>`);
+        requests_executed = JSON.parse(`<%- JSON.stringify(nodes_executed) %>`);
+        requests_pending = JSON.parse(`<%- JSON.stringify(nodes_pending) %>`);
+        clients = JSON.parse(`<%- JSON.stringify(clients) %>`);
+      } catch (error) {
+        console.error("Error parsing JSON:", error);
+      }
 
+      const pending_requests_table = $("#pending_requests_table");
+      const executed_requests_table = $("#executed_requests_table");
+      const rejected_requests_table = $("#rejected_requests_table");
 
-            try {
-                requests_pending = JSON.parse(`<%- JSON.stringify(nodes_pending) %>`);
-                requests_viewed = JSON.parse(`<%- JSON.stringify(nodes_viewed) %>`);
-                requests_rejected = JSON.parse(`<%- JSON.stringify(nodes_rejected) %>`);
-                requests_executed = JSON.parse(`<%- JSON.stringify(nodes_executed) %>`);
-            } catch (error) {
-                console.error("Error parsing JSON:", error);
-            }
+      var pending_count = 0;
+      var executed_count = 0;
+      var rejected_count = 0;
 
-            try {
-                clients = JSON.parse(`<%- JSON.stringify(clients) %>`);
-            } catch (error) {
-                console.error("Error parsing JSON:", error);
-            }
-            
-            const pending_requests_table = $("#pending_requests_table");
-            const executed_requests_table = $("#executed_requests_table");
-            const rejected_requests_table = $("#rejected_requests_table");
+      requests_pending.forEach((request) => {
+        const row = $("<tr>")
+          .css("background-color", "lime")
+          .attr("id", "row_pendign_" + pending_count);
+        const cell_type = $("<td>").text(request.type).addClass("column1");
+        var cell_title = $("<td>").text(request.title).addClass("column2");
+        if (request.type == "relationship") {
+          cell_title = $("<td>").text(request.type2).addClass("column2");
+          }
+        const date = new Date(request.registrationDate);
+        const cell_reg_date = $("<td>")
+          .text(date.toLocaleString("en-US", timestamp_options))
+          .addClass("column3");
+        const cell_due_date = $("<td>")
+          .text(request.due_date)
+          .addClass("column4");
+        var cell_company = $("<td>").text("-").addClass("column5");
+        for (let i = 0; i < clients.length; i++) {
+          if (clients[i]._id == request.company_id) {
+            cell_company = $("<td>").text(clients[i].name).addClass("column5");
+            break;
+          }
+        }
+        const cell_actions = $("<td>").addClass("column6");
+        const btn_view = $("<button>")
+          .text("View")
+          .click(function () {
+            window.location.href = "/view-request?req_id=" + request._id;
+          });
 
-            var pending_count = 0;
-            var executed_count = 0;
-            var rejected_count = 0;
+        row.append(cell_type);
+        row.append(cell_title);
+        row.append(cell_reg_date);
+        row.append(cell_due_date);
+        row.append(cell_company);
+        row.append(cell_actions);
+        cell_actions.append(btn_view);
 
-            requests_pending.forEach(request => {
-                const row = $("<tr>").css("background-color", "lime").attr("id", "row_pendign_"+pending_count);
-                const cell_type = $("<td>").text(request.type);
-                var cell_title = $("<td>").text(request.title);
-                if(request.type == "relationship"){
-                    cell_title = $("<td>").text(request.type2);
-                }
-                const date = new Date(request.registrationDate);
-                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
-                const cell_due_date = $("<td>").text(request.due_date);
-                const cell_actions = $("<td>");
-                const btn_view = $("<button>").text("View").click(function() {
-                    window.location.href = '/view-request?req_id='+request._id;
-                });
-                
-                row.append(cell_type);
-                row.append(cell_title);
-                row.append(cell_reg_date);
-                row.append(cell_due_date);
-                row.append(cell_actions);
-                cell_actions.append(btn_view);
+        pending_requests_table.append(row);
+        pending_count = pending_count + 1;
+      });
 
-                pending_requests_table.append(row);
-                pending_count = pending_count +1;
-            });
+      requests_viewed.forEach((request) => {
+        const row = $("<tr>").attr("id", "row_pendign_" + pending_count);
 
-            requests_viewed.forEach(request => {
-                const row = $("<tr>").attr("id", "row_pendign_"+pending_count);
+        const cell_type = $("<td>").text(request.type).addClass("column1");
+        var cell_title = $("<td>").text(request.title).addClass("column2");
+        if (request.type == "relationship") {
+          cell_title = $("<td>").text(request.type2).addClass("column2");
+        }
+        const date = new Date(request.registrationDate);
+        const cell_reg_date = $("<td>")
+          .text(date.toLocaleString("en-US", timestamp_options))
+          .addClass("column3");
+        const cell_due_date = $("<td>")
+          .text(request.due_date)
+          .addClass("column4");
+        var cell_company = $("<td>").text("-").addClass("column5");
+        for (let i = 0; i < clients.length; i++) {
+          if (clients[i]._id == request.company_id) {
+            cell_company = $("<td>").text(clients[i].name).addClass("column5");
+              break;
+          }
+        }
+        const cell_actions = $("<td>").addClass("column6");
+        const btn_view = $("<button>")
+          .text("View")
+          .click(function () {
+            window.location.href = "/view-request?req_id=" + request._id;
+          });
 
-                const cell_type = $("<td>").text(request.type);
-                var cell_title = $("<td>").text(request.title);
-                if(request.type == "relationship"){
-                    cell_title = $("<td>").text(request.type2);
-                }                const date = new Date(request.registrationDate);
-                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
-                const cell_due_date = $("<td>").text(request.due_date);
-                const cell_actions = $("<td>");
-                const btn_view = $("<button>").text("View").click(function() {
-                    window.location.href = '/view-request?req_id='+request._id;
-                });
-                
-                row.append(cell_type);
-                row.append(cell_title);
-                row.append(cell_reg_date);
-                row.append(cell_due_date);
-                row.append(cell_actions);
-                cell_actions.append(btn_view);
+        row.append(cell_type);
+        row.append(cell_title);
+        row.append(cell_reg_date);
+        row.append(cell_due_date);
+        row.append(cell_company);
+        row.append(cell_actions);
+        cell_actions.append(btn_view);
 
-                pending_requests_table.append(row);
-                pending_count = pending_count +1;
-            });
+        pending_requests_table.append(row);
+        pending_count = pending_count + 1;
+      });
 
-            requests_executed.forEach(request => {
-                const row = $("<tr>").attr("id", "row_executed_"+executed_count);
+      requests_executed.forEach((request) => {
+        const row = $("<tr>").attr("id", "row_executed_" + executed_count);
 
-                const cell_type = $("<td>").text(request.type);
-                var cell_title = $("<td>").text(request.title);
-                if(request.type == "relationship"){
-                    cell_title = $("<td>").text(request.type2);
-                }
-                const date = new Date(request.registrationDate);
-                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
-                const cell_due_date = $("<td>").text(request.due_date);
-                const cell_actions = $("<td>");
-                const btn_view = $("<button>").text("View").click(function() {
-                    window.location.href = '/view-request?req_id='+request._id;
-                });
-                
-                row.append(cell_type);
-                row.append(cell_title);
-                row.append(cell_reg_date);
-                row.append(cell_due_date);
-                row.append(cell_actions);
-                cell_actions.append(btn_view);
+        const cell_type = $("<td>").text(request.type).addClass("column1");
+        var cell_title = $("<td>").text(request.title).addClass("column2");
+        if (request.type == "relationship") {
+          cell_title = $("<td>").text(request.type2).addClass("column2");
+        }
+        const date = new Date(request.registrationDate);
+        const cell_reg_date = $("<td>")
+          .text(date.toLocaleString("en-US", timestamp_options))
+          .addClass("column3");
+        const cell_due_date = $("<td>")
+          .text(request.due_date)
+          .addClass("column4");
+        var cell_company = $("<td>").text("-").addClass("column5");
+        for (let i = 0; i < clients.length; i++) {
+          if (clients[i]._id == request.company_id) {
+            cell_company = $("<td>").text(clients[i].name).addClass("column5");
+              break;
+          }
+        }
+        const cell_actions = $("<td>").addClass("column6");
+        const btn_view = $("<button>")
+          .text("View")
+          .click(function () {
+            window.location.href = "/view-request?req_id=" + request._id;
+          });
 
-                executed_requests_table.append(row);
-                executed_count = executed_count +1;
-            });
+        row.append(cell_type);
+        row.append(cell_title);
+        row.append(cell_reg_date);
+        row.append(cell_due_date);
+        row.append(cell_company);
+        row.append(cell_actions);
+        cell_actions.append(btn_view);
 
-            requests_rejected.forEach(request => {
-                const row = $("<tr>").attr("id", "row_rejected_" + rejected_count);
+        executed_requests_table.append(row);
+        executed_count = executed_count + 1;
+      });
 
-                const cell_type = $("<td>").text(request.type);
-                var cell_title = $("<td>").text(request.title);
-                if(request.type == "relationship"){
-                    cell_title = $("<td>").text(request.type2);
-                }
-                const date = new Date(request.registrationDate);
-                const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
-                const cell_due_date = $("<td>").text(request.due_date);
-                const cell_actions = $("<td>");
-                const btn_view = $("<button>").text("View").click(function() {
-                    window.location.href = '/view-request?req_id='+request._id;
-                });
-                
-                row.append(cell_type);
-                row.append(cell_title);
-                row.append(cell_reg_date);
-                row.append(cell_due_date);
-                row.append(cell_actions);
-                cell_actions.append(btn_view);
+      requests_rejected.forEach((request) => {
+        const row = $("<tr>").attr("id", "row_rejected_" + rejected_count);
 
-                rejected_requests_table.append(row);
-                rejected_count = rejected_count +1;
-            });
+          const cell_type = $("<td>").text(request.type).addClass("column1");
+        var cell_title = $("<td>").text(request.title).addClass("column2");
+        if (request.type == "relationship") {
+          cell_title = $("<td>").text(request.type2).addClass("column2");
+          }
+        const date = new Date(request.registrationDate);
+        const cell_reg_date = $("<td>")
+          .text(date.toLocaleString("en-US", timestamp_options))
+          .addClass("column3");
+        const cell_due_date = $("<td>")
+          .text(request.due_date)
+          .addClass("column4");
+        var cell_company = $("<td>").text("-").addClass("column5");
+        for (let i = 0; i < clients.length; i++) {
+          if (clients[i]._id == request.company_id) {
+            cell_company = $("<td>").text(clients[i].name).addClass("column5");
+              break;
+          }
+        }
+        const cell_actions = $("<td>").addClass("column6");
+        const btn_view = $("<button>")
+          .text("View")
+          .click(function () {
+            window.location.href = "/view-request?req_id=" + request._id;
+          });
+        row.append(cell_type);
+        row.append(cell_title);
+        row.append(cell_reg_date);
+        row.append(cell_due_date);
+        row.append(cell_company);
+        row.append(cell_actions);
+        cell_actions.append(btn_view);
 
+        rejected_requests_table.append(row);
+        rejected_count = rejected_count + 1;
+      });
 
-            // Pending 
-            if(pending_count == 0){
-                $("#pending_requests_div").append($("<p>").text("You have no pending requests at the moment"));
-                pending_requests_table.hide();
-            }
-            else{
-                for (let i = visible_request_num; i <= pending_count; i++) {
-                    $("#row_pendign_"+i).hide();
-                }
-            }
-            //Executed
-            if(executed_count == 0){
-                $("#executed_requests_div").append($("<p>").text("You have no executed requests at the moment"));
-                executed_requests_table.hide()
-            }
-            else{
-                for (let i = visible_request_num; i <= executed_count; i++) {
-                    $("#row_executed_"+i).hide();
-                }
-            }
-            //Rejected
-            if(rejected_count == 0){
-                $("#rejected_requests_div").append($("<p>").text("You have no rejected requests at the moment"));
-                rejected_requests_table.hide()
-            }
-            else{
-                for (let i = visible_request_num; i <= rejected_count; i++) {
-                    $("#row_rejected_"+i).hide();
-                }
-            }
-        });
-        
-    </script>
-
+      // Pending
+      if (pending_count == 0) {
+        $("#pending_requests_div").append(
+          $("<p>").text("You have no pending requests at the moment")
+        );
+        pending_requests_table.hide();
+      } else {
+        for (let i = visible_request_num; i <= pending_count; i++) {
+          $("#row_pendign_" + i).hide();
+        }
+      }
+      //Executed
+      if (executed_count == 0) {
+        $("#executed_requests_div").append(
+          $("<p>").text("You have no executed requests at the moment")
+        );
+        executed_requests_table.hide();
+      } else {
+        for (let i = visible_request_num; i <= executed_count; i++) {
+          $("#row_executed_" + i).hide();
+        }
+      }
+      //Rejected
+      if (rejected_count == 0) {
+        $("#rejected_requests_div").append(
+          $("<p>").text("You have no rejected requests at the moment")
+        );
+        rejected_requests_table.hide();
+      } else {
+        for (let i = visible_request_num; i <= rejected_count; i++) {
+          $("#row_rejected_" + i).hide();
+        }
+      }
+    });
+  </script>
 </html>
