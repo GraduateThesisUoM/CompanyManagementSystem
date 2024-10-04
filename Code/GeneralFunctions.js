@@ -34,15 +34,20 @@ const schemaMap = {
   documents: Document,
 };
 
-const disabled_company_accesable_pages = ["/my-accountant", "/fff"];
+const disabled_company_accesable_pages = ["/","/my-company"];
 const company_owner_accesable_pages = ["/my-company"];
 
 //function checkAccessRights(req, data ,res){
 function checkAccessRigts(req) {
   try {
-    //console.log("TEST-----------------------");
+    var page_url = req.baseUrl;
+    if(req.baseUrl == ''){
+      page_url = '/';
+    }
+    console.log(page_url)
+    console.log(disabled_company_accesable_pages.includes(page_url));
     if (req.user.type == "user") {
-      if (req.session.company.status != 1 && disabled_company_accesable_pages.includes(req.originalUrl)) {
+      if (req.session.company.status != 1 && disabled_company_accesable_pages.includes(page_url) == false) {
         console.log("Access denied: This page is restricted.");
         return {
           response: false,
@@ -66,7 +71,7 @@ function checkAccessRigts(req) {
         req.user.companyOwner == 0 &&
         company_owner_accesable_pages.includes(req.originalUrl)
       ) {
-        return { response: false, error: "Access Denied insufficient rights2" };
+        return { response: false, error: "Access Denied insufficient rights" };
       }
     } else if (file_path.startsWith(path_constants.routes.accountant)) {
       page_user_type = "accountant";

@@ -23,6 +23,8 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
+    const company = await Company.findOne({ _id: req.user.company });
+        req.session.company = company;
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
       var data = {};
@@ -66,8 +68,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         };
       } else if (req.user.type == "user") {
         //index for users
-        const company = await Company.findOne({ _id: req.user.company });
-        req.session.company = company;
+        
         data = {
           user: req.user,
           company: company,
