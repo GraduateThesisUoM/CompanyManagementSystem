@@ -417,6 +417,22 @@ async function create_notification(
   }
 }
 
+function get_status(id){
+  if(id==0){
+    return 'Disabled'
+  }
+  else if(id == 1){
+    return 'Active'
+  }
+  else if(id == 2){
+    return 'Deleted'
+  }
+  else if(id == 3){
+    return 'Banned'
+  }
+  return 'ERROR IN GENERAL FUNCTION get_status 420'
+}
+
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
@@ -445,4 +461,5 @@ module.exports = {
   formatDate,
   create_node,
   node_reply,
+  get_status
 };

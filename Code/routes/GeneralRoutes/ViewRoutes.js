@@ -56,7 +56,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         
                         data.data = {
                             doc : series.acronym + "-" + obj.doc_num,
-                            date : formatDate(obj.registrationDate),
+                            date : generalFunctions.formatDate(obj.registrationDate),
                             data : obj.invoiceData,
                             receiver : person.firstName + " " + person.lastName
                         };
@@ -64,12 +64,12 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                     }
                     else if (type == 'warehouses'){
                         obj = await Warehouse.findOne({_id : id});
-                        data.data = [ obj.title, obj.location, formatDate(obj.registrationDate), obj.active]
+                        data.data = [ obj.title, obj.location, generalFunctions.formatDate(obj.registrationDate), obj.active]
                         data.titles = ["Title","location", "Reg Date","Status"];
                     }
                     else if (type == 'series'){
                         obj = await Series.findOne({_id : id});
-                        data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed, formatDate(obj.registrationDate), obj.active]
+                        data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed, generalFunctions.formatDate(obj.registrationDate), obj.active]
                         data.titles = ["Title","Acronym","Type","Count","Sealed", "Reg Date","Status"];
                     }
                     else if (type == 'persons'){
@@ -82,21 +82,38 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                             obj.phone,
                             obj.afm,
                             obj.account_status,
-                            formatDate(obj.registrationDate)
+                            generalFunctions.formatDate(obj.registrationDate)
                         ]
-                        data.titles = ["Type","firstName","lastName","email","phone", "afm","Status", "Reg Date"];
+                        data.titles = ["Type","FirstName","LastName","email","phone", "afm","Status", "Reg Date"];
                     }
                     else if (type == 'items'){
                         obj = await Item.findOne({_id : id});
-                        data.data = [ obj.title,obj.description ,formatDate(obj.registrationDate), obj.unit_of_measurement,obj.price_r,obj.price_w,obj.discount_r,obj.discount_w,obj.tax_r,obj.tax_w, obj.active]
+                        data.data = [ obj.title,obj.description ,generalFunctions.formatDate(obj.registrationDate), obj.unit_of_measurement,obj.price_r,obj.price_w,obj.discount_r,obj.discount_w,obj.tax_r,obj.tax_w, obj.active]
                         data.titles = ["Title", "Description","Reg Date", "Unit of Peasurement", "Price Retail", "Price Wholesale", "Discount Retail", "Discount Wholesale" , "Tax Retail", "Tax Wholesale","Status"];
+                    }
+                    else if (type == 'users'){
+                        obj = await User.findOne({_id : id});
+                        data.data = [
+                            obj.firstName,
+                            obj.lastName,
+                            obj.email,
+                            generalFunctions.get_status(obj.status),
+                            generalFunctions.formatDate(obj.registrationDate)
+                        ]
+                        data.titles = ["FirstName","LastName","email","Status", "Reg Date"];
                     }
                 }
                 else{
                     console.log("ERROR")
                 }
             }
-            console.log(data.data)
+            if (!data.data || (Array.isArray(data.data) && data.data.length === 0)) {
+                console.error('Error: Data is empty');
+            }
+            else{
+                console.log(data.data)
+            }
+            
             res.render(path_constants.pages.view.view(), data);
         }
         else{
@@ -130,17 +147,5 @@ router.post('/', async (req, res) => {
         return res.redirect('/error?origin_page=/&error=' + encodeURIComponent(e.message));
     }
 });
-    
-
-
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const year = date.getFullYear();
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${day}/${month}/${year} ${hours}:${minutes}`;
-};
 
 module.exports = router;

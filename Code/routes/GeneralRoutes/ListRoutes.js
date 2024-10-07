@@ -46,13 +46,14 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         list_items = await User.find();
         list_items = list_items.map((item) => ({
           data: [
+            item._id,
             item.firstName,
             item.lastName,
             formatDate(item.registrationDate),
-            item.account_status,
+            generalFunctions.get_status(item.status)
           ],
         }));
-        column_titles = ["First Name", "Last Name", "Reg Date", "Status"];
+        column_titles = ["ID", "First Name", "Last Name", "Reg Date", "Status"];
       } else if (req.query.searchfor == "docs") {
         list_items = await Document.find({
           company: company,
