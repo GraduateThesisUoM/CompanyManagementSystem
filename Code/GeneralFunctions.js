@@ -48,10 +48,10 @@ function checkAccessRigts(req) {
     console.log(disabled_company_accesable_pages.includes(page_url));
     if (req.user.type == "user") {
       if (req.session.company.status != 1 && disabled_company_accesable_pages.includes(page_url) == false) {
-        console.log("Access denied: This page is restricted.");
+        console.log("Access denied due to the company is closed");
         return {
           response: false,
-          error: "Access denied: This page is restricted",
+          error: "Access denied due to the company is closed",
         };
       }
     }
@@ -381,6 +381,23 @@ async function get_obj_by_id(data, schema) {
   return await Model.findOne(data);
 }
 
+async function update(id, schema , data){
+  try {
+    console.log(data)
+    var obj = await get_obj_by_id(id, schema);
+    if (schema == 'series') {
+      console.log("****************************************")
+      const fieldsToUpdate = ['title', 'acronym', 'type', 'sealed', 'active'];
+      fieldsToUpdate.forEach((field, index) => {
+            obj[field] = data["input"+index];  // Using index for data
+    });
+    }
+    await obj.save();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 async function create_notification(
   userID,
   relevantUserID,
@@ -461,5 +478,6 @@ module.exports = {
   formatDate,
   create_node,
   node_reply,
-  get_status
+  get_status,
+  update
 };
