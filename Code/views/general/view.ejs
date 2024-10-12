@@ -17,26 +17,29 @@
     <div class="has_sidebar">
         <%- include('../partials/sidebar'); %>
         <div>
+            <form action="/view" method="POST" id="view_form">
             <% if (isParamsEmpty) { %> 
                 <div>ERROR: No elements selected</div>
             <% } else { %>
+                
                 <% titles.forEach(function(title, index) { %>
-                    <div><%= title %> <input id="<%= title %>" value="<%= data[index] %>"></div>
+                    <div><%= title %> <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>"></div>
                 <% }); %>
             <% } %>
-            <form action="/view?type=item2" method="POST" id="view_form">
                 <input type="text" name="action" id="action">
             </form>
             <div id="message_div"><span id="message_span"></span> has been deleted</div>
             <button id="btn1">Delete</button>
             <button id="btn2"></button>
+            <button id="btn3">Save</button>
+            
         </div>
     </div>
 </body>
 <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function () {
-            $("#view_form").hide();
+            //$("#view_form").hide();
             $("#message_div").hide();
 
             const params = new URLSearchParams(window.location.search);
@@ -81,6 +84,10 @@
             });
             $("#btn2").click(function () {
                 $("#action").val(btn_1_var);
+                $("#view_form").submit();
+            });
+            $("#btn3").click(function () {
+                $("#action").val('save');
                 $("#view_form").submit();
             });
 

@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
+const path_constants = require("../../constantsPaths");
+
 //Models
 const Notification = require("../../Schemas/Notification");
 
 //Authentication Function
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 /*--------   SETTINGS */
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {

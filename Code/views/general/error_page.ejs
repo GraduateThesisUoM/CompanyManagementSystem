@@ -9,15 +9,27 @@
     </head>
     <body>
         <h1>Σφάλμα</h1>
-         <div id="error"></div>
-        <button onclick="history.back()">OK</button>
+        <div id="error"></div>
+        <button id="backButton">OK</button>
 
     </body>
     <script>
         $(document).ready(function(){
+            // Get the error parameter from the URL
             const urlParams = new URLSearchParams(window.location.search);
             const error = urlParams.get("error");
             $("#error").text(error);
+
+            // Set up the button to go to document.referrer
+            $("#backButton").click(function(){
+                const previousPageUrl = document.referrer;
+                if (previousPageUrl) {
+                    window.location.href = previousPageUrl;
+                } else {
+                    // Fallback if there's no referrer (optional)
+                    history.back();
+                }
+            });
         });
-      </script>
+    </script>
 </html>

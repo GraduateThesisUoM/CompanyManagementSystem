@@ -34,19 +34,24 @@ const schemaMap = {
   documents: Document,
 };
 
-const disabled_company_accesable_pages = ["/my-accountant", "/fff"];
+const disabled_company_accesable_pages = ["/","/my-company"];
 const company_owner_accesable_pages = ["/my-company"];
 
 //function checkAccessRights(req, data ,res){
 function checkAccessRigts(req) {
   try {
-    //console.log("TEST-----------------------");
+    var page_url = req.baseUrl;
+    if(req.baseUrl == ''){
+      page_url = '/';
+    }
+    console.log(page_url)
+    console.log(disabled_company_accesable_pages.includes(page_url));
     if (req.user.type == "user") {
-      if (req.session.company.status != 1 && disabled_company_accesable_pages.includes(req.originalUrl)) {
-        console.log("Access denied: This page is restricted.");
+      if (req.session.company.status != 1 && disabled_company_accesable_pages.includes(page_url) == false) {
+        console.log("Access denied due to the company is closed");
         return {
           response: false,
-          error: "Access denied: This page is restricted",
+          error: "Access denied due to the company is closed",
         };
       }
     }
@@ -66,7 +71,7 @@ function checkAccessRigts(req) {
         req.user.companyOwner == 0 &&
         company_owner_accesable_pages.includes(req.originalUrl)
       ) {
-        return { response: false, error: "Access Denied insufficient rights2" };
+        return { response: false, error: "Access Denied insufficient rights" };
       }
     } else if (file_path.startsWith(path_constants.routes.accountant)) {
       page_user_type = "accountant";
@@ -376,6 +381,23 @@ async function get_obj_by_id(data, schema) {
   return await Model.findOne(data);
 }
 
+async function update(id, schema , data){
+  try {
+    console.log(data)
+    var obj = await get_obj_by_id(id, schema);
+    if (schema == 'series') {
+      console.log("****************************************")
+      const fieldsToUpdate = ['title', 'acronym', 'type', 'sealed', 'active'];
+      fieldsToUpdate.forEach((field, index) => {
+            obj[field] = data["input"+index];  // Using index for data
+    });
+    }
+    await obj.save();
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 async function create_notification(
   userID,
   relevantUserID,
@@ -412,6 +434,22 @@ async function create_notification(
   }
 }
 
+function get_status(id){
+  if(id==0){
+    return 'Disabled'
+  }
+  else if(id == 1){
+    return 'Active'
+  }
+  else if(id == 2){
+    return 'Deleted'
+  }
+  else if(id == 3){
+    return 'Banned'
+  }
+  return 'ERROR IN GENERAL FUNCTION get_status 420'
+}
+
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
@@ -440,4 +478,6 @@ module.exports = {
   formatDate,
   create_node,
   node_reply,
+  get_status,
+  update
 };

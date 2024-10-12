@@ -182,8 +182,15 @@
                 }
                 $("#searchfor").val(searchfor);
 
-                $('.btn1').click(view_doc)
-                //$('.btn2').click(print_doc)
+                $('.btn1').click(function () {
+                    window.location = "/view?type="+searchfor+"&id="+$(this).data('id');
+                })
+                $('.btn2').click(function () {
+                    alert("this will delete the obj with id : "+$(this).data('id'))
+                })
+                $('.btn3').click(function () {
+                    alert("this will block the obj with id : "+$(this).data('id'))
+                })
             }
 
             $("#back_btn").click(function () {
@@ -198,11 +205,7 @@
                 }
             }
 
-            function view_doc() {
-                window.location = "/view?type="+searchfor+"&id="+$(this).data('id');
-            }
-
-            function delete_doc() {
+            function btn() {
                 var index = $(this).closest('tr').find('td:first').text() - 1;
                 alert($(".btn1").eq(index - 1).data('id'));
             }
