@@ -28,7 +28,7 @@
             }
 
         %>
-        <h2>User status: <%= status; %></h2>
+        <h2>User status: <%= status; %></h2> 
 
         <form action="/change-ban-status?id=<%=target_user._id%>"  method="POST">
             <% if(target_user.status == 3){ %>

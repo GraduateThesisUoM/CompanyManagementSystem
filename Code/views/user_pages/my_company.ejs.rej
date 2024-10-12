@@ -1,0 +1,18 @@
+diff a/Code/views/user_pages/my_company.ejs b/Code/views/user_pages/my_company.ejs	(rejected hunks)
+@@ -27,8 +27,14 @@
+                 </form>
+ 
+                 <form action="/my-company/change-company-status" method="POST">
+-                    <div>Company on/of</div>
+-                    <button type="submit">Company on/of</button>
++                    <%if(company.status == '1' ){ %>
++                        <div>Company On </div>
++                        <button type="submit">Deactivate Company</button>
++                    <%}else{ %>
++                        <div>Company OFF </div>
++                        <button type="submit">Activate Company</button>
++
++                    <%} %>
+                 </form>
+                 <%if(company.logo == "" || company.logo == null){ %>
+                     <img src="https://www.smartmoneymatch.com/images/company-logo.png.pagespeed.ce.-9qAfcmVqF.png" id="company_logo">
