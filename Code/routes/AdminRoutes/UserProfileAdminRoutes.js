@@ -3,6 +3,7 @@ const router = express.Router();
 const ObjectId = require("mongodb").ObjectId;
 
 const path_constants = require("../../constantsPaths");
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 //Models
 const Report = require(path_constants.schemas.two.report);
