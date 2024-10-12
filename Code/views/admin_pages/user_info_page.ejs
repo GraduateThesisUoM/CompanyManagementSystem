@@ -67,9 +67,9 @@
             <h2>Clients</h2>
             <% for(var i=0;i < company_list.length;i++){ 
                 for(var j=0;j < list_of_clients.length ;j++){
-                    if(company_list[i]._id == list_of_clients[j]._id ){ %>
+                    if(company_list[i].id == list_of_clients[j].id ){ %>
                         <a href="#"><%=company_list[i].name%></a> 
-                        <form action="/remove-relationship?id_user=<%=user_list[i].id%>&id_acc=<%=target_user._id%>"  method="POST">
+                        <form action="/remove-relationship?id_company=<%company_list[i]._id%>&id_acc=<%=target_user._id%>"  method="POST">
                             <input type="submit" id="remove_relationship_button" name="remove_relationship_button" value="Remove">
                         </form>
                         <br>
@@ -81,10 +81,11 @@
             <h2>Accountant</h2>
             <%for(var i=0;i < user_list.length ;i++){
                 <!--console.log(target_user.type);-->
-                if(user_list[i]._id == accountant){ %>
+                if(user_list[i].id == accountant){ %>
                     
-                    <a href="/user-profile?id=<%=target_company.accountant%>"><%=user_list[i].firstName%></a>
-                    <form action="/remove-relationship?id_user=<%=target_user._id%>&id_acc=<%=user_list[i]._id%>"  method="POST">
+                    <a href="/user-profile?id=<%=target_company.accountant%>">Όνομα: <%=user_list[i].firstName%><br>Επώνυμο: <%=user_list[i].lastName%><br>Email: <%=user_list[i].email%></a>
+                    <br>
+                    <form action="/remove-relationship?id_company=<%=target_company._id%>&id_acc=<%=user_list[i].id%>"  method="POST">
                         <input type="submit" id="remove_relationship_button" name="remove_relationship_button" value="Remove">
                     </form>
                     <br>

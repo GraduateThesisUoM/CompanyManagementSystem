@@ -3,6 +3,8 @@ const router = express.Router();
 const ObjectId = require("mongodb").ObjectId;
 
 const path_constants = require("../../constantsPaths");
+const generalFunctions = require("../../GeneralFunctions");
+const clientAccountantFunctions = require("../../ClientAccountantFunctions");
 
 //Models
 const Report = require(path_constants.schemas.two.report);
@@ -25,16 +27,11 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
       if (target_user.type == "accountant") {
         // check if target user is an accountant so we can pass client list as a parameter
-        var list_of_clients = await Company.find({ accountant: req.query.id });
+        var list_of_clients = await clientAccountantFunctions.fetchClients(req.query.id, "current");
       } else if (target_user.type == "user") {
-        // check if target user is an accountant so we can pass client list as a parameter
-        var target_company = await Company.findOne({
-          _id: target_user.company,
-        });
-        let target_node = await Node.findOne({
-          _id: target_company.accountant,
-        });
-        console.log(target_node);
+        // check if target user is an user so we can pass accountant as a parameter
+        var target_company = await Company.findOne({_id: target_user.company});
+        let target_node = await Node.findOne({_id: target_company.accountant});
         var accountant = target_node.receiver_id;
       }
       res.render("admin_pages/user_info_page.ejs", {

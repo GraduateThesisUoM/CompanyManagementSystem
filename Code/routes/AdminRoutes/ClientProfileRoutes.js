@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 
+const generalFunctions = require("../../GeneralFunctions");
+
 //Models
 const Client = require("../../Schemas/Client");
 const Review = require("../../Schemas/Review");

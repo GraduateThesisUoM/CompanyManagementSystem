@@ -139,7 +139,7 @@ async function fetchClients(accountantId,select){
         else if(select == 'fired'){
             clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'firing', status: 'executed', next: { $exists: false }  });
         }
-        else if(select == 'curent'){
+        else if(select == 'current'){
             clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: 'executed', next: { $exists: false }  });
         }
         else{

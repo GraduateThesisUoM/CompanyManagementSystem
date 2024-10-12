@@ -3,6 +3,7 @@ const router = express.Router();
 
 //File with the paths
 const path_constants = require("../../constantsPaths");
+const generalFunctions = require("../../GeneralFunctions");
 
 //Models
 const Report = require(path_constants.schemas.two.report);
