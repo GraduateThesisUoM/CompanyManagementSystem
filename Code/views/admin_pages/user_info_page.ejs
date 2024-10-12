@@ -69,7 +69,7 @@
                 for(var j=0;j < list_of_clients.length ;j++){
                     if(company_list[i].id == list_of_clients[j].id ){ %>
                         <a href="#"><%=company_list[i].name%></a> 
-                        <form action="/remove-relationship?id_company=<%company_list[i]._id%>&id_acc=<%=target_user._id%>"  method="POST">
+                        <form action="/remove-relationship?id_company=<%=company_list[i]._id%>&id_acc=<%=target_user._id%>"  method="POST">
                             <input type="submit" id="remove_relationship_button" name="remove_relationship_button" value="Remove">
                         </form>
                         <br>
