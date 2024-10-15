@@ -121,7 +121,7 @@ async function create_node(data) {
   if (data.type == "relationship") {
     if (data.company_id.equals(data.receiver_id) && data.type2 == "hiring") {
       status = "executed";
-    } else if (data.reply == "firing") {
+    } else if (data.type2 == "firing") {
       status = "executed";
     }
     new_data = {
@@ -155,21 +155,26 @@ async function create_node(data) {
 }
 
 async function node_reply(data) {
+  console.log("node_reply")
   const target_node = await Node.findOne({ _id: data.target_node._id });
-  var status = "pending";
-  if (target_node.type == "relationship" && data.reply == "firing") {
-    status = "executed";
+  var sts = "pending";
+  console.log("---------------------------------------"+data.reply+'firing')
+  if (data.reply == 'firing') {
+    sts = "executed";
   }
+  console.log("---------------------------------------"+sts)
 
   const reply_node = await create_node({
     company_id: target_node.company_id,
     sender_id: target_node.sender_id,
     receiver_id: target_node.receiver_id,
     type: target_node.type,
-    type2: target_node.type2,
+    type2: data.reply,
     text: data.text,
-    status: status,
+    status: sts,
   });
+
+  await reply_node.save();
 
   target_node.next = reply_node._id;
   await target_node.save();

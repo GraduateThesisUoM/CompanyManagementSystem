@@ -111,6 +111,15 @@ async function create_users() {
   await company5.save();
 
   data = {
+    name: "Blue Cat",
+    logo: logo,
+    signupcode: 1,
+  };
+  const company6 = await generalFunctions.create_company(data);
+  company6.status = 0;
+  await company6.save();
+
+  data = {
     type: "user",
     firstName: "John",
     lastName: "Doe",

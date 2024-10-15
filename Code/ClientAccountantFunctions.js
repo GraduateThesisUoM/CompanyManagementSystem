@@ -98,7 +98,7 @@ async function fire_accountant(companyId,senderId,accountantId){
         const company_node = await Node.findOne({_id:company.accountant});
         //const new_company_node = await generalFunctions.create_node(company._id,senderId,accountantId,'relationship','firing');
             
-        const new_company_node = generalFunctions.node_reply({
+        const new_company_node = await  generalFunctions.node_reply({
             target_node : company_node,
             reply: 'firing',
             text : ''

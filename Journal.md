@@ -5,13 +5,15 @@
 
 
 -13/10/2024
-- [] fire accountant deletes field from db if done from admin (Nektarios)
-- [] Make sure notifications work on relationships (Nikos)
-- [] Match Person and transaction ,and delete transaction shema (Nektarios)
-- [] delete transactor pages (Nikos)
-- [] check edit fiels on view (Nektarios) 
-- [] edit in all obj
-- [] sales types 1,2,3 (Nektarios) 
+- [x] fire accountant deletes field from db if done from admin (Nektarios)
 - [] restart db add items and inventroy (Nektarios)
 - [] view in werehose inventory (Nektarios)
+- [] Match Person and transaction ,and delete transaction shema (Nektarios)
+- [] check edit fiels on view (Nektarios) 
+- [] edit in all obj (Nektarios)
+
+
+- [] Make sure notifications work on relationships (Nikos)
+- [] delete transactor pages (Nikos)
+- [] sales types 1,2,3 (Nektarios) 
 - [] buy/sell docs efect invntory (Nikos)
