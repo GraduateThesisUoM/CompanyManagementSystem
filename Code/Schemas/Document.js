@@ -14,7 +14,7 @@ const DocumentSchema = new mongoose.Schema({
     enum: [0, 1],
     default: 0},
   invoiceData: {
-    type: mongoose.Schema.Types.Mixed,
+    type: mongoose.Schema.Types.Mixed
   },
   active: {
     type: Number,

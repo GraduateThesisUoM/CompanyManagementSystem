@@ -7,13 +7,15 @@ const NodeShema = new mongoose.Schema({
   receiver_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   type: {
     type: String,
-    enum: ['relationship','response','request','node'],
+    enum: ['relationship','response','request',4,5],
+    //1=relationship,2=response,3=request,4=node,5=warehouse
     required: true,
     default:'node'
   },
   type2: {
     type: String,
-    enum: ['hiring','firing','response','request1','request2','general'],
+    enum: ['hiring','firing','response','request1','request2','general',7,8],
+    //1=hiring,2=firing,3=response,4=request1,5=request2,6=general,7=buy,8=shell
     required: true,
     default:'general'
   },
@@ -27,7 +29,8 @@ const NodeShema = new mongoose.Schema({
     required: true,
     default: 'pending',
   },
-  registrationDate: { type: Date, default: Date.now , required: true}
+  registrationDate: { type: Date, default: Date.now , required: true},
+  data:{type: mongoose.Schema.Types.Mixed}
 });
 
 
