@@ -247,6 +247,7 @@ async function createWarehouse(data) {
 async function createItem(data) {
   try {
     const item = new Item({
+      type:data.type,
       companyID: data.companyID,
       title: data.title,
       description: data.description,
@@ -314,11 +315,11 @@ async function create_person(data) {
     email: data.email,
     afm: data.afm,
     phone: data.phone,
-    company: data.company,
+    company: data.company
   });
 
   if (data.phone2) person.phone2 = data.phone2;
-  if (data.active) person.active = data.active;
+  if (data.status) person.active = data.status;
   if (data.address) person.address = data.address;
   if (data.district) person.district = data.district;
   if (data.city) person.city = data.city;

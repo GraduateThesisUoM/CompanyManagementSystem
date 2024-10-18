@@ -8,7 +8,7 @@ const ItemSchema = new mongoose.Schema({
     description: { type: String, required: true },
     type : { type: Number, required: true },
     //buy = 1,shell=2
-    active: {
+    status: {
       type: Number,
       enum: [0, 1, 2],
       //1 active

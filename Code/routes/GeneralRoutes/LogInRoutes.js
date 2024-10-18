@@ -278,7 +278,7 @@ async function create_users() {
   );
 
   data = {
-    type: "sale",
+    type: 1,
     firstName: "p1",
     lastName: "p1ln",
     email: "p1@p1.com",
@@ -290,7 +290,7 @@ async function create_users() {
   const person1 = await generalFunctions.create_person(data);
 
   data = {
-    type: "buy",
+    type: 2,
     firstName: "p2",
     lastName: "p2ln",
     email: "p2@p2.com",
@@ -301,7 +301,7 @@ async function create_users() {
   const person2 = await generalFunctions.create_person(data);
 
   data = {
-    type: "sale",
+    type: 1,
     firstName: "p3",
     lastName: "p3ln",
     email: "p3@p3.com",
@@ -312,7 +312,7 @@ async function create_users() {
   const person3 = await generalFunctions.create_person(data);
 
   data = {
-    type:2,
+    type:1,
     companyID: company2._id,
     title: "i1",
     description: "i1",
@@ -338,7 +338,7 @@ async function create_users() {
   };
   const i2 = await generalFunctions.createItem(data);
   data = {
-    type:1,
+    type:2,
     companyID: company2._id,
     title: "i3",
     description: "i3",

@@ -160,7 +160,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             item.email,
             item.phone,
             item.afm,
-            item.account_status,
+            item.status,
             formatDate(item.registrationDate),
           ],
         }));
@@ -176,7 +176,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Reg Date",
         ];
       } else if (req.query.searchfor == "items") {
-        list_items = await Item.find({ companyID: company });
+        list_items = await Item.find({ companyID: company
+          ,type: req.query.type
+         });
         list_items = list_items.map((item) => ({
           data: [
             item._id,
@@ -184,7 +186,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             formatDate(item.registrationDate),
             total_price(item.price_r, item.discount_r, item.tax_r),
             total_price(item.price_w, item.discount_w, item.tax_w),
-            item.active,
+            item.status,
           ],
         }));
         column_titles = [
