@@ -317,6 +317,20 @@ async function create_person(data) {
     company: data.company,
   });
 
+  if (data.phone2) person.phone2 = data.phone2;
+  if (data.active) person.active = data.active;
+  if (data.address) person.address = data.address;
+  if (data.district) person.district = data.district;
+  if (data.city) person.city = data.city;
+  if (data.country) person.country = data.country;
+  if (data.zip) person.zip = data.zip;
+  if (data.shipping_address) person.shipping_address = data.shipping_address;
+  if (data.shipping_district) person.shipping_district = data.shipping_district;
+  if (data.shipping_city) person.shipping_city = data.shipping_city;
+  if (data.shipping_country) person.shipping_country = data.shipping_country;
+  if (data.shipping_zip) person.shipping_zip = data.shipping_zip;
+
+
   await person.save();
 
   console.log("Person " + person.f_name + " " + person.l_name + " Created");

@@ -284,6 +284,7 @@ async function create_users() {
     email: "p1@p1.com",
     afm: "111",
     phone: "222",
+    phone2: "333",
     company: company2._id,
   };
   const person1 = await generalFunctions.create_person(data);
@@ -311,6 +312,7 @@ async function create_users() {
   const person3 = await generalFunctions.create_person(data);
 
   data = {
+    type:2,
     companyID: company2._id,
     title: "i1",
     description: "i1",
@@ -323,6 +325,7 @@ async function create_users() {
   };
   const i1 = await generalFunctions.createItem(data);
   data = {
+    type:2,
     companyID: company2._id,
     title: "i2",
     description: "i2",
@@ -335,6 +338,7 @@ async function create_users() {
   };
   const i2 = await generalFunctions.createItem(data);
   data = {
+    type:1,
     companyID: company2._id,
     title: "i3",
     description: "i3",

@@ -6,9 +6,9 @@
 
 -13/10/2024
 - [x] fire accountant deletes field from db if done from admin (Nektarios)
-- [] restart db add items and inventroy (Nektarios)
+- [x] restart db add items and inventroy (Nektarios)
 - [] view in werehose inventory (Nektarios)
-- [] Match Person and transaction ,and delete transaction shema (Nektarios)
+- [x] Match Person and transaction ,and delete transaction shema (Nektarios)
 - [] check edit fiels on view (Nektarios) 
 - [] edit in all obj (Nektarios)
 
