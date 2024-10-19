@@ -97,12 +97,35 @@
                 $('.main_side_menubtn').removeClass('clicked');
             }
         });
-        function handle_click(event,link) {
-            if ($(event).hasClass("clicked")) {
-                location.href = link;
-            } else {
-                myrightclick($(event))        
+        $("#back_btn").click(function(){
+            try {
+                let previousLink = document.referrer;
+
+                // Check if the referrer exists
+                if (previousLink) {
+                    // Create a new URL object from the previous link
+                    const url = new URL(previousLink);
+                    
+                    // Extract the pathname (e.g., /list)
+                    const previousPath = url.pathname;
+
+                    // Extract the search parameters (query string)
+                    const params = url.search; // This will include '?' at the start
+
+                    // Combine pathname and parameters if you want to navigate to the full path with parameters
+                    const newLocation = `${previousPath}${params}`;
+
+                    // Redirect to the combined pathname and parameters
+                    window.location = newLocation;
+                } else {
+                    // If no referrer, navigate back
+                    window.history.back();
+                }
+            } catch (e) {
+                console.log(e);
+                window.history.back();
             }
-        }
+
+        });
     });
 </script>

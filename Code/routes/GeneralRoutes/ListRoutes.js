@@ -115,7 +115,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             item.title,
             item.location,
             formatDate(item.registrationDate),
-            item.active,
+            item.status,
           ],
         }));
         column_titles = ["ID", "Title", "location", "Reg Date", "Status"];
@@ -176,6 +176,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Reg Date",
         ];
       } else if (req.query.searchfor == "items") {
+        console.log("++++++++++++++++"+req.query.type)
         list_items = await Item.find({ companyID: company
           ,type: req.query.type
          });

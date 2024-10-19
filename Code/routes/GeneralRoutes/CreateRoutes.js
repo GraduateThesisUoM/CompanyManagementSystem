@@ -44,6 +44,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 });
 
 router.post("/", Authentication.checkAuthenticated, async (req, res) => {
+  console.log("Create Post");
+
   try {
     var company = "";
     var data = {};
@@ -53,11 +55,14 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       company = req.user.company;
     }
     console.log(req.body.create_type);
-    if (req.body.create_type == "warehouse") {
+    if (req.body.create_type == "warehouses") {
+      data = {
+        companyid :company._id,
+        title: req.body.warehouse_title,
+        location:req.body.warehouse_address
+      }
       const warehouse = await generalFunctions.createWarehouse(
-        company,
-        req.body.warehouse_title,
-        req.body.warehouse_address
+        data
       );
       console.log(warehouse);
     } else if (req.body.create_type == "items") {

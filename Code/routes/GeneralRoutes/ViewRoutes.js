@@ -67,9 +67,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                     }
                     else if (type == 'warehouses'){
                         obj = await Warehouse.findOne({_id : id});
-                        data.data = [ obj.title, obj.location, generalFunctions.formatDate(obj.registrationDate), obj.active]
+                        data.data = [ obj.title, obj.location, generalFunctions.formatDate(obj.registrationDate), obj.status]
                         data.titles = ["Title","location", "Reg Date","Status"];
-                        data.type = [1,1,1,1];
+                        data.type = [1,1,0,0];
                         //1=normal-text,0=text-readonly
 
                     }
@@ -77,7 +77,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         obj = await Series.findOne({_id : id});
                         data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed, generalFunctions.formatDate(obj.registrationDate), obj.active]
                         data.titles = ["Title","Acronym","Type","Count","Sealed", "Reg Date","Status"];
-                        data.type = [1,1,1,1,1,1,1];
+                        data.type = [1,1,1,1,1,0,0];
                         //1=normal-text,0=text-readonly
 
                     }
@@ -90,11 +90,11 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                             obj.email,
                             obj.phone,
                             obj.afm,
-                            obj.account_status,
+                            obj.status,
                             generalFunctions.formatDate(obj.registrationDate)
                         ]
                         data.titles = ["Type","FirstName","LastName","email","phone", "afm","Status", "Reg Date"];
-                        data.type = [1,1,1,1,1,1,1,0];
+                        data.type = [1,1,1,1,1,1,0,0];
                         //1=normal-text,0=text-readonly
 
                     }
@@ -102,7 +102,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         obj = await Item.findOne({_id : id});
                         data.data = [ obj.title,obj.description ,generalFunctions.formatDate(obj.registrationDate), obj.unit_of_measurement,obj.price_r,obj.price_w,obj.discount_r,obj.discount_w,obj.tax_r,obj.tax_w, obj.status]
                         data.titles = ["Title", "Description","Reg Date", "Unit of Peasurement", "Price Retail", "Price Wholesale", "Discount Retail", "Discount Wholesale" , "Tax Retail", "Tax Wholesale","Status"];
-                        data.type = [1,1,0,1,1,1,1,1,1,1,1];
+                        data.type = [1,1,0,1,1,1,1,1,1,1,0];
                         //1=normal-text,0=text-readonly
 
                     }
@@ -116,7 +116,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                             generalFunctions.formatDate(obj.registrationDate)
                         ]
                         data.titles = ["FirstName","LastName","email","Status", "Reg Date"];
-                        data.type = [1,1,1,1,1];
+                        data.type = [1,1,1,0,0];
                         //1=normal-text,0=text-readonly
 
                     }

@@ -6,7 +6,7 @@ const WarehouseSchema = new mongoose.Schema({
     companyID: { type: String, required: true },
     title: { type: String, required: true },
     location: { type: String, required: true },
-    active: {
+    status: {
       type: Number,
       enum: [0, 1, 2],
       //1 active
@@ -18,7 +18,7 @@ const WarehouseSchema = new mongoose.Schema({
     full: {
       type: Number,
       enum: [0, 1],
-      default: 1
+      default: 0
     }
 });
 

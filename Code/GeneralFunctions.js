@@ -226,11 +226,13 @@ async function create_admin(data) {
 }
 
 async function createWarehouse(data) {
+  console.log("creagte warehouse enter");
+
   try {
     const warehouse = new Warehouse({
-      companyID: data.companyID,
+      companyID: data.companyid,
       title: data.title,
-      location: data.location,
+      location: data.location
     });
 
     await warehouse.save();
@@ -380,11 +382,11 @@ async function delete_deactivate(data, schema, action) {
   try {
     var obj = await get_obj_by_id(data, schema);
     if (action == "delete") {
-      obj.active = 2;
+      obj.status = 2;
     } else if (action == "activate") {
-      obj.active = 1;
+      obj.status = 1;
     } else {
-      obj.active = 0;
+      obj.status = 0;
     }
     console.log(obj);
     await obj.save();
