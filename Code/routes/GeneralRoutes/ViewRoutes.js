@@ -144,7 +144,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 
     });
 
-router.post('/', async (req, res) => {
+router.post("/", Authentication.checkAuthenticated, async (req, res) => {
+
     try {
         const isParamsEmpty = Object.keys(req.query).length === 0;
         console.log(req.query.type +" "+ req.query.id+ "-------------- "+req.body.action)
@@ -152,7 +153,6 @@ router.post('/', async (req, res) => {
             console.log("ERROR ViewRoutes 2");
             return res.redirect('/error?origin_page=/&error=' + encodeURIComponent("Query parameters are missing"));
         }
-        console.log(req.body);
         if (req.query.type && req.query.id) {
             if(req.body.action == 'save'){
                 console.log('1');

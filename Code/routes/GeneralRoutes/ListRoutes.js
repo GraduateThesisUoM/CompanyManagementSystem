@@ -221,6 +221,19 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   }
 });
 
+router.post("/", Authentication.checkAuthenticated, async (req, res) => {
+  try {
+    console.log(req.body.list_id);
+    console.log(req.body.list_action);
+    return res.redirect(`/list?searchfor=${req.query.searchfor}`);
+
+  } catch (e) {
+    console.error(e);
+    return res.redirect('/error?origin_page=/&error=' + encodeURIComponent(e.message));
+}
+});
+
+
 const formatDate = (dateString) => {
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");

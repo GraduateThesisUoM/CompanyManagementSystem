@@ -82,8 +82,12 @@
         <%- include('../partials/sidebar'); %>
             <div>
                 <h1 id="list_header"></h1>
-                <div>Tottal Number Of <span id="span_number_of">companys</span> : <%=list_items.length%>
-                </div>
+                <div>Tottal Number Of <span id="span_number_of">companys</span> : <%=list_items.length%></div>
+                <form action="/list" method="POST" id="list_form">
+                    <input name="list_id" id = "list_id">
+                    <input name="list_action" id = "list_action">
+                    <button type="submit">fff</button>
+                </form>
                 <div id="table_container">
                     <table>
                         <thead>
@@ -121,9 +125,9 @@
 
                                                 <td>
                                                     <div id="td_button_container">
-                                                        <div><button class="btn1" data-id="<%= list_item.data[0] %>">View</button></div>
-                                                        <div><button class="btn2" data-id="<%= list_item.data[0] %>">Delete</button></div>
-                                                        <div><button class="btn3" data-id="<%= list_item.data[0] %>">Block</button></div>
+                                                        <div><button class="btn1" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">View</button></div>
+                                                        <div><button class="btn2" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Delete</button></div>
+                                                        <div><button class="btn3" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Block</button></div>
                                                     </div>
                                                 </td>
 
@@ -186,33 +190,33 @@
                     window.location = "/view?type="+searchfor+"&id="+$(this).data('id');
                 })
                 $('.btn2').click(function () {
-                    alert("this will delete the obj with id : "+$(this).data('id'))
+                    delete_element($(this));
                 })
                 $('.btn3').click(function () {
-                    alert("this will block the obj with id : "+$(this).data('id'))
+                    block($(this));
                 })
             }
 
-            /*$("#back_btn").click(function () {
-                window.location = "/";
-            });*/
-
             function print_doc() {
-                var index = $(this).closest('tr').find('td:first').text() - 1;
-                var doc_id = $(".btn1").eq(index - 1).data('id')
+                var doc_id = $(".btn1").eq($(this).data('id')).data('id')
                 if(confirm('After this point editing will not be possible, you want to continue')){
                     window.location = "/list?searchfor=" + searchfor + "&type=" + type + "&printdoc=" + doc_id;
                 }
             }
 
-            function btn() {
-                var index = $(this).closest('tr').find('td:first').text() - 1;
-                alert($(".btn1").eq(index - 1).data('id'));
+            function block(element) {
+                if(confirm("this will block the obj with id : "+ element.data('id'))){
+                    $('#list_id').val(element.data('id'));
+                    $('#list_action').val('3');
+                }
             }
 
-            function block() {
-                var index = $(this).closest('tr').find('td:first').text() - 1;
-                alert($(".btn1").eq(index - 1).data('id'));
+            function delete_element(element) {
+                if(confirm("this will delete the obj with id : "+ element.data('id'))){
+                    $('#list_action_'+element.data('index')).val('2');
+                    $('#list_form_'+element.data('index')).submit();
+                }
+                $('#list_action').val('2');
             }
 
             function print_form(data) {
