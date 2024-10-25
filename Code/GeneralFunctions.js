@@ -26,7 +26,7 @@ const schemaMap = {
   reports: Report,
   series: Series,
   items: Item,
-  warehouses: Warehouse,
+  Warehouse: Warehouse,
   persons: Person,
   accountants: Accountant,
   nodes: Node,
@@ -381,9 +381,10 @@ async function drop_collection(collection_name) {
 async function delete_deactivate(data, schema, action) {
   try {
     var obj = await get_obj_by_id(data, schema);
-    if (action == "delete") {
+    console.log(obj)
+    if (action == "delete" || action == 2) {
       obj.status = 2;
-    } else if (action == "activate") {
+    } else if (action == "activate"|| action == 1) {
       obj.status = 1;
     } else {
       obj.status = 0;

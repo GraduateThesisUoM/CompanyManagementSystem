@@ -55,20 +55,28 @@
         border-radius: 10px;
     }
 
-    #td_button_container>div>button:hover {
+    #td_button_container > div > button:not(:disabled):hover {
         transform: scale(1.1);
         /* Scale up the button on hover */
         box-shadow: 3px 3px 10px black;
     }
 
     #td_button_container>div>.btn2 {
-        background-color: red;
+        background-color: rgb(255, 0, 0);
         color: white;
     }
+
+    #td_button_container > div > .btn2:disabled {
+    background-color: rgba(255, 0, 0, 0.33);
+}
 
     #td_button_container>div>.btn3 {
         background-color: rgb(71, 71, 71);
         color: white;
+    }
+    #td_button_container>div>.btn3:disabled {
+        background-color: rgba(71, 71, 71, 0.33);
+
     }
 
     #td_button_container>div>.btn1 {
@@ -86,7 +94,6 @@
                 <form action="/list" method="POST" id="list_form">
                     <input name="list_id" id = "list_id">
                     <input name="list_action" id = "list_action">
-                    <button type="submit">fff</button>
                 </form>
                 <div id="table_container">
                     <table>
@@ -113,28 +120,29 @@
                                         <% } %>
                                     <% } %>
                                 <%} else{ list_items.forEach(function(list_item, index) { %>
-                            <tr>
-                                <td>
-                                    <%= index + 1 %>
-                                </td>
-                                <% for (let i=0; i < list_item.data.length; i++) { %>
-                                    <% if (column_titles[i] != 'ID') { %>
-                                        <td id="cell_<%= i %>_<%= index %>"><%= list_item.data[i] %></td>
-                                    <% }%>
-                                            <% } %>
+                                <tr>
+                                    <td>
+                                        <%= index + 1 %>
+                                    </td>
+                                    <% for (let i=0; i < list_item.data.length; i++) { %>
+                                        <% if (column_titles[i] != 'ID') { %>
+                                            <td id="cell_<%= i %>_<%= index %>" class ="<%= column_titles[i].toLowerCase() %>"><%= list_item.data[i] %></td>
+                                        <% }%>
+                                        
+                                    <% } %>
 
-                                                <td>
-                                                    <div id="td_button_container">
-                                                        <div><button class="btn1" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">View</button></div>
-                                                        <div><button class="btn2" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Delete</button></div>
-                                                        <div><button class="btn3" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Block</button></div>
-                                                    </div>
-                                                </td>
-
-                            </tr>
-                            <% }); }%>
+                                    <td>
+                                        <div id="td_button_container">
+                                            <div><button class="btn1" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">View</button></div>
+                                            <div><button class="btn2" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Delete</button></div>
+                                            <div><button class="btn3" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Disable</button></div>
+                                        </div>
+                                    </td>
 
                                 </tr>
+                                <% }); }%>
+
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -149,10 +157,35 @@
         $(document).ready(function () {
             var total_doc_rows = '<%=doc_data.doc_line_num%>';
             const queryString = new URL(window.location.href).search;
-            const params = new URLSearchParams(queryString);
+            var params = new URLSearchParams(queryString);
             var searchfor = '';
             var type = '';
             var printdoc = ""
+
+            if (params.has('message')) {
+                alert(params.get('message'));
+            }
+
+            var status_cells = $(".status");
+            var btn2_cells = $(".btn2");
+
+            var btn3_cells = $(".btn3");
+            for(let i=0; i<status_cells.length;i++){
+                if(status_cells[i].innerHTML == 2){
+                    $(btn2_cells[i]).prop('disabled', true);
+                    $(status_cells[i]).html('Deleted');
+                }
+                else if(status_cells[i].innerHTML == 0){
+                    $(btn3_cells[i]).prop('disabled', true);
+                    $(status_cells[i]).html('Disabled');
+                }
+                else if(status_cells[i].innerHTML == 1){
+                    $(status_cells[i]).html('Active');
+                }
+            }
+ 
+
+            $('#list_form').attr('action', '/list'+queryString);
 
             if (queryString.length > 0) {
                 searchfor = params.get('searchfor');
@@ -190,10 +223,10 @@
                     window.location = "/view?type="+searchfor+"&id="+$(this).data('id');
                 })
                 $('.btn2').click(function () {
-                    delete_element($(this));
+                    button_action($(this),2);
                 })
                 $('.btn3').click(function () {
-                    block($(this));
+                    button_action($(this),0);
                 })
             }
 
@@ -204,19 +237,17 @@
                 }
             }
 
-            function block(element) {
-                if(confirm("this will block the obj with id : "+ element.data('id'))){
+            function button_action(element, action){
+                var message = "this will block this obj"
+                if(action == 2){
+                    message = "this will delete the obj"
+                }
+                if(confirm(message)){
                     $('#list_id').val(element.data('id'));
-                    $('#list_action').val('3');
+                    $('#list_action').val(action);
+                    $("#list_form").submit();
                 }
-            }
 
-            function delete_element(element) {
-                if(confirm("this will delete the obj with id : "+ element.data('id'))){
-                    $('#list_action_'+element.data('index')).val('2');
-                    $('#list_form_'+element.data('index')).submit();
-                }
-                $('#list_action').val('2');
             }
 
             function print_form(data) {

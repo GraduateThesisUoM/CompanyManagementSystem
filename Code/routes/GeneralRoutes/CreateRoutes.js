@@ -55,7 +55,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       company = req.user.company;
     }
     console.log(req.body.create_type);
-    if (req.body.create_type == "warehouses") {
+    if (req.body.create_type == "Warehouse") {
       data = {
         companyid :company._id,
         title: req.body.warehouse_title,
@@ -104,7 +104,10 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       const person = await generalFunctions.create_person(data);
       console.log(person);
     }
-    res.redirect("/create");
+    else{
+      console.log("Type not found CreateRoutes.js")
+    }
+    res.redirect("/list?searchfor="+req.body.create_type+"&message="+req.body.create_type+" created successfully");
   } catch (e) {
     console.error("** " + e + " **");
     res.redirect("/error?origin_page=create&error=" + e);

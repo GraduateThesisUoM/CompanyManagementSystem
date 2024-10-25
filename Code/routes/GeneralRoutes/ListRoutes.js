@@ -107,7 +107,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             doc_line_num: document.invoiceData.length,
           };
         }
-      } else if (req.query.searchfor == "warehouses") {
+      } else if (req.query.searchfor == "Warehouse") {
         list_items = await Warehouse.find({ companyID: company });
         list_items = list_items.map((item) => ({
           data: [
@@ -222,9 +222,15 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 });
 
 router.post("/", Authentication.checkAuthenticated, async (req, res) => {
+  
   try {
     console.log(req.body.list_id);
     console.log(req.body.list_action);
+
+    if(req.body.list_action == 2 || req.body.list_action == 0){
+      await generalFunctions.delete_deactivate({ _id: req.body.list_id }, 'Warehouse', req.body.list_action);
+    }
+
     return res.redirect(`/list?searchfor=${req.query.searchfor}`);
 
   } catch (e) {
