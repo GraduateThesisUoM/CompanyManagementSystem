@@ -16,13 +16,12 @@ const DocumentSchema = new mongoose.Schema({
   invoiceData: {
     type: mongoose.Schema.Types.Mixed
   },
-  active: {
+  status: {
     type: Number,
     enum: [0, 1, 2],
     //1 active
     //0 disabled
-    //2 delete
-    //3 baned
+    //2 deleted
     default: 1
   },
   registrationDate: { type: Date, default: Date.now }

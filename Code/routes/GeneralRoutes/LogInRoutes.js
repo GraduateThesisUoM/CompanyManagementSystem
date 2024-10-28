@@ -312,10 +312,10 @@ async function create_users() {
   const person3 = await generalFunctions.create_person(data);
 
   data = {
-    type:1,
     companyID: company2._id,
     title: "i1",
     description: "i1",
+    type : 1,
     price_r: 100,
     price_w: 50,
     discount_r: 10,
@@ -325,10 +325,10 @@ async function create_users() {
   };
   const i1 = await generalFunctions.createItem(data);
   data = {
-    type:2,
     companyID: company2._id,
     title: "i2",
     description: "i2",
+    type:2,
     price_r: 200,
     price_w: 100,
     discount_r: 20,
@@ -338,10 +338,10 @@ async function create_users() {
   };
   const i2 = await generalFunctions.createItem(data);
   data = {
-    type:2,
     companyID: company2._id,
     title: "i3",
     description: "i3",
+    type:2,
     price_r: 500,
     price_w: 200,
     discount_r: 10,
@@ -373,7 +373,7 @@ async function create_users() {
     company: company2._id,
     sender: user2._id,
     receiver: person1._id,
-    type: "sale",
+    type: 2,
     series: s2._id,
     generalDiscount: 10,
     invoiceData: [
@@ -388,7 +388,7 @@ async function create_users() {
     company: company2._id,
     sender: user2._id,
     receiver: person1._id,
-    type: "sale",
+    type: 2,
     series: s2._id,
     generalDiscount: 10,
     invoiceData: [

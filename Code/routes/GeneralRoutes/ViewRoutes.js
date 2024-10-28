@@ -46,6 +46,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             };;
 
             if(!isParamsEmpty){
+                console.log('1')
                 type = req.query.type;
                 id = req.query.id;
                 if(type && id){
@@ -65,7 +66,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         //1=normal-text,0=text-readonly
 
                     }
-                    else if (type == 'warehouses'){
+                    else if (type == 'Warehouse'){
                         obj = await Warehouse.findOne({_id : id});
                         data.data = [ obj.title, obj.location, generalFunctions.formatDate(obj.registrationDate), obj.status]
                         data.titles = ["Title","location", "Reg Date","Status"];

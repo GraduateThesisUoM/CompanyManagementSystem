@@ -55,21 +55,24 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       company = req.user.company;
     }
     console.log(req.body.create_type);
+
+    var created_obj;//Declare Variable
+
     if (req.body.create_type == "Warehouse") {
       data = {
         companyid :company._id,
         title: req.body.warehouse_title,
         location:req.body.warehouse_address
       }
-      const warehouse = await generalFunctions.createWarehouse(
+      created_obj = await generalFunctions.createWarehouse(
         data
       );
-      console.log(warehouse);
     } else if (req.body.create_type == "items") {
       data = {
         companyID: company._id,
         title: req.body.items_title,
         description: req.body.items_description,
+        type: req.body.obj_type,
         price_r: req.body.items_price_r,
         price_w: req.body.items_price_w,
         discount_r: req.body.items_price_r_disc,
@@ -77,8 +80,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         tax_r: req.body.items_tax_w,
         tax_w: req.body.items_tax_w,
       };
-      const item = await generalFunctions.createItem(data);
-      console.log(item);
+      created_obj = await generalFunctions.createItem(data);
     } else if (req.body.create_type == "series") {
       const isSealed = req.body.series_sealed === "on" ? 1 : 0;
       console.log(isSealed);
@@ -89,8 +91,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         type: req.body.series_type,
         sealed: isSealed,
       };
-      const series = await generalFunctions.createSeries(data);
-      console.log(series);
+      created_obj = await generalFunctions.createSeries(data);
     } else if (req.body.create_type == "person") {
       data = {
         type: req.query.type,
@@ -101,13 +102,13 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         phone: req.body.person_phone,
         company: company,
       };
-      const person = await generalFunctions.create_person(data);
-      console.log(person);
+      created_obj = await generalFunctions.create_person(data);
     }
     else{
       console.log("Type not found CreateRoutes.js")
     }
-    res.redirect("/list?searchfor="+req.body.create_type+"&message="+req.body.create_type+" created successfully");
+    //res.redirect("/list?searchfor="+req.body.create_type+"&message="+req.body.create_type+" created successfully");
+    res.redirect("/view?type="+req.body.create_type+"&id="+created_obj._id+"&message="+req.body.create_type+" created successfully");
   } catch (e) {
     console.error("** " + e + " **");
     res.redirect("/error?origin_page=create&error=" + e);

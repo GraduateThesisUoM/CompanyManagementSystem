@@ -251,6 +251,7 @@ async function createItem(data) {
     const item = new Item({
       type:data.type,
       companyID: data.companyID,
+      type: data.type,
       title: data.title,
       description: data.description,
       price_r: data.price_r,
