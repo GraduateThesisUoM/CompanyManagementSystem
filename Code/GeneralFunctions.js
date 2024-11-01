@@ -230,7 +230,7 @@ async function createWarehouse(data) {
 
   try {
     const warehouse = new Warehouse({
-      companyID: data.companyid,
+      companyid: data.companyid,
       title: data.title,
       location: data.location
     });
@@ -311,6 +311,7 @@ async function createReport(userID, reportedID, reportReason, reportText) {
 }
 
 async function create_person(data) {
+  console.log('enter create_person')
   const person = new Person({
     type: data.type,
     firstName: data.firstName,

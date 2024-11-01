@@ -27,4 +27,4 @@ const ItemSchema = new mongoose.Schema({
 
 
 // Export the transaction schema
-module.exports = mongoose.model("item", ItemSchema)
+module.exports = mongoose.model("Item", ItemSchema)

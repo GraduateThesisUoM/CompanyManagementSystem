@@ -55,13 +55,13 @@ module.exports = router;
 async function create_users() {
   await generalFunctions.drop_collection("Company");
   await generalFunctions.drop_collection("Node");
-  await generalFunctions.drop_collection("users");
-  await generalFunctions.drop_collection("item");
+  await generalFunctions.drop_collection("User");
+  await generalFunctions.drop_collection("Item");
   await generalFunctions.drop_collection("Report");
-  await generalFunctions.drop_collection("warehouses");
-  await generalFunctions.drop_collection("series");
-  await generalFunctions.drop_collection("persons");
-  await generalFunctions.drop_collection("document");
+  await generalFunctions.drop_collection("Warehouse");
+  await generalFunctions.drop_collection("Series");
+  await generalFunctions.drop_collection("Person");
+  await generalFunctions.drop_collection("Document");
   await generalFunctions.drop_collection("Notification");
 
   console.log("End Deleting -----");
@@ -356,7 +356,7 @@ async function create_users() {
     companyID: company2._id,
     title: "series1b",
     acronym: "S1",
-    type: "buy",
+    type: 1,
     sealed: 1,
   };
   const s1 = await generalFunctions.createSeries(data);
@@ -364,7 +364,7 @@ async function create_users() {
     companyID: company2._id,
     title: "series2s",
     acronym: "S2",
-    type: "sale",
+    type: 2,
     sealed: 0,
   };
   const s2 = await generalFunctions.createSeries(data);
@@ -439,19 +439,19 @@ async function create_users() {
   const doc3 = await generalFunctions.create_doc(data);
 
   data = {
-    companyID: company2._id,
+    companyid: company2._id,
     title: "w1",
     location: "w1_l",
   };
   const w1 = await generalFunctions.createWarehouse(data);
 
   data = {
-    companyID: company2._id,
+    companyid: company2._id,
     title: "w2",
     location: "w2_l",
   };
-  const w2 = await generalFunctions.createWarehouse(data);
-  w2.active = 0;
+  var w2 = await generalFunctions.createWarehouse(data);
+  w2.status = 0;
   w2.registrationDate = "2024-06-10T18:22:57.852+00:00";
   await w2.save();
 

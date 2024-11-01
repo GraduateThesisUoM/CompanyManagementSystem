@@ -42,4 +42,4 @@ const PersonSchema = new mongoose.Schema({
       }
     });
 
-module.exports = mongoose.model("persons", PersonSchema)
+module.exports = mongoose.model("Person", PersonSchema)

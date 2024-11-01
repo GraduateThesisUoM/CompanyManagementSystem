@@ -54,17 +54,37 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         obj = await Document.findOne({_id : id});
                         var series = await Series.findOne({_id : obj.series});
                         var person = await Person.findOne({_id : obj.receiver});
-        
-                        data.data = {
-                            doc : series.acronym + "-" + obj.doc_num,
-                            date : generalFunctions.formatDate(obj.registrationDate),
-                            data : obj.invoiceData,
-                            receiver : person.firstName + " " + person.lastName
-                        };
-                        data.titles = ["Doc", "Reg Date","Data"];
-                        data.type = [1,1,1];
-                        //1=normal-text,0=text-readonly
 
+                        var person_type = "Customer";
+                        if(person.type == 1){
+                            person_type = "Supplier";
+                        }
+                        console.log("****************************");
+                        var items_id_list = [];
+                        for(let i=0;i<Object.keys(obj.invoiceData).length;i++){
+                            items_id_list.push(obj.invoiceData[i].lineItem); // Add the lineItem ID to the list
+                        }
+                        var items = await Item.find({companyID : company,_id: { $in: items_id_list }});
+
+                        console.log("****************************");
+        
+                        data.data = [
+                            series.acronym + "-" + obj.doc_num,
+                            generalFunctions.formatDate(obj.registrationDate),
+                            person.firstName + " " + person.lastName,
+                            obj.status,
+                            obj.invoiceData,
+                        ];
+                        data.titles = ["Doc", "Reg Date",person_type,"Status","Data"];
+                        var editable = 2;
+                        if(obj.sealed == 1){
+                            editable = 4
+                        }
+                        data.type = [0,0,0,3,editable];//1=normal-text,0=text-readonly,2=table-editable,3=display:none,4=table-non-editable
+                        data.item_titles = []
+                        for (const item of items) {
+                            data.item_titles.push(item.title)
+                        }
                     }
                     else if (type == 'Warehouse'){
                         obj = await Warehouse.findOne({_id : id});
@@ -76,13 +96,13 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                     }
                     else if (type == 'series'){
                         obj = await Series.findOne({_id : id});
-                        data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed, generalFunctions.formatDate(obj.registrationDate), obj.active]
+                        data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed, generalFunctions.formatDate(obj.registrationDate), obj.status]
                         data.titles = ["Title","Acronym","Type","Count","Sealed", "Reg Date","Status"];
                         data.type = [1,1,1,1,1,0,0];
                         //1=normal-text,0=text-readonly
 
                     }
-                    else if (type == 'persons'){
+                    else if (type == 'person'){
                         obj = await Person.findOne({_id : id});
                         data.data = [
                             obj.type,

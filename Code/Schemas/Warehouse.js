@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Define the transaction schema
 const WarehouseSchema = new mongoose.Schema({
     registrationDate: { type: Date, default: Date.now , required: true},
-    companyID: { type: String, required: true },
+    companyid: { type: String, required: true },
     title: { type: String, required: true },
     location: { type: String, required: true },
     status: {
@@ -24,4 +24,4 @@ const WarehouseSchema = new mongoose.Schema({
 
 
 // Export the transaction schema
-module.exports = mongoose.model("warehouses", WarehouseSchema)
+module.exports = mongoose.model("Warehouse", WarehouseSchema)

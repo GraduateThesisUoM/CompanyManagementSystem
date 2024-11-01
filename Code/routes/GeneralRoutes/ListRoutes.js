@@ -63,9 +63,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           companyID: company,
           type: req.query.type,
         });
-        var person_type = "supplier";
-        if (req.query.type == "sale") {
-          person_type = "customer";
+        var person_type = "Supplier";
+        if (req.query.type == 1) {//sale
+          person_type = "Customer";
         }
         var list_persons = await Person.find({
           company: company,
@@ -108,7 +108,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           };
         }
       } else if (req.query.searchfor == "Warehouse") {
-        list_items = await Warehouse.find({ companyID: company });
+        list_items = await Warehouse.find({ companyid: company });
+        console.log(list_items)
         list_items = list_items.map((item) => ({
           data: [
             item._id,
@@ -133,7 +134,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             item.count,
             item.sealed,
             formatDate(item.registrationDate),
-            item.active,
+            item.status,
           ],
         }));
         column_titles = [
@@ -146,7 +147,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Reg Date",
           "Status",
         ];
-      } else if (req.query.searchfor == "persons") {
+      } else if (req.query.searchfor == "person") {
         list_items = await Person.find({
           company: company,
           type: req.query.type,
@@ -176,7 +177,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Reg Date",
         ];
       } else if (req.query.searchfor == "items") {
-        console.log("++++++++++++++++"+req.query.type)
         list_items = await Item.find({ companyID: company
           ,type: req.query.type
          });
@@ -228,10 +228,14 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     console.log(req.body.list_action);
 
     if(req.body.list_action == 2 || req.body.list_action == 0){
-      await generalFunctions.delete_deactivate({ _id: req.body.list_id }, 'Warehouse', req.body.list_action);
+      await generalFunctions.delete_deactivate({ _id: req.body.list_id }, req.query.searchfor, req.body.list_action);
+    }
+    var has_type = ``;
+    if(req.query.type){
+      has_type = `&type=${req.query.type}`;
     }
 
-    return res.redirect(`/list?searchfor=${req.query.searchfor}`);
+    return res.redirect(`/list?searchfor=${req.query.searchfor}`+has_type);
 
   } catch (e) {
     console.error(e);

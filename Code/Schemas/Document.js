@@ -28,4 +28,4 @@ const DocumentSchema = new mongoose.Schema({
 });
 
 // Export the invoice schema
-module.exports = mongoose.model("document", DocumentSchema)
+module.exports = mongoose.model("Document", DocumentSchema)

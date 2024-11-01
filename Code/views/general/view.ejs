@@ -23,10 +23,60 @@
             <% } else { %>
                 
                 <% titles.forEach(function(title, index) { %>
-                    <div><%= title %>
+                    <div>
                     <%if(type[index] == 0){%>
-                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" readonly>
+                        <%= title %>
+                        <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" readonly>
+                   <% }else if(type[index] == 2 || type[index] == 4){ %>
+                         <table id="doc_table">
+                            <thead>
+                                <tr>
+                                    <th>A/A</th>
+                                    <th>Title</th>
+                                    <th>Qty</th>
+                                    <th>Tax</th>
+                                    <th>Discount</th>
+                                    <th>Discount %</th>
+                                    <th>U/P</th>
+                                    <th>Value</th>
+                                    <th>Price After Discount</th>
+                                    <th>Final Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(let i=0; i< Object.keys(data[index]).length ; i++){%>
+                                    <tr id='<%=i%>'>
+                                        <td id='<%=i%>0'><%=i%></td>
+                                        <% if(type[index] == 4){ %>
+                                            <td></td><%= item_titles[i] %></td>
+                                            <td><%= data[index][i].quontity%></td>
+                                            <td><%= data[index][i].tax%></td>
+                                            <td><%= data[index][i].discount%></td>
+                                            <td><%= (100*data[index][i].discount)/data[index][i].price_of_unit%></td>
+                                            <td><%= data[index][i].price_of_unit%></td>
+                                            <td><%= data[index][i].quontity * data[index][i].price_of_unit%></td>
+                                            <td><%=data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount)%></td>
+                                            <td><%=(data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount))+((data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount))*(data[index][i].tax/100))%></td>
+                                        <% }else if(type[index] == 2){ %>
+                                            <td><input id='<%=i%>1' value="<%= item_titles[i] %>"></td>
+                                            <td><input id='<%=i%>2' value="<%= data[index][i].quontity %>"></td>
+                                            <td><input id='<%=i%>3' value="<%= data[index][i].tax %>"></td>
+                                            <td><input id='<%=i%>4' value="<%= data[index][i].discount %>"></td>
+                                            <td><input id='<%=i%>5' value="<%= (100*data[index][i].discount)/data[index][i].price_of_unit %>"></td>
+
+                                            <td id='<%=i%>6'><%= data[index][i].price_of_unit%></td>
+                                            <td id='<%=i%>7'><%= data[index][i].quontity * data[index][i].price_of_unit%></td>
+                                            <td id='<%=i%>8'><%=data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount)%></td>
+                                            <td id='<%=i%>9'><%=(data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount))+((data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount))*(data[index][i].tax/100))%></td>
+                                        <% } %>
+                                    </tr>
+                                <%}%>
+                            </tbody>
+                         </table>
+                    <% }else if(type[index] == 3){ %>
+                        <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none;">
                     <% }else{ %>
+                        <%= title %>
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>">
                     <% }%>
                     </div>
@@ -78,6 +128,11 @@
                 $("#btn3").hide();
                 $("#message_div").show();
                 $("#message_span").text(queryParams.type);
+            }
+
+            if(queryParams.type == 'docs'){
+                $("#btn2").hide();
+                $("#btn3").hide();
             }
 
 

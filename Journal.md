@@ -9,8 +9,8 @@
 - [x] restart db add items and inventroy (Nektarios)
 - [] view in werehose inventory (Nektarios)
 - [x] Match Person and transaction ,and delete transaction shema (Nektarios)
-- [] check edit fiels on view (Nektarios) 
-- [] edit in all obj (Nektarios)
+- [x] check edit fiels on view (Nektarios) 
+- [x] edit in all obj (Nektarios)
 
 
 - [] Make sure notifications work on relationships (Nikos)

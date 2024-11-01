@@ -23,13 +23,14 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
-      let person = req.query.type === "buy" ? "supplier" : "customer";
+      // for delete let person = req.query.type === "buy" ? "supplier" : "customer";
 
       var list_persons = await Person.find({
         company: req.user.company,
-        type: person,
-        account_status: "active",
+        type: req.query.type,
+        status: 1,
       });
+      console.log(list_persons)
       list_persons = list_persons.map((item) => ({
         id: item._id,
         firstName: item.firstName,
@@ -38,12 +39,12 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
       var list_items = await Item.find({
         companyID: req.user.company,
-        active: 1,
+        status: 1,
       });
 
       var list_series = await Series.find({
         companyID: req.user.company,
-        active: 1,
+        status: 1,
         type: req.query.type,
       });
 

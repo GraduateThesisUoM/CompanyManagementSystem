@@ -6,21 +6,22 @@ const SeriesSchema = new mongoose.Schema({
     companyID: { type: String, required: true },
     title: { type: String, required: true },
     acronym: { type: String, required: true },
-    type : { type: String, required: true },
     count: { type: Number, required: true ,default:0},
     sealed : {
       type: Number,
       enum: [0, 1],
       default: 0},
-    active: {
+    type : { type: Number, required: true },
+    //buy = 1,sale=2
+    status: {
       type: Number,
       enum: [0, 1, 2],
       //1 active
       //0 disabled
-      //2 delete
+      //2 deleted
       default: 1
     }
 });
 
 // Export the transaction schema
-module.exports = mongoose.model("series", SeriesSchema)
+module.exports = mongoose.model("Series", SeriesSchema)

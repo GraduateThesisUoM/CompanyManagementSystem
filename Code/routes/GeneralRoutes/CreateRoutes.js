@@ -88,13 +88,13 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         companyID: company._id,
         title: req.body.series_title,
         acronym: req.body.series_acronym,
-        type: req.body.series_type,
+        type: req.body.obj_type,
         sealed: isSealed,
       };
       created_obj = await generalFunctions.createSeries(data);
     } else if (req.body.create_type == "person") {
       data = {
-        type: req.query.type,
+        type: req.body.obj_type,
         firstName: req.body.person_firstName,
         lastName: req.body.person_lastName,
         email: req.body.person_email,

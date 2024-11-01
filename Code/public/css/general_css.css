@@ -156,3 +156,17 @@ body{
     z-index: 2;
 }
 
+table {
+    border-collapse: collapse;
+    border: 2px solid rgb(140, 140, 140);
+    width: 99%;
+}
+th, td {
+    border-collapse: collapse;
+    border: 2px solid rgb(140, 140, 140);
+    text-align: center;
+}
+table > tbody > tr > td> div{
+    display: grid;
+    grid-template-columns: 70% 30%;
+}
