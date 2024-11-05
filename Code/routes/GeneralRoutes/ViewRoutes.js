@@ -59,32 +59,27 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         if(person.type == 1){
                             person_type = "Supplier";
                         }
-                        console.log("****************************");
                         var items_id_list = [];
                         for(let i=0;i<Object.keys(obj.invoiceData).length;i++){
                             items_id_list.push(obj.invoiceData[i].lineItem); // Add the lineItem ID to the list
                         }
-                        var items = await Item.find({companyID : company,_id: { $in: items_id_list }});
-
-                        console.log("****************************");
         
                         data.data = [
                             series.acronym + "-" + obj.doc_num,
                             generalFunctions.formatDate(obj.registrationDate),
                             person.firstName + " " + person.lastName,
+                            obj.generalDiscount,
                             obj.status,
                             obj.invoiceData,
                         ];
-                        data.titles = ["Doc", "Reg Date",person_type,"Status","Data"];
+                        data.titles = ["Doc", "Reg Date",person_type,"General Discount %","Status","Data"];
                         var editable = 2;
                         if(obj.sealed == 1){
                             editable = 4
                         }
-                        data.type = [0,0,0,3,editable];//1=normal-text,0=text-readonly,2=table-editable,3=display:none,4=table-non-editable
-                        data.item_titles = []
-                        for (const item of items) {
-                            data.item_titles.push(item.title)
-                        }
+                        data.type = [0,0,0,0,3,editable];//1=normal-text,0=text-readonly,2=table-editable,3=display:none,4=table-non-editable,5 checkbox
+                        //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
+                        data.items_all = await Item.find({companyID : company, status:1,type:obj.type});
                     }
                     else if (type == 'Warehouse'){
                         obj = await Warehouse.findOne({_id : id});
@@ -98,8 +93,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         obj = await Series.findOne({_id : id});
                         data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed, generalFunctions.formatDate(obj.registrationDate), obj.status]
                         data.titles = ["Title","Acronym","Type","Count","Sealed", "Reg Date","Status"];
-                        data.type = [1,1,1,1,1,0,0];
-                        //1=normal-text,0=text-readonly
+                        data.type = [1,1,1,1,5,0,0];
+                        //1=normal-text,0=text-readonly 5 checkbox
 
                     }
                     else if (type == 'person'){
@@ -176,7 +171,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         }
         if (req.query.type && req.query.id) {
             if(req.body.action == 'save'){
-                console.log('1');
+                console.log('1++++');
                 await generalFunctions.update({ _id: req.query.id } , req.query.type, req.body);
             }
             else{

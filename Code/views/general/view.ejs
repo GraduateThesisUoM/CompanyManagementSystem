@@ -48,33 +48,54 @@
                                     <tr id='<%=i%>'>
                                         <td id='<%=i%>0'><%=i%></td>
                                         <% if(type[index] == 4){ %>
-                                            <td></td><%= item_titles[i] %></td>
-                                            <td><%= data[index][i].quontity%></td>
+                                            <td>title</td>
+                                            <td><%= data[index][i].quantity%></td>
                                             <td><%= data[index][i].tax%></td>
-                                            <td><%= data[index][i].discount%></td>
+                                            <td class="doc_line_d"></td>><%= data[index][i].discount%></td>
                                             <td><%= (100*data[index][i].discount)/data[index][i].price_of_unit%></td>
-                                            <td><%= data[index][i].price_of_unit%></td>
-                                            <td><%= data[index][i].quontity * data[index][i].price_of_unit%></td>
-                                            <td><%=data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount)%></td>
-                                            <td><%=(data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount))+((data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount))*(data[index][i].tax/100))%></td>
                                         <% }else if(type[index] == 2){ %>
-                                            <td><input id='<%=i%>1' value="<%= item_titles[i] %>"></td>
-                                            <td><input id='<%=i%>2' value="<%= data[index][i].quontity %>"></td>
+                                            <td>
+                                                <select>
+                                                    <% items_all.forEach(function(item) { %>
+                                                        <option value="<%= item._id %>"
+                                                        <% if(item._id == data[index][i].lineItem) {%>
+                                                            selected
+                                                        <% }%>
+                                                        ><%= item.title %></option>
+                                                    <% }) %>
+                                                </select>
+                                            </td>
+                                            <td><input id='<%=i%>2' value="<%= data[index][i].quantity %>"></td>
                                             <td><input id='<%=i%>3' value="<%= data[index][i].tax %>"></td>
-                                            <td><input id='<%=i%>4' value="<%= data[index][i].discount %>"></td>
+                                            <td><input id='<%=i%>4' class="doc_line_d" value="<%= data[index][i].discount %>"></td>
                                             <td><input id='<%=i%>5' value="<%= (100*data[index][i].discount)/data[index][i].price_of_unit %>"></td>
-
-                                            <td id='<%=i%>6'><%= data[index][i].price_of_unit%></td>
-                                            <td id='<%=i%>7'><%= data[index][i].quontity * data[index][i].price_of_unit%></td>
-                                            <td id='<%=i%>8'><%=data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount)%></td>
-                                            <td id='<%=i%>9'><%=(data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount))+((data[index][i].quontity * (data[index][i].price_of_unit - data[index][i].discount))*(data[index][i].tax/100))%></td>
                                         <% } %>
+                                        <td><%= data[index][i].price_of_unit%></td>
+                                        <td class="doc_line_tottal_value"><%= data[index][i].quantity * data[index][i].price_of_unit%></td>
+                                        <td class="doc_line_p_after_d"><%=data[index][i].quantity * (data[index][i].price_of_unit - data[index][i].discount)%></td>
+                                        <td class="doc_line_p_after_t"><%=(data[index][i].quantity * (data[index][i].price_of_unit - data[index][i].discount))+((data[index][i].quantity * (data[index][i].price_of_unit - data[index][i].discount))*(data[index][i].tax/100))%></td>
                                     </tr>
                                 <%}%>
                             </tbody>
                          </table>
+                         <div>
+                            <div>Total Value: € <span id="doc_tottal_value"></span></div>
+                            <div>Total Price after Discounts: € <span id="doc_tottal_p_after_d"></span></div>
+                            <div>Total Price after Tax: € <span id="doc_tottal_p_after_t"></span></div>
+                            <div>Discount Amount ON TOP:  €</div>
+                            <div>Total Discounts: € <span id="doc_tottal_d_amount"></span></div>
+                            <div >Total Cost: ${total_cost.toFixed(2)} €</div>
+                         </div>
                     <% }else if(type[index] == 3){ %>
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none;">
+                    <% }else if(type[index] == 5){ %>
+                        <%= title %>
+                        <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none;">
+                        <input type="checkbox" id="checkbox_<%= index %>" 
+                        <% if (data[index] == 1) { %>
+                            checked 
+                        <% } %>
+                        onclick="document.getElementById('<%= title %>').value = this.checked ? '1' : '0';">
                     <% }else{ %>
                         <%= title %>
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>">
@@ -133,9 +154,12 @@
             if(queryParams.type == 'docs'){
                 $("#btn2").hide();
                 $("#btn3").hide();
+
+                calculate_total('doc_line_tottal_value', 'doc_tottal_value');
+                calculate_total('doc_line_p_after_d', 'doc_tottal_p_after_d');
+                calculate_total('doc_line_p_after_t', 'doc_tottal_p_after_t');
+                calculate_total('doc_line_d', 'doc_tottal_d_amount');
             }
-
-
 
             $("#btn1").click(function () {
                 if(confirm("Are you soure ?")){
@@ -152,6 +176,16 @@
                 $("#view_form").submit();
             });
 
+            function calculate_total(class_id, target_id){
+                var tottal = 0;
+                var lines_tottal = $('.'+class_id);
+
+                lines_tottal.each(function() {
+                    var value = parseFloat($(this).text()) || parseFloat($(this).val()) || 0; 
+                    tottal += value; 
+                });
+                $('#'+target_id).text(tottal.toFixed(2)); // Optionally format to 2 decimal places
+            }
 
         });
 

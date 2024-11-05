@@ -132,8 +132,11 @@ function create_form_body(data) {
     let rows_written = 0;
     var create_doc_table_var;
 
-    while (rows_written < data.total_doc_rows) {
-        create_doc_table_var = create_doc_table(data.doc,rows_written);
+
+
+
+    while (rows_written < data.doc_lines.length) {
+        create_doc_table_var = create_doc_table(data.doc_lines,rows_written);
         body += create_header(data) + `
         <div class="main_body">
             <div>${data.date}</div>
@@ -148,6 +151,9 @@ function create_form_body(data) {
         </div>`;
 
         rows_written = create_doc_table_var.rows_written;
+
+        //************** */
+        //rows_written = data.total_doc_rows;
     }
     return body;
 }
@@ -182,29 +188,35 @@ function create_doc_table(data,rows_written) {
                 </tr>
             </thead>
             <tbody>`;
-        for (let i = rows_written; i < data.invoiceData.length; i++) {
-            let value = data.invoiceData[i].quantity * data.invoiceData[i].price_of_unit;
-            let disc_p = (data.invoiceData[i].discount * 100) / value;
-            let p_after_d = value - data.invoiceData[i].discount;
-            let final_p = p_after_d + (p_after_d * (data.invoiceData[i].tax / 100));
-            table = table + `
-                <tr>
-                    <td>${i + 1}</td>
-                    <td>Title</td>
-                    <td>${data.invoiceData[i].quantity}</td>
-                    <td>${data.invoiceData[i].tax}&nbsp;%</td>
-                    <td>${data.invoiceData[i].discount.toFixed(2)}&nbsp;€</td>
-                    <td>${disc_p}&nbsp;%</td>
-                    <td>${data.invoiceData[i].price_of_unit.toFixed(2)}&nbsp;€</td>
-                    <td>${value.toFixed(2)}&nbsp;€</td>
-                    <td>${p_after_d.toFixed(2)}&nbsp;€</td>
-                    <td>${final_p.toFixed(2)}&nbsp;€</td>
-                </tr>`;
-            rows_written = rows_written + 1;
-            if (i == brake_page) {
-                break;
+            
+            for (let i = rows_written; i < data.length; i++) {
+                let line = data[i];
+                
+                let value = line.quantity * line.price_of_unit;
+                let disc_p = ((line.discount * 100) / value).toFixed(2); // Discount percentage rounded to 2 decimals
+                let p_after_d = value - line.discount;
+                let final_p = p_after_d + (p_after_d * (line.tax / 100));
+            
+                table += `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>Title</td>
+                        <td>${line.quantity}</td>
+                        <td>${line.tax}&nbsp;%</td>
+                        <td>${line.discount.toFixed(2)}&nbsp;€</td>
+                        <td>${disc_p}&nbsp;%</td>
+                        <td>${line.price_of_unit.toFixed(2)}&nbsp;€</td>
+                        <td>${value.toFixed(2)}&nbsp;€</td>
+                        <td>${p_after_d.toFixed(2)}&nbsp;€</td>
+                        <td>${final_p.toFixed(2)}&nbsp;€</td>
+                    </tr>`;
+            
+                rows_written += 1;
+            
+                if (i === brake_page) {
+                    break;
+                }
             }
-        }
 
         table = table + `</tbody></table>`;
     return {table : table,rows_written : rows_written};
@@ -216,7 +228,7 @@ function create_doc_footer(doc) {
     let total_d = 0;
     let total_price_after_t = 0;
 
-    doc.invoiceData.forEach(item => {
+    /*doc.invoiceData.forEach(item => {
         const value = item.quantity * item.price_of_unit;
         const p_after_d = value - item.discount;
         const final_p = p_after_d + (p_after_d * (item.tax / 100));
@@ -224,7 +236,17 @@ function create_doc_footer(doc) {
         total_value += value;
         total_d += item.discount;
         total_price_after_t += final_p;
-    });
+    });*/
+
+    for (let i = 0; i < Object.keys(doc.invoiceData).length; i++) {
+        const value = doc.invoiceData[i].quantity * doc.invoiceData[i].price_of_unit;
+        const p_after_d = value - doc.invoiceData[i].discount;
+        const final_p = p_after_d + (p_after_d * (doc.invoiceData[i].tax / 100));
+
+        total_value += value;
+        total_d += doc.invoiceData[i].discount;
+        total_price_after_t += final_p;
+    };
 
     const total_price_after_d = total_value - total_d;
     const total_d_p = (doc.generalDiscount * 100) / total_price_after_t;
@@ -235,11 +257,15 @@ function create_doc_footer(doc) {
     <hr>
     <div class='from_footer'>
         <div>Total Value: ${total_value.toFixed(2)} €</div>
-        <div>Total Discounts: ${total_d.toFixed(2)} €</div>
+        
         <div>Total Price after Discounts: ${total_price_after_d.toFixed(2)} €</div>
+
         <div>Total Price after Tax: ${total_price_after_t.toFixed(2)} €</div>
-        <div>Discount: ${total_d_p.toFixed(1)} %</div>
-        <div>Discount Amount: ${doc.generalDiscount.toFixed(2)} €</div>
+        <div>Discount ON TOP: ${total_d_p.toFixed(1)} %</div>
+        <div>Discount Amount ON TOP: ${doc.generalDiscount.toFixed(2)} €</div>
+
+        <div>Total Discounts: ${total_d.toFixed(2)} €</div>
+
         <div style='font-weight:bold'>Total Cost: ${total_cost.toFixed(2)} €</div>
     </div>`;
 }

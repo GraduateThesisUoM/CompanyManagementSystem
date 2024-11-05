@@ -372,7 +372,7 @@ async function create_users() {
   data = {
     company: company2._id,
     sender: user2._id,
-    receiver: person1._id,
+    receiver: person2._id,
     type: 2,
     series: s2._id,
     generalDiscount: 10,
@@ -387,7 +387,7 @@ async function create_users() {
   data = {
     company: company2._id,
     sender: user2._id,
-    receiver: person1._id,
+    receiver: person2._id,
     type: 2,
     series: s2._id,
     generalDiscount: 10,
@@ -402,8 +402,8 @@ async function create_users() {
   data = {
     company: company2._id,
     sender: user2._id,
-    receiver: person2._id,
-    type: "buy",
+    receiver: person1._id,
+    type: 1,
     series: s1._id,
     generalDiscount: 10,
     invoiceData: [

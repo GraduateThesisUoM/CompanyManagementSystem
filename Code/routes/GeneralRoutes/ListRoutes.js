@@ -93,6 +93,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         column_titles = ["ID", "Doc", "Reg Date", person_type];
         if (req.query.printdoc) {
           var document = await Document.findOne({ _id: req.query.printdoc });
+
           var series = await Series.findOne({ _id: document.series });
           if (series.sealed == 1) {
             document.sealed = 1;
@@ -104,7 +105,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             doc: document,
             series: series.acronym,
             person1: await Person.findOne({ _id: document.receiver }),
-            doc_line_num: document.invoiceData.length,
+            doc_lines: Object.values(document.invoiceData)
           };
         }
       } else if (req.query.searchfor == "Warehouse") {

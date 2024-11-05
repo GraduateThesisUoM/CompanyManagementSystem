@@ -201,10 +201,10 @@
                 }
                 else if (searchfor == 'docs') {
                     $('.btn3').text('Print')
-                    $('.btn3').click(print_doc);
                     type = new URLSearchParams(window.location.search).get('type');
                     $("#type").val(type);
                     if (params.has('printdoc')) {
+                       
                         var data = {
                             company_name: '<%=doc_data.company.name%>',
                             date: formatDate(new Date('<%=doc_data.doc.registrationDate%>')),
@@ -212,7 +212,8 @@
                             series: '<%=doc_data.series%>',
                             person1: JSON.parse(`<%- JSON.stringify(doc_data.person1) %>`),
                             company: JSON.parse(`<%- JSON.stringify(doc_data.company) %>`),
-                            total_doc_rows: total_doc_rows
+                            total_doc_rows: total_doc_rows,
+                            doc_lines:JSON.parse(`<%- JSON.stringify(doc_data.doc_lines) %>`),
                         }
 
                         print_form(data);
@@ -227,28 +228,39 @@
                     button_action($(this),2);
                 })
                 $('.btn3').click(function () {
-                    button_action($(this),0);
+                    var btn_act = 0;
+                    if (searchfor == 'docs') {
+                        var btn_act = 3;
+                    }
+                    button_action($(this),btn_act);
                 })
             }
 
-            function print_doc() {
-                var doc_id = $(".btn1").eq($(this).data('id')).data('id')
+            /*function print_doc() {
+                var doc_id = $(this).data('id')
                 if(confirm('After this point editing will not be possible, you want to continue')){
                     window.location = "/list?searchfor=" + searchfor + "&type=" + type + "&printdoc=" + doc_id;
                 }
-            }
+            }*/
 
             function button_action(element, action){
                 var message = "this will block this obj"
                 if(action == 2){
                     message = "this will delete the obj"
                 }
-                if(confirm(message)){
-                    $('#list_id').val(element.data('id'));
-                    $('#list_action').val(action);
-                    $("#list_form").submit();
+                if(action == 3){
+                    var doc_id =element.data('id');
+                    if(confirm('After this point editing will not be possible, you want to continue')){
+                        window.location = "/list?searchfor=" + searchfor + "&type=" + type + "&printdoc=" + doc_id;
+                    }
                 }
-
+                else{
+                    if(confirm(message)){
+                        $('#list_id').val(element.data('id'));
+                        $('#list_action').val(action);
+                        $("#list_form").submit();
+                    }
+                }
             }
 
             function print_form(data) {

@@ -412,7 +412,7 @@ async function update(id, schema , data){
     var obj = await get_obj_by_id(id, schema);
     if (schema == 'series') {
       console.log("****************************************")
-      const fieldsToUpdate = ['title', 'acronym', 'type', 'sealed', 'active'];
+      const fieldsToUpdate = ['title', 'acronym', 'type','count', 'sealed', 'active'];
       fieldsToUpdate.forEach((field, index) => {
             obj[field] = data["input"+index];  // Using index for data
     });

@@ -40,6 +40,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       var list_items = await Item.find({
         companyID: req.user.company,
         status: 1,
+        type: req.query.type
       });
 
       var list_series = await Series.find({
@@ -71,12 +72,12 @@ router.post("/", async (req, res) => {
   try {
     const lines_of_doc = {};
     for (let i = 0; i < req.body.num_of_rows; i++) {
-      const quontity = req.body[`quontity_${i}`];
-      const tax = req.body[`tax_${i}`];
-      const lineItem = req.body[`doc_line_item_${i}`];
-      const discount = req.body[`discount_${i}`];
-      const price_of_unit = req.body[`price_of_unit_${i}`];
-      lines_of_doc[i] = { quontity, tax, lineItem, discount, price_of_unit };
+      const quantity = parseInt(req.body[`quantity_${i}`], 10);
+      const tax = parseInt(req.body[`tax_${i}`], 10);
+      const lineItem = req.body[`doc_line_item_${i}`]; // Assuming lineItem should remain a string or ID
+      const discount = parseInt(req.body[`discount_${i}`], 10);
+      const price_of_unit = parseInt(req.body[`price_of_unit_${i}`], 10);
+      lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
     }
     const data = {
       company: req.user.company,
@@ -88,9 +89,9 @@ router.post("/", async (req, res) => {
       invoiceData: lines_of_doc,
     };
 
-    var doc = generalFunctions.create_doc(data);
+    var doc = await generalFunctions.create_doc(data);
 
-    res.redirect("/create-doc?type=" + req.body.doc_type);
+    res.redirect("/view?type=docs&id="+doc._id);
   } catch (e) {
     console.error(e);
     res.redirect(

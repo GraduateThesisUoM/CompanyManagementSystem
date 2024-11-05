@@ -164,7 +164,7 @@
                                 </td>
                                 <td class = 'column'>
                                     <div>
-                                        <input id='quontity_${index}' name='quontity_${index}' class='input' type='number' value=1 min="1" max="100" required><span id='qty_${index}'></span></div></td>
+                                        <input id='quantity_${index}' name='quantity_${index}' class='input' type='number' value=1 min="1" max="100" required><span id='qty_${index}'></span></div></td>
                                 <td class = 'column'>
                                     <div><input id='tax_${index}' name='tax_${index}' type='number' class='input' min="0" max="100" required><span>&nbsp%</span></div></td>
                                 <td class = 'column'>
@@ -197,7 +197,7 @@
                             </tr>`;
             $('#doc_table tbody').append(newRow);
             populateSelect($(`#doc_table tbody tr:last .doc_line_select`));
-            $('#quontity_'+index).css('visibility', 'hidden');
+            $('#quantity_'+index).css('visibility', 'hidden');
             $('#tax_'+index).css('visibility', 'hidden');
             $('#discount_'+index).css('visibility', 'hidden');
             $('#discount_p_'+index).css('visibility', 'hidden');
@@ -212,7 +212,7 @@
 
                 $('.remove_row').eq(index).prop('disabled', false);
 
-                $('#quontity_'+index).css('visibility', 'visible');
+                $('#quantity_'+index).css('visibility', 'visible');
                 $('#tax_'+index).css('visibility', 'visible');
                 $('#discount_'+index).css('visibility', 'visible');
                 $('#discount_p_'+index).css('visibility', 'visible');
@@ -244,17 +244,17 @@
 
         $(document).on('input', '.input', function(){
             var index = $(this).closest('tr').index();
-            var quontity = $('#quontity_'+index).val();
+            var quantity = $('#quantity_'+index).val();
             var price_of_unit = $('#price_of_unit_'+index).val();
             
             if($(this).attr('id') == 'discount_'+index){
                 $('#discount_p_'+index).val(
-                        (100*($('#discount_'+index).val()))/(quontity*price_of_unit)
+                        (100*($('#discount_'+index).val()))/(quantity*price_of_unit)
                 );
             }
             else{
                 $('#discount_'+index).val(
-                    (quontity*price_of_unit)*($('#discount_p_'+index).val()/100)
+                    (quantity*price_of_unit)*($('#discount_p_'+index).val()/100)
                 );
             }
             calculate_row_prices(index);
@@ -326,12 +326,12 @@
         }
 
         function calculate_row_prices(index){
-            var quontity = $('#quontity_'+index).val();
+            var quantity = $('#quantity_'+index).val();
             var price_of_unit = $('#price_of_unit_'+index).val()
             var tax = $('#tax_'+index).val()
             var discount = $('#discount_'+index).val()
 
-            var total = quontity*price_of_unit;
+            var total = quantity*price_of_unit;
             $('#total_price_of_line_'+index).html(total);
 
             var total = total - discount;
@@ -416,11 +416,11 @@
         }
 
         function put_data_on_row(index){
-            var quontity = $('#quontity_'+index).val();
+            var quantity = $('#quantity_'+index).val();
             var price_of_unit = get_price(get_item_index_from_id(index));
 
             var tax = get_tax(get_item_index_from_id(index));
-            var total = quontity*price_of_unit;
+            var total = quantity*price_of_unit;
             var discount = get_discount(get_item_index_from_id(index));
             var discount_p = (100*discount)/total;
 
