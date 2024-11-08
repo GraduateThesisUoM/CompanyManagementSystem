@@ -68,6 +68,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         data
       );
     } else if (req.body.create_type == "items") {
+      console.log("fffffffffffff")
       data = {
         companyID: company._id,
         title: req.body.items_title,

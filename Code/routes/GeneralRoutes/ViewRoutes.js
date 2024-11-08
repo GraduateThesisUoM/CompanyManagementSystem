@@ -71,6 +71,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                             obj.generalDiscount,
                             obj.status,
                             obj.invoiceData,
+                            data.items_all = await Item.find({companyID : company, status:1,type:obj.type})
                         ];
                         data.titles = ["Doc", "Reg Date",person_type,"General Discount %","Status","Data"];
                         var editable = 2;
@@ -79,7 +80,6 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         }
                         data.type = [0,0,0,0,3,editable];//1=normal-text,0=text-readonly,2=table-editable,3=display:none,4=table-non-editable,5 checkbox
                         //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
-                        data.items_all = await Item.find({companyID : company, status:1,type:obj.type});
                     }
                     else if (type == 'Warehouse'){
                         obj = await Warehouse.findOne({_id : id});

@@ -28,6 +28,8 @@
                         <%= title %>
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" readonly>
                    <% }else if(type[index] == 2 || type[index] == 4){ %>
+                        <input id="num_of_rows" name="num_of_rows" style="display: none;">
+
                          <table id="doc_table">
                             <thead>
                                 <tr>
@@ -44,47 +46,16 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% for(let i=0; i< Object.keys(data[index]).length ; i++){%>
-                                    <tr id='<%=i%>'>
-                                        <td id='<%=i%>0'><%=i%></td>
-                                        <% if(type[index] == 4){ %>
-                                            <td>title</td>
-                                            <td><%= data[index][i].quantity%></td>
-                                            <td><%= data[index][i].tax%></td>
-                                            <td class="doc_line_d"></td>><%= data[index][i].discount%></td>
-                                            <td><%= (100*data[index][i].discount)/data[index][i].price_of_unit%></td>
-                                        <% }else if(type[index] == 2){ %>
-                                            <td>
-                                                <select>
-                                                    <% items_all.forEach(function(item) { %>
-                                                        <option value="<%= item._id %>"
-                                                        <% if(item._id == data[index][i].lineItem) {%>
-                                                            selected
-                                                        <% }%>
-                                                        ><%= item.title %></option>
-                                                    <% }) %>
-                                                </select>
-                                            </td>
-                                            <td><input id='<%=i%>2' value="<%= data[index][i].quantity %>"></td>
-                                            <td><input id='<%=i%>3' value="<%= data[index][i].tax %>"></td>
-                                            <td><input id='<%=i%>4' class="doc_line_d" value="<%= data[index][i].discount %>"></td>
-                                            <td><input id='<%=i%>5' value="<%= (100*data[index][i].discount)/data[index][i].price_of_unit %>"></td>
-                                        <% } %>
-                                        <td><%= data[index][i].price_of_unit%></td>
-                                        <td class="doc_line_tottal_value"><%= data[index][i].quantity * data[index][i].price_of_unit%></td>
-                                        <td class="doc_line_p_after_d"><%=data[index][i].quantity * (data[index][i].price_of_unit - data[index][i].discount)%></td>
-                                        <td class="doc_line_p_after_t"><%=(data[index][i].quantity * (data[index][i].price_of_unit - data[index][i].discount))+((data[index][i].quantity * (data[index][i].price_of_unit - data[index][i].discount))*(data[index][i].tax/100))%></td>
-                                    </tr>
-                                <%}%>
+   
                             </tbody>
                          </table>
                          <div>
                             <div>Total Value: € <span id="doc_tottal_value"></span></div>
-                            <div>Total Price after Discounts: € <span id="doc_tottal_p_after_d"></span></div>
-                            <div>Total Price after Tax: € <span id="doc_tottal_p_after_t"></span></div>
+                            <div>Total Price after Discounts: <span id="doc_tottal_p_after_d"></span> €</div>
+                            <div>Total Price after Tax: <span id="doc_tottal_p_after_t"></span> €</div>
                             <div>Discount Amount ON TOP:  €</div>
-                            <div>Total Discounts: € <span id="doc_tottal_d_amount"></span></div>
-                            <div >Total Cost: ${total_cost.toFixed(2)} €</div>
+                            <div>Total Discounts: <span id="doc_tottal_d_amount"> €</span></div>
+                            <div >Total Cost: <span id="doc_tottal_d_amount"></span>€</div>
                          </div>
                     <% }else if(type[index] == 3){ %>
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none;">
@@ -114,6 +85,7 @@
     </div>
 </body>
 <%- include('../partials/footer'); %>
+    <script type = "text/javascript" src="JSDocumentFunctions.js"></script>
     <script>
         $(document).ready(function () {
             //$("#view_form").hide();
@@ -155,10 +127,91 @@
                 $("#btn2").hide();
                 $("#btn3").hide();
 
-                calculate_total('doc_line_tottal_value', 'doc_tottal_value');
+                /*calculate_total('doc_line_tottal_value', 'doc_tottal_value');
                 calculate_total('doc_line_p_after_d', 'doc_tottal_p_after_d');
                 calculate_total('doc_line_p_after_t', 'doc_tottal_p_after_t');
-                calculate_total('doc_line_d', 'doc_tottal_d_amount');
+                calculate_total('doc_line_d', 'doc_tottal_d_amount');*/
+                var items = JSON.parse(`<%- JSON.stringify(data) %>`)[6];
+                var selected_items = JSON.parse(`<%- JSON.stringify(data) %>`)[5];
+
+                addNewRow(0,items);
+                for( i in selected_items){
+                    console.log(selected_items[i])
+                    $('.doc_line_select:eq('+i+') option[value="'+selected_items[i].lineItem+'"]').prop('selected', true);
+                    $('#quantity_'+i).val(selected_items[i].quantity);
+                    $('#tax_'+i).val(selected_items[i].tax);
+                    $('#discount_'+i).val(selected_items[i].discount);
+                    $('#price_of_unit_'+i).val(selected_items[i].price_of_unit);
+
+
+
+
+                    $('.remove_row').eq(i).prop('disabled', false);
+
+                    $('#quantity_'+i).css('visibility', 'visible');
+                    $('#tax_'+i).css('visibility', 'visible');
+                    $('#discount_'+i).css('visibility', 'visible');
+                    $('#discount_p_'+i).css('visibility', 'visible');
+                    $('#price_of_unit_'+i).css('visibility', 'visible');
+
+                    addNewRow(parseInt(i)+1,items);
+                }
+
+                function  allow_submit(){}
+
+                function removeRow(index,submit){
+                    $('#row' + index).remove();
+
+                    // Update row indices
+                    $('#doc_table tbody tr').each(function(i) {
+                        $(this).attr('id', 'row' + i);
+                        $(this).find('td:first').text(i + 1);
+                        $(this).find('.remove_row').attr('onclick', 'removeRow(' + i + ')');
+                        $(this).find('#discount_' + i).attr('id', 'discount_' + i);
+                        $(this).find('#price_of_unit_' + i).attr('id', 'price_of_unit_' + i);
+                        $(this).find('#total_price_of_line_' + i).attr('id', 'total_price_of_line_' + i);
+                    });
+
+                    calculate_total_cost();
+                    if(!submit){
+                        $('#num_of_rows').val($('#num_of_rows').val()-1);
+                    }
+                    allow_submit();
+                }
+
+
+
+                function get_item_index_from_id(index){
+                    for(let i=0;i<items.length;i++){
+                        if(items[i]._id == $('.doc_line_select').eq(index).val()){
+                            return i;
+                        }
+                    };
+                }
+
+                $(document).on('change', '.doc_line_select', function(){
+                    var index = $(this).closest('tr').index();
+                    if($('.doc_line_select').eq(index).val() != "-"){
+
+                        $('.remove_row').eq(index).prop('disabled', false);
+
+                        $('#quantity_'+index).css('visibility', 'visible');
+                        $('#tax_'+index).css('visibility', 'visible');
+                        $('#discount_'+index).css('visibility', 'visible');
+                        $('#discount_p_'+index).css('visibility', 'visible');
+                        $('#price_of_unit_'+index).css('visibility', 'visible');
+
+                        put_data_on_row(index,items);
+                        
+                        if($(this).closest('tr').is(':last-child')){
+                            addNewRow(index+1);
+                        }
+                    }
+                    else{
+                        removeRow(index,false)
+                    }
+                });
+
             }
 
             $("#btn1").click(function () {

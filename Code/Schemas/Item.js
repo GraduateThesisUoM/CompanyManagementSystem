@@ -6,8 +6,12 @@ const ItemSchema = new mongoose.Schema({
     companyID: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    type : { type: Number, required: true },
-    //buy = 1,sale=2
+    type:{
+      type: Number,
+      enum: [1,2],
+      //1=sale,2=buy
+      required: true
+    },
     status: {
       type: Number,
       enum: [0, 1, 2],

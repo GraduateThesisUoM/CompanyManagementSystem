@@ -5,7 +5,12 @@ const DocumentSchema = new mongoose.Schema({
   company: { type: String, required: true },
   sender: { type: String, required: true },
   receiver: { type: String, required: true },
-  type: { type: String, required: true },
+  type:{
+    type: Number,
+    enum: [1,2],
+    //1=sale,2=buy
+    required: true
+  },
   generalDiscount: { type: Number, required: true },
   series: { type: String, required: true },
   doc_num:{ type: Number, required: true },

@@ -228,15 +228,6 @@ function create_doc_footer(doc) {
     let total_d = 0;
     let total_price_after_t = 0;
 
-    /*doc.invoiceData.forEach(item => {
-        const value = item.quantity * item.price_of_unit;
-        const p_after_d = value - item.discount;
-        const final_p = p_after_d + (p_after_d * (item.tax / 100));
-
-        total_value += value;
-        total_d += item.discount;
-        total_price_after_t += final_p;
-    });*/
 
     for (let i = 0; i < Object.keys(doc.invoiceData).length; i++) {
         const value = doc.invoiceData[i].quantity * doc.invoiceData[i].price_of_unit;
