@@ -29,7 +29,6 @@
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" readonly>
                    <% }else if(type[index] == 2 || type[index] == 4){ %>
                         <input id="num_of_rows" name="num_of_rows" style="display: none;">
-
                          <table id="doc_table">
                             <thead>
                                 <tr>
@@ -133,16 +132,34 @@
                 calculate_total('doc_line_d', 'doc_tottal_d_amount');*/
                 var items = JSON.parse(`<%- JSON.stringify(data) %>`)[6];
                 var selected_items = JSON.parse(`<%- JSON.stringify(data) %>`)[5];
+                var doc_sealed = JSON.parse(`<%- JSON.stringify(data) %>`)[7];
+
 
                 addNewRow(0,items);
                 for( i in selected_items){
-                    console.log(selected_items[i])
-                    $('.doc_line_select:eq('+i+') option[value="'+selected_items[i].lineItem+'"]').prop('selected', true);
-                    $('#quantity_'+i).val(selected_items[i].quantity);
-                    $('#tax_'+i).val(selected_items[i].tax);
-                    $('#discount_'+i).val(selected_items[i].discount);
-                    $('#price_of_unit_'+i).val(selected_items[i].price_of_unit);
+                    let quantity = selected_items[i].quantity;
+                    let price_of_unit = selected_items[i].price_of_unit;
+                    let total = quantity*price_of_unit
+                    let tax = selected_items[i].tax;
+                    let totalAfterTax = total + (total*(tax/100));
+                    let discount = selected_items[i].discount;
+                    let discount_p = ((discount / total) * 100).toFixed(2);
 
+                    $('.doc_line_select:eq('+i+') option[value="'+selected_items[i].lineItem+'"]').prop('selected', true);
+                    $('#quantity_'+i).val(quantity);
+                    $('#tax_'+i).val(selected_items[i].tax);
+                    $('#discount_'+i).val(discount);
+                    $('#discount_p_'+i).val(discount_p);
+                    $('#price_of_unit_'+i).val(price_of_unit);
+                    $('#total_price_of_line_'+i).text(total);
+                    $('#total_price_of_line_after_disc_'+i).text(total-discount);
+                    $('#final_price_of_line_'+i).text((total-discount) + ((total-discount)*(tax/100)));
+
+                    //$('.doc_line_select').val(quantity).prop('disabled', true);
+
+                    if(doc_sealed == 1){
+                        $('.input').val(quantity).prop('readonly', true);
+                    }
 
 
 
@@ -156,6 +173,26 @@
 
                     addNewRow(parseInt(i)+1,items);
                 }
+
+                $(document).on('input', '.general_discount', function() {
+                let totalAfterTax = parseFloat($('#total_after_Tax').html()) || 0;
+
+                if ($(this).attr('id') === 'general_discount_amount') {
+                    let discountAmount = parseFloat($(this).val()) || 0;
+                    let totalCost = totalAfterTax - discountAmount;
+                    $('#total_cost').html(totalCost.toFixed(2));
+
+                    let discountPercentage = (discountAmount / totalAfterTax) * 100;
+                    $('#general_discount').val(discountPercentage.toFixed(2));
+                } else {
+                    let discountPercentage = parseFloat($(this).val()) || 0;
+                    let discountAmount = totalAfterTax * (discountPercentage / 100);
+                    $('#general_discount_amount').val(discountAmount.toFixed(2));
+
+                    let totalCost = totalAfterTax - discountAmount;
+                    $('#total_cost').html(totalCost.toFixed(2));
+                }
+            });
 
                 function  allow_submit(){}
 
