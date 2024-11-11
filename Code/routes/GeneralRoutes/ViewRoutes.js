@@ -70,13 +70,14 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                             person.firstName + " " + person.lastName,
                             obj.generalDiscount,
                             obj.status,
+                            obj.sealed,
                             obj.invoiceData,
+                            //---
                             data.items_all = await Item.find({companyID : company, status:1,type:obj.type}),
-                            obj.sealed
                         ];
-                        data.titles = ["Doc", "Reg Date",person_type,"General Discount %","Status","Data"];
+                        data.titles = ["Doc", "Reg Date",person_type,"General Discount %","Status","Sealed","Data"];
                         
-                        data.type = [0,0,0,0,3,2];//1=normal-text,0=text-readonly,2=doc-table,3=display:none,5 checkbox
+                        data.type = [0,0,0,0,3,4,2];//1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox
                         //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
                     }
                     else if (type == 'Warehouse'){
