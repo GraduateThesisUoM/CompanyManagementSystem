@@ -15,10 +15,10 @@ function get_price(index,items){
 
 function get_discount(index,items){
     if($('#wholesale_retail').val()==="0"){
-        return items[index].discount_w;
+        return (items[index].discount_w).toFixed(2);
     }
     else{
-        return items[index].discount_r;
+        return (items[index].discount_r).toFixed(2);
     }
 }
 
@@ -66,9 +66,9 @@ function calculate_row_prices(index){
     var quantity = $('#quantity_'+index).val();
     var price_of_unit = $('#price_of_unit_'+index).val()
     var tax = $('#tax_'+index).val()
-    var discount = $('#discount_'+index).val()
+    var discount = ($('#discount_'+index).val()).toFixed(2);
 
-    var total = quantity*price_of_unit;
+    var total = (quantity*price_of_unit).toFixed(2);
     $('#total_price_of_line_'+index).html(total);
 
     var total = total - discount;
@@ -87,7 +87,9 @@ function put_data_on_row(index,items){
     var tax = get_tax(get_item_index_from_id(index,items),items);
     var total = quantity*price_of_unit;
     var discount = get_discount(get_item_index_from_id(index,items),items);
+    discount = discount.toFixed(2); 
     var discount_p = (100*discount)/total;
+    discount_p = discount_p.toFixed(2); 
 
     $('#qty_'+index).html(items[index].unit_of_measurement);
     $('#tax_'+index).val(tax);

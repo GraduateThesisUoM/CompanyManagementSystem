@@ -46,7 +46,6 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             };;
 
             if(!isParamsEmpty){
-                console.log('1')
                 type = req.query.type;
                 id = req.query.id;
                 if(type && id){
@@ -77,7 +76,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         ];
                         data.titles = ["Doc", "Reg Date",person_type,"General Discount %","Status","Sealed","Data"];
                         
-                        data.type = [0,0,0,0,3,4,2];//1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox
+                        data.type = [0,0,0,6,3,4,2];//1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox,6 input type number
                         //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
                     }
                     else if (type == 'Warehouse'){
@@ -143,9 +142,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             if (!data.data || (Array.isArray(data.data) && data.data.length === 0)) {
                 console.error('Error: Data is empty');
             }
-            else{
+            /*else{
                 console.log(data.data)
-            }
+            }*/
             
             res.render(path_constants.pages.view.view(), data);
         }
@@ -170,8 +169,29 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         }
         if (req.query.type && req.query.id) {
             if(req.body.action == 'save'){
-                console.log('1++++');
-                await generalFunctions.update({ _id: req.query.id } , req.query.type, req.body);
+                var obj_data = req.body;
+                var obj_type = req.query.type;
+                if(req.query.type == 'docs'){
+                    obj_type = 'documents'
+                    const lines_of_doc = {};
+
+                    for (let i = 0; i < req.body.num_of_rows; i++) {
+                        const quantity = parseInt(req.body[`quantity_${i}`], 10);
+                        const tax = parseFloat(req.body[`tax_${i}`]).toFixed(2);
+                        const lineItem = req.body[`doc_line_item_${i}`]; // Assuming lineItem should remain a string or ID
+                        const discount = parseFloat(req.body[`discount_${i}`]).toFixed(2);
+                        const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
+                        lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
+                    }
+                    
+                    obj_data = {
+                        generalDiscount : 50,
+                        invoiceData : lines_of_doc
+                    }
+
+                }
+                console.log(obj_data)
+                await generalFunctions.update({ _id: req.query.id } , obj_type, obj_data);
             }
             else{
                 await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);

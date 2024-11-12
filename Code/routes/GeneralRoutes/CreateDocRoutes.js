@@ -73,10 +73,10 @@ router.post("/", async (req, res) => {
     const lines_of_doc = {};
     for (let i = 0; i < req.body.num_of_rows; i++) {
       const quantity = parseInt(req.body[`quantity_${i}`], 10);
-      const tax = parseInt(req.body[`tax_${i}`], 10);
+      const tax = parseFloat(req.body[`tax_${i}`]).toFixed(2);
       const lineItem = req.body[`doc_line_item_${i}`]; // Assuming lineItem should remain a string or ID
-      const discount = parseInt(req.body[`discount_${i}`], 10);
-      const price_of_unit = parseInt(req.body[`price_of_unit_${i}`], 10);
+      const discount = parseFloat(req.body[`discount_${i}`]).toFixed(2);
+      const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
       lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
     }
     const data = {

@@ -408,14 +408,23 @@ async function get_obj_by_id(data, schema) {
 
 async function update(id, schema , data){
   try {
-    console.log(data)
+    console.log(data);
+    
     var obj = await get_obj_by_id(id, schema);
-    if (schema == 'series') {
-      console.log("****************************************")
-      const fieldsToUpdate = ['title', 'acronym', 'type','count', 'sealed', 'active'];
+    var fieldsToUpdate;
+    const lines_of_doc = {};
+
+    if (schema == 'documents') {
+      obj.generalDiscount = data.generalDiscount; 
+      obj.invoiceData = data.invoiceData;
+    }
+    else{
+      if (schema == 'series') {
+        fieldsToUpdate = ['title', 'acronym', 'type','count', 'sealed', 'active'];
+      }
       fieldsToUpdate.forEach((field, index) => {
-            obj[field] = data["input"+index];  // Using index for data
-    });
+        obj[field] = data["input"+index];  // Using index for data
+      });
     }
     await obj.save();
   } catch (e) {
