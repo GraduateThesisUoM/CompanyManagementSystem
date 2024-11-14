@@ -8,9 +8,9 @@ function populateSelect(selectElement,items) {
 function get_price(index,items){
 
     if($('#wholesale_retail').val()==="0"){
-        return items[index].price_w.toFixed(2);
+        return parseFloat(items[index].price_w).toFixed(2);
     }
-    return items[index].price_r.toFixed(2);
+    return parseFloat(items[index].price_r).toFixed(2);
 }
 
 function get_discount(index,items){
@@ -27,7 +27,7 @@ function get_tax(index,items){
         return items[index].tax_w.toFixed(1);
     }
     else{
-        return items[index].tax_r.toFixed(1);
+        return parseFloat(items[index].tax_r).toFixed(1);
     }
 }
 
@@ -49,24 +49,25 @@ function calculate_total_cost() {
         after_tax += line_after_tax;
     });
 
-    $('#doc_total_value').html(total.toFixed(2));
+    $('#doc_total_value').html(parseFloat(total).toFixed(2));
 
-    $('#doc_total_disc').html(disc_amnt.toFixed(2));
+    $('#doc_total_disc').html(parseFloat(disc_amnt).toFixed(2));
 
-    $('#doc_total_after_disc').html((total - disc_amnt).toFixed(2));
+    $('#doc_total_after_disc').html(parseFloat(total - disc_amnt).toFixed(2));
 
-    $('#doc_total_after_Tax').html(after_tax.toFixed(2));
+    $('#doc_total_after_tax').html(parseFloat(after_tax).toFixed(2));
 
     var totalCost = after_tax - $('#general_discount_amount').val();
 
-    $('#doc_total_cost').html(totalCost.toFixed(2));
+
+    $('#doc_total_cost').html(parseFloat(totalCost).toFixed(2));
 }
 
 function calculate_row_prices(index){
     var quantity = $('#quantity_'+index).val();
     var price_of_unit = $('#price_of_unit_'+index).val()
     var tax = $('#tax_'+index).val()
-    var discount = ($('#discount_'+index).val()).toFixed(2);
+    var discount = parseFloat($('#discount_'+index).val()).toFixed(2);
 
     var total = (quantity*price_of_unit).toFixed(2);
     $('#total_price_of_line_'+index).html(total);
@@ -82,12 +83,16 @@ function calculate_row_prices(index){
 
 function put_data_on_row(index,items){
     var quantity = $('#quantity_'+index).val();
-    var price_of_unit = get_price(get_item_index_from_id(index,items),items);
+    
+    //var price_of_unit = get_price(get_item_index_from_id(index,items),items);
+    var price_of_unit = get_price(index,items);
 
-    var tax = get_tax(get_item_index_from_id(index,items),items);
+    //var tax = get_tax(get_item_index_from_id(index,items),items);
+    var tax = get_tax(index,items);
     var total = quantity*price_of_unit;
-    var discount = get_discount(get_item_index_from_id(index,items),items);
-    discount = discount.toFixed(2); 
+    //var discount = get_discount(get_item_index_from_id(index,items),items);
+    var discount = get_discount(index,items);
+    discount = parseFloat(discount).toFixed(2); 
     var discount_p = (100*discount)/total;
     discount_p = discount_p.toFixed(2); 
 
@@ -102,7 +107,11 @@ function put_data_on_row(index,items){
 }
 
 function get_item_index_from_id(index,items){
+//---------------------for delete
+    console.log(items);
     for(let i=0;i<items.length;i++){
+        console.log(items[i]._id + " "+$('#doc_line_item_0').val());
+        
         if(items[i]._id == $('.doc_line_select').eq(index).val()){
             return i;
         }

@@ -203,12 +203,12 @@ function create_doc_table(data,rows_written) {
                         <td>Title</td>
                         <td>${line.quantity}</td>
                         <td>${line.tax}&nbsp;%</td>
-                        <td>${line.discount.toFixed(2)}&nbsp;€</td>
+                        <td>${parseFloat(line.discount).toFixed(2)}&nbsp;€</td>
                         <td>${disc_p}&nbsp;%</td>
-                        <td>${line.price_of_unit.toFixed(2)}&nbsp;€</td>
-                        <td>${value.toFixed(2)}&nbsp;€</td>
-                        <td>${p_after_d.toFixed(2)}&nbsp;€</td>
-                        <td>${final_p.toFixed(2)}&nbsp;€</td>
+                        <td>${parseFloat(line.price_of_unit).toFixed(2)}&nbsp;€</td>
+                        <td>${parseFloat(value).toFixed(2)}&nbsp;€</td>
+                        <td>${parseFloat(p_after_d).toFixed(2)}&nbsp;€</td>
+                        <td>${parseFloat(final_p).toFixed(2)}&nbsp;€</td>
                     </tr>`;
             
                 rows_written += 1;
@@ -247,17 +247,17 @@ function create_doc_footer(doc) {
     <br>
     <hr>
     <div class='from_footer'>
-        <div>Total Value: ${total_value.toFixed(2)} €</div>
+        <div>Total Value: ${parseFloat(total_value).toFixed(2)} €</div>
         
-        <div>Total Price after Discounts: ${total_price_after_d.toFixed(2)} €</div>
+        <div>Total Price after Discounts: ${parseFloat(total_price_after_d).toFixed(2)} €</div>
 
-        <div>Total Price after Tax: ${total_price_after_t.toFixed(2)} €</div>
-        <div>Discount ON TOP: ${total_d_p.toFixed(1)} %</div>
-        <div>Discount Amount ON TOP: ${doc.generalDiscount.toFixed(2)} €</div>
+        <div>Total Price after Tax: ${parseFloat(total_price_after_t).toFixed(2)} €</div>
+        <div>Discount ON TOP: ${parseFloat(total_d_p).toFixed(1)} %</div>
+        <div>Discount Amount ON TOP: ${parseFloat(doc.generalDiscount).toFixed(2)} €</div>
 
-        <div>Total Discounts: ${total_d.toFixed(2)} €</div>
+        <div>Total Discounts: ${parseFloat(total_d).toFixed(2)} €</div>
 
-        <div style='font-weight:bold'>Total Cost: ${total_cost.toFixed(2)} €</div>
+        <div style='font-weight:bold'>Total Cost: ${parseFloat(total_cost).toFixed(2)} €</div>
     </div>`;
 }
 

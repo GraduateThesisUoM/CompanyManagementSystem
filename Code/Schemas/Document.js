@@ -14,6 +14,8 @@ const DocumentSchema = new mongoose.Schema({
   generalDiscount: { type: Number, required: true },
   series: { type: String, required: true },
   doc_num:{ type: Number, required: true },
+  retail_wholesale : {type: Number,enum: [0,1,2],default:2},
+  //0=nothing 1 = retail 2 = wholesale
   sealed : {
     type: Number,
     enum: [0, 1],

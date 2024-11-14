@@ -84,13 +84,13 @@
                 <div> Total Value : <span id="doc_total_value">0.00</span> €</div>
                 <div> Total Discounts : <span id="doc_total_disc">0.00</span> €</div>
                 <div> Total Price after Discounts : <span id="doc_total_after_disc">0.00</span> €</div>
-                <div> Total Price after Tax : <span id="doc_total_after_Tax">0.00</span> €</div>
+                <div> Total Price after Tax : <span id="doc_total_after_tax">0.00</span> €</div>
                 <br>
 
                 <div >Discount : <input id="general_discount" class="general_discount" name="general_discount" type="number" value=0 min="0" max="100" required> %</div>
                 <div >Discount Amount: <input id="general_discount_amount" class="general_discount" name="general_discount_amount" type="number" value=0 min="0" required> €</div>
 
-                <div> Total Cost : <span id="total_cost">0.00</span> €</div>
+                <div> Total Cost : <span id="doc_total_cost">0.00</span> €</div>
                 <br>
                 <input id="num_of_rows" name="num_of_rows" style="display: none;">
                 <table id="doc_table">
@@ -206,6 +206,9 @@
                     (quantity*price_of_unit)*($('#discount_p_'+index).val()/100)
                 );
             }
+            if($(this).val() == ""){
+                $(this).val(0)
+            }
             calculate_row_prices(index);
         })
 
@@ -222,12 +225,12 @@
 
 
         $(document).on('input', '.general_discount', function() {
-            let totalAfterTax = parseFloat($('#total_after_Tax').html()) || 0;
+            let totalAfterTax = parseFloat($('#doc_total_after_tax').html()) || 0;
 
             if ($(this).attr('id') === 'general_discount_amount') {
                 let discountAmount = parseFloat($(this).val()) || 0;
                 let totalCost = totalAfterTax - discountAmount;
-                $('#total_cost').html(totalCost.toFixed(2));
+                $('#doc_total_cost').html(totalCost.toFixed(2));
 
                 let discountPercentage = (discountAmount / totalAfterTax) * 100;
                 $('#general_discount').val(discountPercentage.toFixed(2));
@@ -237,7 +240,7 @@
                 $('#general_discount_amount').val(discountAmount.toFixed(2));
 
                 let totalCost = totalAfterTax - discountAmount;
-                $('#total_cost').html(totalCost.toFixed(2));
+                $('#doc_total_cost').html(totalCost.toFixed(2));
             }
         });
 

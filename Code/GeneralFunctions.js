@@ -354,6 +354,7 @@ async function create_doc(data) {
       series: data.series,
       type: data.type,
       doc_num: series.count,
+      retail_wholesale:data.retail_wholesale,
       generalDiscount: data.generalDiscount,
       invoiceData: data.invoiceData,
     });

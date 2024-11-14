@@ -79,9 +79,11 @@ router.post("/", async (req, res) => {
       const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
       lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
     }
+    console.log("-------------------------"+req.user.wholesale_retail)
     const data = {
       company: req.user.company,
       sender: req.user._id,
+      retail_wholesale : req.body.wholesale_retail,
       receiver: req.body.customer_id,
       type: req.body.doc_type,
       series: req.body.doc_series,
