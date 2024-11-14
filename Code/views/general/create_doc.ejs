@@ -206,9 +206,7 @@
                     (quantity*price_of_unit)*($('#discount_p_'+index).val()/100)
                 );
             }
-            if($(this).val() == ""){
-                $(this).val(0)
-            }
+           
             calculate_row_prices(index);
         })
 
@@ -265,6 +263,15 @@
         }
 
         function allow_submit(){
+            var inputs = $('.input');
+
+            // Loop through each input to check if it's empty
+            inputs.each(function() {
+                if ($(this).val() === "") {
+                    $(this).val("0"); // Set empty inputs to 0
+                }
+            });
+            
             if($('#num_of_rows').val() == 0 || $('select[name="customer_id"]').val() == 0 || $('select[name="doc_series"]').val() == 0){
                 $("#submit_btn").prop('disabled', true);
             }

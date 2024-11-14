@@ -73,11 +73,12 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                             obj.sealed,
                             obj.invoiceData,
                             //---
-                            await Item.find({companyID : company, status:1,type:obj.type}),
+                            await Item.find({companyID : company, status:1,type:obj.type})
                         ];
                         data.titles = ["Doc", "Reg Date",person_type,"General Discount %","Status","Type","Sealed","Data"];
                         
-                        data.type = [0,0,0,6,3,0,4,2];//1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox,6 input type number
+                        data.type = [0,0,0,6,3,7,4,2];//1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox,6 input type number
+                        //7 for docs wholesale_retail
                         //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
                     }
                     else if (type == 'Warehouse'){
