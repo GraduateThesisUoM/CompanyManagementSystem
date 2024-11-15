@@ -145,6 +145,9 @@ async function create_node(data) {
       due_date: data.due_date,
     };
   }
+  else{
+    new_data = data
+  }
   console.log(new_data);
 
   const new_node = new Node(new_data);
@@ -355,6 +358,7 @@ async function create_doc(data) {
       type: data.type,
       doc_num: series.count,
       retail_wholesale:data.retail_wholesale,
+      warehouse : data.warehouse,
       generalDiscount: data.generalDiscount,
       invoiceData: data.invoiceData,
     });
@@ -369,6 +373,10 @@ async function create_doc(data) {
   } catch (error) {
     console.error("Error saving document:", error);
   }
+}
+
+async function warehose_get_inventory(data){
+  
 }
 
 async function drop_collection(collection_name) {

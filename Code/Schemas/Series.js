@@ -11,6 +11,10 @@ const SeriesSchema = new mongoose.Schema({
       type: Number,
       enum: [0, 1],
       default: 0},
+      effects_warehouse :{
+      type: Number,
+      enum: [0, 1],
+      default: 0},
     type : { type: Number, required: true },
     //buy = 1,sale=2
     status: {

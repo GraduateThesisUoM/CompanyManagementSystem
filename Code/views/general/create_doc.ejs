@@ -66,6 +66,15 @@
                         <% }); %>
                     </select>
                 </div>
+                <div class="warehouse_div">
+                    <label>Warehouse</label>
+                    <select name="warehouse_id" >
+                        <option value="0">-</option>
+                        <% warehouses.forEach(function(warehouse) { %>
+                            <option value="<%= warehouse.id %>"><%= warehouse.title %></option>
+                        <% }); %>
+                    </select>
+                </div>
                 <label for="wholesale_retail">Type : </label>
                 <select id="wholesale_retail" name="wholesale_retail">
                     <option value="0">wholesale</option>

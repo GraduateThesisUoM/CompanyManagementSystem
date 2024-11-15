@@ -8,7 +8,7 @@ const Company = require(path_constants.schemas.two.company);
 const Accountant = require(path_constants.schemas.two.accountant);
 const Node = require(path_constants.schemas.two.node);
 const Notification = require(path_constants.schemas.two.notification);
-const Report = require(path_constants.schemas.two.report);
+const Warehouse = require(path_constants.schemas.two.warehouse);
 const User = require(path_constants.schemas.two.user);
 const Person = require(path_constants.schemas.two.person);
 const Item = require(path_constants.schemas.two.item);
@@ -25,12 +25,21 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
     if (access.response) {
       // for delete let person = req.query.type === "buy" ? "supplier" : "customer";
 
+      var list_warehouses =  await Warehouse.find({
+        companyid: req.user.company,
+        status: 1,
+      });
+      list_warehouses = list_warehouses.map((warehouse) => ({
+        id: warehouse._id,
+        title: warehouse.title,
+      }));
+      console.log(list_warehouses)
+
       var list_persons = await Person.find({
         company: req.user.company,
         type: req.query.type,
         status: 1,
       });
-      console.log(list_persons)
       list_persons = list_persons.map((item) => ({
         id: item._id,
         firstName: item.firstName,
@@ -52,6 +61,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       var data = {
         user: req.user,
         persons: list_persons,
+        warehouses : list_warehouses,
         items: list_items,
         series: list_series,
         notification_list: await Notification.find({
@@ -79,12 +89,13 @@ router.post("/", async (req, res) => {
       const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
       lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
     }
-    console.log("-------------------------"+req.user.wholesale_retail)
+    console.log("-------------------------"+req.body.warehouse_id)
     const data = {
       company: req.user.company,
       sender: req.user._id,
       retail_wholesale : req.body.wholesale_retail,
       receiver: req.body.customer_id,
+      warehouse : req.body.warehouse_id,
       type: req.body.doc_type,
       series: req.body.doc_series,
       generalDiscount: req.body.general_discount,

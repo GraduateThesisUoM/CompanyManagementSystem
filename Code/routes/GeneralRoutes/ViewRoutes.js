@@ -53,6 +53,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         obj = await Document.findOne({_id : id});
                         var series = await Series.findOne({_id : obj.series});
                         var person = await Person.findOne({_id : obj.receiver});
+                        var warehouse =  await Warehouse.findOne({_id : obj.warehouse});
+
+                        console.log(warehouse.title);
 
                         var person_type = "Customer";
                         if(person.type == 1){
@@ -71,13 +74,14 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                             obj.status,
                             obj.retail_wholesale,
                             obj.sealed,
+                            warehouse.title,
                             obj.invoiceData,
                             //---
                             await Item.find({companyID : company, status:1,type:obj.type})
                         ];
-                        data.titles = ["Doc", "Reg Date",person_type,"General Discount %","Status","Type","Sealed","Data"];
+                        data.titles = ["Doc", "Reg Date",person_type,"General Discount %","Status","Type","Sealed","Warehouse","Data"];
                         
-                        data.type = [0,0,0,6,3,7,4,2];//1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox,6 input type number
+                        data.type = [0,0,0,6,3,7,4,1,2];//1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox,6 input type number
                         //7 for docs wholesale_retail
                         //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
                     }
@@ -91,9 +95,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                     }
                     else if (type == 'series'){
                         obj = await Series.findOne({_id : id});
-                        data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed, generalFunctions.formatDate(obj.registrationDate), obj.status]
-                        data.titles = ["Title","Acronym","Type","Count","Sealed", "Reg Date","Status"];
-                        data.type = [1,1,1,1,5,0,0];
+                        data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed,obj.effects_warehouse, generalFunctions.formatDate(obj.registrationDate), obj.status]
+                        data.titles = ["Title","Acronym","Type","Count","Sealed","Effects Warehouse", "Reg Date","Status"];
+                        data.type = [1,1,1,1,5,5,0,0];
                         //1=normal-text,0=text-readonly 5 checkbox
 
                     }

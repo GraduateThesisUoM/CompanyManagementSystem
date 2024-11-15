@@ -15,7 +15,7 @@ const NodeShema = new mongoose.Schema({
   type2: {
     type: String,
     enum: ['hiring','firing','response','request1','request2','general',7,8],
-    //1=hiring,2=firing,3=response,4=request1,5=request2,6=general,7=buy,8=shell
+    //1=hiring,2=firing,3=response,4=request1,5=request2,6=general,7=shell,8=buy
     required: true,
     default:'general'
   },
