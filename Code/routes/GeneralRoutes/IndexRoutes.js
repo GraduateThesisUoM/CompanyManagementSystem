@@ -86,11 +86,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         };
       }
 
-      generalFunctions.warehose_get_inventory({
-        company : company,
-        type : 2
-      })
-
       res.render(path_constants.pages.index.view(req.user.type), data);
     } else {
       res.redirect("/error?error=" + access.error);

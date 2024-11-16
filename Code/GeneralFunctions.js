@@ -381,12 +381,30 @@ async function warehose_get_inventory(data){
   var series = await Series.find({
     companyID:data.company._id ,
     type: data.type,
-    effects_warehouse: 1
+    effects_warehouse: 1,
+    status : 1
   });
+
+  var items = await Item.find({
+    companyID : data.company._id,
+    type: data.type,
+    status : 1
+  })
+
+  var item_list = []
+
+  for(const i of items){
+    item_list.push({
+      item : {
+        id : i._id.toString(),
+        title : i.title
+      },
+      count : 0})
+  }
+
 
   var seriesIDs = series.map(s => s._id.toString());
 
-  console.log("**");
 
   var docs = await Document.find({
     company:data.company._id,
@@ -394,19 +412,35 @@ async function warehose_get_inventory(data){
     series : { $in: seriesIDs }
   });
 
-  var items = []
+  var doc_items_map = {};
 
-  for(const d of docs){
+  // Iterate through docs and collect items and their quantities
+  for (const d of docs) {
     for (const key in d.invoiceData) {
       if (d.invoiceData.hasOwnProperty(key)) {
-        const item = d.invoiceData[key];
-        items.push(item.lineItem)
+        const doc_item = d.invoiceData[key];
+        if (doc_item.lineItem) {
+          // Accumulate the quantity for each lineItem
+          if (!doc_items_map[doc_item.lineItem]) {
+            doc_items_map[doc_item.lineItem] = 0;
+          }
+          doc_items_map[doc_item.lineItem] += parseFloat(doc_item.quantity);
+        }
       }
     }
   }
-  console.log(items)
 
-  console.log("*/*");
+
+
+  for (const item of item_list) {
+    const doc_item_quantity = doc_items_map[item.item.id];
+    if (doc_item_quantity) {
+      item.count = doc_item_quantity;
+    }
+  }
+
+  return item_list;
+
 }
 
 async function drop_collection(collection_name) {
