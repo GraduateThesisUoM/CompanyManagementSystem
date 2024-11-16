@@ -53,9 +53,11 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         obj = await Document.findOne({_id : id});
                         var series = await Series.findOne({_id : obj.series});
                         var person = await Person.findOne({_id : obj.receiver});
-                        var warehouse =  await Warehouse.findOne({_id : obj.warehouse});
 
-                        console.log(warehouse.title);
+                        var warehouse = {title :'-'};
+                        if (obj.warehouse !== "0") {
+                            warehouse = await Warehouse.findOne({ _id: obj.warehouse });
+                          }
 
                         var person_type = "Customer";
                         if(person.type == 1){

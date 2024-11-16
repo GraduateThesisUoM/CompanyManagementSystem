@@ -282,6 +282,7 @@ async function createSeries(data) {
       acronym: data.acronym,
       type: data.type,
       sealed: data.sealed,
+      effects_warehouse: data.effects_warehouse
     });
 
     await seies.save();
@@ -376,7 +377,36 @@ async function create_doc(data) {
 }
 
 async function warehose_get_inventory(data){
-  
+  console.log("--------------warehose_get_inventory");
+  var series = await Series.find({
+    companyID:data.company._id ,
+    type: data.type,
+    effects_warehouse: 1
+  });
+
+  var seriesIDs = series.map(s => s._id.toString());
+
+  console.log("**");
+
+  var docs = await Document.find({
+    company:data.company._id,
+    type: data.type,
+    series : { $in: seriesIDs }
+  });
+
+  var items = []
+
+  for(const d of docs){
+    for (const key in d.invoiceData) {
+      if (d.invoiceData.hasOwnProperty(key)) {
+        const item = d.invoiceData[key];
+        items.push(item.lineItem)
+      }
+    }
+  }
+  console.log(items)
+
+  console.log("*/*");
 }
 
 async function drop_collection(collection_name) {
@@ -429,7 +459,7 @@ async function update(id, schema , data){
     }
     else{
       if (schema == 'series') {
-        fieldsToUpdate = ['title', 'acronym', 'type','count', 'sealed', 'active'];
+        fieldsToUpdate = ['title', 'acronym', 'type','count', 'sealed','effects_warehouse', 'active'];
       }
       fieldsToUpdate.forEach((field, index) => {
         obj[field] = data["input"+index];  // Using index for data
@@ -522,5 +552,6 @@ module.exports = {
   create_node,
   node_reply,
   get_status,
-  update
+  update,
+  warehose_get_inventory
 };

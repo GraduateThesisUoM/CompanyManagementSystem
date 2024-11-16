@@ -16,7 +16,7 @@ const SeriesSchema = new mongoose.Schema({
       enum: [0, 1],
       default: 0},
     type : { type: Number, required: true },
-    //buy = 1,sale=2
+    //buy = 2,sale=1
     status: {
       type: Number,
       enum: [0, 1, 2],
