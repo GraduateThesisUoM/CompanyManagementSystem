@@ -79,6 +79,27 @@
                     <% }else if(type[index] == 7){ %>
                         <%= title %>
                         <input name="input<%= index %>" id="wholesale_retail" value="<%= data[index] %>" readonly>
+                    <% }else if(type[index] == 8){  %>
+                            <table>
+                            <thead>
+                                <tr>
+                                    <th>A/A</th>
+                                    <th>Title</th>
+                                    <th>Count</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% data[index].forEach(function(row, index) { %>
+                                    <tr>
+                                        <td><%= index +1 %></td>
+                                        <td><%= row.title %></td>
+                                        <td><%= row.count %></td>
+                                        <th><button id="<%= row.id %>" class="go_to_btn">go</button></th>
+                                    </tr>
+                                <%}) %>
+                            </tbody>
+                        </table>
                     <% }else{ %>
                         <%= title %>
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>">
@@ -337,7 +358,7 @@
 
 
             }
-
+            
             $("#btn1").click(function () {
                 if(confirm("Are you soure ?")){
                     $("#action").val('delete');
@@ -363,6 +384,17 @@
                 });
                 $('#'+target_id).text(tottal.toFixed(2)); // Optionally format to 2 decimal places
             }
+
+            
+            $(".go_to_btn").click(function () {
+                event.preventDefault();
+                var url_page,url_type,url_id;
+                if(queryParams.type == "Warehouse"){
+                    url_page = "items";
+                    url_id = $(this).attr('id');
+                }
+                window.location = "/view?type="+url_page+"&id="+url_id;
+            });
 
         });
 

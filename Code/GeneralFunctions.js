@@ -377,17 +377,16 @@ async function create_doc(data) {
 }
 
 async function warehose_get_inventory(data){
-  console.log("--------------warehose_get_inventory");
   var series = await Series.find({
-    companyID:data.company._id ,
-    type: data.type,
+    companyID:data.company,
+    type: 2,
     effects_warehouse: 1,
     status : 1
   });
 
   var items = await Item.find({
-    companyID : data.company._id,
-    type: data.type,
+    companyID : data.company,
+    type: 2,
     status : 1
   })
 
@@ -395,21 +394,19 @@ async function warehose_get_inventory(data){
 
   for(const i of items){
     item_list.push({
-      item : {
-        id : i._id.toString(),
-        title : i.title
-      },
+      id : i._id.toString(),
+      title : i.title,
       count : 0})
   }
 
 
   var seriesIDs = series.map(s => s._id.toString());
 
-
   var docs = await Document.find({
-    company:data.company._id,
-    type: data.type,
-    series : { $in: seriesIDs }
+    company:data.company,
+    type: 2,
+    series : { $in: seriesIDs },
+    warehouse : data.id.toString()
   });
 
   var doc_items_map = {};
@@ -433,13 +430,72 @@ async function warehose_get_inventory(data){
 
 
   for (const item of item_list) {
-    const doc_item_quantity = doc_items_map[item.item.id];
+    const doc_item_quantity = doc_items_map[item.id];
     if (doc_item_quantity) {
       item.count = doc_item_quantity;
     }
   }
 
   return item_list;
+
+}
+
+async function item_get_inventory(data){
+  var series = await Series.find({
+    companyID:data.company,
+    type: 2,
+    effects_warehouse: 1,
+    status : 1
+  });
+
+  var items = await Item.find({_id : data.id})
+
+  var item_list = []
+
+  for(const i of items){
+    item_list.push({
+      id : i._id.toString(),
+      title : i.title,
+      count : 0})
+  }
+
+
+  var seriesIDs = series.map(s => s._id.toString());
+
+  var docs = await Document.find({
+    company:data.company,
+    type: 2,
+    series : { $in: seriesIDs },
+  });
+
+  var doc_items_map = {};
+
+  // Iterate through docs and collect items and their quantities
+  for (const d of docs) {
+    for (const key in d.invoiceData) {
+      if (d.invoiceData.hasOwnProperty(key)) {
+        const doc_item = d.invoiceData[key];
+        if (doc_item.lineItem) {
+          // Accumulate the quantity for each lineItem
+          if (!doc_items_map[doc_item.lineItem]) {
+            doc_items_map[doc_item.lineItem] = 0;
+          }
+          doc_items_map[doc_item.lineItem] += parseFloat(doc_item.quantity);
+        }
+      }
+    }
+  }
+
+
+
+  for (const item of item_list) {
+    const doc_item_quantity = doc_items_map[item.id];
+    if (doc_item_quantity) {
+      item.count = doc_item_quantity;
+    }
+  }
+
+  return item_list[0].count;
 
 }
 
@@ -587,5 +643,6 @@ module.exports = {
   node_reply,
   get_status,
   update,
-  warehose_get_inventory
+  warehose_get_inventory,
+  item_get_inventory
 };

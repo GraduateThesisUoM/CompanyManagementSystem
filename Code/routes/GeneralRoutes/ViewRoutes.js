@@ -89,10 +89,19 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                     }
                     else if (type == 'Warehouse'){
                         obj = await Warehouse.findOne({_id : id});
-                        data.data = [ obj.title, obj.location, generalFunctions.formatDate(obj.registrationDate), obj.status]
-                        data.titles = ["Title","location", "Reg Date","Status"];
-                        data.type = [1,1,0,0];
+                        var inventory = await generalFunctions.warehose_get_inventory({company : company,id : obj._id});
+                        console.log(inventory)
+                        data.data = [
+                            obj.title,
+                            obj.location,
+                            generalFunctions.formatDate(obj.registrationDate),
+                            obj.status,
+                            inventory
+                        ]
+                        data.titles = ["Title","location", "Reg Date","Status","Data"];
+                        data.type = [1,1,0,0,8];
                         //1=normal-text,0=text-readonly
+                        //8 table
 
                     }
                     else if (type == 'series'){
@@ -122,9 +131,22 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                     }
                     else if (type == 'items'){
                         obj = await Item.findOne({_id : id});
-                        data.data = [ obj.title,obj.description ,generalFunctions.formatDate(obj.registrationDate), obj.unit_of_measurement,obj.price_r,obj.price_w,obj.discount_r,obj.discount_w,obj.tax_r,obj.tax_w, obj.status]
-                        data.titles = ["Title", "Description","Reg Date", "Unit of Peasurement", "Price Retail", "Price Wholesale", "Discount Retail", "Discount Wholesale" , "Tax Retail", "Tax Wholesale","Status"];
-                        data.type = [1,1,0,1,1,1,1,1,1,1,0];
+                        data.data = [
+                            obj.title,
+                            obj.description,
+                            generalFunctions.formatDate(obj.registrationDate),
+                            obj.unit_of_measurement,
+                            obj.price_r,
+                            obj.price_w,
+                            obj.discount_r,
+                            obj.discount_w,
+                            obj.tax_r,
+                            obj.tax_w,
+                            obj.status,
+                            await generalFunctions.item_get_inventory({company : company,id : obj._id})
+                        ]
+                        data.titles = ["Title", "Description","Reg Date", "Unit of Peasurement", "Price Retail", "Price Wholesale", "Discount Retail", "Discount Wholesale" , "Tax Retail", "Tax Wholesale","Status","Inventory"];
+                        data.type = [1,1,0,1,1,1,1,1,1,1,0,0];
                         //1=normal-text,0=text-readonly
 
                     }

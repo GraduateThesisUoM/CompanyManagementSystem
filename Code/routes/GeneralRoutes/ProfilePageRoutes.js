@@ -9,6 +9,9 @@ const Notification = require("../../Schemas/Notification");
 
 //Authentication Functions
 const Authentication = require("../../AuthenticationFunctions");
+//Get General Functions
+const generalFunctions = require("../../GeneralFunctions");
+
 
 /*--------   PROFILE */
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {
