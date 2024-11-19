@@ -1,0 +1,22 @@
+[
+  {
+    "_id": "673cdfb95451b4614c6e32c4",
+    "companyid": "673cdfa45451b4614c6e324b",
+    "title": "w1",
+    "location": "w1_l",
+    "status": 1,
+    "full": 0,
+    "registrationDate": "2024-11-19T18:58:01.308Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdfb95451b4614c6e32c6",
+    "companyid": "673cdfa45451b4614c6e324b",
+    "title": "w2",
+    "location": "w2_l",
+    "status": 0,
+    "full": 0,
+    "registrationDate": "2024-06-10T18:22:57.852Z",
+    "__v": 0
+  }
+]

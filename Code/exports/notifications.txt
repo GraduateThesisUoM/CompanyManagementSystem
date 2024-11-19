@@ -1,0 +1,57 @@
+[
+  {
+    "_id": "673cdfac5451b4614c6e3278",
+    "user_id": "673cdfa75451b4614c6e325a",
+    "relevant_user_id": "673cdfa85451b4614c6e3264",
+    "company_id": "673cdfa45451b4614c6e324b",
+    "relevant_company_id": "673cdfa85451b4614c6e3264",
+    "type": "hiring-notification",
+    "status": "unread",
+    "registrationDate": "2024-11-19T18:57:48.798Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdfae5451b4614c6e3285",
+    "user_id": "673cdfa75451b4614c6e325e",
+    "relevant_user_id": "673cdfa85451b4614c6e3264",
+    "company_id": "673cdfa55451b4614c6e324e",
+    "relevant_company_id": "673cdfa85451b4614c6e3264",
+    "type": "hiring-notification",
+    "status": "unread",
+    "registrationDate": "2024-11-19T18:57:50.843Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdfb05451b4614c6e3290",
+    "user_id": "673cdfa85451b4614c6e3260",
+    "relevant_user_id": "673cdfa85451b4614c6e3264",
+    "company_id": "673cdfa55451b4614c6e3250",
+    "relevant_company_id": "673cdfa85451b4614c6e3264",
+    "type": "hiring-notification",
+    "status": "unread",
+    "registrationDate": "2024-11-19T18:57:52.863Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdfb25451b4614c6e329a",
+    "user_id": "673cdfa85451b4614c6e3262",
+    "relevant_user_id": "673cdfa85451b4614c6e3264",
+    "company_id": "673cdfa55451b4614c6e3252",
+    "relevant_company_id": "673cdfa85451b4614c6e3264",
+    "type": "hiring-notification",
+    "status": "unread",
+    "registrationDate": "2024-11-19T18:57:54.134Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdfb45451b4614c6e32a5",
+    "user_id": "673cdfa85451b4614c6e3262",
+    "relevant_user_id": "673cdfa85451b4614c6e3264",
+    "company_id": "673cdfa55451b4614c6e3252",
+    "relevant_company_id": "673cdfa85451b4614c6e3264",
+    "type": "firing-notification",
+    "status": "unread",
+    "registrationDate": "2024-11-19T18:57:56.401Z",
+    "__v": 0
+  }
+]

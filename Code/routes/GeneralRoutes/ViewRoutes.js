@@ -106,10 +106,10 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                     }
                     else if (type == 'series'){
                         obj = await Series.findOne({_id : id});
-                        data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed,obj.effects_warehouse, generalFunctions.formatDate(obj.registrationDate), obj.status]
-                        data.titles = ["Title","Acronym","Type","Count","Sealed","Effects Warehouse", "Reg Date","Status"];
-                        data.type = [1,1,1,1,5,5,0,0];
-                        //1=normal-text,0=text-readonly 5 checkbox
+                        data.data = [ obj.title, obj.acronym,obj.type,obj.count,obj.sealed,obj.effects_warehouse,obj.credit,obj.debit, generalFunctions.formatDate(obj.registrationDate), obj.status]
+                        data.titles = ["Title","Acronym","Type","Count","Sealed","Effects Warehouse","Credit","Debit", "Reg Date","Status"];
+                        data.type = [1,1,1,1,5,5,5,5,0,0];
+                        //1=normal-text,0=text-readonly, 5 checkbox
 
                     }
                     else if (type == 'person'){

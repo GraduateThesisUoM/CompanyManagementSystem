@@ -17,11 +17,7 @@ const DocumentSchema = new mongoose.Schema({
   retail_wholesale : {type: Number,enum: [0,1,2],default:2},
   //0=nothing 1 = retail 2 = wholesale
   warehouse : { type: String },//warehouse ID
-
-  sealed : {
-    type: Number,
-    enum: [0, 1],
-    default: 0},
+  sealed : {type: Number,enum: [0, 1],default: 0},
   invoiceData: {
     type: mongoose.Schema.Types.Mixed
   },

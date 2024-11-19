@@ -1,7 +1,10 @@
 //File with the paths
 const path_constants = require("./constantsPaths");
-
+const fs = require("fs");
+const path = require("path");
 var mongoose = require("mongoose");
+
+const connectDB = require('./db');
 
 //Models
 const Client = require(path_constants.schemas.one.client);
@@ -549,7 +552,7 @@ async function update(id, schema , data){
     }
     else{
       if (schema == 'series') {
-        fieldsToUpdate = ['title', 'acronym', 'type','count', 'sealed','effects_warehouse', 'active'];
+        fieldsToUpdate = ['title', 'acronym', 'type','count', 'sealed','effects_warehouse','credit','debit', 'active'];
       }
       fieldsToUpdate.forEach((field, index) => {
         obj[field] = data["input"+index];  // Using index for data
@@ -623,6 +626,172 @@ const formatDate = (dateString) => {
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
 
+
+async function importExport(action, schemas = []) {
+  try {
+    if (!['export', 'import'].includes(action)) {
+      throw new Error("Invalid action. Please specify 'export' or 'import'.");
+    }
+
+    if (action === 'export') {
+      if (schemas.length > 0) {
+        // Export only specified schemas
+        await exportData(schemas);
+      } else {
+        // Export all schemas
+        await exportAllData();
+      }
+    } else if (action === 'import') {
+      if (schemas.length > 0) {
+        // Import only specified schemas
+        await importData(schemas);
+      } else {
+        // Import all schemas
+        await importAllData();
+      }
+    }
+  } catch (error) {
+    console.error("Error in master function:", error);
+  }
+}
+
+async function exportAllData() {
+
+  try {
+    const outputDir = "./exports"; // Directory to store exported files
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir); // Create the exports directory if it doesn't exist
+    }
+
+    await connectDB();
+
+    for (const [key, model] of Object.entries(schemaMap)) {
+      const filePath = path.join(outputDir, `${key}.txt`);
+      const data = await model.find({}).exec();
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+      console.log(`Exported data from collection '${key}' to ${filePath}`);
+    }
+  } catch (err) {
+    console.error("Error exporting data:", err);
+  }
+}
+
+async function exportData(schemas) {
+  try {
+    const outputDir = "./exports"; // Directory to store exported files
+    if (!fs.existsSync(outputDir)) {
+      fs.mkdirSync(outputDir); // Create the exports directory if it doesn't exist
+    }
+
+    await connectDB();
+
+    for (const schema of schemas) {
+      const model = schemaMap[schema];
+      if (!model) {
+        console.warn(`Schema '${schema}' not found.`);
+        continue;
+      }
+      const filePath = path.join(outputDir, `${schema}.txt`);
+      const data = await model.find({}).exec();
+      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+      console.log(`Exported data from collection '${schema}' to ${filePath}`);
+    }
+  } catch (err) {
+    console.error("Error exporting data:", err);
+  }
+}
+
+async function importAllData() {
+  try {
+    const inputDir = "./exports"; // Directory containing exported files
+    if (!fs.existsSync(inputDir)) {
+      fs.mkdirSync(inputDir); // Create the exports directory if it doesn't exist
+    }
+
+    await connectDB();
+
+    for (const [key, model] of Object.entries(schemaMap)) {
+      // Skip 'clients' and 'accountants' schemas
+      if (key === 'clients' || key === 'accountants') {
+        console.log(`Skipping schema: ${key}`);
+        continue;
+      }
+      const filePath = path.join(inputDir, `${key}.txt`);
+      console.log(key)
+      
+      // Check if the file exists, otherwise create an empty file
+      if (!fs.existsSync(filePath)) {
+        fs.writeFileSync(filePath, JSON.stringify([]), "utf-8");
+        console.warn(`File for collection '${key}' was not found. Created an empty file.`);
+      }
+
+      // Read the file content
+      const fileContent = fs.readFileSync(filePath, "utf-8");
+      const data = JSON.parse(fileContent);
+
+      const model = schemaMap[key];
+      if (!model) {
+        console.warn(`Schema '${key}' not found.`);
+        continue;
+      }
+
+      // Insert the data including the _id field
+      await model.insertMany(data, { ordered: false });  // 'ordered: false' allows for skipping errors
+      console.log(`Imported data into collection '${key}' from ${filePath}`);
+    }
+  } catch (err) {
+    console.error("Error importing data:", err);
+  }
+}
+
+
+async function importData(schemas) {
+  try {
+    const inputDir = "./exports"; // Directory containing exported files
+    if (!fs.existsSync(inputDir)) {
+      fs.mkdirSync(inputDir); // Create the exports directory if it doesn't exist
+    }
+
+    await connectDB();
+
+    for (const schema of schemas) {
+      // Skip 'clients' and 'accountants' schemas
+      if (key === 'clients' || key === 'accountants') {
+        console.log(`Skipping schema: ${key}`);
+        continue;
+      }
+      const filePath = path.join(inputDir, `${schema}.txt`);
+
+      // Check if the file exists, otherwise create an empty file
+      if (!fs.existsSync(filePath)) {
+        fs.writeFileSync(filePath, JSON.stringify([]), "utf-8");
+        console.warn(`File for collection '${schema}' was not found. Created an empty file.`);
+      }
+
+      // Read the file content
+      const fileContent = fs.readFileSync(filePath, "utf-8");
+      const data = JSON.parse(fileContent);
+
+      const model = schemaMap[schema];
+      if (!model) {
+        console.warn(`Schema '${schema}' not found.`);
+        continue;
+      }
+
+      // Insert the data including the _id field
+      await model.insertMany(data, { ordered: false });  // 'ordered: false' allows for skipping errors
+      console.log(`Imported data into collection '${schema}' from ${filePath}`);
+    }
+  } catch (err) {
+    console.error("Error importing data:", err);
+  }
+}
+
+
+
+
+
+
 module.exports = {
   checkAccessRigts,
   createWarehouse,
@@ -644,5 +813,6 @@ module.exports = {
   get_status,
   update,
   warehose_get_inventory,
-  item_get_inventory
+  item_get_inventory,
+  importExport
 };

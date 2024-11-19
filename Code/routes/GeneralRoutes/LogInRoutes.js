@@ -29,14 +29,14 @@ const clientAccountantFunctions = require(path_constants
 const Authentication = require("../../AuthenticationFunctions");
 
 /*--------   LOG IN */
-router.get("/", Authentication.checkNotAuthenticated, (req, res) => {
+router.get("/", Authentication.checkNotAuthenticated, async (req, res) => {
   //FOR TEST START
   if (req.query.restartdb === "true") {
     create_users();
   }
-  //FOR TEST END
-  //generalFunctions.checkAccessRigts('.',req,res,data);
-  //res.render('../views/log_in.ejs');
+  else if (req.query.restartdb === "export") {
+    await generalFunctions.importExport('export');
+  }
   res.render("." + path_constants.pages.log_in.view());
 });
 router.post(
@@ -63,8 +63,13 @@ async function create_users() {
   await generalFunctions.drop_collection("Person");
   await generalFunctions.drop_collection("Document");
   await generalFunctions.drop_collection("Notification");
+  await generalFunctions.drop_collection("Person");
+  await generalFunctions.drop_collection("Review");
 
   console.log("End Deleting -----");
+
+  await generalFunctions.importExport('import');
+  /*
 
   var data = {};
   var logo = "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
@@ -453,7 +458,7 @@ async function create_users() {
   var w2 = await generalFunctions.createWarehouse(data);
   w2.status = 0;
   w2.registrationDate = "2024-06-10T18:22:57.852+00:00";
-  await w2.save();
+  await w2.save();*/
 
   console.log("----------   END ");
 }

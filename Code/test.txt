@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "673cc5d2932942a948ec9910",
+    "companyID": "673cc5bf932942a948ec98a7",
+    "title": "series1b",
+    "acronym": "S1",
+    "count": 1,
+    "sealed": 1,
+    "effects_warehouse": 0,
+    "credit": 0,
+    "debit": 0,
+    "type": 1,
+    "status": 1,
+    "registrationDate": "2024-11-19T17:07:30.706Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cc5d2932942a948ec9912",
+    "companyID": "673cc5bf932942a948ec98a7",
+    "title": "series2s",
+    "acronym": "S2",
+    "count": 2,
+    "sealed": 0,
+    "effects_warehouse": 0,
+    "credit": 0,
+    "debit": 0,
+    "type": 2,
+    "status": 1,
+    "registrationDate": "2024-11-19T17:07:30.995Z",
+    "__v": 0
+  }
+]

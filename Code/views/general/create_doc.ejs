@@ -75,8 +75,8 @@
                         <% }); %>
                     </select>
                 </div>
-                <label for="wholesale_retail">Type : </label>
-                <select id="wholesale_retail" name="wholesale_retail">
+                <label class="wholesale_retail" for="wholesale_retail">Type : </label>
+                <select class="wholesale_retail" id="wholesale_retail" name="wholesale_retail">
                     <option value="0">wholesale</option>
                     <option value="1">Retale</option>
                 </select>
@@ -147,6 +147,7 @@
             else if(type ==2){//sale
                 $("#list_header").html('Create Sales Document');
                 $("#from_label").html('Customer&nbsp&nbsp');
+                $(".wholesale_retail").hide();
 
             }
         }   

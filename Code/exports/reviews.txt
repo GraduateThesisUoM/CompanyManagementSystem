@@ -1,0 +1,90 @@
+[
+  {
+    "_id": "6624353054be8c0eaf18bf31",
+    "company_id": "66242ee9faf85e16929f088a",
+    "reviewer_id": "66242eeafaf85e16929f088c",
+    "reviewed_id": "66242eebfaf85e16929f0890",
+    "text": "w2",
+    "rating": 4,
+    "type": "client",
+    "registrationDate": "2024-04-20T21:35:44.720Z",
+    "__v": 0
+  },
+  {
+    "_id": "66f710c8ea583a7bb47f7325",
+    "company_id": "66f70f18ea583a7bb47f71ad",
+    "reviewer_id": "66f70f1bea583a7bb47f71b9",
+    "reviewed_id": "66f70f1dea583a7bb47f71c3",
+    "text": "good2",
+    "rating": 4,
+    "type": "client",
+    "registrationDate": "2024-09-27T20:08:40.349Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cd36a5a7424f5cb2e3062",
+    "company_id": "66242ee9faf85e16929f088a",
+    "reviewer_id": "66242eeafaf85e16929f088c",
+    "reviewed_id": "66242eebfaf85e16929f0890",
+    "text": "w2",
+    "rating": 4,
+    "type": "client",
+    "registrationDate": "2024-04-20T21:35:44.720Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cd36a5a7424f5cb2e3063",
+    "company_id": "66f70f18ea583a7bb47f71ad",
+    "reviewer_id": "66f70f1bea583a7bb47f71b9",
+    "reviewed_id": "66f70f1dea583a7bb47f71c3",
+    "text": "good2",
+    "rating": 4,
+    "type": "client",
+    "registrationDate": "2024-09-27T20:08:40.349Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cd906d052833fb0f9313d",
+    "company_id": "66242ee9faf85e16929f088a",
+    "reviewer_id": "66242eeafaf85e16929f088c",
+    "reviewed_id": "66242eebfaf85e16929f0890",
+    "text": "w2",
+    "rating": 4,
+    "type": "client",
+    "registrationDate": "2024-04-20T21:35:44.720Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cd906d052833fb0f9313e",
+    "company_id": "66f70f18ea583a7bb47f71ad",
+    "reviewer_id": "66f70f1bea583a7bb47f71b9",
+    "reviewed_id": "66f70f1dea583a7bb47f71c3",
+    "text": "good2",
+    "rating": 4,
+    "type": "client",
+    "registrationDate": "2024-09-27T20:08:40.349Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdf2cdd72ad81cb368b0b",
+    "company_id": "66242ee9faf85e16929f088a",
+    "reviewer_id": "66242eeafaf85e16929f088c",
+    "reviewed_id": "66242eebfaf85e16929f0890",
+    "text": "w2",
+    "rating": 4,
+    "type": "client",
+    "registrationDate": "2024-04-20T21:35:44.720Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdf2cdd72ad81cb368b0c",
+    "company_id": "66f70f18ea583a7bb47f71ad",
+    "reviewer_id": "66f70f1bea583a7bb47f71b9",
+    "reviewed_id": "66f70f1dea583a7bb47f71c3",
+    "text": "good2",
+    "rating": 4,
+    "type": "client",
+    "registrationDate": "2024-09-27T20:08:40.349Z",
+    "__v": 0
+  }
+]

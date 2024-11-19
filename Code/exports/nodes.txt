@@ -1,0 +1,69 @@
+[
+  {
+    "_id": "673cdfaa5451b4614c6e326c",
+    "company_id": "673cdfa45451b4614c6e3248",
+    "sender_id": "673cdfa65451b4614c6e3258",
+    "receiver_id": "673cdfa45451b4614c6e3248",
+    "type": "relationship",
+    "type2": "hiring",
+    "status": "executed",
+    "registrationDate": "2024-11-19T18:57:46.504Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdfab5451b4614c6e3272",
+    "company_id": "673cdfa45451b4614c6e324b",
+    "sender_id": "673cdfa75451b4614c6e325a",
+    "receiver_id": "673cdfa85451b4614c6e3264",
+    "type": "relationship",
+    "type2": "hiring",
+    "status": "executed",
+    "registrationDate": "2024-11-19T18:57:47.788Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdfad5451b4614c6e327e",
+    "company_id": "673cdfa55451b4614c6e324e",
+    "sender_id": "673cdfa75451b4614c6e325e",
+    "receiver_id": "673cdfa85451b4614c6e3264",
+    "type": "relationship",
+    "type2": "hiring",
+    "status": "rejected",
+    "registrationDate": "2024-11-19T18:57:49.819Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdfaf5451b4614c6e328a",
+    "company_id": "673cdfa55451b4614c6e3250",
+    "sender_id": "673cdfa85451b4614c6e3260",
+    "receiver_id": "673cdfa85451b4614c6e3264",
+    "type": "relationship",
+    "type2": "hiring",
+    "status": "pending",
+    "registrationDate": "2024-11-19T18:57:51.850Z",
+    "__v": 0
+  },
+  {
+    "_id": "673cdfb15451b4614c6e3293",
+    "company_id": "673cdfa55451b4614c6e3252",
+    "sender_id": "673cdfa85451b4614c6e3262",
+    "receiver_id": "673cdfa85451b4614c6e3264",
+    "type": "relationship",
+    "type2": "hiring",
+    "status": "canceled",
+    "registrationDate": "2024-11-19T18:57:53.119Z",
+    "__v": 0,
+    "next": "673cdfb25451b4614c6e329d"
+  },
+  {
+    "_id": "673cdfb25451b4614c6e329d",
+    "company_id": "673cdfa55451b4614c6e3252",
+    "sender_id": "673cdfa85451b4614c6e3262",
+    "receiver_id": "673cdfa85451b4614c6e3264",
+    "type": "relationship",
+    "type2": "firing",
+    "status": "executed",
+    "registrationDate": "2024-11-19T18:57:54.636Z",
+    "__v": 0
+  }
+]

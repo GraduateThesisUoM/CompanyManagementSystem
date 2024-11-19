@@ -23,8 +23,10 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
+
     const company = await Company.findOne({ _id: req.user.company });
         req.session.company = company;
+        console.log(req.user);
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
       var data = {};
