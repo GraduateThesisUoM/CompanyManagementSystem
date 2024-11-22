@@ -4,7 +4,6 @@ const fs = require("fs");
 const path = require("path");
 var mongoose = require("mongoose");
 
-const connectDB = require('./db');
 
 //Models
 const Client = require(path_constants.schemas.one.client);
@@ -122,13 +121,13 @@ async function create_node(data) {
   var new_data = {};
   console.log(data);
   if (data.type == "relationship") {
-    if (data.company_id.equals(data.receiver_id) && data.type2 == "hiring") {
+    if (data.company.equals(data.receiver_id) && data.type2 == "hiring") {
       status = "executed";
     } else if (data.type2 == "firing") {
       status = "executed";
     }
     new_data = {
-      company_id: data.company_id,
+      company: data.company,
       sender_id: data.sender_id,
       receiver_id: data.receiver_id,
       type: data.type,
@@ -137,7 +136,7 @@ async function create_node(data) {
     };
   } else if (data.type == "request") {
     new_data = {
-      company_id: data.company_id,
+      company: data.company,
       sender_id: data.sender_id,
       receiver_id: data.receiver_id,
       type: data.type,
@@ -171,7 +170,7 @@ async function node_reply(data) {
   console.log("---------------------------------------"+sts)
 
   const reply_node = await create_node({
-    company_id: target_node.company_id,
+    company: target_node.company,
     sender_id: target_node.sender_id,
     receiver_id: target_node.receiver_id,
     type: target_node.type,
@@ -236,7 +235,7 @@ async function createWarehouse(data) {
 
   try {
     const warehouse = new Warehouse({
-      companyid: data.companyid,
+      company: data.company,
       title: data.title,
       location: data.location
     });
@@ -256,7 +255,7 @@ async function createItem(data) {
   try {
     const item = new Item({
       type:data.type,
-      companyID: data.companyID,
+      company: data.company,
       type: data.type,
       title: data.title,
       description: data.description,
@@ -280,7 +279,7 @@ async function createItem(data) {
 async function createSeries(data) {
   try {
     const seies = new Series({
-      companyID: data.companyID,
+      company: data.company,
       title: data.title,
       acronym: data.acronym,
       type: data.type,
@@ -381,14 +380,14 @@ async function create_doc(data) {
 
 async function warehose_get_inventory(data){
   var series = await Series.find({
-    companyID:data.company,
+    company:data.company,
     type: 2,
     effects_warehouse: 1,
     status : 1
   });
 
   var items = await Item.find({
-    companyID : data.company,
+    company : data.company,
     type: 2,
     status : 1
   })
@@ -445,7 +444,7 @@ async function warehose_get_inventory(data){
 
 async function item_get_inventory(data){
   var series = await Series.find({
-    companyID:data.company,
+    company:data.company,
     type: 2,
     effects_warehouse: 1,
     status : 1
@@ -567,7 +566,7 @@ async function update(id, schema , data){
 async function create_notification(
   userID,
   relevantUserID,
-  companyID,
+  company,
   relevantCompanyID,
   notificationType
 ) {
@@ -576,12 +575,12 @@ async function create_notification(
     $and: [
       { user_id: userID },
       { type: notificationType },
-      { company_id: companyID },
+      { company: relevantCompanyID },
       { status: "unread" },
     ],
   });
   var stus = "unread";
-  if (companyID == relevantCompanyID) {
+  if (company == relevantCompanyID) {
     stus = "read";
   }
 
@@ -591,7 +590,7 @@ async function create_notification(
       //Notification constructor
       user_id: userID,
       relevant_user_id: relevantUserID,
-      company_id: companyID,
+      company: company,
       relevant_company_id: relevantCompanyID,
       type: notificationType,
       status: stus,
@@ -625,7 +624,7 @@ const formatDate = (dateString) => {
   const minutes = String(date.getMinutes()).padStart(2, "0");
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
-
+/*
 
 async function importExport(action, schemas = []) {
   try {
@@ -785,7 +784,91 @@ async function importData(schemas) {
   } catch (err) {
     console.error("Error importing data:", err);
   }
+}*/
+
+
+
+async function importExport(action, company, schemas) {
+  try {
+    if (!['export', 'import'].includes(action)) {
+      throw new Error("Invalid action. Please specify 'export' or 'import'.");
+    }
+
+    if (action === 'export') {
+      await exportData(company, schemas);
+    } else if (action === 'import') {
+      await importData(company, schemas);
+    }
+  } catch (error) {
+    console.error("Error in master function:", error);
+  }
 }
+
+
+async function exportData(company = null, schemas) {
+  try {
+    const baseDir = "./exports";
+
+    // Create the base exports directory if it doesn't exist
+    if (!fs.existsSync(baseDir)) {
+      fs.mkdirSync(baseDir);
+      console.log(`Created exports directory: ${baseDir}`);
+    }
+
+    // If schemas is null, get all schemas from schemaMap
+    if (!schemas) {
+      schemas = Object.keys(schemaMap);
+      console.log("Schemas not provided. Exporting all schemas:", schemas);
+    }
+
+    let companies;
+
+    if (company != null) {
+      // Find a specific company by its ID
+      companies = await Company.find({ _id: company });
+      if (companies.length === 0) {
+        console.warn(`No company found with ID: ${company}`);
+        return;
+      }
+    } else {
+      // Find all companies
+      companies = await Company.find({});
+      console.log(companies)
+      if (companies.length === 0) {
+        console.warn("No companies found.");
+        return;
+      }
+    }
+
+    for (const company of companies) {
+      // Create a folder for each company using `_id-name` format
+      const companyDir = path.join(baseDir, `${company._id}-${company.name}`);
+      if (!fs.existsSync(companyDir)) {
+        fs.mkdirSync(companyDir);
+        console.log(`Created directory for company '${company.name}': ${companyDir}`);
+      }
+
+      // Export data for each specified schema
+      for (const schema of schemas) {
+        const model = schemaMap[schema];
+        if (!model) {
+          console.warn(`Schema '${schema}' not found.`);
+          continue;
+        }
+
+        const filePath = path.join(companyDir, `${schema}.txt`);
+        const data = await model.find({ company: company._id }).exec(); // Filter by company ID
+        console.log(data)
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
+        console.log(`Exported data for company '${company.name}' in collection '${schema}' to ${filePath}`);
+      }
+    }
+  } catch (err) {
+    console.error("Error exporting data:", err);
+  }
+}
+
+
 
 
 

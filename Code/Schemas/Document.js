@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Define the invoice schema
 const DocumentSchema = new mongoose.Schema({
-  company: { type: String, required: true },
+  company: { type: mongoose.Schema.Types.ObjectId, required: true  },
   sender: { type: String, required: true },
   receiver: { type: String, required: true },
   type:{

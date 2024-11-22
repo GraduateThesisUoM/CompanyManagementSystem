@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Define the report schema
 const NodeShema = new mongoose.Schema({
-  company_id: { type: mongoose.Schema.Types.ObjectId, required: true  },
+  company: { type: mongoose.Schema.Types.ObjectId, required: true  },
   sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   receiver_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   type: {

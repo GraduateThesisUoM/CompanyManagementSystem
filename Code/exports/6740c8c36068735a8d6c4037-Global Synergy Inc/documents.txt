@@ -1,0 +1,270 @@
+[
+  {
+    "_id": "6740c8e06068735a8d6c40a5",
+    "company": "6740c8c36068735a8d6c4037",
+    "sender": "6740c8c76068735a8d6c4046",
+    "receiver": "6740c8dd6068735a8d6c4095",
+    "type": 2,
+    "generalDiscount": 10,
+    "series": "6740c8df6068735a8d6c40a2",
+    "doc_num": 1,
+    "retail_wholesale": 2,
+    "sealed": 0,
+    "invoiceData": [
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 1,
+        "tax": 5,
+        "item": "6740c8de6068735a8d6c409d",
+        "discount": 0,
+        "price_of_unit": 30
+      }
+    ],
+    "status": 1,
+    "registrationDate": "2024-11-22T18:09:36.761Z",
+    "__v": 0
+  },
+  {
+    "_id": "6740c8e26068735a8d6c40a9",
+    "company": "6740c8c36068735a8d6c4037",
+    "sender": "6740c8c76068735a8d6c4046",
+    "receiver": "6740c8dd6068735a8d6c4095",
+    "type": 2,
+    "generalDiscount": 10,
+    "series": "6740c8df6068735a8d6c40a2",
+    "doc_num": 2,
+    "retail_wholesale": 2,
+    "sealed": 0,
+    "invoiceData": [
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 1,
+        "tax": 5,
+        "item": "6740c8de6068735a8d6c409b",
+        "discount": 0,
+        "price_of_unit": 30
+      }
+    ],
+    "status": 1,
+    "registrationDate": "2024-11-22T18:09:38.044Z",
+    "__v": 0
+  },
+  {
+    "_id": "6740c8e36068735a8d6c40ad",
+    "company": "6740c8c36068735a8d6c4037",
+    "sender": "6740c8c76068735a8d6c4046",
+    "receiver": "6740c8dc6068735a8d6c4093",
+    "type": 1,
+    "generalDiscount": 10,
+    "series": "6740c8df6068735a8d6c40a0",
+    "doc_num": 1,
+    "retail_wholesale": 2,
+    "sealed": 0,
+    "invoiceData": [
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 2,
+        "tax": 5,
+        "item": "6740c8dd6068735a8d6c4099",
+        "discount": 1,
+        "price_of_unit": 20
+      },
+      {
+        "quantity": 1,
+        "tax": 5,
+        "item": "6740c8de6068735a8d6c409b",
+        "discount": 0,
+        "price_of_unit": 30
+      }
+    ],
+    "status": 1,
+    "registrationDate": "2024-11-22T18:09:39.898Z",
+    "__v": 0
+  }
+]

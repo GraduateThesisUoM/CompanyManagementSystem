@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Define the review schema
 const ReviewSchema = new mongoose.Schema({
-  company_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  company: { type: mongoose.Schema.Types.ObjectId, required: true  },
   reviewer_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   reviewed_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   text: { type: String, required: false },

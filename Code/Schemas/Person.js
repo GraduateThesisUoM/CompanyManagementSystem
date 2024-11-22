@@ -4,11 +4,7 @@ const mongoose = require('mongoose');
 
 // Define the additional properties for the accountant schema
 const PersonSchema = new mongoose.Schema({
-    company : {
-        type: mongoose.Schema.Types.ObjectId,
-        required: false,
-        default: null
-      },
+  company: { type: mongoose.Schema.Types.ObjectId, required: true  },
       type:{
         type: Number,
         enum: [1,2],

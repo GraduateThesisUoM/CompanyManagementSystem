@@ -1,0 +1,19 @@
+[
+  {
+    "_id": "6740c8c96068735a8d6c404e",
+    "company": "6740c8c46068735a8d6c403e",
+    "companyOwner": 1,
+    "firstName": "Lucas",
+    "lastName": "Miller",
+    "email": "c5@c5",
+    "password": "$2b$10$K8cAtm33mFFVPJxqTJ.vdO4RGqgedRozxNPufrf7Ck9UTLZIXxZua",
+    "status": 1,
+    "afm": "998877665",
+    "mydatakey": "key321456",
+    "type": "user",
+    "__t": "client",
+    "registrationDate": "2024-11-22T18:09:13.370Z",
+    "last_log_out": "2024-11-22T18:09:13.370Z",
+    "__v": 0
+  }
+]

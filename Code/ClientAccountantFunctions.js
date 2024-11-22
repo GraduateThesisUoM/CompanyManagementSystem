@@ -18,11 +18,11 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
         const company = await Company.findOne({_id:companyId});
         console.log(accountantId);
 
-        var last_accountant_node = await Node.findOne({company_id:company._id,type2:"hiring",status: { $in: ['executed', 'viewed', 'pending'] }});
+        var last_accountant_node = await Node.findOne({company:company._id,type2:"hiring",status: { $in: ['executed', 'viewed', 'pending'] }});
         
         console.log("fffffffffffffffffffff")
         const company_node = await generalFunctions.create_node({
-            company_id : company._id,
+            company : company._id,
             sender_id : senderId,
             receiver_id : accountantId,
             type : 'relationship',
@@ -35,7 +35,7 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
         }
         else{
             
-            const company_nodes = await Node.find({company_id:company._id,type2:"request",status: { $in: ['viewed', 'pending'] }});
+            const company_nodes = await Node.find({company:company._id,type2:"request",status: { $in: ['viewed', 'pending'] }});
 
             last_accountant_node.next = company_node._id;
             last_accountant_node.status = 'canceled';
@@ -81,7 +81,7 @@ async function cancel_hiring_req_to_accountant(companyId, accountantId){
 
         await company_node.save();
 
-        const notification = await Notification.findOne({company_id:companyId,relevant_user_id:accountantId,type:'hiring-notification'})
+        const notification = await Notification.findOne({company:companyId,relevant_user_id:accountantId,type:'hiring-notification'})
         console.log(notification);
         notification.type = 'cancel-hiring-req-notification'
         await notification.save();
@@ -112,7 +112,7 @@ async function fire_accountant(companyId,senderId,accountantId){
 
         await company_node.save();
 
-        const company_nodes = await Node.find({company_id:company._id,type:"request",status: { $in: ['viewed', 'pending'] }});
+        const company_nodes = await Node.find({company:company._id,type:"request",status: { $in: ['viewed', 'pending'] }});
 
         company_nodes.forEach(async node => {
             node.next = company_node._id;
@@ -147,7 +147,7 @@ async function fetchClients(accountantId,select){
         }
 
         for (let client of clients_Nodes) {
-            clients.push(await Company.findOne({_id:client.company_id}));
+            clients.push(await Company.findOne({_id:client.company}));
           }
           return clients;
         
@@ -160,7 +160,7 @@ async function fetchClients(accountantId,select){
 
 async function fetchOneClient(accountantId,clientId){
     try{
-        const client = await Node.find({receiver_id:accountantId,company_id:clientId, type:'relationship',type2:'hiring', status: 'pending' });
+        const client = await Node.find({receiver_id:accountantId,company:clientId, type:'relationship',type2:'hiring', status: 'pending' });
         return client;
 
     }

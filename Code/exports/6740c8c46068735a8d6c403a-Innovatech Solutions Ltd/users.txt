@@ -1,0 +1,19 @@
+[
+  {
+    "_id": "6740c8c86068735a8d6c404a",
+    "company": "6740c8c46068735a8d6c403a",
+    "companyOwner": 1,
+    "firstName": "Emma",
+    "lastName": "Brown",
+    "email": "c3@c3",
+    "password": "$2b$10$01OIR88Aici/ifI03arsK.21VJRRjUW6c5eEOIyv37TuuesX5Akea",
+    "status": 1,
+    "afm": "223344556",
+    "mydatakey": "key987654",
+    "type": "user",
+    "__t": "client",
+    "registrationDate": "2024-11-22T18:09:12.245Z",
+    "last_log_out": "2024-11-22T18:09:12.245Z",
+    "__v": 0
+  }
+]

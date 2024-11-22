@@ -1,0 +1,36 @@
+[
+  {
+    "_id": "6740c8c76068735a8d6c4046",
+    "company": "6740c8c36068735a8d6c4037",
+    "companyOwner": 1,
+    "firstName": "Alice",
+    "lastName": "Johnson",
+    "email": "c1@c1",
+    "password": "$2b$10$gpv1J3uPInAYziGear2S1.jNQ3cwjdl4q99/uPylGA5l.eFlC5fR.",
+    "status": 1,
+    "afm": "987654321",
+    "mydatakey": "key654321",
+    "type": "user",
+    "__t": "client",
+    "registrationDate": "2024-11-22T18:09:11.126Z",
+    "last_log_out": "2024-11-22T18:09:11.126Z",
+    "__v": 0
+  },
+  {
+    "_id": "6740c8c76068735a8d6c4048",
+    "company": "6740c8c36068735a8d6c4037",
+    "companyOwner": 0,
+    "firstName": "Alice",
+    "lastName": "Johnson",
+    "email": "c2@c2",
+    "password": "$2b$10$O2OXU0VhnQ7n1KNMOKXdY.FrtddNAWVnKe4tDbONXGwvkd.TsSzju",
+    "status": 1,
+    "afm": "987654321",
+    "mydatakey": "key654321",
+    "type": "user",
+    "__t": "client",
+    "registrationDate": "2024-11-22T18:09:11.678Z",
+    "last_log_out": "2024-11-22T18:09:11.678Z",
+    "__v": 0
+  }
+]

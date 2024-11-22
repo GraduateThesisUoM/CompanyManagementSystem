@@ -68,8 +68,8 @@ async function create_users() {
 
   console.log("End Deleting -----");
 
-  await generalFunctions.importExport('import');
-  /*
+  /*await generalFunctions.importExport('import');*/
+  
 
   var data = {};
   var logo = "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
@@ -317,7 +317,7 @@ async function create_users() {
   const person3 = await generalFunctions.create_person(data);
 
   data = {
-    companyID: company2._id,
+    company: company2._id,
     title: "i1",
     description: "i1",
     type : 1,
@@ -330,7 +330,7 @@ async function create_users() {
   };
   const i1 = await generalFunctions.createItem(data);
   data = {
-    companyID: company2._id,
+    company: company2._id,
     title: "i2",
     description: "i2",
     type:2,
@@ -343,7 +343,7 @@ async function create_users() {
   };
   const i2 = await generalFunctions.createItem(data);
   data = {
-    companyID: company2._id,
+    company: company2._id,
     title: "i3",
     description: "i3",
     type:2,
@@ -358,7 +358,7 @@ async function create_users() {
   await i3.save();
 
   data = {
-    companyID: company2._id,
+    company: company2._id,
     title: "series1b",
     acronym: "S1",
     type: 1,
@@ -366,7 +366,7 @@ async function create_users() {
   };
   const s1 = await generalFunctions.createSeries(data);
   data = {
-    companyID: company2._id,
+    company: company2._id,
     title: "series2s",
     acronym: "S2",
     type: 2,
@@ -444,21 +444,21 @@ async function create_users() {
   const doc3 = await generalFunctions.create_doc(data);
 
   data = {
-    companyid: company2._id,
+    company: company2._id,
     title: "w1",
     location: "w1_l",
   };
   const w1 = await generalFunctions.createWarehouse(data);
 
   data = {
-    companyid: company2._id,
+    company: company2._id,
     title: "w2",
     location: "w2_l",
   };
   var w2 = await generalFunctions.createWarehouse(data);
   w2.status = 0;
   w2.registrationDate = "2024-06-10T18:22:57.852+00:00";
-  await w2.save();*/
+  await w2.save();
 
   console.log("----------   END ");
 }

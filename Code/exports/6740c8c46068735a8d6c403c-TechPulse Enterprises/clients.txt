@@ -1,0 +1,19 @@
+[
+  {
+    "_id": "6740c8c86068735a8d6c404c",
+    "company": "6740c8c46068735a8d6c403c",
+    "companyOwner": 1,
+    "firstName": "Olivia",
+    "lastName": "Davis",
+    "email": "c4@c4",
+    "password": "$2b$10$v.103I0ogWWvq0lqSZ3MZOSzW9dpyhkasA1L1jj6KQY/pbbfrOlLC",
+    "status": 1,
+    "afm": "667788990",
+    "mydatakey": "key123987",
+    "type": "user",
+    "__t": "client",
+    "registrationDate": "2024-11-22T18:09:12.802Z",
+    "last_log_out": "2024-11-22T18:09:12.802Z",
+    "__v": 0
+  }
+]

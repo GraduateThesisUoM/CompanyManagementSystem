@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Define the transaction schema
 const WarehouseSchema = new mongoose.Schema({
     registrationDate: { type: Date, default: Date.now , required: true},
-    companyid: { type: String, required: true },
+    company: { type: mongoose.Schema.Types.ObjectId, required: true  },
     title: { type: String, required: true },
     location: { type: String, required: true },
     status: {
