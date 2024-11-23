@@ -1,0 +1,19 @@
+[
+  {
+    "_id": "6741ddf86c8d37e8b1da9647",
+    "company": "6741ddf86c8d37e8b1da9645",
+    "companyOwner": 1,
+    "firstName": "Nikos",
+    "lastName": "Papas",
+    "email": "c3@c3",
+    "password": "$2b$10$gq9UPyCVqKmPuvQxVquodeBVpCEDQKlpRb.4kingawkNDfmxpmvg6",
+    "status": 1,
+    "afm": "",
+    "mydatakey": "",
+    "type": "user",
+    "__t": "client",
+    "registrationDate": "2024-11-23T13:51:52.396Z",
+    "last_log_out": "2024-11-23T13:51:52.396Z",
+    "__v": 0
+  }
+]

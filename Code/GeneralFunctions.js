@@ -284,7 +284,9 @@ async function createSeries(data) {
       acronym: data.acronym,
       type: data.type,
       sealed: data.sealed,
-      effects_warehouse: data.effects_warehouse
+      effects_warehouse: data.effects_warehouse,
+      credit : data.credit ,
+      debit : data.debit
     });
 
     await seies.save();
@@ -513,6 +515,7 @@ async function drop_collection(collection_name) {
 
 async function delete_deactivate(data, schema, action) {
   try {
+
     var obj = await get_obj_by_id(data, schema);
     console.log(obj)
     if (action == "delete" || action == 2) {
@@ -624,169 +627,6 @@ const formatDate = (dateString) => {
   const minutes = String(date.getMinutes()).padStart(2, "0");
   return `${day}/${month}/${year} ${hours}:${minutes}`;
 };
-/*
-
-async function importExport(action, schemas = []) {
-  try {
-    if (!['export', 'import'].includes(action)) {
-      throw new Error("Invalid action. Please specify 'export' or 'import'.");
-    }
-
-    if (action === 'export') {
-      if (schemas.length > 0) {
-        // Export only specified schemas
-        await exportData(schemas);
-      } else {
-        // Export all schemas
-        await exportAllData();
-      }
-    } else if (action === 'import') {
-      if (schemas.length > 0) {
-        // Import only specified schemas
-        await importData(schemas);
-      } else {
-        // Import all schemas
-        await importAllData();
-      }
-    }
-  } catch (error) {
-    console.error("Error in master function:", error);
-  }
-}
-
-async function exportAllData() {
-
-  try {
-    const outputDir = "./exports"; // Directory to store exported files
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir); // Create the exports directory if it doesn't exist
-    }
-
-    await connectDB();
-
-    for (const [key, model] of Object.entries(schemaMap)) {
-      const filePath = path.join(outputDir, `${key}.txt`);
-      const data = await model.find({}).exec();
-      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
-      console.log(`Exported data from collection '${key}' to ${filePath}`);
-    }
-  } catch (err) {
-    console.error("Error exporting data:", err);
-  }
-}
-
-async function exportData(schemas) {
-  try {
-    const outputDir = "./exports"; // Directory to store exported files
-    if (!fs.existsSync(outputDir)) {
-      fs.mkdirSync(outputDir); // Create the exports directory if it doesn't exist
-    }
-
-    await connectDB();
-
-    for (const schema of schemas) {
-      const model = schemaMap[schema];
-      if (!model) {
-        console.warn(`Schema '${schema}' not found.`);
-        continue;
-      }
-      const filePath = path.join(outputDir, `${schema}.txt`);
-      const data = await model.find({}).exec();
-      fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
-      console.log(`Exported data from collection '${schema}' to ${filePath}`);
-    }
-  } catch (err) {
-    console.error("Error exporting data:", err);
-  }
-}
-
-async function importAllData() {
-  try {
-    const inputDir = "./exports"; // Directory containing exported files
-    if (!fs.existsSync(inputDir)) {
-      fs.mkdirSync(inputDir); // Create the exports directory if it doesn't exist
-    }
-
-    await connectDB();
-
-    for (const [key, model] of Object.entries(schemaMap)) {
-      // Skip 'clients' and 'accountants' schemas
-      if (key === 'clients' || key === 'accountants') {
-        console.log(`Skipping schema: ${key}`);
-        continue;
-      }
-      const filePath = path.join(inputDir, `${key}.txt`);
-      console.log(key)
-      
-      // Check if the file exists, otherwise create an empty file
-      if (!fs.existsSync(filePath)) {
-        fs.writeFileSync(filePath, JSON.stringify([]), "utf-8");
-        console.warn(`File for collection '${key}' was not found. Created an empty file.`);
-      }
-
-      // Read the file content
-      const fileContent = fs.readFileSync(filePath, "utf-8");
-      const data = JSON.parse(fileContent);
-
-      const model = schemaMap[key];
-      if (!model) {
-        console.warn(`Schema '${key}' not found.`);
-        continue;
-      }
-
-      // Insert the data including the _id field
-      await model.insertMany(data, { ordered: false });  // 'ordered: false' allows for skipping errors
-      console.log(`Imported data into collection '${key}' from ${filePath}`);
-    }
-  } catch (err) {
-    console.error("Error importing data:", err);
-  }
-}
-
-
-async function importData(schemas) {
-  try {
-    const inputDir = "./exports"; // Directory containing exported files
-    if (!fs.existsSync(inputDir)) {
-      fs.mkdirSync(inputDir); // Create the exports directory if it doesn't exist
-    }
-
-    await connectDB();
-
-    for (const schema of schemas) {
-      // Skip 'clients' and 'accountants' schemas
-      if (key === 'clients' || key === 'accountants') {
-        console.log(`Skipping schema: ${key}`);
-        continue;
-      }
-      const filePath = path.join(inputDir, `${schema}.txt`);
-
-      // Check if the file exists, otherwise create an empty file
-      if (!fs.existsSync(filePath)) {
-        fs.writeFileSync(filePath, JSON.stringify([]), "utf-8");
-        console.warn(`File for collection '${schema}' was not found. Created an empty file.`);
-      }
-
-      // Read the file content
-      const fileContent = fs.readFileSync(filePath, "utf-8");
-      const data = JSON.parse(fileContent);
-
-      const model = schemaMap[schema];
-      if (!model) {
-        console.warn(`Schema '${schema}' not found.`);
-        continue;
-      }
-
-      // Insert the data including the _id field
-      await model.insertMany(data, { ordered: false });  // 'ordered: false' allows for skipping errors
-      console.log(`Imported data into collection '${schema}' from ${filePath}`);
-    }
-  } catch (err) {
-    console.error("Error importing data:", err);
-  }
-}*/
-
-
 
 async function importExport(action, company, schemas) {
   try {
@@ -796,14 +636,18 @@ async function importExport(action, company, schemas) {
 
     if (action === 'export') {
       await exportData(company, schemas);
+      exportAdmins();
+      exportAccountant();
     } else if (action === 'import') {
+      await clear_db();
       await importData(company, schemas);
+      importAdmins();
+      importAccountants();
     }
   } catch (error) {
     console.error("Error in master function:", error);
   }
 }
-
 
 async function exportData(company = null, schemas) {
   try {
@@ -825,7 +669,7 @@ async function exportData(company = null, schemas) {
 
     if (company != null) {
       // Find a specific company by its ID
-      companies = await Company.find({ _id: company });
+      companies = await Company.find({ _id:new mongoose.Types.ObjectId(company) });
       if (companies.length === 0) {
         console.warn(`No company found with ID: ${company}`);
         return;
@@ -857,8 +701,22 @@ async function exportData(company = null, schemas) {
         }
 
         const filePath = path.join(companyDir, `${schema}.txt`);
-        const data = await model.find({ company: company._id }).exec(); // Filter by company ID
-        console.log(data)
+        var data
+        if (model.modelName === "Company") { 
+           data = await model.find({ _id: company._id }).exec(); // Filter by company ID
+        }
+        else if (model.modelName === "Client") { 
+          data = await model.find({ __t:'client',company: company._id ,type:'user'}).exec(); // Filter by company ID
+        }
+        else if (schema == "accountants") { 
+          continue;
+        }
+        else if (schema == "users") { 
+          continue;
+        }
+        else{
+          data = await model.find({ company: company._id }).exec(); // Filter by company ID
+        }
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
         console.log(`Exported data for company '${company.name}' in collection '${schema}' to ${filePath}`);
       }
@@ -868,8 +726,244 @@ async function exportData(company = null, schemas) {
   }
 }
 
+async function importData() {
+  try {
+    const baseDir = "./exports";
+
+    // Check if the base exports directory exists
+    if (!fs.existsSync(baseDir)) {
+      console.error(`Exports directory not found: ${baseDir}`);
+      return;
+    }
+
+    // Get all company subdirectories
+    const companyDirs = fs
+      .readdirSync(baseDir)
+      .filter((dir) => fs.statSync(path.join(baseDir, dir)).isDirectory());
+
+    if (companyDirs.length === 0) {
+      console.warn("No company directories found in exports.");
+      return;
+    }
+    companyDirs.pop(1);
+    companyDirs.pop(2);
+    console.log(companyDirs)
+
+    for (const companyDirName of companyDirs) {
+      // Extract company ID and name from directory name
+      const [companyId, ...companyNameParts] = companyDirName.split("-");
+      const companyName = companyNameParts.join("-");
+      const companyDir = path.join(baseDir, companyDirName);
+
+      console.log(`Processing company: ID=${companyId}, Name=${companyName}`);
+
+      // Create or verify the company in the database
+      const company = await Company.findOneAndUpdate(
+        { _id: companyId },
+        { _id: companyId, name: companyName },
+        { upsert: true, new: true }
+      );
+
+      // Get all schema files in the company's directory
+      const schemaFiles = fs
+        .readdirSync(companyDir)
+        .filter((file) => file.endsWith(".txt"));
+
+      if (schemaFiles.length === 0) {
+        console.warn(`No schema files found for company '${companyName}'.`);
+        continue;
+      }
+
+      for (const schemaFile of schemaFiles) {
+        const schemaName = path.basename(schemaFile, ".txt");
+        const filePath = path.join(companyDir, schemaFile);
+
+        const model = schemaMap[schemaName];
+        if (!model) {
+          console.warn(`Schema '${schemaName}' not found in schemaMap.`);
+          continue;
+        }
+        if(model.modelName === "Company"){
+          continue;
+        }
+
+        console.log(`Importing data for schema: ${schemaName} from ${filePath}`);
+
+        // Read and parse the file data
+        const fileData = fs.readFileSync(filePath, "utf-8");
+        const records = JSON.parse(fileData);
+
+        if (records.length === 0) {
+          console.warn(`No records found in file for schema '${schemaName}'.`);
+          continue;
+        }
+
+        // Add company ID to the records (if not Company schema)
+        const enrichedRecords =
+          model.modelName === "Company"
+            ? records
+            : records.map((record) => ({
+                ...record,
+                company: companyId,
+              }));
+
+        // Insert data into the database
+        await model.insertMany(enrichedRecords, { ordered: false }).catch((err) => {
+          console.error(`Error importing schema '${schemaName}': ${err.message}`);
+        });
+
+        console.log(`Successfully imported data for schema '${schemaName}'.`);
+      }
+    }
+
+    console.log("Data import completed.");
+  } catch (err) {
+    console.error("Error importing data:", err);
+  }
+}
+
+async function exportAdmins() {
+  try {
+    const baseDir = "./exports";
+
+    // Create the base exports directory if it doesn't exist
+    if (!fs.existsSync(baseDir)) {
+      fs.mkdirSync(baseDir);
+      console.log(`Created exports directory: ${baseDir}`);
+    }
+
+    // Create the 'admins' folder inside the exports directory
+    const adminsDir = path.join(baseDir, 'admins');
+    if (!fs.existsSync(adminsDir)) {
+      fs.mkdirSync(adminsDir);
+      console.log(`Created 'admins' directory: ${adminsDir}`);
+    }
+
+    // Fetch all admin data from the Admin model
+
+    const adminData = await User.find({type:'admin'}).exec();
+
+    // Export admin data to a file inside the 'admins' folder
+    const adminFilePath = path.join(adminsDir, 'admins.txt');
+    fs.writeFileSync(adminFilePath, JSON.stringify(adminData, null, 2), 'utf-8');
+    console.log(`Exported all admin data to ${adminFilePath}`);
+
+  } catch (err) {
+    console.error("Error exporting admin data:", err);
+  }
+}
 
 
+async function exportAccountant() {
+  try {
+    const baseDir = "./exports";
+
+    if (!fs.existsSync(baseDir)) {
+      fs.mkdirSync(baseDir);
+      console.log(`Created exports directory: ${baseDir}`);
+    }
+
+    const accountantsDir = path.join(baseDir, 'accountants');
+    if (!fs.existsSync(accountantsDir)) {
+      fs.mkdirSync(accountantsDir);
+      console.log(`Created 'accountants' directory: ${accountantsDir}`);
+    }
+
+    const accountantsData = await User.find({type:'accountant'}).exec();
+
+    const accountantsFilePath = path.join(accountantsDir, 'accountants.txt');
+    fs.writeFileSync(accountantsFilePath, JSON.stringify(accountantsData, null, 2), 'utf-8');
+    console.log(`Exported all accountant data to ${accountantsFilePath}`);
+
+  } catch (err) {
+    console.error("Error exporting accountants data:", err);
+  }
+}
+
+async function importAdmins() {
+  try {
+    const baseDir = "./exports";
+    const adminsDir = path.join(baseDir, 'admins');
+    const adminsFilePath = path.join(adminsDir, 'admins.txt');
+
+    // Check if the file exists
+    if (!fs.existsSync(adminsFilePath)) {
+      console.error(`No file found at ${adminsFilePath}`);
+      return;
+    }
+
+    // Read the accountants data from the file
+    const adminsData = fs.readFileSync(adminsFilePath, 'utf-8');
+
+    // Parse the data
+    const admins = JSON.parse(adminsData);
+
+    if (admins && admins.length > 0) {
+      for (let admin of admins) {
+        // Assuming you are using Mongoose and the User model has necessary fields for accountant
+        const NewAdmin = new User(admin);
+        await NewAdmin.save();
+      }
+      console.log(`Imported ${admins.length} admins into the database.`);
+    } else {
+      console.log('No admins data found in the file.');
+    }
+
+  } catch (err) {
+    console.error("Error importing admins data:", err);
+  }
+}
+
+async function importAccountants() {
+  try {
+    const baseDir = "./exports";
+    const accountantsDir = path.join(baseDir, 'accountants');
+    const accountantsFilePath = path.join(accountantsDir, 'accountants.txt');
+
+    // Check if the file exists
+    if (!fs.existsSync(accountantsFilePath)) {
+      console.error(`No file found at ${accountantsFilePath}`);
+      return;
+    }
+
+    // Read the accountants data from the file
+    const accountantsData = fs.readFileSync(accountantsFilePath, 'utf-8');
+
+    // Parse the data
+    const accountants = JSON.parse(accountantsData);
+
+    // Insert accountants data into the database
+    if (accountants && accountants.length > 0) {
+      for (let accountant of accountants) {
+        // Assuming you are using Mongoose and the User model has necessary fields for accountant
+        const newAccountant = new User(accountant);
+        await newAccountant.save();
+      }
+      console.log(`Imported ${accountants.length} accountants into the database.`);
+    } else {
+      console.log('No accountants data found in the file.');
+    }
+
+  } catch (err) {
+    console.error("Error importing accountants data:", err);
+  }
+}
+
+
+async function clear_db(){
+  await drop_collection("Company");
+  await drop_collection("Node");
+  await drop_collection("User");
+  await drop_collection("Item");
+  await drop_collection("Report");
+  await drop_collection("Warehouse");
+  await drop_collection("Series");
+  await drop_collection("Person");
+  await drop_collection("Document");
+  await drop_collection("Notification");
+  await drop_collection("Person");
+  await drop_collection("Review");
+}
 
 
 

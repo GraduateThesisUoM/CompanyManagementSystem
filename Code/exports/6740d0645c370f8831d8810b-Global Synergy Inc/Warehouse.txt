@@ -1,0 +1,32 @@
+[
+  {
+    "_id": "6740d0835c370f8831d88184",
+    "registrationDate": "2024-11-22T18:42:11.741Z",
+    "company": "6740d0645c370f8831d8810b",
+    "title": "w1",
+    "location": "w1_l",
+    "status": 1,
+    "full": 0,
+    "__v": 0
+  },
+  {
+    "_id": "6740d0845c370f8831d88186",
+    "registrationDate": "2024-06-10T18:22:57.852Z",
+    "company": "6740d0645c370f8831d8810b",
+    "title": "w2",
+    "location": "w2_l",
+    "status": 0,
+    "full": 0,
+    "__v": 0
+  },
+  {
+    "_id": "6741b83305a5a7069eb56331",
+    "registrationDate": "2024-11-23T11:10:43.514Z",
+    "company": "6740d0645c370f8831d8810b",
+    "title": "test1",
+    "location": "111",
+    "status": 1,
+    "full": 0,
+    "__v": 0
+  }
+]

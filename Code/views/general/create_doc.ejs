@@ -139,16 +139,14 @@
 
         if (window.location.search) {
             type = new URLSearchParams(window.location.search).get('type');
-            if(type ==1){//buy
-                $("#list_header").html('Create Buy Document');
-                $("#from_label").html('Buying from &nbsp&nbsp');
-                
-            }
-            else if(type ==2){//sale
+            if(type ==1){//sale
                 $("#list_header").html('Create Sales Document');
                 $("#from_label").html('Customer&nbsp&nbsp');
+            }
+            else if(type ==2){//buy
+                $("#list_header").html('Create Buy Document');
+                $("#from_label").html('Buying from &nbsp&nbsp');
                 $(".wholesale_retail").hide();
-
             }
         }   
         $("#doc_type").val(type);

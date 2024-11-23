@@ -1,0 +1,13 @@
+[
+  {
+    "_id": "6740d0705c370f8831d88138",
+    "user_id": "6740d0685c370f8831d8811a",
+    "relevant_user_id": "6740d06b5c370f8831d88124",
+    "company": "6740d0645c370f8831d8810b",
+    "relevant_company_id": "6740d06b5c370f8831d88124",
+    "type": "hiring-notification",
+    "status": "unread",
+    "registrationDate": "2024-11-22T18:41:52.993Z",
+    "__v": 0
+  }
+]

@@ -20,17 +20,14 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 /*--------   SING UP */
 router.get("/", Authentication.checkNotAuthenticated, async (req, res) => {
   try {
-    const access = generalFunctions.checkAccessRigts(req, res);
-    if (access.response) {
-      const users = await User.find();
-      const companies_list = await Company.find();
-      res.render("../views/sign_up.ejs", {
-        users_list: users,
-        companies: companies_list,
-      });
-    } else {
-      res.redirect("/error?error=" + access.error);
-    }
+
+    const users = await User.find();
+    const companies_list = await Company.find();
+    res.render("../views/sign_up.ejs", {
+      users_list: users,
+      companies: companies_list,
+    });
+    
   } catch (err) {
     console.error("Error updating user data:", err);
     res.redirect("/error?error=" + err);
@@ -46,12 +43,17 @@ router.post("/", async (req, res) => {
       var company;
       if (req.body.companyNewExisting == "0") {
         //New Company
+        var com_logo = "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg";
+        if(req.body.companyLogo){
+          com_logo = req.body.companyLogo
+        }
+        console.log("-------"+req.body.companyLogo)
+        console.log(com_logo);
         var data = {
           name: req.body.companyName,
-          logo: "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg",
+          logo: com_logo,
           signupcode: 1,
-          /*logo : req.body.logo,
-            signupcode : generateRandomCode(length)*/
+          /*signupcode : generateRandomCode(length)*/
         };
         company = await generalFunctions.create_company(data);
       } else {

@@ -79,7 +79,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                             warehouse.title,
                             obj.invoiceData,
                             //---
-                            await Item.find({companyID : company, status:1,type:obj.type})
+                            await Item.find({company : company, status:1,type:obj.type})
                         ];
                         data.titles = ["Doc", "Reg Date",person_type,"General Discount %","Status","Type","Sealed","Warehouse","Data"];
                         
@@ -112,7 +112,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         //1=normal-text,0=text-readonly, 5 checkbox
 
                     }
-                    else if (type == 'person'){
+                    else if (type == 'persons'){
                         obj = await Person.findOne({_id : id});
                         data.data = [
                             obj.type,

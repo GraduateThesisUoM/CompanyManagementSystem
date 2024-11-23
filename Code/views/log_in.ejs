@@ -11,9 +11,9 @@
       <% if (messages.error) { %>
         <%= messages.error %>
       <% } %>
-      <a href="http://localhost:3000/log-in?fast_log_in=1">a1 1</a>
-        <a href="http://localhost:3000/log-in?fast_log_in=2">C1 2</a>
-        <a href="http://localhost:3000/log-in?fast_log_in=3">c2 3</a>
+      <a href="http://localhost:3000/log-in?fast_log_in=1">ad1</a>
+        <a href="http://localhost:3000/log-in?fast_log_in=2">C1 </a>
+        <a href="http://localhost:3000/log-in?fast_log_in=3">C3 3</a>
         <a href="http://localhost:3000/log-in?fast_log_in=4">ad1 4</a>
         <a href="http://localhost:3000/log-in?restartdb=true">restart db</a>
 
@@ -47,7 +47,7 @@
       //test
       else if (urlParams.has('fast_log_in')) {
         if(urlParams.get('fast_log_in')=="1"){
-          $("#email").val("a1@a1");
+          $("#email").val("ad1@ad1");
           $("#password").val("1");
           $("#log_in_btn").click();
         }
@@ -56,13 +56,8 @@
           $("#password").val("1");
           $("#log_in_btn").click();
         }
-        else if(urlParams.get('fast_log_in')=="3"){
-          $("#email").val("c2@c2");
-          $("#password").val("1");
-          $("#log_in_btn").click();
-        }
-        else if(urlParams.get('fast_log_in')=="4"){
-          $("#email").val("admin@admin");
+        else {
+          $("#email").val("c"+urlParams.get('fast_log_in')+"@c"+urlParams.get('fast_log_in'));
           $("#password").val("1");
           $("#log_in_btn").click();
         }

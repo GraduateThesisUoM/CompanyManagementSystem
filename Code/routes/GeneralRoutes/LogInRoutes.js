@@ -37,6 +37,9 @@ router.get("/", Authentication.checkNotAuthenticated, async (req, res) => {
   else if (req.query.restartdb === "export") {
     await generalFunctions.importExport('export');
   }
+  else if (req.query.restartdb === "import") {
+    await generalFunctions.importExport('import');
+  }
   res.render("." + path_constants.pages.log_in.view());
 });
 router.post(
@@ -139,8 +142,8 @@ async function create_users() {
 
   data = {
     type: "user",
-    firstName: "Alice",
-    lastName: "Johnson",
+    firstName: "Maria",
+    lastName: "Papadopoulou",
     password: await bcrypt.hash("1", 10),
     email: "c1@c1",
     afm: "987654321",

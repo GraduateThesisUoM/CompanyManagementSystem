@@ -60,7 +60,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           type: req.query.type,
         });
         var list_series = await Series.find({
-          companyID: company,
+          company: company,
           type: req.query.type,
         });
         var person_type = "Supplier";
@@ -109,7 +109,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           };
         }
       } else if (req.query.searchfor == "Warehouse") {
-        list_items = await Warehouse.find({ companyid: company });
+        list_items = await Warehouse.find({ company: company });
         console.log(list_items)
         list_items = list_items.map((item) => ({
           data: [
@@ -123,7 +123,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         column_titles = ["ID", "Title", "location", "Reg Date", "Status"];
       } else if (req.query.searchfor == "series") {
         list_items = await Series.find({
-          companyID: company,
+          company: company,
           type: req.query.type,
         });
         list_items = list_items.map((item) => ({
@@ -148,7 +148,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Reg Date",
           "Status",
         ];
-      } else if (req.query.searchfor == "person") {
+      } else if (req.query.searchfor == "persons") {
         list_items = await Person.find({
           company: company,
           type: req.query.type,
@@ -178,7 +178,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Reg Date",
         ];
       } else if (req.query.searchfor == "items") {
-        list_items = await Item.find({ companyID: company
+        list_items = await Item.find({ company: company
           ,type: req.query.type
          });
         list_items = list_items.map((item) => ({

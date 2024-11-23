@@ -26,7 +26,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       // for delete let person = req.query.type === "buy" ? "supplier" : "customer";
 
       var list_warehouses =  await Warehouse.find({
-        companyid: req.user.company,
+        company: req.user.company,
         status: 1,
       });
       list_warehouses = list_warehouses.map((warehouse) => ({
@@ -47,13 +47,13 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       }));
 
       var list_items = await Item.find({
-        companyID: req.user.company,
+        company: req.user.company,
         status: 1,
         type: req.query.type
       });
 
       var list_series = await Series.find({
-        companyID: req.user.company,
+        company: req.user.company,
         status: 1,
         type: req.query.type,
       });

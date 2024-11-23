@@ -60,7 +60,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 
     if (req.body.create_type == "Warehouse") {
       data = {
-        companyid :company._id,
+        company :company._id,
         title: req.body.warehouse_title,
         location:req.body.warehouse_address
       }
@@ -69,7 +69,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       );
     } else if (req.body.create_type == "items") {
       data = {
-        companyID: company._id,
+        company: company._id,
         title: req.body.items_title,
         description: req.body.items_description,
         type: req.body.obj_type,
@@ -84,13 +84,18 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     } else if (req.body.create_type == "series") {
       const isSealed = req.body.series_sealed === "on" ? 1 : 0;
       const effects_warehouse = req.body.effects_warehouse === "on" ? 1 : 0;
+      const credit = req.body.credit === "on" ? 1 : 0;
+      const debit = req.body.debit === "on" ? 1 : 0;
+
       data = {
-        companyID: company._id,
+        company: company._id,
         title: req.body.series_title,
         acronym: req.body.series_acronym,
         type: req.body.obj_type,
         sealed: isSealed,
-        effects_warehouse: effects_warehouse
+        effects_warehouse: effects_warehouse,
+        credit : credit ,
+        debit : debit
       };
       created_obj = await generalFunctions.createSeries(data);
     } else if (req.body.create_type == "person") {

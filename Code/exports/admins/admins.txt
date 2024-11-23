@@ -1,0 +1,14 @@
+[
+  {
+    "_id": "6741c5ffeffb337ffdcf9d94",
+    "registrationDate": "2024-11-23T12:09:35.177Z",
+    "last_log_out": "2024-11-23T12:09:35.177Z",
+    "firstName": "ad1",
+    "lastName": "ad1",
+    "email": "ad1@ad1",
+    "password": "$2b$10$nRrVNlAkf2CV5etinY.Gou/yY2ipzjvENHjQn1FblcMj5gcVXmgNy",
+    "status": 1,
+    "type": "admin",
+    "__v": 0
+  }
+]
