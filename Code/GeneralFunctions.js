@@ -48,6 +48,8 @@ function checkAccessRigts(req) {
     }
     /*console.log(page_url)
     console.log(disabled_company_accesable_pages.includes(page_url));*/
+    console.log("-------------");
+    console.log(req.user);
     if (req.user.type == "user") {
       if (req.session.company.status != 1 && disabled_company_accesable_pages.includes(page_url) == false) {
         console.log("Access denied due to the company is closed");
@@ -119,7 +121,6 @@ async function create_user(data) {
 async function create_node(data) {
   var status = "pending";
   var new_data = {};
-  console.log(data);
   if (data.type == "relationship") {
     if (data.company.equals(data.receiver_id) && data.type2 == "hiring") {
       status = "executed";
@@ -150,7 +151,6 @@ async function create_node(data) {
   else{
     new_data = data
   }
-  console.log(new_data);
 
   const new_node = new Node(new_data);
 
@@ -949,8 +949,16 @@ async function importAccountants() {
   }
 }
 
-async function get_accountant(data){
-  const node =  await Node.findOne({company:req.user.company})
+async function get_accountant_node(data){
+  console.log('get_accountant_node');
+  console.log('data.company : '+data.company);
+  return  await Node.findOne({
+    company:data.company,
+    type:'relationship',
+    type2:'hiring',
+    status: 'executed',
+    next: "-"
+  })
 }
 
 
@@ -995,5 +1003,7 @@ module.exports = {
   update,
   warehose_get_inventory,
   item_get_inventory,
-  importExport
+  importExport,
+  clear_db,
+  get_accountant_node
 };

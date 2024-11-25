@@ -1,16 +1,16 @@
 [
   {
-    "_id": "67445bb1c7d656c39c232373",
+    "_id": "6744cea94215507895961cc0",
     "firstName": "ac1",
     "lastName": "ac1",
     "email": "ac1@ac1",
-    "password": "$2b$10$JJ05c0CSat1DeRwr960g0eE2JWm1G9LN/NEDDc38/pVpm7lnLgiYi",
+    "password": "$2b$10$CpiOdUwtRMT5itDT72Zwz.YSDv2NZpj4vmRpeDSppWNkO91GXQAdm",
     "status": 1,
     "afm": "",
     "type": "accountant",
     "__t": "accountant",
-    "registrationDate": "2024-11-25T11:12:49.162Z",
-    "last_log_out": "2024-11-25T11:12:49.162Z",
+    "registrationDate": "2024-11-25T19:23:21.465Z",
+    "last_log_out": "2024-11-25T19:23:21.465Z",
     "__v": 0
   }
 ]

@@ -21,11 +21,12 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 /*--------   ACCOUNTANT PREVIEW */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   try{
+    console.log("AccountantPreviewRoutes")
     const access = generalFunctions.checkAccessRigts(req,res);
     if(access.response){
       const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
       const company = await Company.findOne(_id=req.user.company);
-      var company_node = await Node.findOne({_id:company.accountant});
+      var company_node = await Node.findOne({company:req.user.company,type:'relationship',next:'-'});
       if(company_node == null){
         company_node = {
           receiver_id: req.session.accountant._id,
@@ -36,10 +37,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       const data = { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
         notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) }
     
-        generalFunctions.checkAccessRigts(req.user,'user_pages/preview_accountant.ejs',data,res);
     
-        res.render('user_pages/preview_accountant.ejs', { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
-        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) });  
+        res.render('user_pages/preview_accountant.ejs', data );  
     }
     else{
       res.redirect('/error?error='+access.error);
@@ -55,13 +54,14 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
   try {
+    console.log("AccountantPreviewRoutes")
     const company = await Company.findOne({_id:req.user.company});
-    const company_node = await Node.findOne({_id:company.accountant});
+    const company_node = await generalFunctions.get_accountant_node({company : company._id});
     console.log(company_node);
 
     
-    if(company.accountant !="not_assigned" && company_node.status !="fired" && 2 ==3){
-
+    if(company_node ){
+      console.log('2')
       clientAccountantFunctions.fire_accountant(company._id,req.user._id)
     }
     console.log(req.session.accountant._id)

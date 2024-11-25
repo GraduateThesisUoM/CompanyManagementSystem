@@ -14,15 +14,34 @@
 
         <div>
         <h1>DataBaseAdmin Main</h1>
-        <form>
-            <input>
-            <button>dd</button>
+        <form action="/database" method="POST" id="db_form">
+            <input name="db_post_input" id="db_post_input" style="display: none;">
         </form>
+        <div>
+            <button id="clear_db" class="db_btn">Clear DB</button><br>
+            <button id="export_full_db" class="db_btn">Export Full Back UP</button><br>
+            <button id="import_full_db" class="db_btn">Import Full Back UP</button>
+        </div>
     </div>
 
     </div>
     <script>
+        $(document).ready(function () {
+            $(".db_btn").click(function () {
+                $('#db_post_input').val($(this).attr("id"));
+                $('#db_form').submit();
+            });
 
+            const params = new URLSearchParams(window.location.search);
+            var queryParams = {};
+            for (const [key, value] of params.entries()) {
+                queryParams[key] = value;
+            }
+
+            if (queryParams.message) {
+                alert(queryParams.message);
+            }
+        });
    </script>
 
 <%- include('../partials/footer'); %>

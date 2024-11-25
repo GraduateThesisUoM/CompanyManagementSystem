@@ -19,7 +19,7 @@ const CompanySchema = new mongoose.Schema({
     bought: { type: Number, default: 1 },
     requested: { type: Number, default: 0 }
   },  
-  signupcode: { type: String, required: true},
+  signupcode: { type: String, required: true,default:1},
   autochangesignupcode:{type:Number, required: true,default:1}
 });
 

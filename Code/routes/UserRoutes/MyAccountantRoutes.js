@@ -23,18 +23,20 @@ const clientAccountantFunctions = require(path_constants.clientAccountantFunctio
 /*--------    ΜΥ ACCOUNTΑΝΤ */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
+      console.log("MyAccountantRoutes")
       const access = generalFunctions.checkAccessRigts(req,res);
       if(access.response){
 
         const company = await Company.findOne({_id:req.user.company});
-        console.log(company)
-        const company_accountant_node = await Node.findOne({_id:company.accountant});
-        console.log(company_accountant_node)
+        const company_accountant_node = await generalFunctions.get_accountant_node({company:company._id}) ;
 
-        if(company_accountant_node == null ||
+        console.log('company_accountant_node : '+company_accountant_node)
+
+        if(company_accountant_node == null /*||
           (company_accountant_node.type2 != 'hiring' && company_accountant_node.status != 'canceled') ||
-          (company_accountant_node.type2 != 'firing' && company_accountant_node.status != 'executed')
+          (company_accountant_node.type2 != 'firing' && company_accountant_node.status != 'executed')*/
         ){
+          console.log('2')
           if(req.user.companyOwner == 1){
             res.redirect('pick-accountant');
           }
@@ -43,8 +45,11 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
           }
         }
         else{
-          if(company_accountant_node.company_id == company_accountant_node.receiver_id){
+
+          if(company_accountant_node.company.equals(company_accountant_node.receiver_id)){
+            console.log('3')
             if(req.user.companyOwner == 1){
+              console.log('self-accountant')
               res.redirect('self-accountant');
             }
             else{
@@ -52,6 +57,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             }
           }
           else{
+            console.log('4')
             const users_accountant = await Accountant.findOne({_id:company_accountant_node.receiver_id});
             if(users_accountant == null ){
               if(req.user.companyOwner == 1){

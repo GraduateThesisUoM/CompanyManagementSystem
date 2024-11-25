@@ -133,9 +133,6 @@ app.use(path_constants.pages.logout.url, require(path_constants.pages.logout.fil
 //self_accountant
 app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.self_accountant.file));
 
-//self_accountant_register
-app.use(path_constants.pages.self_accountant_register.url, require(path_constants.pages.self_accountant_register.file));
-
 //search
 app.use(path_constants.pages.search.url, require(path_constants.pages.search.file));
 

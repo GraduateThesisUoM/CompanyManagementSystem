@@ -16,7 +16,6 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
     // check if a notification of the same type exists for user
     try{
         const company = await Company.findOne({_id:companyId});
-        console.log(accountantId);
 
         var last_accountant_node = await Node.findOne({company:company._id,type2:"hiring",status: { $in: ['executed', 'viewed', 'pending'] }});
         
@@ -27,11 +26,10 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
             receiver_id : accountantId,
             type : 'relationship',
             type2 : 'hiring'});
-        console.log(company_node);
+
 
         if(last_accountant_node == null){
             console.log('send_hiring_req_to_accountant has no accountant')
-
         }
         else{
             
@@ -48,24 +46,7 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
             });
         }
 
-        company.accountant = company_node._id;
-        await company.save();
-
-
         console.log("Hiring Node Created");
-
-        var notifications = await Notification.find({user_id:senderId,relevant_user_id:accountantId,type:'hiring-notification',status:'unread'});
-        console.log('notification : '+notifications.length)
-        if(notifications.length > 0){
-            notifications.forEach(async notification => {
-                notification.status = 'canceled';
-                await notification.save();
-            });
-        }
-        if(companyId != accountantId){
-            generalFunctions.create_notification(senderId, accountantId, companyId, accountantId, 'hiring-notification');
-        }
-
     }
     catch(e){
         console.log(e)
@@ -74,8 +55,7 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
 
 async function cancel_hiring_req_to_accountant(companyId, accountantId){
     try{
-        const company = await Company.findOne({_id:companyId});
-        const company_node = await Node.findOne({_id:company.accountant});
+        const company_node = await Node.findOne({company:companyId,type:'relationship',next:'-'});
 
         company_node.status = 'canceled';
 
@@ -103,9 +83,6 @@ async function fire_accountant(companyId,senderId,accountantId){
             reply: 'firing',
             text : ''
         });
-
-        company.accountant = new_company_node._id;
-        await company.save();
 
         //company_node.next = new_company_node._id;
         company_node.status = 'canceled';
@@ -172,8 +149,7 @@ async function fetchOneClient(accountantId,clientId){
 
 async function relationship_accept_reject(companyId,action){
     try{
-        const company = await Company.findOne({_id:companyId});
-        const relationshipNode = await Node.findOne({_id:company.accountant});
+        const relationshipNode = await generalFunctions.get_accountant_node({company:companyId});
         relationshipNode.status = action;
         await relationshipNode.save();
         console.log(action+" done"); 

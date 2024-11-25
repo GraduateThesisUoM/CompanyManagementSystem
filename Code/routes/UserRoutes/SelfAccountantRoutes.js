@@ -1,15 +1,21 @@
 const express = require("express");
 const router = express.Router();
 
+//File with the paths
+const path_constants = require('../../constantsPaths');
+
 //Models
 const Accountant = require("../../Schemas/Accountant");
 const Review = require("../../Schemas/Review");
 const Notification = require("../../Schemas/Notification");
 
 //Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
+//Get General Functions
+const generalFunctions = require( path_constants.generalFunctions_folder.two);
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
 
-/*--------   PICK ACCOUNTANT */
+/*--------   Self ACCOUNTANT */
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const access = generalFunctions.checkAccessRigts(req, res);

@@ -13,21 +13,26 @@ const Node = require(path_constants.schemas.two.node);
 //Authentication Functions
 const Authentication = require(path_constants.authenticationFunctions_folder.two);
 const generalFunctions = require(path_constants.generalFunctions_folder.two)
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
+
 
 /*--------   PICK ACCOUNTANT */
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   try {
+    console.log("PickAccoutnantRoutes")
     const access = generalFunctions.checkAccessRigts(req,res);
     if(access.response){
       const accountants = await Accountant.find({}); // Fetch all accountants from the database
       accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
       const company = await Company.findOne({_id:req.user.company});
-      console.log("Pick Accountant  Company:"+company)
-      var company_node = await Node.findOne({_id:company.accountant});
-      console.log("Pick Accountant  Company Node:"+company_node)
+      var data = {
+        company: company._id
+      };
+      var company_node = await generalFunctions.get_accountant_node(data) ;
       if (company_node == null){
         company_node = {
-          company_id: company._id
+          company: '-',
+          receiver_id : '-'
         }
       }
   
@@ -65,11 +70,23 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
-      console.log("FFFFFFFFFFFFFFFFFFFFFFFFFFF");
-      const accountant = await Accountant.findOne({_id:req.body.accountant_id});
-      req.session.accountant = accountant;
-      console.log(req.session.accountant );
-      res.redirect('/preview-accountant');
+      if(req.body.accountant_id == 'self-accountant'){
+        console.log("Pick Accountnant Post Self - accountnat")
+        //const company = await Company.findOne({_id:req.user.company});
+        await clientAccountantFunctions.send_hiring_req_to_accountant(
+          req.user.company,
+          req.user._id,
+          req.user.company
+        );
+        res.redirect("/my-accountant")
+      }
+      else{
+        const accountant = await Accountant.findOne({_id:req.body.accountant_id});
+        req.session.accountant = accountant;
+        console.log("PickAccountantRoutes "+req.session.accountant );
+        res.redirect('/preview-accountant');
+      }
+      
     }
     catch (err) {
       console.error('Error updating user data:', err);

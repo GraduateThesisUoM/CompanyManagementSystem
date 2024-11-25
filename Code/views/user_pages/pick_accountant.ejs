@@ -16,11 +16,12 @@
             <%- include('../partials/sidebar'); %>
             <div>
                 <h1>Επιλογή Λογιστή</h1>
-                <form action="/self-accountant-register" method="POST">
-                    <button type="button" id="self_accountant_btn">Αυτοδιαχείριση λογιστικών</button>
+                <!--form action="/self-accountant-register" method="POST">
                     <button style="display: none;" type="submit" id="self_accountant_submit_btn">Αυτοδιαχείριση λογιστικών</button>
-                    </form>
-                <form action="/pick-accountant" method="POST">
+                    </form-->
+                <button type="button" id="self_accountant_btn">Αυτοδιαχείριση λογιστικών</button>
+
+                <form action="/pick-accountant" method="POST" id="pick_accountant_form">
                 <input style="display: none;" name="accountant_id" id="accountant_id">
 
                 <button style="display: none;" type="submit" id="accountant_id_submit_btn">Submit</button>
@@ -35,7 +36,8 @@
     <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
-            if('<%=company_node.company_id%>' == '<%=company_node.receiver_id%>'){
+
+            if('<%=company_node.company%>' == '<%=company_node.receiver_id%>' && "<%=company_node.company%>" != "-"){
                     $("#self_accountant_btn").prop("disabled", true);
                 }
 
@@ -56,7 +58,8 @@
             });
             $("#self_accountant_btn").click(function(){
                 if (confirm("By choosing the self accounting option you are automatically\nfiring your accountant") == true) {
-                    $("#self_accountant_submit_btn").click();
+                    $("#accountant_id").val('self-accountant')
+                    $("#pick_accountant_form").submit();
                 }
             });
 
