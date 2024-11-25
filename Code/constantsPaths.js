@@ -303,6 +303,13 @@ const pages = {
     url : "/report-list-page",
     file: routes.admin+"ReportListPageRouters.js",
     view : ""
+  },
+  database :{
+    url : "/database",
+    file: routes.admin+"DataBaseRoutes.js",
+    view : function() { {
+      return views_folders.admin +"database_page.ejs"
+    }}
   }
 };
 

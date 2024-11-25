@@ -160,6 +160,9 @@ app.use(path_constants.pages.create_doc.url, require(path_constants.pages.create
 //view
 app.use(path_constants.pages.view.url, require(path_constants.pages.view.file));
 
+//database
+app.use(path_constants.pages.database.url, require(path_constants.pages.database.file));
+
 
 const http = require('http').createServer(app);
 socketIO(http);

@@ -1,16 +1,16 @@
 [
   {
-    "_id": "6741c960a215910f474972d0",
-    "registrationDate": "2024-11-23T12:24:00.247Z",
-    "last_log_out": "2024-11-23T12:24:00.247Z",
+    "_id": "67445bb1c7d656c39c232373",
     "firstName": "ac1",
     "lastName": "ac1",
     "email": "ac1@ac1",
-    "password": "$2b$10$lnwOCS68WeKOJ83f.9CMUOCwc1hq1zQp2cN1FmpMbQ72rCcfkYhjC",
+    "password": "$2b$10$JJ05c0CSat1DeRwr960g0eE2JWm1G9LN/NEDDc38/pVpm7lnLgiYi",
     "status": 1,
     "afm": "",
     "type": "accountant",
-    "__v": 0,
-    "__t": "accountant"
+    "__t": "accountant",
+    "registrationDate": "2024-11-25T11:12:49.162Z",
+    "last_log_out": "2024-11-25T11:12:49.162Z",
+    "__v": 0
   }
 ]

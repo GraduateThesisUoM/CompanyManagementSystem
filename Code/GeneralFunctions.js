@@ -46,8 +46,8 @@ function checkAccessRigts(req) {
     if(req.baseUrl == ''){
       page_url = '/';
     }
-    console.log(page_url)
-    console.log(disabled_company_accesable_pages.includes(page_url));
+    /*console.log(page_url)
+    console.log(disabled_company_accesable_pages.includes(page_url));*/
     if (req.user.type == "user") {
       if (req.session.company.status != 1 && disabled_company_accesable_pages.includes(page_url) == false) {
         console.log("Access denied due to the company is closed");
@@ -947,6 +947,10 @@ async function importAccountants() {
   } catch (err) {
     console.error("Error importing accountants data:", err);
   }
+}
+
+async function get_accountant(data){
+  const node =  await Node.findOne({company:req.user.company})
 }
 
 

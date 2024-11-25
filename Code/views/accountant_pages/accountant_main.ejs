@@ -32,6 +32,34 @@
         </div>
         <div>
           <h2>Pending Requests</h2>
+          <div>
+            <table>
+              <thead>
+                <tr>
+                  <th class="">Type</th>
+                  <th class="">Title</th>
+                  <th class="">Registration Date</th>
+                  <th class="">Due Date</th>
+                  <th class="">Company</th>
+                  <th class="">B</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% pending_nodes_list.forEach(function(row, index) { %>
+                  <tr>
+                    <td><%=row.type%></td>
+                    <td><%=row.title%></td>
+                    <td><%=row.reg_date%></td>
+                    <td><%=row.due_date%></td>
+                    <td><%=row.company%></td>
+                    <td><button           onclick="window.location.href = 'view?type=request&id=<%= row.id %>'">
+                      View</button></td>
+                  </tr>
+                <% }); %>
+              </tbody>
+            </table>
+            <br>
+          </div>
           <div id="pending_requests_div">
             <table id="pending_requests_table" class="requests_record_table">
               <tr>
@@ -155,7 +183,6 @@
         requests_viewed = JSON.parse(`<%- JSON.stringify(nodes_viewed) %>`);
         requests_rejected = JSON.parse(`<%- JSON.stringify(nodes_rejected) %>`);
         requests_executed = JSON.parse(`<%- JSON.stringify(nodes_executed) %>`);
-        requests_pending = JSON.parse(`<%- JSON.stringify(nodes_pending) %>`);
         clients = JSON.parse(`<%- JSON.stringify(clients) %>`);
       } catch (error) {
         console.error("Error parsing JSON:", error);
@@ -185,6 +212,7 @@
         const cell_due_date = $("<td>")
           .text(request.due_date)
           .addClass("column4");
+          //add company name
         var cell_company = $("<td>").text("-").addClass("column5");
         for (let i = 0; i < clients.length; i++) {
           if (clients[i]._id == request.company_id) {

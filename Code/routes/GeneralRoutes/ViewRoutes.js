@@ -11,10 +11,8 @@ const generalFunctions = require("../../GeneralFunctions");
 
 //Models
 const Company  = require(path_constants.schemas.two.company);
-const Accountant  = require(path_constants.schemas.two.accountant);
 const Node = require(path_constants.schemas.two.node);
 const Notification = require(path_constants.schemas.two.notification);
-const Report = require(path_constants.schemas.two.report);
 const User = require(path_constants.schemas.two.user);
 const Item = require(path_constants.schemas.two.item);
 const Person = require(path_constants.schemas.two.person);
@@ -163,6 +161,22 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         data.type = [1,1,1,0,0];
                         //1=normal-text,0=text-readonly
 
+                    }
+                    else if( type == 'request'){
+                        obj = await Node.findOne({_id : id});
+                        const company = await Company.findOne({ _id: obj.company });
+
+                        data.data = [
+                            obj.type,
+                            obj.type2,
+                            generalFunctions.formatDate(obj.registrationDate),
+                            generalFunctions.formatDate(obj.due_date),
+                            obj.status,
+                            company.name,
+                            ""
+                        ]
+                        data.titles = ["Type","Type2", "Reg Date", "Due Date","Status","Company","Answer"];
+                        data.type = [0,0,0,0,0,0,9];
                     }
                 }
                 else{

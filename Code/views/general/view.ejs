@@ -100,6 +100,9 @@
                                 <%}) %>
                             </tbody>
                         </table>
+                    <% }else if(type[index] == 9){  %>
+                        <%= title %><br>
+                        <textarea name="input<%= index %>" id="<%= title %>"><%= data[index] %></textarea>
                     <% }else{ %>
                         <%= title %>
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>">
@@ -358,21 +361,33 @@
 
 
             }
-            
-            $("#btn1").click(function () {
-                if(confirm("Are you soure ?")){
-                    $("#action").val('delete');
+            if(queryParams.type == 'request'){
+                $("#btn3").hide();
+                $("#btn1").text("Accept")
+                $("#btn1").click(function () {
+                    alert("New")
+                });
+                $("#btn2").text("Reject")
+                $("#btn2").click(function () {
+                    alert("New")
+                });
+            }
+            else{
+                $("#btn1").click(function () {
+                    if(confirm("Are you soure ?")){
+                        $("#action").val('delete');
+                        $("#view_form").submit();
+                    }
+                });
+                $("#btn2").click(function () {
+                    $("#action").val(btn_1_var);
                     $("#view_form").submit();
-                }
-            });
-            $("#btn2").click(function () {
-                $("#action").val(btn_1_var);
-                $("#view_form").submit();
-            });
-            $("#btn3").click(function () {
-                $("#action").val('save');
-                $("#view_form").submit();
-            });
+                });
+                $("#btn3").click(function () {
+                    $("#action").val('save');
+                    $("#view_form").submit();
+                });
+            }
 
             function calculate_total(class_id, target_id){
                 var tottal = 0;

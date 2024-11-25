@@ -43,18 +43,14 @@ router.post("/", async (req, res) => {
       var company;
       if (req.body.companyNewExisting == "0") {
         //New Company
-        var com_logo = "https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg";
-        if(req.body.companyLogo){
-          com_logo = req.body.companyLogo
-        }
-        console.log("-------"+req.body.companyLogo)
-        console.log(com_logo);
         var data = {
           name: req.body.companyName,
-          logo: com_logo,
           signupcode: 1,
           /*signupcode : generateRandomCode(length)*/
         };
+        if (req.body.companyLogo) {
+          data.logo = req.body.companyLogo; // Add `logo` only if it's provided
+        }
         company = await generalFunctions.create_company(data);
       } else {
         //Existing Company

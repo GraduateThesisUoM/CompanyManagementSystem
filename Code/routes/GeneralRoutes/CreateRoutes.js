@@ -54,6 +54,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     } else {
       company = req.user.company;
     }
+    console.log(company)
     console.log(req.body.create_type);
 
     var created_obj;//Declare Variable

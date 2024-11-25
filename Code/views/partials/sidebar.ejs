@@ -1,6 +1,10 @@
 <div id="sidebar_div">
     <div>
         <div>
+            <button class="main_side_menubtn user sidebar_btn" onclick="window.location='/'" >
+                <img src="https://img.icons8.com/glyph-neue/64/FFFFFF/home--v1.png" alt="home"/>
+                Home
+            </button>
             <% if(user.type == 'admin') { %>
                 <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=companys'">
                     <img src="https://img.icons8.com/ios-filled/100/FFFFFF/client-company.png" alt="client-company"/>
@@ -14,8 +18,12 @@
                     <img src="https://img.icons8.com/wired/64/FFFFFF/siren.png" alt="reports"/>
                     Reports
                 </button>
+                <button class="main_side_menubtn" onclick="location.href = '/database'">
+                    <img src="https://img.icons8.com/ios-filled/50/FFFFFF/database.png" alt="reports"/>
+                    DataBase
+                </button>
+            <%}else if(user.type == 'accountant') { %>
             <% } else { %>
-    
                 <button class="main_side_menubtn user sidebar_btn">
                     <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying"/>
                     Buying
@@ -31,6 +39,7 @@
             <% } %>
         </div>
         <div id='column_two_menu_div' >
+            <div class="sub_side_menu_div" style="display: none;"></div>
             <div class="sub_side_menu_div" style="display: none;">
                 <button onclick="location.href = 'list?searchfor=docs&type=2';">View Docs</button>
                 <button onclick="location.href = '/create-doc?type=2';">Create Docs</button>

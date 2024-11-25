@@ -25,8 +25,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
 
     const company = await Company.findOne({ _id: req.user.company });
-        req.session.company = company;
-        console.log(req.user);
+    req.session.company = company;
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
       var data = {};
@@ -37,9 +36,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         //add more filters
         const nodes_pending = await Node.find({
           receiver_id: req.user._id,
-          status: "pending",
+          $or: [{ status: "pending" }, { status: "viewed" }]
         });
-        console.log(nodes_pending);
+
         const nodes_viewed = await Node.find({
           receiver_id: req.user._id,
           status: "viewed",
@@ -56,9 +55,29 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           req.user._id,
           "all"
         );
-        console.log(clients);
+
+        console.log('----------------------testing')
+        var pending_nodes_list = []
+        for( node of nodes_pending){
+          const company = await Company.findOne({ _id: node.company });
+          pending_nodes_list.push({
+            id:node._id,
+            type:node.type,
+            title: node.type2,
+            reg_date: generalFunctions.formatDate(node.registrationDate) ,
+            due_date: node.due_date ? generalFunctions.formatDate(node.due_date) : "-",
+            company : company.name,
+            status: node.status
+          })
+        }
+
+        console.log(pending_nodes_list)
+
+
         data = {
           user: req.user,
+          pending_nodes_list:pending_nodes_list,
+          //-------------------------------
           nodes_pending: nodes_pending,
           nodes_viewed: nodes_viewed,
           nodes_rejected: nodes_rejected,

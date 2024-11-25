@@ -24,7 +24,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       }
       const accountants_client = await Client.findOne({ _id: node.sender_id });
       const accountants_client_company = await Company.findOne({
-        _id: node.company_id,
+        _id: node.company,
       });
 
       const data = {
@@ -60,7 +60,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     await generalFunctions.create_notification(
       node.sender_id,
       req.user.id,
-      node.company_id,
+      node.company,
       req.user.id,
       "assignments-status-notification"
     );
