@@ -163,18 +163,20 @@ async function node_reply(data) {
   console.log("node_reply")
   const target_node = await Node.findOne({ _id: data.target_node._id });
   var sts = "pending";
-  console.log("---------------------------------------"+data.reply+'firing')
-  if (data.reply == 'firing') {
+  var reply = data.reply;
+  if (data.reply == 'firing' || data.reply == 'response') {
     sts = "executed";
   }
-  console.log("---------------------------------------"+sts)
+  if(target_node.type2 == 'hiring'){
+    reply = target_node.type2;
+  }
 
   const reply_node = await create_node({
     company: target_node.company,
     sender_id: target_node.sender_id,
     receiver_id: target_node.receiver_id,
     type: target_node.type,
-    type2: data.reply,
+    type2: reply,
     text: data.text,
     status: sts,
   });
@@ -182,6 +184,7 @@ async function node_reply(data) {
   await reply_node.save();
 
   target_node.next = reply_node._id;
+  target_node.status = 'executed';
   await target_node.save();
 
   return reply_node;
@@ -543,7 +546,7 @@ async function get_obj_by_id(data, schema) {
 async function update(id, schema , data){
   try {
     console.log(data);
-    
+
     var obj = await get_obj_by_id(id, schema);
     var fieldsToUpdate;
     const lines_of_doc = {};
@@ -551,6 +554,9 @@ async function update(id, schema , data){
     if (schema == 'documents') {
       obj.generalDiscount = data.generalDiscount; 
       obj.invoiceData = data.invoiceData;
+    }
+    else if(schema == 'nodes') {
+      obj.text = data.text; 
     }
     else{
       if (schema == 'series') {

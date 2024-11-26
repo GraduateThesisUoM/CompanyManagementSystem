@@ -39,10 +39,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           $or: [{ status: "pending" }, { status: "viewed" }]
         });
 
-        const nodes_viewed = await Node.find({
-          receiver_id: req.user._id,
-          status: "viewed",
-        });
         const nodes_rejected = await Node.find({
           receiver_id: req.user._id,
           status: "rejected",
@@ -56,7 +52,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "all"
         );
 
-        console.log('----------------------testing')
         var pending_nodes_list = []
         for( node of nodes_pending){
           const company = await Company.findOne({ _id: node.company });
@@ -71,17 +66,41 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           })
         }
 
-        console.log(pending_nodes_list)
+        var rejected_nodes_list = [];
+        for( node of nodes_rejected){
+          const company = await Company.findOne({ _id: node.company });
+          rejected_nodes_list.push({
+            id:node._id,
+            type:node.type,
+            title: node.type2,
+            reg_date: generalFunctions.formatDate(node.registrationDate) ,
+            due_date: node.due_date ? generalFunctions.formatDate(node.due_date) : "-",
+            company : company.name,
+            status: node.status
+          })
+        }
+
+        var executed_nodes_list = []
+        for( node of nodes_executed){
+          const company = await Company.findOne({ _id: node.company });
+          executed_nodes_list.push({
+            id:node._id,
+            type:node.type,
+            title: node.type2,
+            reg_date: generalFunctions.formatDate(node.registrationDate) ,
+            due_date: node.due_date ? generalFunctions.formatDate(node.due_date) : "-",
+            company : company.name,
+            status: node.status
+          })
+        }
 
 
         data = {
           user: req.user,
           pending_nodes_list:pending_nodes_list,
-          //-------------------------------
-          nodes_pending: nodes_pending,
-          nodes_viewed: nodes_viewed,
-          nodes_rejected: nodes_rejected,
-          nodes_executed: nodes_executed,
+          executed_nodes_list:executed_nodes_list,
+          rejected_nodes_list:rejected_nodes_list,
+
           notification_list: await Notification.find({
             $and: [{ user_id: req.user.id }, { status: "unread" }],
           }),

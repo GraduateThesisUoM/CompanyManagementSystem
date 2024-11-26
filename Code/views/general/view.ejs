@@ -361,15 +361,22 @@
 
 
             }
-            if(queryParams.type == 'request'){
-                $("#btn3").hide();
-                $("#btn1").text("Accept")
+            if(queryParams.type == 'nodes'){
+                $("#btn3").text("Save");
+                $("#btn3").click(function () {
+                    $("#action").val('save');
+                    $("#view_form").submit();
+                });
+
+                $("#btn1").text("Ececuted");
                 $("#btn1").click(function () {
-                    alert("New")
+                    $("#action").val('executed');
+                    $("#view_form").submit();
                 });
                 $("#btn2").text("Reject")
                 $("#btn2").click(function () {
-                    alert("New")
+                    $("#action").val('rejected');
+                    $("#view_form").submit();
                 });
             }
             else{

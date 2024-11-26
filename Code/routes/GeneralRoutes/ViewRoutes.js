@@ -162,18 +162,22 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         //1=normal-text,0=text-readonly
 
                     }
-                    else if( type == 'request'){
+                    else if( type == 'nodes'){
                         obj = await Node.findOne({_id : id});
+                        if(obj.status == 'pending'){
+                            obj.status = 'viewed'
+                            await obj.save();
+                        }
                         const company = await Company.findOne({ _id: obj.company });
 
                         data.data = [
                             obj.type,
                             obj.type2,
                             generalFunctions.formatDate(obj.registrationDate),
-                            generalFunctions.formatDate(obj.due_date),
+                            obj.due_date ? generalFunctions.formatDate(obj.due_date) : '-',
                             obj.status,
                             company.name,
-                            ""
+                            obj.text
                         ]
                         data.titles = ["Type","Type2", "Reg Date", "Due Date","Status","Company","Answer"];
                         data.type = [0,0,0,0,0,0,9];
@@ -212,9 +216,10 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
             return res.redirect('/error?origin_page=/&error=' + encodeURIComponent("Query parameters are missing"));
         }
         if (req.query.type && req.query.id) {
+            var obj_data = req.body;
+            var obj_type = req.query.type;
+
             if(req.body.action == 'save'){
-                var obj_data = req.body;
-                var obj_type = req.query.type;
                 if(req.query.type == 'docs'){
                     obj_type = 'documents'
                     const lines_of_doc = {};
@@ -232,10 +237,23 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
                         generalDiscount : 50,
                         invoiceData : lines_of_doc
                     }
-
                 }
-                console.log(obj_data)
+                else if(req.query.type == 'nodes'){
+                    obj_data = {
+                        text : req.body.input7,
+                    }
+                }
                 await generalFunctions.update({ _id: req.query.id } , obj_type, obj_data);
+            }
+            else if (req.query.type == 'nodes'){
+                const node = await Node.findOne({_id:req.query.id});
+                /*await generalFunctions.update({ _id: req.query.id } , obj_type, obj_data);
+                node.status = req.body.action;
+                await node.save();*/
+                const new_node = await generalFunctions.node_reply({
+                    target_node:node,
+                    reply : 'response',
+                    text: ''})
             }
             else{
                 await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);
