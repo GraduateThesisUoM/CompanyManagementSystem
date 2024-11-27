@@ -231,22 +231,10 @@ const pages = {
     view : ""
   },
   //Acountant
-  pickclientcompany :{
-    url : "/pickclientcompany",
-    file: routes.accountant+"PickClientCompanyRoutes.js",
-    view : ""
-  },
   request_history :{
     url : "/request-history",
     file: routes.accountant+"RequestHistoryRoutes.js",
     view : ""
-  },
-  clients :{
-    url : "/clients",
-    file: routes.accountant+"ClientsPageRouters.js",
-    view : function() { {
-      return views_folders.accountant+"clients_page.ejs"
-    }}
   },
   view_request :{
     url : "/view-request",
@@ -292,11 +280,6 @@ const pages = {
   dismiss_report :{
     url : "/dismiss-report",
     file: routes.admin+"DismissReportAdmin.js",
-    view : ""
-  },
-  client_profile :{
-    url : "/client-profile",
-    file: routes.admin+"ClientProfileRoutes.js",
     view : ""
   },
   report_list_page :{

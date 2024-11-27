@@ -91,17 +91,11 @@ app.use(path_constants.pages.pick_accountant.url, require(path_constants.pages.p
 //preview_accountant
 app.use(path_constants.pages.preview_accountant.url, require(path_constants.pages.preview_accountant.file));
 
-//clients
-app.use(path_constants.pages.clients.url, require(path_constants.pages.clients.file));
-
 //create
 app.use(path_constants.pages.create.url, require(path_constants.pages.create.file));
 
 //request_history
 app.use(path_constants.pages.request_history.url, require(path_constants.pages.request_history.file));
-
-//client_profile
-app.use(path_constants.pages.client_profile.url, require(path_constants.pages.client_profile.file));
 
 //report_list_page
 app.use(path_constants.pages.report_list_page.url, require(path_constants.pages.report_list_page.file));
@@ -141,9 +135,6 @@ app.use(path_constants.pages.filters.url, require(path_constants.pages.filters.f
 
 //change_ban_status
 app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));
-
-//pickclientcompany
-app.use(path_constants.pages.pickclientcompany.url, require(path_constants.pages.pickclientcompany.file));
 
 //my_company
 app.use(path_constants.pages.my_company.url, require(path_constants.pages.my_company.file));

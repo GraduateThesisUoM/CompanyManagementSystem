@@ -5,13 +5,6 @@ const NodeShema = new mongoose.Schema({
   company: { type: mongoose.Schema.Types.ObjectId, required: true  },
   sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   receiver_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-  root:{
-    type: Number,
-    required: true,
-    enum: [0,1],
-    default : 1
-    //1 = root 0 = not root
-  },
   type: {
     type: String,
     enum: ['relationship','response','request',4,5],
@@ -26,6 +19,8 @@ const NodeShema = new mongoose.Schema({
     required: true,
     default:'general'
   },
+  locked:{type: Number, enum:[0,1,2],default:0},
+  //0=unloked, 1=locked, 2= reject , fire, canceled
   text: { type: String},
   title: { type: String},
   due_date: { type: Date},

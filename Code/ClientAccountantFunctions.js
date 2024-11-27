@@ -109,9 +109,18 @@ async function fetchClients(accountantId,select){
     try{
         var clients = [];
         var clients_Nodes;
+        var all_nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: { $in: ['executed','pending', 'rejected'] } });
+
         if(select == 'all'){
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: { $in: ['executed','pending', 'rejected'] }, next: { $exists: false } });
-            
+            //clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: { $in: ['executed','pending', 'rejected'] } });
+            for(node of all_nodes){
+                if(node.next != '-'){
+                    let n  = await Node.findOne({_id:node.next});
+                    if(n.status =='executed' && n.next == '-'){
+                        clients.push(await Company.findOne({_id:n.company}))
+                    }
+                }
+            }
         }
         else if(select == 'fired'){
             clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'firing', status: 'executed', next: { $exists: false }  });
@@ -123,10 +132,10 @@ async function fetchClients(accountantId,select){
             clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: select , next: { $exists: false }});
         }
 
-        for (let client of clients_Nodes) {
+        /*for (let client of clients_Nodes) {
             clients.push(await Company.findOne({_id:client.company}));
-          }
-          return clients;
+          }*/
+        return clients;
         
     }
     catch(e){

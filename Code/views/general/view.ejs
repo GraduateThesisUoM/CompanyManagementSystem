@@ -10,7 +10,7 @@
     <!--CSS-->
     <link rel="stylesheet" href="general_css.css">
     <link rel="stylesheet" href="view_css.css">
-    
+    <link rel="stylesheet" href="my_company_css.css">
     <!--Header-->
     <%- include('../partials/header'); %>
 </head>
@@ -116,6 +116,8 @@
                                 </div>
                             <%});%>
                         </div>
+                    <% }else if(type[index] == 11){  %>
+                        <div><img src="<%= data[index] %>" id="company_logo"></div>
                     <% }else{ %>
                         <%= title %>
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>">

@@ -3,11 +3,13 @@ const router = express.Router();
 
 const path_constants = require('../../constantsPaths');
 
-//Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
-
+//Authentication Function
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
+//Get clients Function
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
 //Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
+
 
 //Models
 const Company  = require(path_constants.schemas.two.company);
@@ -210,6 +212,16 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                         data.titles = ["Title","Type","Type2","Company","Data","Answer"];
                         data.type = [0,0,0,0,10,9];
                         //nodes10
+                    }
+                    else if( type == 'clients'){
+                        obj = await Company.findOne({_id : id});
+                        data.data = [
+                            obj.name,
+                            obj.logo,
+                            generalFunctions.formatDate(obj.registrationDate)
+                        ]
+                        data.titles = ["Name","Logo","Reg Date"];
+                        data.type = [0,11,0];
                     }
                 }
                 else{

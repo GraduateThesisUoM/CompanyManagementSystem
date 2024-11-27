@@ -160,9 +160,6 @@ async function create_node(data) {
   }
 
   const new_node = new Node(new_data);
-  if (data.root !== undefined) {
-    new_node.root = data.root;
-  }
 
   await new_node.save();
 
@@ -198,7 +195,6 @@ async function node_reply(data) {
     type2: reply,
     text: data.text,
     status: sts,
-    root: 0
   });
 
   await reply_node.save();

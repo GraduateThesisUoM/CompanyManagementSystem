@@ -1,7 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const path_constants = require("../../constantsPaths");
+const path_constants = require('../../constantsPaths');
+
+//Authentication Function
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
+//Get clients Function
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
+//Get General Functions
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 //Models
 const Company = require(path_constants.schemas.two.company);
@@ -13,14 +20,11 @@ const Document = require(path_constants.schemas.two.document);
 const Series = require(path_constants.schemas.two.series);
 const Warehouse = require(path_constants.schemas.two.warehouse);
 
-//Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
-//Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
 
 /*--------   ADMIN - USER PROFILE*/
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
+    console.log("ListRoutes")
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
       var company = "";
@@ -199,6 +203,19 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Price Wholesale",
           "Status",
         ];
+      }else if(req.query.searchfor == "clients"){
+        list_items = await clientAccountantFunctions.fetchClients(req.user._id,'all');
+        console.log(list_items)
+        list_items = list_items.map((client) => ({
+          data: [
+            client._id,
+            client.name
+          ],
+        }));
+        column_titles = [
+          "ID",
+          "Title"
+        ]
       }
 
       var data = {
