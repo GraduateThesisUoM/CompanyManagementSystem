@@ -1,6 +1,8 @@
 [
   {
     "_id": "6744cea94215507895961cc0",
+    "registrationDate": "2024-11-25T19:23:21.465Z",
+    "last_log_out": "2024-11-25T19:23:21.465Z",
     "firstName": "ac1",
     "lastName": "ac1",
     "email": "ac1@ac1",
@@ -8,9 +10,7 @@
     "status": 1,
     "afm": "",
     "type": "accountant",
-    "__t": "accountant",
-    "registrationDate": "2024-11-25T19:23:21.465Z",
-    "last_log_out": "2024-11-25T19:23:21.465Z",
-    "__v": 0
+    "__v": 0,
+    "__t": "accountant"
   }
 ]

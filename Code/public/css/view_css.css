@@ -1,0 +1,8 @@
+#nodes_conainer{
+    display: grid;
+    grid-template-columns: 25% 25% 25% 25%;
+}
+
+#nodes_conainer > div{
+    border: black solid 1px;
+}

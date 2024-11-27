@@ -1,1 +1,15 @@
-[]
+[
+  {
+    "_id": "674722b76c1546c75049abc2",
+    "company": "6744cd138aa03131f1a8251c",
+    "sender_id": "6744cd138aa03131f1a8251e",
+    "receiver_id": "6744cea94215507895961cc0",
+    "root": 1,
+    "type": "relationship",
+    "type2": "hiring",
+    "next": "-",
+    "status": "pending",
+    "registrationDate": "2024-11-27T13:46:31.314Z",
+    "__v": 0
+  }
+]

@@ -41,6 +41,7 @@ const company_owner_accesable_pages = ["/my-company"];
 
 //function checkAccessRights(req, data ,res){
 function checkAccessRigts(req) {
+  console.log("checkAccessRigts");
   try {
     var page_url = req.baseUrl;
     if(req.baseUrl == ''){
@@ -48,8 +49,7 @@ function checkAccessRigts(req) {
     }
     /*console.log(page_url)
     console.log(disabled_company_accesable_pages.includes(page_url));*/
-    console.log("-------------");
-    console.log(req.user);
+    
     if (req.user.type == "user") {
       if (req.session.company.status != 1 && disabled_company_accesable_pages.includes(page_url) == false) {
         console.log("Access denied due to the company is closed");
@@ -119,10 +119,16 @@ async function create_user(data) {
 }
 
 async function create_node(data) {
+  console.log('create_node')
+  console.log(data)
   var status = "pending";
   var new_data = {};
   if (data.type == "relationship") {
-    if (data.company.equals(data.receiver_id) && data.type2 == "hiring") {
+    if(data.status != undefined){
+      console.log("**************************************")
+      status = data.status;
+    }
+    else if (data.company.equals(data.receiver_id) && data.type2 == "hiring") {
       status = "executed";
     } else if (data.type2 == "firing") {
       status = "executed";
@@ -134,6 +140,7 @@ async function create_node(data) {
       type: data.type,
       type2: data.type2,
       status: status,
+      text: data.text
     };
   } else if (data.type == "request") {
     new_data = {
@@ -153,6 +160,9 @@ async function create_node(data) {
   }
 
   const new_node = new Node(new_data);
+  if (data.root !== undefined) {
+    new_node.root = data.root;
+  }
 
   await new_node.save();
 
@@ -161,24 +171,34 @@ async function create_node(data) {
 
 async function node_reply(data) {
   console.log("node_reply")
+  console.log(data)
   const target_node = await Node.findOne({ _id: data.target_node._id });
   var sts = "pending";
   var reply = data.reply;
-  if (data.reply == 'firing' || data.reply == 'response') {
+  if(data.status != undefined){
+    sts = data.status
+  }
+  else if (data.reply == 'firing' || data.reply == 'response') {
     sts = "executed";
   }
   if(target_node.type2 == 'hiring'){
     reply = target_node.type2;
   }
 
+  var receiver = target_node.sender_id;
+  if(receiver == data.user._id){
+    receiver = target_node.receiver_id
+  }
+
   const reply_node = await create_node({
     company: target_node.company,
-    sender_id: target_node.sender_id,
-    receiver_id: target_node.receiver_id,
+    sender_id: data.user._id,
+    receiver_id: receiver,
     type: target_node.type,
     type2: reply,
     text: data.text,
     status: sts,
+    root: 0
   });
 
   await reply_node.save();
@@ -245,7 +265,6 @@ async function createWarehouse(data) {
 
     await warehouse.save();
 
-    //console.log(warehouse);
     console.log("warehouse" + warehouse.title + " created");
 
     return warehouse;
@@ -518,9 +537,8 @@ async function drop_collection(collection_name) {
 
 async function delete_deactivate(data, schema, action) {
   try {
-
+    console.log("delete_deactivate")
     var obj = await get_obj_by_id(data, schema);
-    console.log(obj)
     if (action == "delete" || action == 2) {
       obj.status = 2;
     } else if (action == "activate"|| action == 1) {
@@ -528,7 +546,6 @@ async function delete_deactivate(data, schema, action) {
     } else {
       obj.status = 0;
     }
-    console.log(obj);
     await obj.save();
   } catch (e) {
     console.log(e);
@@ -545,7 +562,7 @@ async function get_obj_by_id(data, schema) {
 
 async function update(id, schema , data){
   try {
-    console.log(data);
+    console.log('update');
 
     var obj = await get_obj_by_id(id, schema);
     var fieldsToUpdate;
@@ -683,7 +700,6 @@ async function exportData(company = null, schemas) {
     } else {
       // Find all companies
       companies = await Company.find({});
-      console.log(companies)
       if (companies.length === 0) {
         console.warn("No companies found.");
         return;
@@ -753,7 +769,6 @@ async function importData() {
     }
     companyDirs.pop(1);
     companyDirs.pop(2);
-    console.log(companyDirs)
 
     for (const companyDirName of companyDirs) {
       // Extract company ID and name from directory name
@@ -982,10 +997,6 @@ async function clear_db(){
   await drop_collection("Person");
   await drop_collection("Review");
 }
-
-
-
-
 
 module.exports = {
   checkAccessRigts,

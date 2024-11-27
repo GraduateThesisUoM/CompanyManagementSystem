@@ -23,6 +23,7 @@ const Warehouse = require(path_constants.schemas.two.warehouse);
 
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     try{
+        console.log('ViewRoutes')
         const access = generalFunctions.checkAccessRigts(req,res);
         if(access.response){
             var company;
@@ -168,19 +169,47 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                             obj.status = 'viewed'
                             await obj.save();
                         }
+                        var nodes = []
+                        nodes.push(obj);
+                        var node = obj;
+                        while(true){
+                            
+                            node = await Node.findOne({next : node._id});
+                            if(node == undefined){
+                                break; 
+                            }
+                            else{
+                                nodes.push(node);
+                            }
+                        }
+
                         const company = await Company.findOne({ _id: obj.company });
 
+                        var node_data = [];
+                        for(n of nodes){
+                            var sender_user = await User.findOne({_id:n.sender_id})
+                            node_data.push({
+                                sender : sender_user,
+                                registrationDate: generalFunctions.formatDate(obj.registrationDate),
+                                title: n.title,
+                                status: n.status,
+                                text: n.text
+                            })
+                        }
+                        node_data.reverse();
+
                         data.data = [
+                            obj.title,
                             obj.type,
                             obj.type2,
-                            generalFunctions.formatDate(obj.registrationDate),
-                            obj.due_date ? generalFunctions.formatDate(obj.due_date) : '-',
-                            obj.status,
                             company.name,
-                            obj.text
+                            node_data,
+                            "",
+
                         ]
-                        data.titles = ["Type","Type2", "Reg Date", "Due Date","Status","Company","Answer"];
-                        data.type = [0,0,0,0,0,0,9];
+                        data.titles = ["Title","Type","Type2","Company","Data","Answer"];
+                        data.type = [0,0,0,0,10,9];
+                        //nodes10
                     }
                 }
                 else{
@@ -238,22 +267,20 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
                         invoiceData : lines_of_doc
                     }
                 }
-                else if(req.query.type == 'nodes'){
-                    obj_data = {
-                        text : req.body.input7,
-                    }
-                }
+               
                 await generalFunctions.update({ _id: req.query.id } , obj_type, obj_data);
             }
             else if (req.query.type == 'nodes'){
                 const node = await Node.findOne({_id:req.query.id});
-                /*await generalFunctions.update({ _id: req.query.id } , obj_type, obj_data);
-                node.status = req.body.action;
-                await node.save();*/
+
                 const new_node = await generalFunctions.node_reply({
+                    user: req.user,
                     target_node:node,
                     reply : 'response',
-                    text: ''})
+                    text: req.body.input5,
+                    status : req.body.action
+                })
+                return res.redirect(`/view?type=${req.query.type}&id=${new_node.id}`);
             }
             else{
                 await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);

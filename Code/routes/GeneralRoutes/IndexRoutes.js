@@ -31,22 +31,30 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       var data = {};
 
       if (req.user.type == "accountant") {
-        // index for accountants
-        //add something to get the requests that happen while away
-        //add more filters
+
         const nodes_pending = await Node.find({
-          receiver_id: req.user._id,
-          $or: [{ status: "pending" }, { status: "viewed" }]
+          //receiver_id: req.user._id,
+          $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
+          $or: [{ status: "pending" }, { status: "viewed" }],
+          //root : 1
+          next:'-'
         });
 
         const nodes_rejected = await Node.find({
-          receiver_id: req.user._id,
+          //receiver_id: req.user._id,
+          $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
           status: "rejected",
+          //root : 1
+          next:'-'
         });
         const nodes_executed = await Node.find({
-          receiver_id: req.user._id,
+          //receiver_id: req.user._id,
+          $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
           status: "executed",
+          //root : 1
+          next:'-'
         });
+
         const clients = await clientAccountantFunctions.fetchClients(
           req.user._id,
           "all"

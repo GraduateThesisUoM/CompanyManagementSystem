@@ -5,6 +5,13 @@ const NodeShema = new mongoose.Schema({
   company: { type: mongoose.Schema.Types.ObjectId, required: true  },
   sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   receiver_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  root:{
+    type: Number,
+    required: true,
+    enum: [0,1],
+    default : 1
+    //1 = root 0 = not root
+  },
   type: {
     type: String,
     enum: ['relationship','response','request',4,5],

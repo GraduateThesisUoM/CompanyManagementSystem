@@ -3,6 +3,8 @@
     "_id": "6744cd138aa03131f1a8251e",
     "company": "6744cd138aa03131f1a8251c",
     "companyOwner": 1,
+    "registrationDate": "2024-11-25T19:16:35.808Z",
+    "last_log_out": "2024-11-27T13:46:34.769Z",
     "firstName": "Makis",
     "lastName": "Papas",
     "email": "c1@c1",
@@ -11,9 +13,7 @@
     "afm": "",
     "mydatakey": "",
     "type": "user",
-    "__t": "client",
-    "registrationDate": "2024-11-25T19:16:35.808Z",
-    "last_log_out": "2024-11-25T19:16:48.598Z",
-    "__v": 0
+    "__v": 0,
+    "__t": "client"
   }
 ]

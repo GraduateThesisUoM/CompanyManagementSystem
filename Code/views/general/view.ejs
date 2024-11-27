@@ -9,6 +9,8 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!--CSS-->
     <link rel="stylesheet" href="general_css.css">
+    <link rel="stylesheet" href="view_css.css">
+    
     <!--Header-->
     <%- include('../partials/header'); %>
 </head>
@@ -103,6 +105,17 @@
                     <% }else if(type[index] == 9){  %>
                         <%= title %><br>
                         <textarea name="input<%= index %>" id="<%= title %>"><%= data[index] %></textarea>
+                    <% }else if(type[index] == 10){  %>
+                        <div>
+                            <% data[index].forEach(function(node, index) {%>
+                                <div id="nodes_conainer">
+                                    <div>Sender : <a><%=node.sender.firstName%> <%=node.sender.lastName%></a></div>
+                                    <div>Reg Date : <%=node.registrationDate%></div>
+                                    <div>Status : <%=node.status%></div>
+                                    <div>Text : <%=node.text%></div>
+                                </div>
+                            <%});%>
+                        </div>
                     <% }else{ %>
                         <%= title %>
                         <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>">
@@ -362,11 +375,7 @@
 
             }
             if(queryParams.type == 'nodes'){
-                $("#btn3").text("Save");
-                $("#btn3").click(function () {
-                    $("#action").val('save');
-                    $("#view_form").submit();
-                });
+                $("#btn3").hide();
 
                 $("#btn1").text("Ececuted");
                 $("#btn1").click(function () {
