@@ -6,30 +6,29 @@ const NodeShema = new mongoose.Schema({
   sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   receiver_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   type: {
-    type: String,
-    enum: ['relationship','response','request',4,5],
+    type: Number,
+    enum: [1,2,3,4,5],
     //1=relationship,2=response,3=request,4=node,5=warehouse
     required: true,
-    default:'node'
+    default:4
   },
   type2: {
-    type: String,
-    enum: ['hiring','firing','response','request1','request2','general',7,8],
+    type: Number,
+    enum: [1,2,3,4,5,6,7,8],
     //1=hiring,2=firing,3=response,4=request1,5=request2,6=general,7=shell,8=buy
     required: true,
-    default:'general'
+    default:6
   },
-  locked:{type: Number, enum:[0,1,2],default:0},
-  //0=unloked, 1=locked, 2= reject , fire, canceled
   text: { type: String},
   title: { type: String},
   due_date: { type: Date},
   next:{ type: String,required: true, default:"-"},
   status: {
-    type: String,
-    enum: ['viewed', 'executed', 'pending', 'rejected','canceled'],
+    type: Number,
+    enum: [1,2,3,4,5,6],
+    //1='viewed,2 =executed, 3=pending, 4=rejected, 5 =canceled , 6=temp
     required: true,
-    default: 'pending',
+    default: 3,
   },
   registrationDate: { type: Date, default: Date.now , required: true},
   data:{type: mongoose.Schema.Types.Mixed}

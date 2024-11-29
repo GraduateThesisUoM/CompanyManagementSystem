@@ -53,8 +53,8 @@
                 status: '<%= company_node.status %>'
             };
             
-            if(company_accountant.id == "<%= accountant._id %>" && company_accountant.status == "pending"){
-                if(company_accountant.status == "pending"){
+            if(company_accountant.id == "<%= accountant._id %>" && (company_accountant.status == 3 ||company_accountant.status == 1)){
+                if(company_accountant.status == 3 ||company_accountant.status == 1){
                     $("#request_bnt").hide();
                     $("#cansel_request_bnt").show();
                 }

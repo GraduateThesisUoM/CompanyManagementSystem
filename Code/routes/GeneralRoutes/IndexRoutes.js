@@ -35,7 +35,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         const nodes_pending = await Node.find({
           //receiver_id: req.user._id,
           $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
-          $or: [{ status: "pending" }, { status: "viewed" }],
+          $or: [{ status: 3 }, { status: 1 }],//pending, viewed
           //root : 1
           next:'-'
         });
@@ -43,14 +43,14 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         const nodes_rejected = await Node.find({
           //receiver_id: req.user._id,
           $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
-          status: "rejected",
+          status: 4,//rejected
           //root : 1
           next:'-'
         });
         const nodes_executed = await Node.find({
           //receiver_id: req.user._id,
           $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
-          status: "executed",
+          status: 2,//executed
           //root : 1
           next:'-'
         });

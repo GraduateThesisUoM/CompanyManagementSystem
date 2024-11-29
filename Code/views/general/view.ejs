@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="general_css.css">
     <link rel="stylesheet" href="view_css.css">
     <link rel="stylesheet" href="my_company_css.css">
+    <link rel="stylesheet" href="time_table_css.css">
     <!--Header-->
     <%- include('../partials/header'); %>
 </head>
@@ -111,7 +112,7 @@
                                 <div id="nodes_conainer">
                                     <div>Sender : <a><%=node.sender.firstName%> <%=node.sender.lastName%></a></div>
                                     <div>Reg Date : <%=node.registrationDate%></div>
-                                    <div>Status : <%=node.status%></div>
+                                    <div>Status : <span class="node_status"><%=node.status%></span></div>
                                     <div>Text : <%=node.text%></div>
                                 </div>
                             <%});%>
@@ -131,6 +132,103 @@
             <button id="btn1">Delete</button>
             <button id="btn2"></button>
             <button id="btn3">Save</button>
+            <div id="clients">
+                <button>ΦΠΑ</button>
+                <button>Time Table</button>
+                <div>
+                    <div>
+                        <button id="tt_day">Day</button>
+                        <button id="tt_week">Week</button>
+                        <button id="tt_month">Month</button>
+                        <input id="day_picker" type="date">
+                        <div id="month_picker">
+                            <select id="month_picker_month">
+                                <option>1</option>
+                                <option>2</option>
+                                <option>3</option>
+                                <option>4</option>
+                                <option>5</option>
+                                <option>6</option>
+                                <option>7</option>
+                                <option>8</option>
+                                <option>9</option>
+                                <option>10</option>
+                                <option>11</option>
+                                <option>12</option>
+                            </select>
+                            <input id="month_picker_year" type="number">
+                        </div>
+                    </div>
+                    <div id="calendar_div">
+                        <div id="day" class="day">1</div>
+                        <div id="week" class="week">
+                            <div class="day">1</div>
+                            <div class="day">1</div>
+                            <div class="day">1</div>
+                            <div class="day">1</div>
+                            <div class="day">1</div>
+                            <div class="day">1</div>
+                            <div class="day">1</div>
+                        </div>
+                        <div id="month" class="month">
+                            <div class="week">
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                            </div>
+                            <div class="week">
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                            </div>
+                            <div class="week">
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                            </div>
+                            <div class="week">
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                            </div>
+                            <div class="week">
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                            </div>
+                            <div class="week">
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                                <div class="day">1</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
         </div>
     </div>
@@ -139,8 +237,16 @@
     <script type = "text/javascript" src="JSDocumentFunctions.js"></script>
     <script>
         $(document).ready(function () {
-            //$("#view_form").hide();
+            $("#clients").hide();
             $("#message_div").hide();
+
+            $("#day").hide();
+            $("#week").hide();
+            $("#month").hide();
+
+            $("#day_picker").hide();
+            $("#month_picker_month").hide();
+            $("#month_picker").hide();
 
             const params = new URLSearchParams(window.location.search);
             var queryParams = {};
@@ -176,6 +282,7 @@
 
             if(queryParams.type == 'docs'){
                 $("#btn2").hide();
+                
                 
                 var selected_items = JSON.parse(`<%- JSON.stringify(data) %>`)[8];
                 var items = JSON.parse(`<%- JSON.stringify(data) %>`)[9];
@@ -376,7 +483,17 @@
 
 
             }
-            if(queryParams.type == 'nodes'){
+            else if(queryParams.type == 'nodes'){
+                var node = $(".node_status:last");
+
+                if(node.text() == '2'){
+                    $("#btn1").prop('disabled', true);
+                }
+                else if(node.text() == '4'){
+                    $("#btn1").prop('disabled', true);
+                    $("#btn2").prop('disabled', true);
+                }
+
                 $("#btn3").hide();
 
                 $("#btn1").text("Ececuted");
@@ -389,6 +506,9 @@
                     $("#action").val('rejected');
                     $("#view_form").submit();
                 });
+            }
+            else if (queryParams.type == 'clients'){
+                $("#clients").show();
             }
             else{
                 $("#btn1").click(function () {
@@ -427,6 +547,35 @@
                     url_id = $(this).attr('id');
                 }
                 window.location = "/view?type="+url_page+"&id="+url_id;
+            });
+
+            $("#tt_day").click(function () {
+                $("#day").show();
+                $("#week").hide();
+                $("#month").hide();
+
+                $("#day_picker").show();
+                $("#month_picker").hide();
+            });
+
+            $("#tt_week").click(function () {
+                $("#day").hide();
+                $("#week").show();
+                $("#month").hide();
+
+                $("#day_picker").hide();
+                $("#month_picker_month").show();
+                $("#month_picker").show();
+            });
+
+            $("#tt_month").click(function () {
+                $("#day").hide();
+                $("#week").hide();
+                $("#month").show();
+
+                $("#day_picker").hide();
+                $("#month_picker_month").hide();
+                $("#month_picker").show();
             });
 
         });

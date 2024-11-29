@@ -1,0 +1,23 @@
+#calendar_div{  
+    background-color: red !important;
+}
+
+#calendar_div div{
+    margin: 10px;
+}
+
+
+.day{
+    background-color: yellow;
+}
+
+.week{
+    display: grid;
+    grid-template-columns: 10% 10% 10% 10% 10% 10% 10% ;
+    gap:5%;
+    background-color: green;
+}
+
+.month{
+    background-color: blue;
+}

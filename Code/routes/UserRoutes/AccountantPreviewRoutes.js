@@ -26,11 +26,12 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     if(access.response){
       const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
       const company = await Company.findOne(_id=req.user.company);
-      var company_node = await Node.findOne({company:req.user.company,type:'relationship',next:'-'});
+      var company_node = await Node.findOne({company:req.user.company,type:1,next:'-'}).sort({ registrationDate: -1 });
+      console.log(company_node)
       if(company_node == null){
         company_node = {
           receiver_id: req.session.accountant._id,
-          status:'temp'
+          status: 6
         }
       }
     

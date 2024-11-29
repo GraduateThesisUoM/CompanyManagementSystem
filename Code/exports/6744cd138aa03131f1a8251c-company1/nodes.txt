@@ -1,15 +1,15 @@
 [
   {
-    "_id": "674722b76c1546c75049abc2",
+    "_id": "674a02fa9704a1bb056da8f6",
     "company": "6744cd138aa03131f1a8251c",
     "sender_id": "6744cd138aa03131f1a8251e",
     "receiver_id": "6744cea94215507895961cc0",
-    "root": 1,
-    "type": "relationship",
-    "type2": "hiring",
+    "type": 1,
+    "type2": 1,
+    "locked": 0,
     "next": "-",
-    "status": "pending",
-    "registrationDate": "2024-11-27T13:46:31.314Z",
+    "status": 3,
+    "registrationDate": "2024-11-29T18:07:54.967Z",
     "__v": 0
   }
 ]

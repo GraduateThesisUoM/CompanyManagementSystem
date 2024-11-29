@@ -195,7 +195,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                                 registrationDate: generalFunctions.formatDate(obj.registrationDate),
                                 title: n.title,
                                 status: n.status,
-                                text: n.text
+                                text: n.text,
+                                locked: n.locked
                             })
                         }
                         node_data.reverse();
@@ -284,13 +285,17 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
             }
             else if (req.query.type == 'nodes'){
                 const node = await Node.findOne({_id:req.query.id});
+                let action = 4;//rejected
+                if(req.body.action == 'executed'){
+                    action = 2;
+                }
 
                 const new_node = await generalFunctions.node_reply({
                     user: req.user,
                     target_node:node,
-                    reply : 'response',
+                    reply : 2,//response
                     text: req.body.input5,
-                    status : req.body.action
+                    status : action
                 })
                 return res.redirect(`/view?type=${req.query.type}&id=${new_node.id}`);
             }

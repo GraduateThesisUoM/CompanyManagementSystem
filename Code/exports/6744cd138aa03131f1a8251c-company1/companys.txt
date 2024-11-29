@@ -10,7 +10,7 @@
     "autochangesignupcode": 1,
     "logo": "https://i.pinimg.com/originals/ec/d9/c2/ecd9c2e8ed0dbbc96ac472a965e4afda.jpg",
     "name": "company1",
-    "registrationDate": "2024-11-27T13:46:20.561Z",
+    "registrationDate": "2024-11-27T21:03:45.625Z",
     "signupcode": "1",
     "status": 1
   }

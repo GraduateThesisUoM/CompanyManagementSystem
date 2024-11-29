@@ -121,18 +121,17 @@ async function create_user(data) {
 async function create_node(data) {
   console.log('create_node')
   console.log(data)
-  var status = "pending";
+  var status = 3;//pending
   var new_data = {};
-  if (data.type == "relationship") {
+  if (data.type == 1) {//relationship
     if(data.status != undefined){
       console.log("**************************************")
       status = data.status;
     }
-    else if (data.company.equals(data.receiver_id) && data.type2 == "hiring") {
-      status = "executed";
-    } else if (data.type2 == "firing") {
-      status = "executed";
+    else if ((data.company.equals(data.receiver_id) && data.type2 == 1)|| (data.type2 == 2)) {
+      status = 2 //executed;
     }
+
     new_data = {
       company: data.company,
       sender_id: data.sender_id,
@@ -142,7 +141,7 @@ async function create_node(data) {
       status: status,
       text: data.text
     };
-  } else if (data.type == "request") {
+  } else if (data.type == 3) {//request
     new_data = {
       company: data.company,
       sender_id: data.sender_id,
@@ -170,15 +169,15 @@ async function node_reply(data) {
   console.log("node_reply")
   console.log(data)
   const target_node = await Node.findOne({ _id: data.target_node._id });
-  var sts = "pending";
+  var sts = 3;//pending
   var reply = data.reply;
   if(data.status != undefined){
     sts = data.status
   }
-  else if (data.reply == 'firing' || data.reply == 'response') {
-    sts = "executed";
+  else if (data.reply == 2 || data.reply == 3) {
+    sts = 2;//executed
   }
-  if(target_node.type2 == 'hiring'){
+  if(target_node.type2 == 1){
     reply = target_node.type2;
   }
 
@@ -200,7 +199,7 @@ async function node_reply(data) {
   await reply_node.save();
 
   target_node.next = reply_node._id;
-  target_node.status = 'executed';
+  target_node.status = 2;//executed
   await target_node.save();
 
   return reply_node;
@@ -971,9 +970,9 @@ async function get_accountant_node(data){
   console.log('data.company : '+data.company);
   return  await Node.findOne({
     company:data.company,
-    type:'relationship',
-    type2:'hiring',
-    status: 'executed',
+    type: 1,//relationship
+    type2:1,
+    status: 2,//executed
     next: "-"
   })
 }
