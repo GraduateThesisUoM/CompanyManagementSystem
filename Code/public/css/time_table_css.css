@@ -11,13 +11,13 @@
     background-color: yellow;
 }
 
-.week{
+.week .days{
     display: grid;
     grid-template-columns: 10% 10% 10% 10% 10% 10% 10% ;
     gap:5%;
     background-color: green;
 }
 
-.month{
+.month {
     background-color: blue;
 }

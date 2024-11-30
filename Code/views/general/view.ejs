@@ -127,6 +127,8 @@
                 <% }); %>
             <% } %>
                 <input type="text" name="action" id="action" style="display: none;">
+                <input type="text" name="date_from" id="date_from" style="">
+                <input type="text" name="date_to" id="date_to" style="">
             </form>
             <div id="message_div"></span>Record has been deleted</div>
             <button id="btn1">Delete</button>
@@ -134,96 +136,102 @@
             <button id="btn3">Save</button>
             <div id="clients">
                 <button>ΦΠΑ</button>
-                <button>Time Table</button>
-                <div>
+                <button id="time_table_btn">Time Table</button>
+                <div id="time_table_div">
                     <div>
                         <button id="tt_day">Day</button>
                         <button id="tt_week">Week</button>
                         <button id="tt_month">Month</button>
                         <input id="day_picker" type="date">
-                        <div id="month_picker">
-                            <select id="month_picker_month">
-                                <option>1</option>
-                                <option>2</option>
-                                <option>3</option>
-                                <option>4</option>
-                                <option>5</option>
-                                <option>6</option>
-                                <option>7</option>
-                                <option>8</option>
-                                <option>9</option>
-                                <option>10</option>
-                                <option>11</option>
-                                <option>12</option>
-                            </select>
-                            <input id="month_picker_year" type="number">
-                        </div>
                     </div>
                     <div id="calendar_div">
-                        <div id="day" class="day">1</div>
+                        <div>
+                            <div id="selected_month"></div>
+                            <div id="selected_year"></div>
+                        </div>
+
+                        <div id="day" class="day">
+                            <div class="day_date"></div>
+                        </div>
                         <div id="week" class="week">
-                            <div class="day">1</div>
-                            <div class="day">1</div>
-                            <div class="day">1</div>
-                            <div class="day">1</div>
-                            <div class="day">1</div>
-                            <div class="day">1</div>
-                            <div class="day">1</div>
+                            <div class="days">
+                                <div class="day week_date"></div>
+                                <div class="day week_date"></div>
+                                <div class="day week_date"></div>
+                                <div class="day week_date"></div>
+                                <div class="day week_date"></div>
+                                <div class="day week_date"></div>
+                                <div class="day week_date"></div>
+                            </div>
                         </div>
                         <div id="month" class="month">
-                            <div class="week">
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                            </div>
-                            <div class="week">
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                            </div>
-                            <div class="week">
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                            </div>
-                            <div class="week">
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                            </div>
-                            <div class="week">
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                            </div>
-                            <div class="week">
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
-                                <div class="day">1</div>
+                            <div class="days">
+                                <div class="week">
+                                    <div class="days">
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                    </div>
+                                </div>
+                                <div class="week">
+                                    <div class="days">
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                    </div>
+                                </div>
+                                <div class="week">
+                                    <div class="days">
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                    </div>
+                                </div>
+                                <div class="week">
+                                    <div class="days">
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                    </div>
+                                </div>
+                                <div class="week">
+                                    <div class="days">
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                    </div>
+                                </div>
+                                <div class="week">
+                                    <div class="days">
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                        <div class="day month_date"></div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -234,9 +242,11 @@
     </div>
 </body>
 <%- include('../partials/footer'); %>
-    <script type = "text/javascript" src="JSDocumentFunctions.js"></script>
+    <script type = "text/javascript" src="JSFrontEndFunctions.js"></script>
     <script>
         $(document).ready(function () {
+            var selected_date = get_today();
+            var calendar_spectrum = '-';
             $("#clients").hide();
             $("#message_div").hide();
 
@@ -247,6 +257,8 @@
             $("#day_picker").hide();
             $("#month_picker_month").hide();
             $("#month_picker").hide();
+
+            $("#time_table_div").hide();
 
             const params = new URLSearchParams(window.location.search);
             var queryParams = {};
@@ -537,8 +549,7 @@
                 });
                 $('#'+target_id).text(tottal.toFixed(2)); // Optionally format to 2 decimal places
             }
-
-            
+           
             $(".go_to_btn").click(function () {
                 event.preventDefault();
                 var url_page,url_type,url_id;
@@ -555,7 +566,12 @@
                 $("#month").hide();
 
                 $("#day_picker").show();
-                $("#month_picker").hide();
+                $("#day_picker").val(selected_date)
+                calendar_spectrum = 'day';
+                $("#day_picker").change();
+
+                
+                $("#day_picker").show();
             });
 
             $("#tt_week").click(function () {
@@ -563,9 +579,11 @@
                 $("#week").show();
                 $("#month").hide();
 
-                $("#day_picker").hide();
-                $("#month_picker_month").show();
-                $("#month_picker").show();
+                $("#day_picker").show();
+
+                $("#day_picker").val(selected_date)
+                calendar_spectrum = 'week';
+                $("#day_picker").change();
             });
 
             $("#tt_month").click(function () {
@@ -573,10 +591,52 @@
                 $("#week").hide();
                 $("#month").show();
 
-                $("#day_picker").hide();
-                $("#month_picker_month").hide();
-                $("#month_picker").show();
+                $("#day_picker").show();
+
+                $("#day_picker").val(selected_date)
+                calendar_spectrum = 'month'
+                $("#day_picker").change();
+
+                
             });
+
+            $("#time_table_btn").click(function () {
+                $("#time_table_div").toggle();
+                $("#date_from").val(selected_date)
+
+            });
+
+            
+            $("#day_picker").change(function () {
+                selected_date = $('#day_picker').val();
+                show_selected_month_year(selected_date)
+                put_dates();
+            });
+
+
+            function show_selected_month_year(date){
+                $("#selected_month").text(date.split('-')[1]);
+                $("#selected_year").text(date.split('-')[0]);
+            }
+
+            function put_dates(type){
+                var dates = $("."+calendar_spectrum+"_date");
+                var date_selected = $('#day_picker').val();
+                var start = parseInt(date_selected.split('-')[2]);
+                var end = daysInMonth(11,2024)
+                if(calendar_spectrum=='week'){
+                    start = getFirstDayOfWeek(date_selected);
+                }
+                else if (calendar_spectrum=='month'){
+                    start = 1;
+                    end = end + getMonthStartOffset(date_selected);
+                }
+                for(let i=0;i<end;i++){
+                    $(dates.get(i)).text(start)
+                    start = start + 1;
+                }
+                
+            }
 
         });
 

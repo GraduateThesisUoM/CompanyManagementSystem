@@ -303,3 +303,57 @@ function formatDate(date) {
     // Format into DD/MM/YYYY HH:MM
     return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
+
+function get_today(data){
+    var fullDate = new Date();
+    var date = fullDate.getDate();
+    /*if(date.spectrum =! undefined){
+        if(date.spectrum == 'week'){
+
+        }
+    }*/
+    var month = fullDate.getMonth();
+    var twoDigitMonth = (month+1) > 9? month+1 : '0' + (month+1);
+    return fullDate.getFullYear() + "-" + twoDigitMonth + "-" + date;
+}
+
+function daysInMonth(month, year) {
+    return new Date(year, month, 0).getDate();
+}
+
+function getFirstDayOfWeek(dateString) {
+    // Parse the input date string
+    const inputDate = new Date(dateString);
+
+    // Get the day of the week (0 = Sunday, 1 = Monday, etc.)
+    const dayOfWeek = inputDate.getDay();
+
+    // Calculate the difference to the first day of the week (Monday)
+    const diffToMonday = (dayOfWeek === 0 ? 6 : dayOfWeek - 1);
+
+    // Get the first day of the week
+    const firstDayOfWeek = new Date(inputDate);
+    firstDayOfWeek.setDate(inputDate.getDate() - diffToMonday);
+
+    // Return just the day of the month
+    return firstDayOfWeek.getDate();
+}
+
+function getMonthStartOffset(dateString) {
+    // Parse the input date string
+    const inputDate = new Date(dateString);
+
+    // Get the year and month from the input date
+    const year = inputDate.getFullYear();
+    const month = inputDate.getMonth();
+
+    // Get the first day of the month
+    const firstDayOfMonth = new Date(year, month, 1);
+
+    // Get the day of the week (0 = Sunday, 1 = Monday, etc.)
+    const dayOfWeek = firstDayOfMonth.getDay();
+
+    // Adjust for Monday as the first day of the week
+    return dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+}
+
