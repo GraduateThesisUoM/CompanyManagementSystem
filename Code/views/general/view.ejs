@@ -639,12 +639,17 @@
                     if(startOffset > i){
                         text = ''
                     }
+                    else if (start > date_selected.split('-')[2]){
+                        text= -start;
+                    }
                     else{
                         text=start;
-                        start = start + 1;
                     }
                     $(dates.get(i)).text(text)
-                    
+                    start = start + 1;
+                    if(start > end - startOffset){
+                        start =1;
+                    }
                 }
                 
             }
