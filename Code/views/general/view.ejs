@@ -143,6 +143,9 @@
                         <button id="tt_week">Week</button>
                         <button id="tt_month">Month</button>
                         <input id="day_picker" type="date">
+                        <select>
+                            <option value="">All</option>
+                        </select>
                     </div>
                     <div id="calendar_div">
                         <div>
@@ -150,8 +153,7 @@
                             <div id="selected_year"></div>
                         </div>
 
-                        <div id="day" class="day">
-                            <div class="day_date"></div>
+                        <div id="day" class="day now day_date">
                         </div>
                         <div id="week" class="week">
                             <div class="days">
@@ -235,6 +237,15 @@
                             </div>
                         </div>
                     </div>
+                    <div id="day_data">
+                        <div>
+                            <div id ='day_data_date'></div>
+                            <div>
+                                data
+                            </div>
+                            <button id="close_day_data">close</button>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -259,6 +270,8 @@
             $("#month_picker").hide();
 
             $("#time_table_div").hide();
+
+            $("#day_data").hide();
 
             const params = new URLSearchParams(window.location.search);
             var queryParams = {};
@@ -614,6 +627,24 @@
                 put_dates();
             });
 
+            $(".day").click(function(){
+                var index = $(this).index(".day");
+                if ($(this).hasClass("now")) {
+                    let y= $("#selected_year").text();
+                    let m= $("#selected_month").text();
+                    $("#day_data_date").text($(this).text()+'-'+m+'-'+y)
+                }
+                else if ($(this).hasClass("old")) {
+                    return;
+                }
+                $("#day_data").show();
+            })
+
+            
+            $("#close_day_data").click(function(){
+                $("#day_data").hide();
+            });
+
 
             function show_selected_month_year(date){
                 $("#selected_month").text(date.split('-')[1]);
@@ -636,14 +667,20 @@
                 }
                 var text = '';
                 for(let i=0;i<end;i++){
+                    $(dates.get(i)).removeClass('now');
+                    $(dates.get(i)).removeClass('old');
                     if(startOffset > i){
-                        text = ''
+                        text = '';
+                        start = start -1;
+                        $(dates.get(i)).addClass('old');
                     }
-                    else if (start > date_selected.split('-')[2]){
-                        text= -start;
+                    else if (start > date_selected.split('-')[2] && calendar_spectrum=='week'){
+                        text= '';
+                        $(dates.get(i)).addClass('old');
                     }
                     else{
                         text=start;
+                        $(dates.get(i)).addClass('now');
                     }
                     $(dates.get(i)).text(text)
                     start = start + 1;
