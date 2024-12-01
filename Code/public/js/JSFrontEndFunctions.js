@@ -360,3 +360,12 @@ function getMonthStartOffset(dateString) {
     return dayOfWeek === 0 ? 6 : dayOfWeek - 1;
 }
 
+function get_item_from_list(list,id){
+    for(l of list){
+        if(l._id == id){
+            return l;
+        }
+    }
+    return 'not found'
+}
+

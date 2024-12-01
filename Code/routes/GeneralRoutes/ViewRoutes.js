@@ -21,6 +21,8 @@ const Person = require(path_constants.schemas.two.person);
 const Document = require(path_constants.schemas.two.document);
 const Series = require(path_constants.schemas.two.series);
 const Warehouse = require(path_constants.schemas.two.warehouse);
+const Client = require(path_constants.schemas.two.client);
+
 
 
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
@@ -216,10 +218,13 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                     }
                     else if( type == 'clients'){
                         obj = await Company.findOne({_id : id});
+                        var users = await Client.find({company:id,status:1})
+                        console.log(users)
                         data.data = [
                             obj.name,
                             obj.logo,
-                            generalFunctions.formatDate(obj.registrationDate)
+                            generalFunctions.formatDate(obj.registrationDate),
+                            users
                         ]
                         data.titles = ["Name","Logo","Reg Date"];
                         data.type = [0,11,0];
@@ -252,7 +257,8 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 
     try {
         const isParamsEmpty = Object.keys(req.query).length === 0;
-        console.log(req.query.type +" "+ req.query.id+ "-------------- "+req.body.action)
+        console.log("ViewRoutes")
+        console.log(req.query)
         if (isParamsEmpty) {
             console.log("ERROR ViewRoutes 2");
             return res.redirect('/error?origin_page=/&error=' + encodeURIComponent("Query parameters are missing"));
@@ -261,48 +267,52 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
             var obj_data = req.body;
             var obj_type = req.query.type;
 
-            if(req.body.action == 'save'){
-                if(req.query.type == 'docs'){
-                    obj_type = 'documents'
-                    const lines_of_doc = {};
+            if(req.body.form_type == 'f_1'){
+                if(req.body.action == 'save'){
+                    if(req.query.type == 'docs'){
+                        obj_type = 'documents'
+                        const lines_of_doc = {};
 
-                    for (let i = 0; i < req.body.num_of_rows; i++) {
-                        const quantity = parseInt(req.body[`quantity_${i}`], 10);
-                        const tax = parseFloat(req.body[`tax_${i}`]).toFixed(2);
-                        const lineItem = req.body[`doc_line_item_${i}`]; // Assuming lineItem should remain a string or ID
-                        const discount = parseFloat(req.body[`discount_${i}`]).toFixed(2);
-                        const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
-                        lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
+                        for (let i = 0; i < req.body.num_of_rows; i++) {
+                            const quantity = parseInt(req.body[`quantity_${i}`], 10);
+                            const tax = parseFloat(req.body[`tax_${i}`]).toFixed(2);
+                            const lineItem = req.body[`doc_line_item_${i}`]; // Assuming lineItem should remain a string or ID
+                            const discount = parseFloat(req.body[`discount_${i}`]).toFixed(2);
+                            const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
+                            lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
+                        }
+                        
+                        obj_data = {
+                            generalDiscount : 50,
+                            invoiceData : lines_of_doc
+                        }
                     }
-                    
-                    obj_data = {
-                        generalDiscount : 50,
-                        invoiceData : lines_of_doc
+                
+                    await generalFunctions.update({ _id: req.query.id } , obj_type, obj_data);
+                }
+                else if (req.query.type == 'nodes'){
+                    const node = await Node.findOne({_id:req.query.id});
+                    let action = 4;//rejected
+                    if(req.body.action == 'executed'){
+                        action = 2;
                     }
-                }
-               
-                await generalFunctions.update({ _id: req.query.id } , obj_type, obj_data);
-            }
-            else if (req.query.type == 'nodes'){
-                const node = await Node.findOne({_id:req.query.id});
-                let action = 4;//rejected
-                if(req.body.action == 'executed'){
-                    action = 2;
-                }
 
-                const new_node = await generalFunctions.node_reply({
-                    user: req.user,
-                    target_node:node,
-                    reply : 2,//response
-                    text: req.body.input5,
-                    status : action
-                })
-                return res.redirect(`/view?type=${req.query.type}&id=${new_node.id}`);
+                    const new_node = await generalFunctions.node_reply({
+                        user: req.user,
+                        target_node:node,
+                        reply : 2,//response
+                        text: req.body.input5,
+                        status : action
+                    })
+                    return res.redirect(`/view?type=${req.query.type}&id=${new_node.id}`);
+                }
+                else{
+                    await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);
+                }
             }
-            else{
-                await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);
+            else if(req.body.form_type == 'f_2'){
+                console.log("XXXXXXXXXXXx")
             }
-            
             return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
         } else {
             console.log("ERROR ViewRoutes 1");
@@ -313,5 +323,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         return res.redirect('/error?origin_page=/&error=' + encodeURIComponent(e.message));
     }
 });
+
+
 
 module.exports = router;

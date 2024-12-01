@@ -72,7 +72,8 @@ body{
 }
 
 #sidebar_div{
-    height: 100vh;
+    /*height: 100vh;*/
+    height: 100%;
     background-color: rgb(170, 170, 170);
     position: relative;
     display: flex;
