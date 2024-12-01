@@ -127,8 +127,8 @@
                 <% }); %>
             <% } %>
                 <input type="text" name="action" id="action" style="display: none;">
-                <input type="text" name="date_from" id="date_from" style="">
-                <input type="text" name="date_to" id="date_to" style="">
+                <input type="text" name="date_from" id="date_from">
+                <input type="text" name="date_to" id="date_to">
             </form>
             <div id="message_div"></span>Record has been deleted</div>
             <button id="btn1">Delete</button>
@@ -603,6 +603,7 @@
             $("#time_table_btn").click(function () {
                 $("#time_table_div").toggle();
                 $("#date_from").val(selected_date)
+                $("#day_picker").val(selected_date)
 
             });
 
@@ -623,17 +624,27 @@
                 var dates = $("."+calendar_spectrum+"_date");
                 var date_selected = $('#day_picker').val();
                 var start = parseInt(date_selected.split('-')[2]);
-                var end = daysInMonth(11,2024)
+                var end = daysInMonth(11,2024);
+                var startOffset = 0;
                 if(calendar_spectrum=='week'){
                     start = getFirstDayOfWeek(date_selected);
                 }
                 else if (calendar_spectrum=='month'){
                     start = 1;
-                    end = end + getMonthStartOffset(date_selected);
+                    startOffset = getMonthStartOffset(date_selected)
+                    end = end + startOffset;
                 }
+                var text = '';
                 for(let i=0;i<end;i++){
-                    $(dates.get(i)).text(start)
-                    start = start + 1;
+                    if(startOffset > i){
+                        text = ''
+                    }
+                    else{
+                        text=start;
+                        start = start + 1;
+                    }
+                    $(dates.get(i)).text(text)
+                    
                 }
                 
             }

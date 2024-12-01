@@ -304,17 +304,20 @@ function formatDate(date) {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
 
-function get_today(data){
+function get_today(){
     var fullDate = new Date();
-    var date = fullDate.getDate();
+    //var date = fullDate.getDate();
     /*if(date.spectrum =! undefined){
         if(date.spectrum == 'week'){
 
         }
     }*/
     var month = fullDate.getMonth();
+    var day = fullDate.getDay();
+
     var twoDigitMonth = (month+1) > 9? month+1 : '0' + (month+1);
-    return fullDate.getFullYear() + "-" + twoDigitMonth + "-" + date;
+    var twoDigitday = (day+1) > 9? day+1 : '0' + (day+1);
+    return fullDate.getFullYear() + "-" + twoDigitMonth + "-" + twoDigitday;
 }
 
 function daysInMonth(month, year) {
