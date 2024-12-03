@@ -21,7 +21,6 @@
         <%- include('../partials/sidebar'); %>
         <div>
             <form action="/view" method="POST" id="view_form">
-                <input name="form_type" value="f_1">
             <% if (isParamsEmpty) { %> 
                 <div>ERROR: No elements selected</div>
             <% } else { %>
@@ -127,9 +126,32 @@
                     </div>
                 <% }); %>
             <% } %>
-                <input type="text" name="action" id="action" style="display: none;">
+                <input type="text" name="action" id="action" style="display: inline;">
                 <input type="text" name="date_from" id="date_from">
                 <input type="text" name="date_to" id="date_to">
+
+                <div id="day_data">
+                    <div>
+                        <div id ='day_data_date'></div>
+                            <input name="day_data_input_user_id" id="day_data_input_user_id">
+                            <div id="day_data_div_client_name"></div>
+                            <input name="day_data_input_date" id="day_data_input_date">
+                            <div id="time_table_hours">
+                                <input name="time_table_hours" type="number" max="23"min="0">
+                                :
+                                <input name="time_table_minutes" type="number" max="59"min="0">
+                            </div>
+                            <div>
+                                <input id="new_edit_time_teble" name="new_edit_time_teble">
+                                Edit<input type="checkbox" name="edit_time_table" id="edit_time_table"><br>
+                                New<input type="checkbox" name="new_time_table" id="new_time_table">
+                            </div>
+                            <label for="time_table_notes">Notes</label><br>
+                            <textarea placeholder="Notes..." name="time_table_notes" id="time_table_notes"></textarea>
+                            <button id="time_table_submit_btn">Submit</button>
+                        <button id="close_day_data">close</button>
+                    </div>
+                </div>
             </form>
             <div id="message_div"></span>Record has been deleted</div>
             <button id="btn1">Delete</button>
@@ -145,10 +167,7 @@
                         <button id="tt_month">Month</button>
                         <input id="day_picker" type="date">
                         <select id="user_select">
-                            <option value="0">All</option>
-                            <% for(client of data[3]){%>
-                                <option value="<%=client._id%>"><%=client.firstName%> <%=client.lastName%></option>
-                            <% }%>
+                            <option  value="all">All</option>
                         </select>
                     </div>
                     <div id="calendar_div">
@@ -241,29 +260,6 @@
                             </div>
                         </div>
                     </div>
-                    <div id="day_data">
-                        <div>
-                            <div id ='day_data_date'></div>
-                            <form action="/view" method="POST">
-                                <input name="form_type" value="f_2">
-                                <input name="day_data_input_client_id" id="day_data_input_client_id">
-                                <div id="day_data_div_client_name"></div>
-                                <input name="day_data_input_date" id="day_data_input_date">
-                                <div id="time_table_hours">
-                                    <input type="number" max="23"min="0">
-                                    :
-                                    <input type="number" max="59"min="0">
-                                </div>
-                                <div>Edit<input type="checkbox" name="edit_time_table" id="edit_time_table"><br>
-                                    New<input type="checkbox" name="new_time_table" id="new_time_table">
-                                </div>
-                                <label for="time_table_notes">Notes</label><br>
-                                <textarea placeholder="Notes..." name="time_table_notes" id="time_table_notes"></textarea>
-                                <button type="submit">Submit</button>
-                            </form>
-                            <button id="close_day_data">close</button>
-                        </div>
-                    </div>
                 </div>
             </div>
             
@@ -277,6 +273,8 @@
             var selected_date = get_today();
             var calendar_spectrum = '-';
             var clients_users = [];
+
+            const secondery_data = JSON.parse(`<%- JSON.stringify(secondery_data) %>`);
 
             $("#clients").hide();
             $("#message_div").hide();
@@ -553,7 +551,14 @@
                 });
             }
             else if (queryParams.type == 'clients'){
-                clients_users = JSON.parse(`<%- JSON.stringify(data) %>`)[3];
+                clients_users = secondery_data.users;
+                
+                
+                for( client of clients_users){
+                    $("#user_select").append(
+                        `<option value="${client._id}">${client.firstName} ${client.lastName}</option>`
+                    );
+                }
                 $("#clients").show();
             }
             else{
@@ -606,6 +611,8 @@
 
                 
                 $("#day_picker").show();
+
+                put_data_on_calendar('all')
             });
 
             $("#tt_week").click(function () {
@@ -618,6 +625,8 @@
                 $("#day_picker").val(selected_date)
                 calendar_spectrum = 'week';
                 $("#day_picker").change();
+
+                put_data_on_calendar('all')
             });
 
             $("#tt_month").click(function () {
@@ -631,7 +640,7 @@
                 calendar_spectrum = 'month'
                 $("#day_picker").change();
 
-                
+                put_data_on_calendar('all')
             });
 
             $("#time_table_btn").click(function () {
@@ -656,12 +665,9 @@
                     $("#day_data_date").text($(this).text()+'-'+m+'-'+y);
 
                     var u_id = $("#user_select").val()
-                    console.log(clients_users)
-                    console.log("---")
                     var u = get_item_from_list(clients_users,u_id);
-                    console.log(u)
                     $("#day_data_div_client_name").text(u.firstName + " "+ u.firstName);
-                    $("#day_data_input_client_id").val(u._id);
+                    $("#day_data_input_user_id").val(u._id);
                     $("#day_data_input_date").val(selected_date);
                     
                 }
@@ -679,6 +685,7 @@
             $("#new_time_table").change(function() {
                 if ($(this).is(":checked")) {
                     $("#edit_time_table").prop("checked", false);
+                    $("#new_edit_time_teble").val("-")
                 }
             });
 
@@ -688,6 +695,13 @@
                 }
             });
 
+            $("#time_table_submit_btn").click(function(event) {
+                event.preventDefault();
+                $("#action").val('time_table');
+                $("#view_form").submit();
+            });
+            
+
             function show_selected_month_year(date){
                 $("#selected_month").text(date.split('-')[1]);
                 $("#selected_year").text(date.split('-')[0]);
@@ -695,6 +709,10 @@
 
             function put_dates(type){
                 var dates = $("."+calendar_spectrum+"_date");
+
+                $(".day").removeClass('old');
+                $(".day").removeClass('now');
+
                 var date_selected = $('#day_picker').val();
                 var start = parseInt(date_selected.split('-')[2]);
                 var end = daysInMonth(11,2024);
@@ -709,8 +727,8 @@
                 }
                 var text = '';
                 for(let i=0;i<end;i++){
-                    $(dates.get(i)).removeClass('now');
-                    $(dates.get(i)).removeClass('old');
+                    /*$(dates.get(i)).removeClass('now');
+                    $(dates.get(i)).removeClass('old');*/
                     if(startOffset > i){
                         text = '';
                         start = start -1;
@@ -733,6 +751,18 @@
                 
             }
 
+            function put_data_on_calendar(user){
+                var days = $(".day.now")
+                for( d of days){
+                        console.log($(d).text())
+                    }
+                    console.log("---")
+                /*if(user == 'all'){
+                    for( n of secondery_data.nodes){
+                        console.log(n)
+                    }
+                }*/
+            }
         });
 
     </script>

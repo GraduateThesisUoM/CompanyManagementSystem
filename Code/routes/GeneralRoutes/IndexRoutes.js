@@ -37,7 +37,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
           $or: [{ status: 3 }, { status: 1 }],//pending, viewed
           //root : 1
-          next:'-'
+          next:'-',
+          type: { $in: [1, 3] }//relationship,request
         });
 
         const nodes_rejected = await Node.find({
@@ -45,14 +46,16 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
           status: 4,//rejected
           //root : 1
-          next:'-'
+          next:'-',
+          type: { $in: [1, 3] }//relationship,request
         });
         const nodes_executed = await Node.find({
           //receiver_id: req.user._id,
           $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
           status: 2,//executed
           //root : 1
-          next:'-'
+          next:'-',
+          type: { $in: [1, 3] }//relationship,request
         });
 
         const clients = await clientAccountantFunctions.fetchClients(

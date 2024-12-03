@@ -121,44 +121,42 @@ async function create_user(data) {
 async function create_node(data) {
   console.log('create_node')
   console.log(data)
-  var status = 3;//pending
-  var new_data = {};
+
+  new_data = {
+    company: data.company,
+    sender_id: data.sender_id,
+    receiver_id: data.receiver_id,
+    type: data.type,
+    type2: data.type2,
+    status: 3,//pending
+    text: data.text
+  };
   if (data.type == 1) {//relationship
     if(data.status != undefined){
       console.log("**************************************")
-      status = data.status;
+      new_data.status = data.status;
     }
     else if ((data.company.equals(data.receiver_id) && data.type2 == 1)|| (data.type2 == 2)) {
-      status = 2 //executed;
+      new_data.status = 2 //executed;
     }
 
-    new_data = {
-      company: data.company,
-      sender_id: data.sender_id,
-      receiver_id: data.receiver_id,
-      type: data.type,
-      type2: data.type2,
-      status: status,
-      text: data.text
-    };
   } else if (data.type == 3) {//request
     new_data = {
-      company: data.company,
-      sender_id: data.sender_id,
-      receiver_id: data.receiver_id,
-      type: data.type,
-      type2: data.type2,
-      status: status,
-      text: data.text,
+      ...new_data, // Spread existing properties
       title: data.title,
       due_date: data.due_date,
     };
+  }
+  else if (data.type == 6){
+    new_data.status = 2;
   }
   else{
     new_data = data
   }
 
   const new_node = new Node(new_data);
+  if(data.data) new_node.data = data.data;
+
 
   await new_node.save();
 
@@ -169,17 +167,6 @@ async function node_reply(data) {
   console.log("node_reply")
   console.log(data)
   const target_node = await Node.findOne({ _id: data.target_node._id });
-  var sts = 3;//pending
-  var reply = data.reply;
-  if(data.status != undefined){
-    sts = data.status
-  }
-  else if (data.reply == 2 || data.reply == 3) {
-    sts = 2;//executed
-  }
-  if(target_node.type2 == 1){
-    reply = target_node.type2;
-  }
 
   var receiver = target_node.sender_id;
   if(receiver == data.user._id){
@@ -191,10 +178,17 @@ async function node_reply(data) {
     sender_id: data.user._id,
     receiver_id: receiver,
     type: target_node.type,
-    type2: reply,
-    text: data.text,
-    status: sts,
   });
+
+  if (data.text) reply_node.text = data.text;
+  if (target_node.type2 == 1) reply_node.type2 = data.type2;
+  if (data.status != undefined){
+    reply_node.sts = data.status
+  }
+  else if (data.reply == 2 || data.reply == 3){
+    reply_node.sts = 2;
+  }
+  else if (data.type == 6)reply_node.sts = 2;
 
   await reply_node.save();
 

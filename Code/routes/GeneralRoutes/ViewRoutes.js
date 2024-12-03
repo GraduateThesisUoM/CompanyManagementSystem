@@ -32,13 +32,14 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         if(access.response){
             var company;
             var obj;
+            var secondery_data={};
 
             if(req.user.type != 'admin'){
                 company = req.user.company
 
-            }else{
-                console.log("company")
-            }
+            }/*else{ for delete
+                company = await Company.findOne({_id:req.query.id})
+            }*/
             const isParamsEmpty = Object.keys(req.query).length === 0;
             var data = {
                 user: req.user,
@@ -218,16 +219,18 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                     }
                     else if( type == 'clients'){
                         obj = await Company.findOne({_id : id});
-                        var users = await Client.find({company:id,status:1})
-                        console.log(users)
                         data.data = [
                             obj.name,
                             obj.logo,
                             generalFunctions.formatDate(obj.registrationDate),
-                            users
                         ]
                         data.titles = ["Name","Logo","Reg Date"];
                         data.type = [0,11,0];
+                        secondery_data = {
+                            nodes :await Node.find({company:id,type:6,type2:6}),
+                            users : await Client.find({company:id,status:1})
+                        }
+                        console.log("secondery_data : "+ secondery_data.nodes)
                     }
                 }
                 else{
@@ -240,7 +243,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             /*else{
                 console.log(data.data)
             }*/
-            
+            data.secondery_data = secondery_data;
             res.render(path_constants.pages.view.view(), data);
         }
         else{
@@ -256,9 +259,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 
     try {
+        var data ={}
         const isParamsEmpty = Object.keys(req.query).length === 0;
         console.log("ViewRoutes")
-        console.log(req.query)
         if (isParamsEmpty) {
             console.log("ERROR ViewRoutes 2");
             return res.redirect('/error?origin_page=/&error=' + encodeURIComponent("Query parameters are missing"));
@@ -267,52 +270,70 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
             var obj_data = req.body;
             var obj_type = req.query.type;
 
-            if(req.body.form_type == 'f_1'){
-                if(req.body.action == 'save'){
-                    if(req.query.type == 'docs'){
-                        obj_type = 'documents'
-                        const lines_of_doc = {};
+            console.log(req.body.action)
+            if(req.body.action == 'save'){
+                if(req.query.type == 'docs'){
+                    obj_type = 'documents'
+                    const lines_of_doc = {};
 
-                        for (let i = 0; i < req.body.num_of_rows; i++) {
-                            const quantity = parseInt(req.body[`quantity_${i}`], 10);
-                            const tax = parseFloat(req.body[`tax_${i}`]).toFixed(2);
-                            const lineItem = req.body[`doc_line_item_${i}`]; // Assuming lineItem should remain a string or ID
-                            const discount = parseFloat(req.body[`discount_${i}`]).toFixed(2);
-                            const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
-                            lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
-                        }
-                        
-                        obj_data = {
-                            generalDiscount : 50,
-                            invoiceData : lines_of_doc
+                    for (let i = 0; i < req.body.num_of_rows; i++) {
+                        const quantity = parseInt(req.body[`quantity_${i}`], 10);
+                        const tax = parseFloat(req.body[`tax_${i}`]).toFixed(2);
+                        const lineItem = req.body[`doc_line_item_${i}`]; // Assuming lineItem should remain a string or ID
+                        const discount = parseFloat(req.body[`discount_${i}`]).toFixed(2);
+                        const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
+                        lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
+                    }
+                    
+                    obj_data = {
+                        generalDiscount : 50,
+                        invoiceData : lines_of_doc
+                    }
+                }
+            
+                await generalFunctions.update({ _id: req.query.id } , obj_type, obj_data);
+            }
+            else if ( req.body.action == 'time_table'){
+                var company = await Company.findOne({_id : req.query.id});
+                if(req.body.new_edit_time_teble == "-"){
+                    
+                    data = {
+                        company: company._id,
+                        sender_id: req.user._id,
+                        receiver_id: company._id,
+                        type : 6,//timetable
+                        text: req.body.time_table_notes,
+                        data : {
+                            date: req.body.day_data_input_client_id,
+                            hour : req.body.time_table_hours,
+                            minutes: req.body.time_table_minutes,
+                            user_id: req.body.day_data_input_user_id
                         }
                     }
-                
-                    await generalFunctions.update({ _id: req.query.id } , obj_type, obj_data);
                 }
-                else if (req.query.type == 'nodes'){
-                    const node = await Node.findOne({_id:req.query.id});
-                    let action = 4;//rejected
-                    if(req.body.action == 'executed'){
-                        action = 2;
-                    }
+                console.log(data)
+                const time_table_node = await generalFunctions.create_node(data);
+            }
+            else if (req.query.type == 'nodes'){
+                const node = await Node.findOne({_id:req.query.id});
+                let action = 4;//rejected
+                if(req.body.action == 'executed'){
+                    action = 2;
+                }
 
-                    const new_node = await generalFunctions.node_reply({
-                        user: req.user,
-                        target_node:node,
-                        reply : 2,//response
-                        text: req.body.input5,
-                        status : action
-                    })
-                    return res.redirect(`/view?type=${req.query.type}&id=${new_node.id}`);
-                }
-                else{
-                    await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);
-                }
+                const new_node = await generalFunctions.node_reply({
+                    user: req.user,
+                    target_node:node,
+                    reply : 2,//response
+                    text: req.body.input5,
+                    status : action
+                })
+                return res.redirect(`/view?type=${req.query.type}&id=${new_node.id}`);
             }
-            else if(req.body.form_type == 'f_2'){
-                console.log("XXXXXXXXXXXx")
+            else{
+                await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);
             }
+            
             return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
         } else {
             console.log("ERROR ViewRoutes 1");

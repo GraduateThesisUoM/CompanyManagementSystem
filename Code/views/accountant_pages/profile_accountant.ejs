@@ -10,34 +10,40 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <!--Header-->
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>Profile</h1>
-        <div id="accountant-info-div" name="accountant-info-div">
-            <h2>Info</h2>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1>Profile</h1>
+                <div id="accountant-info-div" name="accountant-info-div">
+                    <h2>Info</h2>
 
-            <form class="display_block" action="/profile-page" method="POST" >
-                <label for="firstName">Όνομα</label>
-                <input type="text" name="firstName" required value="<%= user.firstName %>">
-                <label for="lastName">Επίθετο</label>
-                <input type="text" name="lastName" required value="<%= user.lastName %>">
-                <label for="email">Email</label>
-                <input type="email" name="email" required value="<%= user.email %>">
-                <label for="afm">Α.Φ.Μ.</label>
-                <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ." value="<%= user.afm %>">
+                    <form class="display_block" action="/profile-page" method="POST" >
+                        <label for="firstName">Όνομα</label>
+                        <input type="text" name="firstName" required value="<%= user.firstName %>">
+                        <label for="lastName">Επίθετο</label>
+                        <input type="text" name="lastName" required value="<%= user.lastName %>">
+                        <label for="email">Email</label>
+                        <input type="email" name="email" required value="<%= user.email %>">
+                        <label for="afm">Α.Φ.Μ.</label>
+                        <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ." value="<%= user.afm %>">
 
-                <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
-                <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData" value="<%= user.mydatakey %>">
-                <button type="submit" id="edit-info-button" name="edit-info-button">Αποθήκευση αλλαγών</button>
-            </form>
-            <button id="back_btn">Πίσω</button>
-        </div>
-        <hr>
-        <div id="rating-div" name="rating-div">
-            <h2>Reviews and Comments</h2>
-            <div id="reviews_div">
+                        <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
+                        <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData" value="<%= user.mydatakey %>">
+                        <button type="submit" id="edit-info-button" name="edit-info-button">Αποθήκευση αλλαγών</button>
+                    </form>
+                    <button id="back_btn">Πίσω</button>
+                </div>
+                <hr>
+                <div id="rating-div" name="rating-div">
+                    <h2>Reviews and Comments</h2>
+                    <div id="reviews_div">
 
+                    </div>
+                </div>
             </div>
         </div>
     </body>
