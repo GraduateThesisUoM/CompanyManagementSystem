@@ -678,7 +678,8 @@
             })
 
             
-            $("#close_day_data").click(function(){
+            $("#close_day_data").click(function(event){
+                event.preventDefault();
                 $("#day_data").hide();
             });
 
@@ -727,8 +728,6 @@
                 }
                 var text = '';
                 for(let i=0;i<end;i++){
-                    /*$(dates.get(i)).removeClass('now');
-                    $(dates.get(i)).removeClass('old');*/
                     if(startOffset > i){
                         text = '';
                         start = start -1;
@@ -752,16 +751,31 @@
             }
 
             function put_data_on_calendar(user){
-                var days = $(".day.now")
-                for( d of days){
-                        console.log($(d).text())
+                var days = $(".day.now");
+                var selected_month = $("#selected_month").text();
+                var selected_year = $("#selected_year").text();
+                var cal_data = [];
+                var cal_days = [];
+
+                days.each(function (index, element) {
+                    cal_data.push({ 
+                        index: index, 
+                        day: $(element).text() 
+                    });
+                    cal_days.push(parseInt((element).text()));
+                });
+                console.log(cal_days);
+                /*for( d of days){
+                    for( n of secondery_data.nodes){*/
+                for( n of secondery_data.nodes){
+                    if(selected_year == new Date(n.data.date_start).getFullYear()){
+                        if(selected_month  == new Date(n.data.date_start).getMonth()+1){
+                            if (cal_days.includes(new Date(n.data.date_start).getDate())) {
+                                console.log(new Date(n.data.date_start).getDate())
+                            }
+                        }
                     }
-                    console.log("---")
-                /*if(user == 'all'){
-                    for( n of secondery_data.nodes){
-                        console.log(n)
-                    }
-                }*/
+                }
             }
         });
 

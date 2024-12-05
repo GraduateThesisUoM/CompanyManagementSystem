@@ -296,18 +296,19 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
             else if ( req.body.action == 'time_table'){
                 var company = await Company.findOne({_id : req.query.id});
                 if(req.body.new_edit_time_teble == "-"){
-                    
+                    let dateObject = new Date(req.body.day_data_input_date);
+
                     data = {
                         company: company._id,
                         sender_id: req.user._id,
-                        receiver_id: company._id,
+                        receiver_id: req.body.day_data_input_user_id,
                         type : 6,//timetable
                         text: req.body.time_table_notes,
                         data : {
-                            date: req.body.day_data_input_client_id,
+                            date_start: dateObject,
+                            date_end: dateObject,
                             hour : req.body.time_table_hours,
                             minutes: req.body.time_table_minutes,
-                            user_id: req.body.day_data_input_user_id
                         }
                     }
                 }
