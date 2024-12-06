@@ -168,10 +168,12 @@ async function node_reply(data) {
   console.log(data)
   const target_node = await Node.findOne({ _id: data.target_node._id });
 
+  // -------------receiver_id
   var receiver = target_node.sender_id;
-  if(receiver == data.user._id){
+  if(receiver == data.user._id || data.reply == 6){
     receiver = target_node.receiver_id
   }
+
 
   const reply_node = await create_node({
     company: target_node.company,
@@ -180,15 +182,21 @@ async function node_reply(data) {
     type: target_node.type,
   });
 
+  // -------------type
+  if (data.reply) reply_node.type = data.reply;
+
+  // -------------type2
+  if (data.type2) reply_node.type2 = data.type2;
+  else if (data.reply == 6) reply_node.type2 = 6;
+  else if (target_node.type2 == 1) reply_node.type2 = data.type2;
+
+  // -------------status
+  if (data.status)reply_node.status = data.status
+  else if ([2, 3, 6].includes(data.reply))reply_node.status = 2;
+
   if (data.text) reply_node.text = data.text;
-  if (target_node.type2 == 1) reply_node.type2 = data.type2;
-  if (data.status != undefined){
-    reply_node.sts = data.status
-  }
-  else if (data.reply == 2 || data.reply == 3){
-    reply_node.sts = 2;
-  }
-  else if (data.type == 6)reply_node.sts = 2;
+  if (data.data) reply_node.data = data.data;
+
 
   await reply_node.save();
 

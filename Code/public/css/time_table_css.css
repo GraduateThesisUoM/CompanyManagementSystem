@@ -42,3 +42,15 @@
     left: 0px;
     width: 100vw;
 }
+
+.day_line{
+    margin: 0px;
+    padding: 0px;
+    background-color: red;
+}
+.day_line div{
+    margin: 0px !important;
+    padding: 0px !important;
+    background-color: blue;
+
+}

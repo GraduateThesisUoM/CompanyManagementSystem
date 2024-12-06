@@ -754,15 +754,10 @@
                 var days = $(".day.now");
                 var selected_month = $("#selected_month").text();
                 var selected_year = $("#selected_year").text();
-                var cal_data = [];
                 var cal_days = [];
 
                 days.each(function (index, element) {
-                    cal_data.push({ 
-                        index: index, 
-                        day: $(element).text() 
-                    });
-                    cal_days.push(parseInt((element).text()));
+                    cal_days.push(parseInt($(element).text()));
                 });
                 console.log(cal_days);
                 /*for( d of days){
@@ -771,7 +766,13 @@
                     if(selected_year == new Date(n.data.date_start).getFullYear()){
                         if(selected_month  == new Date(n.data.date_start).getMonth()+1){
                             if (cal_days.includes(new Date(n.data.date_start).getDate())) {
-                                console.log(new Date(n.data.date_start).getDate())
+                                const index = cal_days.findIndex(day => day === new Date(n.data.date_start).getDate());
+                                $(days[index]).append(
+                                    "<div class='day_line'>"+
+                                        "<div>"+n.user.firstName+" "+n.user.lastName+"</div>"+
+                                        "<div>"+n.data.hour+" : "+n.data.minutes+"</div>"+
+                                        
+                                        "</div>")
                             }
                         }
                     }
