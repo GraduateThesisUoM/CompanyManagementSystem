@@ -159,13 +159,13 @@
             <button id="btn3">Save</button>
             <div id="clients">
                 <button>ΦΠΑ</button>
-                <button id="time_table_btn">Time Table</button>
+                <button id="time_table_btn" onclick="show_hide_time_table">Time Table</button>
                 <div id="time_table_div">
                     <div>
                         <button id="tt_day">Day</button>
                         <button id="tt_week">Week</button>
                         <button id="tt_month">Month</button>
-                        <input id="day_picker" type="date">
+                        <input id="day_picker" type="date" onchange="day_picker">
                         <select id="user_select">
                             <option  value="all">All</option>
                         </select>
@@ -553,13 +553,17 @@
             else if (queryParams.type == 'clients'){
                 clients_users = secondery_data.users;
                 
-                
                 for( client of clients_users){
                     $("#user_select").append(
                         `<option value="${client._id}">${client.firstName} ${client.lastName}</option>`
                     );
                 }
                 $("#clients").show();
+
+                if(queryParams.timetable){
+                    show_hide_time_table();
+                    show_calendar(queryParams.timetable);
+                }
             }
             else{
                 $("#btn1").click(function () {
@@ -599,63 +603,54 @@
                 window.location = "/view?type="+url_page+"&id="+url_id;
             });
 
-            $("#tt_day").click(function () {
-                $("#day").show();
-                $("#week").hide();
-                $("#month").hide();
+            $("#tt_day").click(function (){day_week_month('day')});
+
+            $("#tt_week").click(function (){day_week_month('week')});
+
+            $("#tt_month").click(function () {day_week_month('month')});
+
+            function day_week_month(input){
+                window.location = "/view?type=clients&id="+queryParams.id+"&timetable="+input
+            }
+
+            function show_calendar(input){
+                if(input == 'month'){
+                    $("#day").hide();
+                    $("#week").hide();
+                    $("#month").show();
+                }
+                else if(input == 'week'){
+                    $("#day").hide();
+                    $("#week").show();
+                    $("#month").hide();
+                }
+                else if(input == 'day'){
+                    $("#day").show();
+                    $("#week").hide();
+                    $("#month").hide();
+
+                    $("#day_picker").show();
+                }
 
                 $("#day_picker").show();
                 $("#day_picker").val(selected_date)
-                calendar_spectrum = 'day';
-                $("#day_picker").change();
-
-                
-                $("#day_picker").show();
+                calendar_spectrum = input;
+                pick_date()
 
                 put_data_on_calendar('all')
-            });
-
-            $("#tt_week").click(function () {
-                $("#day").hide();
-                $("#week").show();
-                $("#month").hide();
-
-                $("#day_picker").show();
-
-                $("#day_picker").val(selected_date)
-                calendar_spectrum = 'week';
-                $("#day_picker").change();
-
-                put_data_on_calendar('all')
-            });
-
-            $("#tt_month").click(function () {
-                $("#day").hide();
-                $("#week").hide();
-                $("#month").show();
-
-                $("#day_picker").show();
-
-                $("#day_picker").val(selected_date)
-                calendar_spectrum = 'month'
-                $("#day_picker").change();
-
-                put_data_on_calendar('all')
-            });
-
-            $("#time_table_btn").click(function () {
+            }
+            
+            function show_hide_time_table(){
                 $("#time_table_div").toggle();
                 $("#date_from").val(selected_date)
                 $("#day_picker").val(selected_date)
+            }
 
-            });
-
-            
-            $("#day_picker").change(function () {
+            function pick_date(){
                 selected_date = $('#day_picker').val();
                 show_selected_month_year(selected_date)
                 put_dates();
-            });
+            }
 
             $(".day").click(function(){
                 var index = $(this).index(".day");
@@ -716,25 +711,27 @@
 
                 var date_selected = $('#day_picker').val();
                 var start = parseInt(date_selected.split('-')[2]);
-                var end = daysInMonth(11,2024);
+                var end = 1;
                 var startOffset = 0;
+                var days_of_month = daysInMonth(date_selected.split('-')[1],2024);
                 if(calendar_spectrum=='week'){
                     start = getFirstDayOfWeek(date_selected);
+                    end = 8;
                 }
                 else if (calendar_spectrum=='month'){
                     start = 1;
                     startOffset = getMonthStartOffset(date_selected)
-                    end = end + startOffset;
+                    end = days_of_month + startOffset;
                 }
                 var text = '';
                 for(let i=0;i<end;i++){
                     if(startOffset > i){
-                        text = '';
+                        //text = 'i';
                         start = start -1;
                         $(dates.get(i)).addClass('old');
                     }
-                    else if (start > date_selected.split('-')[2] && calendar_spectrum=='week'){
-                        text= '';
+                    else if (start > days_of_month){
+                        //text= 'x';
                         $(dates.get(i)).addClass('old');
                     }
                     else{
@@ -742,10 +739,11 @@
                         $(dates.get(i)).addClass('now');
                     }
                     $(dates.get(i)).text(text)
-                    start = start + 1;
-                    if(start > end - startOffset){
+                    
+                    if(start > end - startOffset && calendar_spectrum !='week'){
                         start =1;
                     }
+                    start = start + 1;
                 }
                 
             }

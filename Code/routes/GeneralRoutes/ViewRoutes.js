@@ -287,7 +287,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data.titles = ["Name", "Logo", "Reg Date"];
             data.type = [0, 11, 0];
 
-            let nodes = await Node.find({ company: id, type: 6, type2: 6 });
+            let nodes = await Node.find({ company: id, type: 6, type2: 6 ,next:'-'});
 
             nodes = await Promise.all(
                 nodes.map(async (n) => {
