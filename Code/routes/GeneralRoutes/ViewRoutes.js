@@ -293,15 +293,12 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
                 nodes.map(async (n) => {
                     const c = await Client.findOne({ _id: n.receiver_id });
                     return {
+                        _id : n._id,
                         user: { _id: c._id, firstName: c.firstName, lastName: c.lastName },
                         data: n.data,
                     };
                 })
             );
-            
-            for(n of nodes){
-                console.log(n)
-            }
 
             secondery_data = {
               nodes: nodes,
@@ -443,7 +440,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         const new_node = await generalFunctions.node_reply({
           user: req.user,
           target_node: node,
-          reply: 2, //response
+          reply: 1, //response
           text: req.body.input5,
           status: action,
         });

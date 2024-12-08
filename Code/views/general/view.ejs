@@ -133,6 +133,8 @@
                 <div id="day_data">
                     <div>
                         <div id ='day_data_date'></div>
+                            <select id="user_selected">
+                            </select>
                             <input name="day_data_input_user_id" id="day_data_input_user_id">
                             <div id="day_data_div_client_name"></div>
                             <input name="day_data_input_date" id="day_data_input_date">
@@ -141,11 +143,7 @@
                                 :
                                 <input name="time_table_minutes" type="number" max="59"min="0">
                             </div>
-                            <div>
-                                <input id="new_edit_time_teble" name="new_edit_time_teble">
-                                Edit<input type="checkbox" name="edit_time_table" id="edit_time_table"><br>
-                                New<input type="checkbox" name="new_time_table" id="new_time_table">
-                            </div>
+                            <input id="new_edit_time_teble" name="new_edit_time_teble">
                             <label for="time_table_notes">Notes</label><br>
                             <textarea placeholder="Notes..." name="time_table_notes" id="time_table_notes"></textarea>
                             <button id="time_table_submit_btn">Submit</button>
@@ -159,12 +157,12 @@
             <button id="btn3">Save</button>
             <div id="clients">
                 <button>ΦΠΑ</button>
-                <button id="time_table_btn" onclick="show_hide_time_table">Time Table</button>
+                <button id="time_table_btn">Time Table</button>
                 <div id="time_table_div">
                     <div>
-                        <button id="tt_day">Day</button>
-                        <button id="tt_week">Week</button>
-                        <button id="tt_month">Month</button>
+                        <button class="calendar_date_reage_btn" id="tt_day">Day</button>
+                        <button class="calendar_date_reage_btn" id="tt_week">Week</button>
+                        <button class="calendar_date_reage_btn" id="tt_month">Month</button>
                         <input id="day_picker" type="date" onchange="day_picker">
                         <select id="user_select">
                             <option  value="all">All</option>
@@ -261,8 +259,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-            
+            </div>            
         </div>
     </div>
 </body>
@@ -557,12 +554,18 @@
                     $("#user_select").append(
                         `<option value="${client._id}">${client.firstName} ${client.lastName}</option>`
                     );
+                    $("#user_selected").append(
+                        `<option value="${client._id}">${client.firstName} ${client.lastName}</option>`
+                    );
                 }
                 $("#clients").show();
 
                 if(queryParams.timetable){
                     show_hide_time_table();
                     show_calendar(queryParams.timetable);
+                }
+                if(queryParams.timetable_user){
+                    $('#user_select').val(queryParams.timetable_user);
                 }
             }
             else{
@@ -603,14 +606,19 @@
                 window.location = "/view?type="+url_page+"&id="+url_id;
             });
 
-            $("#tt_day").click(function (){day_week_month('day')});
+            $(".calendar_date_reage_btn").click(function () {
+            day_week_month($(this).attr("id").replace("tt_", ""));
+            });
 
-            $("#tt_week").click(function (){day_week_month('week')});
 
-            $("#tt_month").click(function () {day_week_month('month')});
+            $('#user_select').change(function(){
+                window.location = "/view?type=clients&id="+queryParams.id+"&timetable="+queryParams.timetable
+                +'&timetable_user='+$('#user_select').val();
+            })
 
             function day_week_month(input){
                 window.location = "/view?type=clients&id="+queryParams.id+"&timetable="+input
+                +'&timetable_user='+$('#user_select').val()
             }
 
             function show_calendar(input){
@@ -639,6 +647,10 @@
 
                 put_data_on_calendar('all')
             }
+
+            $("#time_table_btn").click(function(){
+                show_hide_time_table();
+            });
             
             function show_hide_time_table(){
                 $("#time_table_div").toggle();
@@ -652,43 +664,10 @@
                 put_dates();
             }
 
-            $(".day").click(function(){
-                var index = $(this).index(".day");
-                if ($(this).hasClass("now")) {
-                    let y= $("#selected_year").text();
-                    let m= $("#selected_month").text();
-                    $("#day_data_date").text($(this).text()+'-'+m+'-'+y);
 
-                    var u_id = $("#user_select").val()
-                    var u = get_item_from_list(clients_users,u_id);
-                    $("#day_data_div_client_name").text(u.firstName + " "+ u.firstName);
-                    $("#day_data_input_user_id").val(u._id);
-                    $("#day_data_input_date").val(selected_date);
-                    
-                }
-                else if ($(this).hasClass("old")) {
-                    return;
-                }
-                $("#day_data").show();
-            })
-
-            
             $("#close_day_data").click(function(event){
                 event.preventDefault();
                 $("#day_data").hide();
-            });
-
-            $("#new_time_table").change(function() {
-                if ($(this).is(":checked")) {
-                    $("#edit_time_table").prop("checked", false);
-                    $("#new_edit_time_teble").val("-")
-                }
-            });
-
-            $("#edit_time_table").change(function() {
-                if ($(this).is(":checked")) {
-                    $("#new_time_table").prop("checked", false);
-                }
             });
 
             $("#time_table_submit_btn").click(function(event) {
@@ -696,7 +675,6 @@
                 $("#action").val('time_table');
                 $("#view_form").submit();
             });
-            
 
             function show_selected_month_year(date){
                 $("#selected_month").text(date.split('-')[1]);
@@ -735,10 +713,14 @@
                         $(dates.get(i)).addClass('old');
                     }
                     else{
-                        text=start;
+                        //text=start;
+                        text = "<div>"+start+"</div>";
+                        $(dates.get(i)).append(text);
                         $(dates.get(i)).addClass('now');
+                        $(dates.get(i)).append("<button id='add_event_for_"+start+"' class='add_event'>+</button>");
+                        $(dates.get(i)).append("<div class='events_container'></div>");
                     }
-                    $(dates.get(i)).text(text)
+                    
                     
                     if(start > end - startOffset && calendar_spectrum !='week'){
                         start =1;
@@ -757,24 +739,56 @@
                 days.each(function (index, element) {
                     cal_days.push(parseInt($(element).text()));
                 });
-                console.log(cal_days);
-                /*for( d of days){
-                    for( n of secondery_data.nodes){*/
+
                 for( n of secondery_data.nodes){
                     if(selected_year == new Date(n.data.date_start).getFullYear()){
                         if(selected_month  == new Date(n.data.date_start).getMonth()+1){
                             if (cal_days.includes(new Date(n.data.date_start).getDate())) {
                                 const index = cal_days.findIndex(day => day === new Date(n.data.date_start).getDate());
-                                $(days[index]).append(
-                                    "<div class='day_line'>"+
-                                        "<div>"+n.user.firstName+" "+n.user.lastName+"</div>"+
-                                        "<div>"+n.data.hour+" : "+n.data.minutes+"</div>"+
-                                        
-                                        "</div>")
+                                // Get the events container div inside the selected day element
+                                var eventsContainer = $(days[index]).find('.events_container');
+                                if(queryParams.timetable_user == n.user._id || queryParams.timetable_user =='all'){
+                                        console.log(eventsContainer.text())
+                                        eventsContainer.append("<div class='day_line' id='" + n._id + "'>" +
+                                        "<div class=event_id>" + n.user._id+"</div>" +
+                                        "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" +
+                                        "<div>" + n.data.hour + " : " + n.data.minutes + "</div>" +
+                                        "</div>"
+                                    );
+                                }
+
                             }
                         }
                     }
                 }
+            }
+
+            $('.day_line').click(function () {edit_new_event($(this).attr('id'));});
+            $('.add_event').click(function () {edit_new_event($(this).attr('id'));});
+
+            function edit_new_event(id){
+                $("#day_data").show();
+                /*alert(id)
+                let exists = secondery_data.nodes.some(node => node._id === id);
+                alert(exists)*/
+
+                let y= $("#selected_year").text();
+                let m= $("#selected_month").text();
+                let d = id.replace("add_event_for_", "");
+
+                $("#day_data_date").text(d+'-'+m+'-'+y);
+                $("#new_edit_time_teble").val(new_old);
+
+                var u_id = $("#user_select").val()
+                var u = get_item_from_list(clients_users,u_id);
+                $("#day_data_div_client_name").text(u.firstName + " "+ u.lastName);
+                $("#day_data_input_user_id").val(u._id);
+                $("#day_data_input_date").val(selected_date);
+
+                if(old_new == '-'){
+                    $("#id")
+                }
+                    
             }
         });
 

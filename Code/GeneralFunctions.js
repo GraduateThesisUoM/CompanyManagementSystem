@@ -188,7 +188,7 @@ async function node_reply(data) {
   // -------------type2
   if (data.type2) reply_node.type2 = data.type2;
   else if (data.reply == 6) reply_node.type2 = 6;
-  else if (target_node.type2 == 1) reply_node.type2 = data.type2;
+  else if (target_node.type2 == 1) reply_node.type2 = 1;
 
   // -------------status
   if (data.status)reply_node.status = data.status

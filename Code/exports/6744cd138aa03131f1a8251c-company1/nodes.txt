@@ -6,10 +6,21 @@
     "receiver_id": "6744cea94215507895961cc0",
     "type": 1,
     "type2": 1,
-    "locked": 0,
-    "next": "-",
-    "status": 3,
+    "next": "67560c2953f5d2d00ef652ff",
+    "status": 2,
     "registrationDate": "2024-11-29T18:07:54.967Z",
+    "__v": 0
+  },
+  {
+    "_id": "67560c2953f5d2d00ef652ff",
+    "company": "6744cd138aa03131f1a8251c",
+    "sender_id": "6744cea94215507895961cc0",
+    "receiver_id": "6744cd138aa03131f1a8251e",
+    "type": 1,
+    "type2": 1,
+    "next": "-",
+    "status": 2,
+    "registrationDate": "2024-12-08T21:14:17.545Z",
     "__v": 0
   }
 ]

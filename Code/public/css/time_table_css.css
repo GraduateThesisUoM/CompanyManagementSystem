@@ -3,35 +3,61 @@
 }
 
 #calendar_div div{
-    margin: 10px;
+    /*margin: 10px;*/
 }
 
 
 .day{
     max-width: 200px;
     min-height: 50px;
-    height: 100px;
-    overflow-y: auto;
-    overflow-x: hidden;
+    height: 160px;
+    /*overflow-y: auto;
+    overflow-x: hidden;*/
+    display: grid;
+    grid-template-rows: 15% 15 70%;
+    width: 160px;
+    padding: 5px;
+}
+
+.day div{
+    /*margin: 0px !important;*/
 }
 
 #day{
     height: 100px;
+    padding: 0px !important;
+    margin: 0px !important;
 }
 
 .day.now{
     background-color: rgb(255, 247, 0);
 }
 
+.events_container{
+    padding: 0px ;
+    margin: 0px ;
+    background-color: rgb(73, 226, 43);
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+
 .day.old{
     background-color: rgb(116, 116, 116);
 }
 
+.week {
+    margin: 10px 10px 10px 10px;
+    padding: 0px;
+}
+
 .week .days{
-    display: grid;
-    grid-template-columns: 10% 10% 10% 10% 10% 10% 10% ;
-    gap:5%;
+    display: flex;
+    justify-content: space-between;
     background-color: green;
+    margin: 0px;
+    padding: 0px;
 }
 
 .month {
@@ -46,14 +72,8 @@
     width: 100vw;
 }
 
-.day_line{
-    margin: 0px;
-    padding: 0px;
-    background-color: red;
-}
-.day_line div{
-    margin: 0px !important;
-    padding: 0px !important;
-    background-color: blue;
+.day_line {
+    margin: 0px 0px  10px 0px;
+    background-color: rgb(255, 0, 149) !important;
 
 }
