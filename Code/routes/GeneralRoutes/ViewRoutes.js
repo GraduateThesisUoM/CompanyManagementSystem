@@ -382,6 +382,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         let date_start_dateObject = new Date(req.body.day_data_input_date);
         var time_table_new_node;
 
+
         var time_table_node = await Node.findOne({
             receiver_id: req.body.day_data_input_user_id,
             type:6,
@@ -392,8 +393,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
             }*/
         })
         
-
-        if (req.body.new_edit_time_teble == "-") {
+        if (req.body.new_edit_time_teble == "false") {
 
           data = {
             company: company._id,

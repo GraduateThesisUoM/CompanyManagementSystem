@@ -304,20 +304,19 @@ function formatDate(date) {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
 }
 
-function get_today(){
-    var fullDate = new Date();
-    //var date = fullDate.getDate();
-    /*if(date.spectrum =! undefined){
-        if(date.spectrum == 'week'){
+function get_today() {
+    const today = new Date();
 
-        }
-    }*/
-    var month = fullDate.getMonth();
-    var day = fullDate.getDay();
+    // Convert to Athens time zone
+    const options = { timeZone: 'Europe/Athens' };
+    const athensDate = new Date(today.toLocaleString('en-US', options));
 
-    var twoDigitMonth = (month+1) > 9? month+1 : '0' + (month+1);
-    var twoDigitday = (day+1) > 9? day+1 : '0' + (day+1);
-    return fullDate.getFullYear() + "-" + twoDigitMonth + "-" + twoDigitday;
+    // Extract components
+    const year = athensDate.getFullYear();
+    const month = String(athensDate.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(athensDate.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
 }
 
 function daysInMonth(month, year) {
@@ -340,24 +339,6 @@ function getFirstDayOfWeek(dateString) {
 
     // Return just the day of the month
     return firstDayOfWeek.getDate();
-}
-
-function getMonthStartOffset(dateString) {
-    // Parse the input date string
-    const inputDate = new Date(dateString);
-
-    // Get the year and month from the input date
-    const year = inputDate.getFullYear();
-    const month = inputDate.getMonth();
-
-    // Get the first day of the month
-    const firstDayOfMonth = new Date(year, month, 1);
-
-    // Get the day of the week (0 = Sunday, 1 = Monday, etc.)
-    const dayOfWeek = firstDayOfMonth.getDay();
-
-    // Adjust for Monday as the first day of the week
-    return dayOfWeek === 0 ? 6 : dayOfWeek - 1;
 }
 
 function get_item_from_list(list,id){
