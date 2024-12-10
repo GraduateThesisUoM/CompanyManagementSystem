@@ -133,22 +133,28 @@
                 <div id="day_data">
                     <div>
                         <div id ='day_data_date'></div>
-                            <select id="user_selected">
-                                <option  value="all">All</option>
-                            </select>
-                            <input name="day_data_input_user_id" id="day_data_input_user_id">
-                            <div id="day_data_div_client_name"></div>
-                            <input name="day_data_input_date" id="day_data_input_date">
-                            <div>
-                                <input name="time_table_hours" id="time_table_hours" type="number" max="23"min="0">
-                                :
-                                <input name="time_table_minutes" id="time_table_minutes" type="number" max="59"min="0">
-                            </div>
-                            <input id="new_edit_time_teble" name="new_edit_time_teble">
-                            <label for="time_table_notes">Notes</label><br>
-                            <textarea placeholder="Notes..." name="time_table_notes" id="time_table_notes"></textarea>
-                            <button id="time_table_submit_btn">Submit</button>
-                        <button id="close_day_data">close</button>
+                        <select id="user_selected">
+                            <option  value="all">All</option>
+                        </select>
+                        <input name="day_data_input_user_id" id="day_data_input_user_id">
+                        <input name="day_data_input_node_id" id="day_data_input_node_id">
+                        <div id="day_data_div_client_name"></div>
+                        <input type="date" name="day_data_input_date" id="day_data_input_date">
+                        <div>
+                            From <input name="time_table_hours_start" id="time_table_hours_start" type="number" max="23"min="0">
+                            :
+                            <input name="time_table_minutes_start" id="time_table_minutes_start" type="number" max="59"min="0">
+
+                            To <input name="time_table_hours_end" id="time_table_hours_end" type="number" max="23"min="0">
+                            :
+                            <input name="time_table_minutes_end" id="time_table_minutes_end" type="number" max="59"min="0">
+                        </div>
+                        <input id="new_edit_time_teble" name="new_edit_time_teble" style="display: none;">
+                        <label for="time_table_notes">Notes</label><br>
+                        <textarea placeholder="Notes..." name="time_table_notes" id="time_table_notes"></textarea>
+                        <button id="time_table_submit_btn">Submit</button>
+                        <button id="close_day_data" type="button">close</button>
+                        <button id="delete_event" type="button">Delete</button>
                     </div>
                 </div>
             </form>
@@ -675,7 +681,6 @@
                 );
             }
 
-
             $("#close_day_data").click(function(event){
                 event.preventDefault();
                 $("#day_data").hide();
@@ -684,6 +689,11 @@
             $("#time_table_submit_btn").click(function(event) {
                 event.preventDefault();
                 $("#action").val('time_table');
+                $("#view_form").submit();
+            });
+            $("#delete_event").click(function(event) {
+                event.preventDefault();
+                $("#action").val('time_table_delete');
                 $("#view_form").submit();
             });
 
@@ -711,9 +721,11 @@
                                 if(queryParams.timetable_user == n.user._id || queryParams.timetable_user =='all'){
                                         console.log(eventsContainer.text())
                                         eventsContainer.append("<div class='day_line' id='" + n._id + "'>" +
-                                        "<div class=event_id>" + n.user._id+"</div>" +
+                                        "<div class=event_id style='display:none'>" + n.user._id+"</div>" +
                                         "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" +
-                                        "<div>" + n.data.hour + " : " + n.data.minutes + "</div>" +
+                                        "<div> From " + n.data.hour_start + " : " + n.data.minutes_start + "</div>" +
+                                        "<div> To " + n.data.hour_end + " : " + n.data.minutes_end + "</div>" +
+                                        "<div> Notes : <br>" + n.text + "</div>" +
                                         "</div>"
                                     );
                                 }
@@ -725,11 +737,6 @@
             }
 
             $('.day_line').click(function (event) {
-                /*edit_new_event($(this).attr('id'),
-                clients_users,
-                secondery_data.nodes,
-                selected_date,
-                $("#user_select").val()*/
                 view_edit_event(
                     $(this).attr('id'),
                     secondery_data.nodes
@@ -740,14 +747,13 @@
                 let user_id = $("#user_select").val();
                 
                 // Generate the date string
-                let date = 
-                $("#selected_year").text() + "-"+
-                $("#selected_month").text() +"-"+
-                $(this).attr('id').replace("add_event_for_", "");
+                let year = $("#selected_year").text();
+                let month = $("#selected_month").text().padStart(2, "0");
+                let day = $(this).attr('id').replace("add_event_for_", "").padStart(2, "0");
+                let date = `${year}-${month}-${day}`;
 
                 new_event(
                     $(this).attr('id'),
-                    clients_users,
                     secondery_data.nodes,
                     date,
                     user_id

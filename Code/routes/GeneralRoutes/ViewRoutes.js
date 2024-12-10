@@ -287,7 +287,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data.titles = ["Name", "Logo", "Reg Date"];
             data.type = [0, 11, 0];
 
-            let nodes = await Node.find({ company: id, type: 6, type2: 6 ,next:'-'});
+            let nodes = await Node.find({ company: id, type: 6, type2: 6 ,next:'-',status:2});
 
             nodes = await Promise.all(
                 nodes.map(async (n) => {
@@ -296,6 +296,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
                         _id : n._id,
                         user: { _id: c._id, firstName: c.firstName, lastName: c.lastName },
                         data: n.data,
+                        text: n.text
                     };
                 })
             );
@@ -377,11 +378,11 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
           obj_type,
           obj_data
         );
-      } else if (req.body.action == "time_table") {
+      } else if (req.body.action == "time_table" || req.body.action == "time_table_delete") {
         var company = await Company.findOne({ _id: req.query.id });
+        console.log(req.body.day_data_input_date)
         let date_start_dateObject = new Date(req.body.day_data_input_date);
         var time_table_new_node;
-
 
         var time_table_node = await Node.findOne({
             receiver_id: req.body.day_data_input_user_id,
@@ -392,9 +393,40 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
                 date_start:date_start_dateObject
             }*/
         })
+        console.log("---"+req.body.day_data_input_node_id)
+        var node = false;
+        if(req.body.day_data_input_node_id){
+          node = await Node.findOne({_id:req.body.day_data_input_node_id})
+        }
+         
         
-        if (req.body.new_edit_time_teble == "false") {
+        //if (req.body.new_edit_time_teble == "false") {
+        if (node) {
 
+          if(req.body.action == "time_table_delete"){
+            node.status = 5 //canceled
+            await node.save()
+          }
+          else{
+            time_table_new_node = await generalFunctions.node_reply({
+              user: req.user,
+              target_node: time_table_node,
+              reply: 6, //response
+              text: req.body.time_table_notes,
+              data: {
+                  date_start: date_start_dateObject,
+                  date_end: date_start_dateObject,
+
+                  hour_start: req.body.time_table_hours_start,
+                  minutes_start: req.body.time_table_minutes_start,
+
+                  hour_end: req.body.time_table_hours_end,
+                  minutes_end: req.body.time_table_minutes_end
+              }
+            });
+          }
+        }
+        else{
           data = {
             company: company._id,
             sender_id: req.user._id,
@@ -404,33 +436,20 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
             data: {
               date_start: date_start_dateObject,
               date_end: date_start_dateObject,
-              hour: req.body.time_table_hours,
-              minutes: req.body.time_table_minutes,
+
+              hour_start: req.body.time_table_hours_start,
+              minutes_start: req.body.time_table_minutes_start,
+
+              hour_end: req.body.time_table_hours_end,
+              minutes_end: req.body.time_table_minutes_end
             }
           };
 
           time_table_new_node = await generalFunctions.create_node(data);
         }
-        else{
-            console.log("---------------------------------------")
-            console.log(time_table_node)
-            console.log("---------------------------------------")
-
-            time_table_new_node = await generalFunctions.node_reply({
-                user: req.user,
-                target_node: time_table_node,
-                reply: 6, //response
-                text: req.body.time_table_notes,
-                data: {
-                    date_start: date_start_dateObject,
-                    date_end: date_start_dateObject,
-                    hour: req.body.time_table_hours,
-                    minutes: req.body.time_table_minutes
-                }
-              });
-        }
         
-      } else if (req.query.type == "nodes") {
+      }
+      else if (req.query.type == "nodes") {
         const node = await Node.findOne({ _id: req.query.id });
         let action = 4; //rejected
         if (req.body.action == "executed") {

@@ -1,33 +1,15 @@
-function new_event(id,list,nodes,selected_date,user_id){
+function new_event(id,nodes,selected_date,user_id){
     $("#day_data").show();
-    let exists = nodes.some(node => node._id === id);
-
     $("#day_data_input_user_id").val(user_id);
     $("#user_selected").val(user_id);
 
-    $("#day_data_date").text(selected_date);
     $("#day_data_input_date").val(selected_date);
 
-    $("#new_edit_time_teble").val(exists);
+    $("#time_table_hours_start").val("");
+    $("#time_table_minutes_start").val("");
 
-
-    /*let y= $("#selected_year").text();
-    let m= $("#selected_month").text();
-    let d = id.replace("add_event_for_", "");
-
-    $("#day_data_date").text(d+'-'+m+'-'+y);
-    $("#new_edit_time_teble").val('-');
-
-    var u_id = $("#user_select").val()
-    var u = get_item_from_list(list,u_id);
-    $("#day_data_div_client_name").text(u.firstName + " "+ u.lastName);
-    $("#day_data_input_user_id").val(u._id);
-    $("#day_data_input_date").val(selected_date);
-
-    /*if(old_new == '-'){
-        $("#id")
-    }*/
-        
+    $("#time_table_hours_end").val("");
+    $("#time_table_minutes_end").val("");
 }
 
 function view_edit_event(id, nodes) {
@@ -37,19 +19,22 @@ function view_edit_event(id, nodes) {
     // Find the node with the matching ID
     let node = nodes.find(node => node._id === id);
 
-    if (node) {
+    if (node) {       
         // Populate the inputs with the node's data
         $("#day_data_input_user_id").val(node.user._id);
-        $("#user_selected").val(node.user.firstName + " " + node.user.lastName);
+        $("#day_data_input_node_id").val(id);
+
+        $("#user_selected").val($("#day_data_input_user_id").val());
 
         let selectedDate = formatDate(new Date(node.data.date_start));
-        $("#day_data_date").text(selectedDate);
         $("#day_data_input_date").val(selectedDate);
 
-        $("#time_table_hours").val(String(node.data.hour).padStart(2, "0"));
-        $("#time_table_minutes").val(String(node.data.minutes).padStart(2, "0"));
+        $("#time_table_hours_start").val(String(node.data.hour_start).padStart(2, "0"));
+        $("#time_table_minutes_start").val(String(node.data.minutes_start).padStart(2, "0"));
 
-        alert(node.text)
+        $("#time_table_hours_end").val(String(node.data.hour_end).padStart(2, "0"));
+        $("#time_table_minutes_end").val(String(node.data.minutes_end).padStart(2, "0"));
+
         $("#time_table_notes").val(node.text);
 
     } else {
@@ -74,7 +59,7 @@ function formatDate(date) {
     const minutes = String(date.getMinutes()).padStart(2, '0');
 
     // Format into DD/MM/YYYY HH:MM
-    return `${day}/${month}/${year}`;
+    return `${year}-${month}-${day}`;
 }
 
 
