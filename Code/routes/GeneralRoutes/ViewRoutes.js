@@ -414,8 +414,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
               reply: 6, //response
               text: req.body.time_table_notes,
               data: {
-                  date_start: date_start_dateObject,
-                  date_end: date_start_dateObject,
+                  date: date_start_dateObject,
 
                   hour_start: req.body.time_table_hours_start,
                   minutes_start: req.body.time_table_minutes_start,
@@ -434,8 +433,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
             type: 6, //timetable
             text: req.body.time_table_notes,
             data: {
-              date_start: date_start_dateObject,
-              date_end: date_start_dateObject,
+              date: date_start_dateObject,
 
               hour_start: req.body.time_table_hours_start,
               minutes_start: req.body.time_table_minutes_start,

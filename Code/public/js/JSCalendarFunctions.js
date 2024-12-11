@@ -1,4 +1,5 @@
-function new_event(id,nodes,selected_date,user_id){
+function new_event(id,nodes,selected_date,user_id){    
+
     $("#day_data").show();
     $("#day_data_input_user_id").val(user_id);
     $("#user_selected").val(user_id);
@@ -10,6 +11,8 @@ function new_event(id,nodes,selected_date,user_id){
 
     $("#time_table_hours_end").val("");
     $("#time_table_minutes_end").val("");
+
+    return 1;
 }
 
 function view_edit_event(id, nodes) {

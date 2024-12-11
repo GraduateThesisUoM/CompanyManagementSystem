@@ -620,7 +620,6 @@
             day_week_month($(this).attr("id").replace("tt_", ""));
             });
 
-
             $('#user_select').change(function(){
                 window.location = "/view?type=clients&id="+queryParams.id+"&timetable="+queryParams.timetable
                 +'&timetable_user='+$('#user_select').val();
@@ -688,9 +687,24 @@
 
             $("#time_table_submit_btn").click(function(event) {
                 event.preventDefault();
+                let c_e_o = check_event_overlap(
+                    $("#day_data_input_user_id").val(),
+                    $("#day_data_input_date").val(),
+                    $("#time_table_hours_start").val(),
+                    $("#time_table_minutes_start").val(),
+                    $("#time_table_hours_end").val(),
+                    $("#time_table_minutes_end").val(),
+                    secondery_data.nodes
+                );
+                alert(c_e_o)
+                if(c_e_o==0){
+                    alert("fff")
+                }
+                else{
                 $("#action").val('time_table');
-                $("#view_form").submit();
+                $("#view_form").submit();}
             });
+            
             $("#delete_event").click(function(event) {
                 event.preventDefault();
                 $("#action").val('time_table_delete');
@@ -712,10 +726,10 @@
                     cal_days.push(parseInt($(element).text()));
                 });
                 for( n of secondery_data.nodes){
-                    if(selected_year == new Date(n.data.date_start).getFullYear()){
-                        if(selected_month  == new Date(n.data.date_start).getMonth()+1){
-                            if (cal_days.includes(new Date(n.data.date_start).getDate())) {
-                                const index = cal_days.findIndex(day => day === new Date(n.data.date_start).getDate());
+                    if(selected_year == new Date(n.data.date).getFullYear()){
+                        if(selected_month  == new Date(n.data.date).getMonth()+1){
+                            if (cal_days.includes(new Date(n.data.date).getDate())) {
+                                const index = cal_days.findIndex(day => day === new Date(n.data.date).getDate());
                                 // Get the events container div inside the selected day element
                                 var eventsContainer = $(days[index]).find('.events_container');
                                 if(queryParams.timetable_user == n.user._id || queryParams.timetable_user =='all'){
@@ -759,6 +773,21 @@
                     user_id
             )});
 
+            function check_event_overlap(id,date,s_hour,s_min,e_hour,e_min,nodes){
+                // Format the input date for comparison
+                const formattedDate = formatDate(new Date(date));
+
+                console.log(formattedDate)
+                for(n of nodes){
+                    console.log(formatDate(new Date(n.data.date)))
+                }
+                let overlappingNode = nodes.findOne(node => 
+                    node.receiver_id == id &&
+                    formatDate(new Date(node.data.date)) == formattedDate
+                );
+
+                return overlappingNode ? 0 : 1;
+            }
         });
 
     </script>
