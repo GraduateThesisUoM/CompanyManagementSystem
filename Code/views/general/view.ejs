@@ -138,6 +138,8 @@
                         </select>
                         <input name="day_data_input_user_id" id="day_data_input_user_id">
                         <input name="day_data_input_node_id" id="day_data_input_node_id">
+                        <input name="day_data_input_node_id_end" id="day_data_input_node_id_end">
+
                         <div id="day_data_div_client_name"></div>
                         <input type="date" name="day_data_input_date" id="day_data_input_date">
                         <div>
@@ -171,6 +173,7 @@
                         <button class="calendar_date_reage_btn" id="tt_week">Week</button>
                         <button class="calendar_date_reage_btn" id="tt_month">Month</button>
                         <input id="day_picker" type="date" onchange="day_picker">
+                        <input name="calendar_view_selection" id="calendar_view_selection">
                         <select id="user_select">
                             <option  value="all">All</option>
                         </select>
@@ -309,6 +312,9 @@
             }
             if (queryParams.id) {
                 formAction += (queryParams.type ? '&' : '?') + 'id=' + encodeURIComponent(queryParams.id);
+            }
+            if(queryParams.timetable){
+                $('#calendar_view_selection').val(queryParams.timetable );
             }
             $('#view_form').attr('action', formAction);
 
@@ -558,7 +564,6 @@
             }
             else if (queryParams.type == 'clients'){
                 clients_users = secondery_data.users;
-                console.log(secondery_data.nodes)
                 
                 for( client of clients_users){
                     $("#user_select").append(
@@ -574,8 +579,12 @@
                     show_hide_time_table();
                     show_calendar(queryParams.timetable);
                 }
+
                 if(queryParams.timetable_user){
                     $('#user_select').val(queryParams.timetable_user);
+                }
+                else{
+                    $('#user_select').val("all");
                 }
             }
             else{
@@ -617,7 +626,8 @@
             });
 
             $(".calendar_date_reage_btn").click(function () {
-            day_week_month($(this).attr("id").replace("tt_", ""));
+                let type = $(this).attr("id").replace("tt_", "");
+                day_week_month(type);
             });
 
             $('#user_select').change(function(){
@@ -721,6 +731,10 @@
                 var selected_month = $("#selected_month").text();
                 var selected_year = $("#selected_year").text();
                 var cal_days = [];
+                var selected_user = 'all'
+                if(queryParams.timetable_user){
+                    selected_user = queryParams.timetable_user;
+                }
 
                 days.each(function (index, element) {
                     cal_days.push(parseInt($(element).text()));
@@ -732,7 +746,7 @@
                                 const index = cal_days.findIndex(day => day === new Date(n.data.date).getDate());
                                 // Get the events container div inside the selected day element
                                 var eventsContainer = $(days[index]).find('.events_container');
-                                if(queryParams.timetable_user == n.user._id || queryParams.timetable_user =='all'){
+                                if(selected_user == n.user._id || selected_user =='all'){
                                         console.log(eventsContainer.text())
                                         eventsContainer.append("<div class='day_line' id='" + n._id + "'>" +
                                         "<div class=event_id style='display:none'>" + n.user._id+"</div>" +
@@ -756,6 +770,33 @@
                     secondery_data.nodes
                 );
             });
+
+            $('#time_table_hours_end').on('blur', function () {
+                let start = $('#time_table_hours_start').val();
+                if($('#time_table_hours_end').val() < start){
+                    alert('time_table_hours_start < time_table_hours_end');
+                    $('#time_table_hours_end').val(parseInt(start) + 1)
+                }
+            });
+
+            $('#time_table_minutes_end').on('blur', function () {
+                let m_start = parseInt($('#time_table_minutes_start').val());
+                let h_start = parseInt(($('#time_table_hours_start').val()));
+                h_start = (h_start*60)+m_start;
+
+                let m_end = parseInt($('#time_table_minutes_end').val());
+                let h_end = parseInt($('#time_table_hours_end').val());
+                h_end = (h_end*60)+m_end;
+                
+                console.log(h_start)
+                console.log('----')
+                console.log(h_end)
+                if(h_end < h_start){
+                    alert('hours_start < hours_end');
+                    $('#time_table_hours_end').val(parseInt(parseInt($('#time_table_hours_start').val()))+1);
+                    $('#time_table_minutes_end').val(0)
+                }
+            });
             
             $('.add_event').click(function (event) {
                 let user_id = $("#user_select").val();
@@ -773,21 +814,50 @@
                     user_id
             )});
 
-            function check_event_overlap(id,date,s_hour,s_min,e_hour,e_min,nodes){
-                // Format the input date for comparison
-                const formattedDate = formatDate(new Date(date));
+            function check_event_overlap(id, date, s_hour, s_min, e_hour, e_min, nodes) {
 
-                console.log(formattedDate)
+                // Convert input start and end times to minutes since midnight
+                const inputStartTime = parseInt(s_hour) * 60 + parseInt(s_min);
+                const inputEndTime = parseInt(e_hour) * 60 + parseInt(e_min);
+
+                console.log(inputStartTime);
+                console.log(inputEndTime);
+                console.log("---------")
                 for(n of nodes){
-                    console.log(formatDate(new Date(n.data.date)))
-                }
-                let overlappingNode = nodes.findOne(node => 
-                    node.receiver_id == id &&
-                    formatDate(new Date(node.data.date)) == formattedDate
-                );
+                    console.log(parseInt(n.data.hour_start) * 60 + parseInt(n.data.minutes_start));
+                    console.log(parseInt(n.data.hour_end) * 60 + parseInt(n.data.minutes_end));
 
-                return overlappingNode ? 0 : 1;
+                }
+                var isDateMatching = false;
+                var isTimeOverlapping = false;
+
+                for(node of nodes){
+                    const nodeDate = formatDate(new Date(node.data.date));
+                    const nodeStartTime = node.data.hour_start * 60 + node.data.minutes_start;
+                    const nodeEndTime = node.data.hour_end * 60 + node.data.minutes_end;
+
+                    //date
+                    isDateMatching = nodeDate == date;
+
+                    //time
+                    if(inputStartTime > nodeStartTime && inputStartTime <=nodeEndTime){
+                        isTimeOverlapping = true;
+                    }
+                    else if(inputStartTime <= nodeStartTime && inputEndTime <= nodeEndTime){
+                        isTimeOverlapping = true;
+                    }
+                    else if (inputEndTime < nodeEndTime){
+                        isTimeOverlapping = true;
+                    }
+                }
+                
+                console.log(isDateMatching)
+                console.log(isTimeOverlapping)
+
+                if(isTimeOverlapping && isDateMatching) return 0;
+                return 1;
             }
+
         });
 
     </script>

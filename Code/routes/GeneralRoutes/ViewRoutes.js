@@ -380,7 +380,6 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         );
       } else if (req.body.action == "time_table" || req.body.action == "time_table_delete") {
         var company = await Company.findOne({ _id: req.query.id });
-        console.log(req.body.day_data_input_date)
         let date_start_dateObject = new Date(req.body.day_data_input_date);
         var time_table_new_node;
 
@@ -393,7 +392,6 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
                 date_start:date_start_dateObject
             }*/
         })
-        console.log("---"+req.body.day_data_input_node_id)
         var node = false;
         if(req.body.day_data_input_node_id){
           node = await Node.findOne({_id:req.body.day_data_input_node_id})
@@ -445,7 +443,8 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 
           time_table_new_node = await generalFunctions.create_node(data);
         }
-        
+        return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}&timetable=month`);
+
       }
       else if (req.query.type == "nodes") {
         const node = await Node.findOne({ _id: req.query.id });
