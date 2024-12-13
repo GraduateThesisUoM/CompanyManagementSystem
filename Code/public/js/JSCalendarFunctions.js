@@ -29,7 +29,7 @@ function view_edit_event(id, nodes) {
 
         $("#user_selected").val($("#day_data_input_user_id").val());
 
-        let selectedDate = formatDate(new Date(node.data.date_start));
+        let selectedDate = formatDate(new Date(node.data.date));
         $("#day_data_input_date").val(selectedDate);
 
         $("#time_table_hours_start").val(String(node.data.hour_start).padStart(2, "0"));
