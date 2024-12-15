@@ -2,7 +2,6 @@ function new_event(id,nodes,selected_date,user_id){
 
     $("#day_data").show();
     $("#day_data_input_user_id").val(user_id);
-    $("#user_selected").val(user_id);
 
     $("#day_data_input_date").val(selected_date);
 
@@ -26,8 +25,6 @@ function view_edit_event(id, nodes) {
         // Populate the inputs with the node's data
         $("#day_data_input_user_id").val(node.user._id);
         $("#day_data_input_node_id").val(id);
-
-        $("#user_selected").val($("#day_data_input_user_id").val());
 
         let selectedDate = formatDate(new Date(node.data.date));
         $("#day_data_input_date").val(selectedDate);

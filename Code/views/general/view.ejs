@@ -130,10 +130,10 @@
           <input type="text" name="action" id="action" style="display: inline" />
           <div id="day_data">
             <div>
-              <div id="day_data_date"></div>
-              <select id="user_selected">
-                <option value="all">All</option>
-              </select>
+              <div id="day_data_users">
+                <div>All <input class="all_selected_users" type="checkbox" value="all"></div>
+              </div>
+
               <input name="day_data_input_user_id" id="day_data_input_user_id" />
               <input name="day_data_input_node_id" id="day_data_input_node_id" />
               <input name="calendar_view_selection" id="calendar_view_selection" />
@@ -291,6 +291,7 @@
 
       $("#clients").hide();
       $("#message_div").hide();
+      //$("#day_data_users").hide();
 
       $("#day").hide();
       $("#week").hide();
@@ -482,6 +483,7 @@
           removeRow($(this).closest("tr").index(), false);
         });
 
+        
         $(document).on("change", ".doc_line_select", function () {
           var index = $(this).closest("tr").index();
           if ($(".doc_line_select").eq(index).val() != "-") {
@@ -558,7 +560,8 @@
 
         for (client of clients_users) {
           $("#user_select").append(`<option value="${client._id}">${client.firstName} ${client.lastName}</option>`);
-          $("#user_selected").append(`<option value="${client._id}">${client.firstName} ${client.lastName}</option>`);
+          $("#day_data_users").append(`<div>${client.firstName} ${client.lastName} <input class="all_selected_users" type="checkbox" value="${client._id}"></div>`);
+
         }
         $("#clients").show();
 
@@ -619,10 +622,6 @@
         window.location = "/view?type=clients&id=" + queryParams.id + "&timetable=" + queryParams.timetable + "&timetable_user=" + $("#user_select").val();
       });
 
-      $("#user_selected").change(function () {
-        $("#day_data_input_user_id").val($("#user_selected").val());
-      });
-
       function day_week_month(input) {
         window.location = "/view?type=clients&id=" + queryParams.id + "&timetable=" + input + "&timetable_user=" + $("#user_select").val();
       }
@@ -676,10 +675,12 @@
       $("#time_table_submit_btn").click(function (event) {
         event.preventDefault();
         let c_e_o = check_event_overlap($("#day_data_input_user_id").val(), $("#day_data_input_date").val(), $("#time_table_hours_start").val(), $("#time_table_minutes_start").val(), $("#time_table_hours_end").val(), $("#time_table_minutes_end").val(), secondery_data.nodes);
+        $("#action").val("time_table");
         if (c_e_o == 0) {
-          alert("This time overlaps with enother event");
+          if(confirm("This time overlaps with enother event")){
+            $("#view_form").submit();
+          }
         } else {
-          $("#action").val("time_table");
           $("#view_form").submit();
         }
       });
@@ -725,6 +726,7 @@
       }
 
       $(".day_line").click(function (event) {
+        $("#day_data_users").hide();
         view_edit_event($(this).attr("id"), secondery_data.nodes);
       });
 
@@ -773,8 +775,36 @@
         }
       });
 
+      $(".all_selected_users").change(function (event){
+        var checkboxes = $('.all_selected_users');
+
+        if($(this).val() == 'all'){
+          var set_value = false;
+          if($(this).prop('checked')){
+            set_value = true;
+          }
+          for( c of checkboxes){
+            $(c).prop('checked', set_value);
+          }
+        }
+
+        var selected_users =''
+        for( c of checkboxes){
+          if($(c).prop('checked') == true){
+            selected_users=selected_users + $(c).val()+";"
+          }
+        }
+        selected_users = selected_users.replace('all;', '').slice(0, -1);;
+        $('#day_data_input_user_id').val(selected_users);
+        
+      });
+
+      
+
       $(".add_event").click(function (event) {
         let user_id = $("#user_select").val();
+        $("#day_data_users").show();
+
 
         // Generate the date string
         let year = $("#selected_year").text();
@@ -824,6 +854,7 @@
         }
         return 1;
       }
+
     });
   </script>
 </html>
