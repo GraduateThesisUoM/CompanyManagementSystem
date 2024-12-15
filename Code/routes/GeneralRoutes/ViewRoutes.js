@@ -267,23 +267,88 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       } else if (req.body.action == "time_table" || req.body.action == "time_table_delete") {
         var company = await Company.findOne({ _id: req.query.id });
         let date_start_dateObject = new Date(req.body.day_data_input_date);
+        let endDate = new Date(req.body.day_data_input_date_to);
+
+        var node = false;
+        if (req.body.day_data_input_node_id) {
+          node = await Node.findOne({ _id: req.body.day_data_input_node_id });
+        }
+        else{
+          var users = req.body.day_data_input_user_id;
+          users = users.split(';');
+          console.log("users "+users)
+          for( u of users){
+            let currentDate = new Date(date_start_dateObject);
+            while (currentDate <= endDate) {
+              let d = new Date(currentDate);
+              const dd = d.toISOString().replace('Z', '+00:00')
+              console.log("++++++++++++++++++"+dd)
+
+              var data = {
+                company : company._id,
+                receiver_id : u,
+                type : 6,
+                type2: 6,
+                next : '-',
+                status : 2,
+                data : {
+                  date : dd,
+                  hour_start: req.body.time_table_hours_start,
+                  minutes_start: req.body.time_table_minutes_start,
+  
+                  hour_end: req.body.time_table_hours_end,
+                  minutes_end: req.body.time_table_minutes_end  
+                }
+              };
+              var node = await Node.findOne(data);
+              console.log(node)
+              if(node){
+                data = {
+                  user: req.user,
+                  target_node: node,
+                  reply: 6, //response
+                  text: req.body.time_table_notes,
+                  data: {
+                    date: date_start_dateObject,
+    
+                    hour_start: req.body.time_table_hours_start,
+                    minutes_start: req.body.time_table_minutes_start,
+    
+                    hour_end: req.body.time_table_hours_end,
+                    minutes_end: req.body.time_table_minutes_end,
+                  }
+                }
+                await generalFunctions.node_reply(data);
+              }
+              else{
+                console.log("Node Foud");
+                console.log(node)
+                data.sender_id = req.user._id,
+                await generalFunctions.create_node(data);
+              }
+
+              // Increment the current date by one day
+              currentDate.setDate(currentDate.getDate() + 1);
+            }
+            console.log("********************");
+          }
+
+        }
+
         var time_table_new_node;
 
-        var time_table_node = await Node.findOne({
+        /*var time_table_node = await Node.findOne({
           receiver_id: req.body.day_data_input_user_id,
           type: 6,
           type2: 6,
           next: "-" /*,
             data:{
                 date_start:date_start_dateObject
-            }*/,
-        });
-        var node = false;
-        if (req.body.day_data_input_node_id) {
-          node = await Node.findOne({ _id: req.body.day_data_input_node_id });
-        }
+            }*//*,
+        });*/
+        
 
-        if (node) {
+        /*if (node) {
           if (req.body.action == "time_table_delete") {
             node.status = 5; //canceled
             await node.save();
@@ -348,7 +413,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         if (req.body.calendar_view_selection) {
           return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}&timetable=${req.body.calendar_view_selection}`);
         }
-        return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
+        return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);*/
       } else if (req.query.type == "nodes") {
         const node = await Node.findOne({ _id: req.query.id });
         let action = 4; //rejected

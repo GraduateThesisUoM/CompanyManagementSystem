@@ -4,6 +4,7 @@ function new_event(id,nodes,selected_date,user_id){
     $("#day_data_input_user_id").val(user_id);
 
     $("#day_data_input_date").val(selected_date);
+    $("#day_data_input_date_to").val(selected_date);
 
     $("#time_table_hours_start").val("");
     $("#time_table_minutes_start").val("");

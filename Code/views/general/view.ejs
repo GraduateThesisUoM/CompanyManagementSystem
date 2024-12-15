@@ -141,14 +141,14 @@
 
               <div id="day_data_div_client_name"></div>
               <div>From : 
-              <input type="date" name="day_data_input_date" id="day_data_input_date" />
+              <input type="date" name="day_data_input_date" id="day_data_input_date" re/>
               To : 
               <input type="date" name="day_data_input_date_to" id="day_data_input_date_to" />
 
             </div>
               <div>
                 From
-                <input class="time_input" name="time_table_hours_start" id="time_table_hours_start" type="number" max="23" min="0" />
+                <input class="time_input" name="time_table_hours_start" id="time_table_hours_start" type="number" max="23" min="0"/>
                 :
                 <input class="time_input" name="time_table_minutes_start" id="time_table_minutes_start" type="number" max="59" min="0" />
 
@@ -678,9 +678,24 @@
         $("#action").val("time_table");
         if (c_e_o == 0) {
           if(confirm("This time overlaps with enother event")){
-            $("#view_form").submit();
+            if(confirm("This will replace existing with new are you sure ?")){
+              $("#view_form").submit();
+            }
           }
-        } else {
+        }
+        else if(
+          $("#day_data_input_user_id").val() == 'all' ||
+          $("#day_data_input_user_id").val() == '' ||
+          $("#day_data_input_date").val() == '' ||
+          $("#day_data_input_date_to").val() == '' ||
+          $("#time_table_hours_start").val() == '' ||
+          $("#time_table_minutes_start").val() == '' ||
+          $("#time_table_hours_end").val() == '' ||
+          $("#time_table_minutes_end").val() == ''
+        ){
+          alert("missing data")
+        }
+        else {
           $("#view_form").submit();
         }
       });
@@ -832,23 +847,18 @@
           isIdMatching = node.user._id == id;
 
           //date
-          isDateMatching = nodeDate == date;
+          isDateMatching = nodeDate == formatDate(new Date(date));
 
           //time
-          if (inputStartTime > nodeStartTime && inputStartTime < nodeEndTime) {
+          if (inputStartTime >= nodeStartTime && inputStartTime < nodeEndTime) {
             isTimeOverlapping = true;
           } else if (inputStartTime < nodeStartTime && inputEndTime <= nodeEndTime) {
             isTimeOverlapping = true;
           } else if (inputEndTime < nodeEndTime) {
             isTimeOverlapping = true;
           }
-          console.log(isIdMatching)
-          console.log(isTimeOverlapping)
-          console.log(isDateMatching)
+
           if (isIdMatching && isTimeOverlapping && isDateMatching){
-            console.log(node.user._id +" - "+ id)
-          console.log(nodeDate +" - "+ date)
-          console.log(isDateMatching)
             return 0;
           }
         }
