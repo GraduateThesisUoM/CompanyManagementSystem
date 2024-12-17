@@ -4,7 +4,7 @@
     "company": "6744cd138aa03131f1a8251c",
     "companyOwner": 1,
     "registrationDate": "2024-11-25T19:16:35.808Z",
-    "last_log_out": "2024-11-29T18:08:00.728Z",
+    "last_log_out": "2024-12-17T22:04:23.492Z",
     "firstName": "Makis",
     "lastName": "Papas",
     "email": "c1@c1",
@@ -20,6 +20,8 @@
     "_id": "67560cc253f5d2d00ef65360",
     "company": "6744cd138aa03131f1a8251c",
     "companyOwner": 0,
+    "registrationDate": "2024-12-08T21:16:50.096Z",
+    "last_log_out": "2024-12-08T21:16:50.096Z",
     "firstName": "Jim",
     "lastName": "Gordon",
     "email": "c2@c2",
@@ -28,9 +30,7 @@
     "afm": "",
     "mydatakey": "",
     "type": "user",
-    "__t": "client",
-    "registrationDate": "2024-12-08T21:16:50.096Z",
-    "last_log_out": "2024-12-08T21:16:50.096Z",
-    "__v": 0
+    "__v": 0,
+    "__t": "client"
   }
 ]

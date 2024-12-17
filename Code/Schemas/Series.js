@@ -23,7 +23,9 @@ const SeriesSchema = new mongoose.Schema({
       //0 disabled
       //2 deleted
       default: 1
-    }
+    },
+    transforms : {type: Number,enum: [0,1],default:0},
+    transforms_to: [{ type: mongoose.Schema.Types.ObjectId }] // Array of Series IDs
 });
 
 // Export the transaction schema

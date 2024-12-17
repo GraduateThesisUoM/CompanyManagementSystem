@@ -307,6 +307,8 @@ async function createSeries(data) {
       credit : data.credit ,
       debit : data.debit
     });
+    if (data.transforms) seies.transforms = data.transforms;
+    if(data.series_transforms_list)seies.transforms_to = series_transforms_list.split(',');
 
     await seies.save();
 

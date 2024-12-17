@@ -87,6 +87,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       const effects_warehouse = req.body.effects_warehouse === "on" ? 1 : 0;
       const credit = req.body.credit === "on" ? 1 : 0;
       const debit = req.body.debit === "on" ? 1 : 0;
+      const transforms = req.body.transforms === "on" ? 1 : 0;
 
       data = {
         company: company._id,
@@ -96,7 +97,8 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         sealed: isSealed,
         effects_warehouse: effects_warehouse,
         credit : credit ,
-        debit : debit
+        debit : debit,
+        transforms : transforms
       };
       created_obj = await generalFunctions.createSeries(data);
     } else if (req.body.create_type == "person") {

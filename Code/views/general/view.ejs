@@ -122,6 +122,13 @@
             <div>
               <img src="<%= data[index] %>" id="company_logo" />
             </div>
+            <% }else if(type[index] == 12){ %>
+              <div>
+                <% data[index].forEach(function(s, index) {%>
+                  <div><input type="checkbox" id="<%= s._id%>" class="series_transforms_check"><%= s.acronym%> - <%= s.title%></div>
+                <%});%>
+                <input type="text" id="series_transforms_list" name="series_transforms_list">
+              </div>
             <% }else{ %> <%= title %>
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" />
             <% }%>
@@ -555,7 +562,8 @@
           $("#action").val("rejected");
           $("#view_form").submit();
         });
-      } else if (queryParams.type == "clients") {
+      }
+      else if (queryParams.type == "clients") {
         clients_users = secondery_data.users;
 
         for (client of clients_users) {
@@ -676,7 +684,7 @@
         event.preventDefault();
         let c_e_o = check_event_overlap($("#day_data_input_user_id").val(), $("#day_data_input_date").val(), $("#time_table_hours_start").val(), $("#time_table_minutes_start").val(), $("#time_table_hours_end").val(), $("#time_table_minutes_end").val(), secondery_data.nodes);
         $("#action").val("time_table");
-        if (c_e_o == 0) {
+        if (c_e_o == 0 && $('#day_data_input_node_id').val()=='') {
           if(confirm("This time overlaps with enother event")){
             if(confirm("This will replace existing with new are you sure ?")){
               $("#view_form").submit();
@@ -684,14 +692,15 @@
           }
         }
         else if(
-          $("#day_data_input_user_id").val() == 'all' ||
+          ($("#day_data_input_user_id").val() == 'all' ||
           $("#day_data_input_user_id").val() == '' ||
           $("#day_data_input_date").val() == '' ||
           $("#day_data_input_date_to").val() == '' ||
           $("#time_table_hours_start").val() == '' ||
           $("#time_table_minutes_start").val() == '' ||
           $("#time_table_hours_end").val() == '' ||
-          $("#time_table_minutes_end").val() == ''
+          $("#time_table_minutes_end").val() == '')&&
+          $('#day_data_input_node_id').val()==''
         ){
           alert("missing data")
         }
@@ -732,7 +741,14 @@
                 // Get the events container div inside the selected day element
                 var eventsContainer = $(days[index]).find(".events_container");
                 if (selected_user == n.user._id || selected_user == "all") {
-                  eventsContainer.append("<div class='day_line' id='" + n._id + "'>" + "<div class=event_id style='display:none'>" + n.user._id + "</div>" + "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" + "<div> From " + n.data.hour_start + " : " + n.data.minutes_start + "</div>" + "<div> To " + n.data.hour_end + " : " + n.data.minutes_end + "</div>" + "<div> Notes : <br>" + n.text + "</div>" + "</div>");
+                  var day_div = "<div class='day_line' id='" + n._id + "'>" + "<div class=event_id style='display:none'>" + n.user._id + "</div>" + "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" + "<div> From " + n.data.hour_start + " : " + n.data.minutes_start + "</div>" + "<div> To " + n.data.hour_end + " : " + n.data.minutes_end + "</div>";
+                  if(n.text){
+                    day_div = day_div + "<div> Notes : <br>" + n.text + "</div>";
+                  }
+                  
+                  day_div = day_div + "</div>"
+
+                  eventsContainer.append(day_div);
                 }
               }
             }
@@ -814,8 +830,6 @@
         
       });
 
-      
-
       $(".add_event").click(function (event) {
         let user_id = $("#user_select").val();
         $("#day_data_users").show();
@@ -864,6 +878,16 @@
         }
         return 1;
       }
+
+      $('.series_transforms_check').on('change', function(){
+        // Get all checked checkboxes and map their values (IDs) into an array
+        const checkedIds = $('.series_transforms_check:checked').map(function () {
+          return $(this).attr('id'); // Get the value (ID) of the checked checkbox
+        }).get(); // Convert the jQuery object to an array
+
+        // Update the input field with a comma-separated list of IDs
+        $('#series_transforms_list').val(checkedIds.join(','));
+      });
 
     });
   </script>

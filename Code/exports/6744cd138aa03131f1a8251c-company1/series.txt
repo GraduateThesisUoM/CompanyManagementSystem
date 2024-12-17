@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "_id": "6761f5342851233460c08e06",
+    "company": "6744cd138aa03131f1a8251c",
+    "title": "Series1",
+    "acronym": "S1",
+    "count": 0,
+    "sealed": 0,
+    "effects_warehouse": 0,
+    "credit": 0,
+    "debit": 0,
+    "type": 2,
+    "status": 1,
+    "transforms": 1,
+    "transforms_to": [],
+    "registrationDate": "2024-12-17T22:03:32.448Z",
+    "__v": 0
+  }
+]

@@ -101,10 +101,11 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             //8 table
           } else if (type == "series") {
             obj = await Series.findOne({ _id: id });
-            data.data = [obj.title, obj.acronym, obj.type, obj.count, obj.sealed, obj.effects_warehouse, obj.credit, obj.debit, generalFunctions.formatDate(obj.registrationDate), obj.status];
-            data.titles = ["Title", "Acronym", "Type", "Count", "Sealed", "Effects Warehouse", "Credit", "Debit", "Reg Date", "Status"];
-            data.type = [1, 1, 1, 1, 5, 5, 5, 5, 0, 0];
-            //1=normal-text,0=text-readonly, 5 checkbox
+            var series = await Series.find({company:company, status:1,type:obj.type,_id: { $ne: obj._id } /* Exclude the document with the same _id as `obj`*/})
+            data.data = [obj.title, obj.acronym, obj.type, obj.count, obj.sealed, obj.effects_warehouse, obj.credit, obj.debit, generalFunctions.formatDate(obj.registrationDate), obj.status,obj.transforms,series];
+            data.titles = ["Title", "Acronym", "Type", "Count", "Sealed", "Effects Warehouse", "Credit", "Debit", "Reg Date", "Status","Transforms","Series"];
+            data.type = [1, 1, 1, 1, 5, 5, 5, 5, 0, 0,5,12];
+            //1=normal-text,0=text-readonly, 5 checkbox,12 series
           } else if (type == "persons") {
             obj = await Person.findOne({ _id: id });
             data.data = [obj.type, obj.firstName, obj.lastName, obj.email, obj.phone, obj.afm, obj.status, generalFunctions.formatDate(obj.registrationDate)];
@@ -272,6 +273,27 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         var node = false;
         if (req.body.day_data_input_node_id) {
           node = await Node.findOne({ _id: req.body.day_data_input_node_id });
+          if (req.body.action == "time_table_delete") {
+            node.status = 5; //canceled
+            await node.save();
+          }
+          else {
+            time_table_new_node = await generalFunctions.node_reply({
+              user: req.user,
+              target_node: node,
+              reply: 6, //response
+              text: req.body.time_table_notes,
+              data: {
+                date: date_start_dateObject,
+
+                hour_start: req.body.time_table_hours_start,
+                minutes_start: req.body.time_table_minutes_start,
+
+                hour_end: parseInt(req.body.time_table_hours_end),
+                minutes_end: req.body.time_table_minutes_end,
+              },
+            });
+          }
         }
         else{
           var users = req.body.day_data_input_user_id;
@@ -282,7 +304,6 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
             while (currentDate <= endDate) {
               let d = new Date(currentDate);
               const dd = d.toISOString().replace('Z', '+00:00')
-              console.log("++++++++++++++++++"+dd)
 
               var data = {
                 company : company._id,
@@ -296,7 +317,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
                   hour_start: req.body.time_table_hours_start,
                   minutes_start: req.body.time_table_minutes_start,
   
-                  hour_end: req.body.time_table_hours_end,
+                  hour_end: parseInt(req.body.time_table_hours_end),
                   minutes_end: req.body.time_table_minutes_end  
                 }
               };
@@ -314,7 +335,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
                     hour_start: req.body.time_table_hours_start,
                     minutes_start: req.body.time_table_minutes_start,
     
-                    hour_end: req.body.time_table_hours_end,
+                    hour_end: parseInt(req.body.time_table_hours_end),
                     minutes_end: req.body.time_table_minutes_end,
                   }
                 }
@@ -330,90 +351,17 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
               // Increment the current date by one day
               currentDate.setDate(currentDate.getDate() + 1);
             }
-            console.log("********************");
           }
 
         }
 
         var time_table_new_node;
 
-        /*var time_table_node = await Node.findOne({
-          receiver_id: req.body.day_data_input_user_id,
-          type: 6,
-          type2: 6,
-          next: "-" /*,
-            data:{
-                date_start:date_start_dateObject
-            }*//*,
-        });*/
-        
-
-        /*if (node) {
-          if (req.body.action == "time_table_delete") {
-            node.status = 5; //canceled
-            await node.save();
-          } else {
-            time_table_new_node = await generalFunctions.node_reply({
-              user: req.user,
-              target_node: time_table_node,
-              reply: 6, //response
-              text: req.body.time_table_notes,
-              data: {
-                date: date_start_dateObject,
-
-                hour_start: req.body.time_table_hours_start,
-                minutes_start: req.body.time_table_minutes_start,
-
-                hour_end: req.body.time_table_hours_end,
-                minutes_end: req.body.time_table_minutes_end,
-              },
-            });
-          }
-        } else {
-          const data = {
-            company: company._id,
-            sender_id: req.user._id,
-            receiver_id: req.body.day_data_input_user_id,
-            type: 6, // timetable
-            text: req.body.time_table_notes,
-            data: {
-              date: date_start_dateObject,
-              hour_start: req.body.time_table_hours_start,
-              minutes_start: req.body.time_table_minutes_start,
-              hour_end: req.body.time_table_hours_end,
-              minutes_end: req.body.time_table_minutes_end,
-            },
-          };
-
-          // Create a node for every date until `day_data_input_date_to`
-          if (req.body.day_data_input_date_to) {
-            const endDate = new Date(req.body.day_data_input_date_to);
-            let currentDate = new Date(date_start_dateObject);
-
-            while (currentDate <= endDate) {
-              const dataForDate = {
-                ...data,
-                data: {
-                  ...data.data,
-                  date: new Date(currentDate), // Set current date in the loop
-                },
-              };
-
-              await generalFunctions.create_node(dataForDate);
-
-              // Increment the current date by one day
-              currentDate.setDate(currentDate.getDate() + 1);
-            }
-          } else {
-            // Create a single node for the initial date
-            await generalFunctions.create_node(data);
-          }
-        }
 
         if (req.body.calendar_view_selection) {
           return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}&timetable=${req.body.calendar_view_selection}`);
         }
-        return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);*/
+        return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
       } else if (req.query.type == "nodes") {
         const node = await Node.findOne({ _id: req.query.id });
         let action = 4; //rejected

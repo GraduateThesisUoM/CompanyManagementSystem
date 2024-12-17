@@ -1,16 +1,16 @@
 [
   {
     "license": {
-      "bought": 2,
+      "bought": 1,
       "requested": 0,
-      "used": 2
+      "used": 1
     },
     "_id": "6744cd138aa03131f1a8251c",
     "__v": 0,
     "autochangesignupcode": 1,
     "logo": "https://i.pinimg.com/originals/ec/d9/c2/ecd9c2e8ed0dbbc96ac472a965e4afda.jpg",
     "name": "company1",
-    "registrationDate": "2024-12-08T21:14:09.636Z",
+    "registrationDate": "2024-12-17T22:02:59.954Z",
     "signupcode": "1",
     "status": 1
   }
