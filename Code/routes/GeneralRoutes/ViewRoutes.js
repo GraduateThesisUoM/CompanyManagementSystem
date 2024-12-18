@@ -105,6 +105,10 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data.data = [obj.title, obj.acronym, obj.type, obj.count, obj.sealed, obj.effects_warehouse, obj.credit, obj.debit, generalFunctions.formatDate(obj.registrationDate), obj.status,obj.transforms,series];
             data.titles = ["Title", "Acronym", "Type", "Count", "Sealed", "Effects Warehouse", "Credit", "Debit", "Reg Date", "Status","Transforms","Series"];
             data.type = [1, 1, 1, 1, 5, 5, 5, 5, 0, 0,5,12];
+
+            secondery_data = {
+              selected_series :obj.transforms_to
+            }
             //1=normal-text,0=text-readonly, 5 checkbox,12 series
           } else if (type == "persons") {
             obj = await Person.findOne({ _id: id });
@@ -202,7 +206,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               nodes: nodes,
               users: await Client.find({ company: id, status: 1 }),
             };
-            console.log("secondery_data : " + secondery_data.nodes);
           }
         } else {
           console.log("ERROR");

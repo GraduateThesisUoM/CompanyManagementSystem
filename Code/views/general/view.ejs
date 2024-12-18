@@ -540,7 +540,8 @@
             removeRow(index, false);
           }
         });
-      } else if (queryParams.type == "nodes") {
+      }
+      else if (queryParams.type == "nodes") {
         var node = $(".node_status:last");
 
         if (node.text() == "2") {
@@ -583,7 +584,8 @@
         } else {
           $("#user_select").val("all");
         }
-      } else {
+      }
+      else {
         $("#btn1").click(function () {
           if (confirm("Are you soure ?")) {
             $("#action").val("delete");
@@ -599,6 +601,14 @@
           $("#view_form").submit();
         });
       }
+
+      if (queryParams.type == "series") {
+        for( s of secondery_data.selected_series){
+          $("#" + s).prop("checked", true);
+          $('#series_transforms_list').val($('#series_transforms_list').val()+','+s)
+        }
+      }
+      
 
       function calculate_total(class_id, target_id) {
         var tottal = 0;
@@ -882,7 +892,7 @@
       $('.series_transforms_check').on('change', function(){
         // Get all checked checkboxes and map their values (IDs) into an array
         const checkedIds = $('.series_transforms_check:checked').map(function () {
-          return $(this).attr('id'); // Get the value (ID) of the checked checkbox
+          return $(this).attr('id').replace(/'/g, "");
         }).get(); // Convert the jQuery object to an array
 
         // Update the input field with a comma-separated list of IDs

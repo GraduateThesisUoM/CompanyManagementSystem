@@ -297,7 +297,7 @@ async function createItem(data) {
 
 async function createSeries(data) {
   try {
-    const seies = new Series({
+    const series = new Series({
       company: data.company,
       title: data.title,
       acronym: data.acronym,
@@ -307,14 +307,15 @@ async function createSeries(data) {
       credit : data.credit ,
       debit : data.debit
     });
-    if (data.transforms) seies.transforms = data.transforms;
-    if(data.series_transforms_list)seies.transforms_to = series_transforms_list.split(',');
+    if (data.transforms) series.transforms = data.transforms;
+    console.log(data.transforms_to)
+    if(data.transforms_to)series.transforms_to = data.transforms_to.split(',');
 
-    await seies.save();
+    await series.save();
 
-    console.log("seies " + seies.title + " created");
+    console.log("seies " + series.title + " created");
 
-    return seies;
+    return series;
   } catch (e) {
     console.log(e);
   }
@@ -565,7 +566,6 @@ async function update(id, schema , data){
 
     var obj = await get_obj_by_id(id, schema);
     var fieldsToUpdate;
-    const lines_of_doc = {};
 
     if (schema == 'documents') {
       obj.generalDiscount = data.generalDiscount; 
@@ -574,14 +574,22 @@ async function update(id, schema , data){
     else if(schema == 'nodes') {
       obj.text = data.text; 
     }
-    else{
-      if (schema == 'series') {
-        fieldsToUpdate = ['title', 'acronym', 'type','count', 'sealed','effects_warehouse','credit','debit', 'active'];
+    else if (schema == 'series') {
+        obj.title = data["input0"];
+        obj.acronym = data["input1"];
+        obj.type = data["input2"];
+        obj.count = data["input3"];
+
+        obj.sealed = data["input4"];
+        obj.effects_warehouse = data["input5"];
+        obj.credit = data["input6"];
+        obj.debit = data["input7"];
+
+        obj.active = data["input8"];
+        obj.transforms = data["input9"];
+        obj.transforms_to = data["series_transforms_list"].split(',');
       }
-      fieldsToUpdate.forEach((field, index) => {
-        obj[field] = data["input"+index];  // Using index for data
-      });
-    }
+      
     await obj.save();
   } catch (e) {
     console.log(e);

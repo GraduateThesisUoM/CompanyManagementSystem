@@ -74,8 +74,7 @@
                         <div>Debit : <input type="checkbox" name="debit"></div>
                         <div>Transforms : <input type="checkbox" name="transforms"></div>
                         <div id = 'transforms_to_div'>Transforms To:
-                            <br>
-                            <input type="checkbox" name="transforms">
+                            <input type="text" name="series_transforms_list" id="series_transforms_list">
                         </div>
 
                     </div>
@@ -105,6 +104,7 @@
         const params = new URLSearchParams(queryString);
         var type = '';
         var  create = '';
+        const secondery_data = JSON.parse(`<%- JSON.stringify(secondary_data) %>`);
 
         $(".create_div").hide();
         $("#my_submit_btn").hide();
@@ -147,6 +147,13 @@
                         window.location = '/';
                     }
                 }
+                if(params.get('create') == 'series'){
+                    for(s of secondery_data){
+                        console.log(s.title)
+                        $("#transforms_to_div").append(`<div><input type='checkbox' class='series_transforms_check' id=${s._id}'>${s.acronym}- ${s.title}</div>`);
+                    }
+                }
+
             }
             else{
                 window.location = '/';
@@ -229,6 +236,16 @@
         $('.disc').on('input', price_dicount_input);
         $('.percent').on('input', price_dicount_input);
         $('.price').on('input', price_dicount_input);
+
+        $('.series_transforms_check').on('change', function(){
+        // Get all checked checkboxes and map their values (IDs) into an array
+        const checkedIds = $('.series_transforms_check:checked').map(function () {
+            return $(this).attr('id').replace(/'/g, "");
+        }).get(); // Convert the jQuery object to an array
+
+        // Update the input field with a comma-separated list of IDs
+        $('#series_transforms_list').val(checkedIds.join(','));
+      });
 
     });
     

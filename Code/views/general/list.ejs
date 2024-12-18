@@ -152,6 +152,8 @@
                         </tbody>
                     </table>
                 </div>
+                <button id="go_to_create">Create</button>
+
             </div>
     </div>
     <iframe id="print-frame" style="display:none;"></iframe>
@@ -241,6 +243,16 @@
                     button_action($(this),btn_act);
                 })
             }
+
+            $("#go_to_create").click(function () {
+                
+                var destination = '/create?create='+params.get('searchfor')+'&type='+params.get('type')
+                
+                if(params.get('searchfor')==='docs'){
+                    destination = '/create-doc?type='+params.get('type')
+                }
+                window.location = destination;
+            });
 
             /*function print_doc() {
                 var doc_id = $(this).data('id')

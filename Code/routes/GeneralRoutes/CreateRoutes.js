@@ -1,20 +1,23 @@
 const express = require("express");
 const router = express.Router();
 
-//Models
-const Notification = require("../../Schemas/Notification");
+//File with the paths
+const path_constants = require("../../constantsPaths");
 
 //Authentication Function
-const Authentication = require("../../AuthenticationFunctions");
-//General Functions
-const generalFunctions = require("../../GeneralFunctions");
-//File with the paths
-const constants = require("../../constantsPaths");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
+//Get General Functions
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
+//Models
+const Series = require(path_constants.schemas.two.series);
+const Notification = require(path_constants.schemas.two.notification);
+
 
 /*--------   Create */
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const access = generalFunctions.checkAccessRigts(req, res);
+    var secondary_data = [];
     if (access.response) {
       if (
         req.user.type == "admin" &&
@@ -22,17 +25,22 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       ) {
         res.redirect("/clients");
       } else {
+        if(req.query.create == 'series'){
+          secondary_data = await Series.find({company:req.user.company, status:1,type:req.query.type})
+          console.log(secondary_data);
+        }
         const data = {
           user: req.user,
           companyId: req.user.company,
           notification_list: await Notification.find({
             $and: [{ user_id: req.user.id }, { status: "unread" }],
           }),
+          secondary_data : secondary_data
         };
         if (req.user.type == "admin") {
           data.clientId = req.session.selected_client._id;
         }
-        res.render(constants.pages.create.view(), data);
+        res.render(path_constants.pages.create.view(), data);
       }
     } else {
       res.redirect("/error?error=" + access.error);
@@ -98,7 +106,8 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         effects_warehouse: effects_warehouse,
         credit : credit ,
         debit : debit,
-        transforms : transforms
+        transforms : transforms,
+        transforms_to : req.body.series_transforms_list
       };
       created_obj = await generalFunctions.createSeries(data);
     } else if (req.body.create_type == "person") {
