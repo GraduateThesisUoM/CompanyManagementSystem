@@ -6,63 +6,76 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!--CSS-->
     <link rel="stylesheet" href="general_css.css">
+    <link rel="stylesheet" href="sing_up_css.css">
+    <link rel="stylesheet" href="fonts_css.css">
+    <!--Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poiret+One&family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
   </head>
 <body>
-  <h1>Εγγραφή</h1>
-  <button id ="user_btn">Χρήστης</button>
-  <button id ="accountant_btn">Λογιστής</button>
-  <form class="display_block" action="/sign-up" method="POST" >
-    <!--User-->
-    <h2 id="h2">Χρήστης</h2>
-    <input type="text" id="account_type" name="account_type" value="user" required>
-    <label for="firstName">Όνομα</label>
-    <input type="text" name="firstName" id="firstName" placeholder="Όνομα" required>
-    <label for="lastName">Επίθετο</label>
-    <input type="text" name="lastName" id="lastName" placeholder="Επίθετο" required>
-    <label for="email">Email</label>
-    <input type="email" name="email" id="email" placeholder="email" required>
-    <label for="password">Κωδικός</label>
-    <input type="password" id="password" name="password" placeholder="Κωδικός" required>
-    <label for="password_confirm">Επιβεβαίωση Κωδικού</label>
-    <input type="password" id="password_confirm" name="password_confirm" placeholder="Κωδικός" required>
-    <div class="checkbox_conatainer">
-      <input type="checkbox" id="showpasswordcheckbox">
-      <label for="showpasswordcheckbox">Εμφάνηση Κωδικού</label>
-    </div>
-    <span id="admin_hide">
-      <label for="afm">Α.Φ.Μ.</label>
-      <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ.">
-
-      <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
-      <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData (προαιρετικό)">
-      <span id="accountant_hide">
-        <span style="display: flex;">
-          <button type="button" id="newCompanybtn">Νέα Εταιρία</button>
-          <button type="button" id="existingCompanybtn">Υπάρχουσα Εταιρία</button>
-          <input id="companyNewExisting" name="companyNewExisting" value="-1" style="display: none;">
+  <div id="sign_in_container">
+    <h1>Εγγραφή</h1>
+    <button id ="user_btn">Χρήστης</button>
+    <button id ="accountant_btn">Λογιστής</button>
+    <form class="display_block" action="/sign-up" method="POST" >
+      <!--User-->
+      <h2 id="h2">Χρήστης</h2>
+      <input type="text" id="account_type" name="account_type" value="user" required>
+      <label for="firstName">Όνομα</label>
+      <input type="text" name="firstName" id="firstName" placeholder="Όνομα" required>
+      <label for="lastName">Επίθετο</label>
+      <input type="text" name="lastName" id="lastName" placeholder="Επίθετο" required>
+      <label for="email">Email</label>
+      <input type="email" name="email" id="email" placeholder="email" required>
+      <label for="password">Κωδικός</label>
+      <input type="password" id="password" name="password" placeholder="Κωδικός" required>
+      <label for="password_confirm">Επιβεβαίωση Κωδικού</label>
+      <input type="password" id="password_confirm" name="password_confirm" placeholder="Κωδικός" required>
+      <div class="checkbox_conatainer">
+        <input type="checkbox" id="showpasswordcheckbox">
+        <label for="showpasswordcheckbox">Εμφάνηση Κωδικού</label>
+      </div>
+      <span id="admin_hide">
+        <label for="afm">Α.Φ.Μ.</label>
+        <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ.">
+  
+        <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
+        <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData (προαιρετικό)">
+        <span id="accountant_hide">
+          <span style="display: flex;">
+            <button type="button" id="newCompanybtn">Νέα Εταιρία</button>
+            <button type="button" id="existingCompanybtn">Υπάρχουσα Εταιρία</button>
+            <input id="companyNewExisting" name="companyNewExisting" value="-1" style="display: none;">
+          </span>
+          <label for="companyName" id="companyName_label" style="display: none;">'Ονομα εταιρείας:</label>
+          <input type="text" name="companyName" id="companyName" style="display: none;">
+          <span id="newCompany" style="display: none;">
+            <label for="companyLogo">Λογότυπο εταιρείας :</label>
+            <input type="text" name="companyLogo" id="companyLogo">
+          </span>
+          <span id="existingCompany" style="display: none;">
+            <label for="companyRegisterCode">Κωδικός Εταιρείας:</label>
+            <input type="text" name="companyRegisterCode" id="companyRegisterCode">
+          </span>
+  
+          <div class="checkbox_conatainer">
+            <input type="checkbox" id="self_accountant_check_box">
+            <label for="self_accountant_check_box">Αυτοδιαχείριση Λογιστικών :</label>
+            <input style="display: none;" type="text" name="self_accountant" id="self_accountant" value="false">
+          </div>
         </span>
-        <label for="companyName" id="companyName_label" style="display: none;">'Ονομα εταιρείας:</label>
-        <input type="text" name="companyName" id="companyName" style="display: none;">
-        <span id="newCompany" style="display: none;">
-          <label for="companyLogo">Λογότυπο εταιρείας :</label>
-          <input type="text" name="companyLogo" id="companyLogo">
-        </span>
-        <span id="existingCompany" style="display: none;">
-          <label for="companyRegisterCode">Κωδικός Εταιρείας:</label>
-          <input type="text" name="companyRegisterCode" id="companyRegisterCode">
-        </span>
-
-        <div class="checkbox_conatainer">
-          <input type="checkbox" id="self_accountant_check_box">
-          <label for="self_accountant_check_box">Αυτοδιαχείριση Λογιστικών :</label>
-          <input style="display: none;" type="text" name="self_accountant" id="self_accountant" value="false">
-        </div>
       </span>
-    </span>
-    <button style="display: none;" id="submit_btn" type="submit">Εγγραφή</button>
-  </form>
-  <button id="sign_up_btn">Εγγραφή</button>
+      <button style="display: none;" id="submit_btn" type="submit">Εγγραφή</button>
+    </form>
+
+    <button id="sign_up_btn">Εγγραφή</button>
   <button id="log_in_btn">Σύνδεση</button>
+  </div>
+  
+  
+  
 </body>
 <script>
   $(document).ready(function(){

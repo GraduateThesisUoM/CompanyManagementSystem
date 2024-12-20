@@ -6,32 +6,40 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="log_in_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poiret+One&family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     </head>
     <body>
       <% if (messages.error) { %>
         <%= messages.error %>
       <% } %>
-      <a href="http://localhost:3000/log-in?fast_log_in=1">ad1</a>
-        <a href="http://localhost:3000/log-in?fast_log_in=2">C1 </a>
-        <a href="http://localhost:3000/log-in?fast_log_in=3">C3 3</a>
-        <a href="http://localhost:3000/log-in?fast_log_in=4">ac1@ac1</a>
-        <a href="http://localhost:3000/log-in?restartdb=true">restart db</a>
 
-         <form class="display_block" action="/log-in" method="POST" >
-            <h1>Σύνδεση</h1>
+         <div id="log_in_container">
+          <!--a href="http://localhost:3000/log-in?fast_log_in=1">ad1</a><br>
+          <a href="http://localhost:3000/log-in?fast_log_in=2">C1 </a><br>
+          <a href="http://localhost:3000/log-in?fast_log_in=3">C3 3</a><br>
+          <a href="http://localhost:3000/log-in?fast_log_in=4">ac1@ac1</a><br-->
+          <form class="display_block asap-condensed-regular" action="/log-in" method="POST" >
+            <h1>Log in</h1>
             <label for="email">Email</label>
-            <input type="text" id="email" placeholder="email" name="email" required>
-            <label for="password">Κωδικός</label>
-            <input type="password" id="password" name="password" placeholder="Κωδικός" required>
+            <input type="text" id="email" placeholder="myemail@domain.com" name="email" required>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Password" required>
             <div class="checkbox_conatainer">
               <input type="checkbox" id="showpasswordcheckbox">
-              <label for="showpasswordcheckbox">Εμφάνηση Κωδικού</label>
+              <label  for="showpasswordcheckbox">Show password</label>
             </div>
-            <button id='log_in_btn' type="submit">Σύνδεση</button>
+            <button id='log_in_btn' type="submit">Log in</button>
             
         </form>
-        <button id="sign_up_btn">Εγγραφή</button>
-        <button id="forgot_passsword_btn">Ξέχασα τον Κωδικό μου</button>
+        <button id="sign_up_btn">Sign Up</button>
+        <button id="forgot_passsword_btn">Forgot my password</button>
+         </div>
     </body>
   <script>
     $(document).ready(function(){

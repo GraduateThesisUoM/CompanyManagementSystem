@@ -5,14 +5,6 @@ button{
     display: block;
 }
 
-/*Δοκίμαζα κάτι αν δημιουργεί προβλημα μπορεί να φύγει*/
-body{
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    padding: 0px;
-    margin: 0px;
-}
 
 .has_sidebar{
     display: grid;
