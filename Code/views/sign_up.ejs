@@ -69,25 +69,21 @@
           <div class="button_group_1 columns_two">
             <button class="selected" type="button" id="newCompanybtn">New Company</button>
             <button type="button" id="existingCompanybtn">Existing Company</button>
-            <input id="companyNewExisting" name="companyNewExisting" value="-1" style="display: none;">
+            <input id="companyNewExisting" name="companyNewExisting" value="0" style="display: none;">
           </div>
           <div class="tab_1">
             <div class="input_container">
-              <input class="input_type_1" type="text" name="companyName" id="companyName" style="display: none;" placeholder=" ">
-              <label for="companyName" id="companyName_label" style="display: none;">Company Name:</label>
+              <input class="input_type_1" type="text" name="companyName" id="companyName" placeholder=" ">
+              <label for="companyName" id="companyName_label">Company Name:</label>
             </div>
-            <span id="newCompany">
-              <div class="input_container">
+              <div id="newCompany" class="input_container">
                 <input class="input_type_1" type="text" name="companyLogo" id="companyLogo" placeholder=" ">
                 <label for="companyLogo">Logo :</label>
               </div>
-            </span>
-            <span id="existingCompany">
-              <div class="input_container">
+              <div id="existingCompany" class="input_container" style="display: none;">
                 <input class="input_type_1" type="text" name="companyRegisterCode" id="companyRegisterCode" placeholder=" ">
                 <label for="companyRegisterCode">Company Code:</label>
               </div>
-            </span>
           </div>
   
           <div class="checkbox_conatainer" id="self_accountant_check_box_container">
@@ -201,7 +197,7 @@
         all_checks_ok = false;
       }
 
-      users_list.forEach(user => {
+      for(user of users_list){
         if (user.email === $("#email").val()) {
           alert("Email already exists")
           all_checks_ok = false;
@@ -210,8 +206,19 @@
           }else{
             $("#email").val("");
           }
+          return;
         }
-      });
+        else if(user.afm === $("#afm").val()){
+          alert("Το Α.Φ.Μ. χρησιμοποιείται ήδη");
+          all_checks_ok = false;
+          if(all_checks_ok){
+            $("#afm").val("").focus();
+          }else{
+            $("#afm").val("");
+          }
+          return;
+        }
+      };
 
 
       if($("#account_type").val() == "user"){

@@ -1,4 +1,4 @@
-<div id="sidebar_div">
+<div id="sidebar_div" class="asap-condensed-regular">
     <div>
         <div>
             <button class="main_side_menubtn user sidebar_btn" onclick="window.location='/'" >
@@ -46,25 +46,25 @@
             <div class="sub_side_menu_div" style="display: none;"></div>
             <div class="sub_side_menu_div" style="display: none;">
                 <button onclick="location.href = 'list?searchfor=docs&type=2';">View Docs</button>
-                <button onclick="location.href = '/create-doc?type=2';">Create Docs</button>
+                <!--button onclick="location.href = '/create-doc?type=2';">Create Docs</button-->
                 <button onclick="location.href = 'list?searchfor=series&type=2';">View Series</button>
-                <button onclick="location.href = '/create?create=series&type=2';">Create Series</button>
+                <!--button onclick="location.href = '/create?create=series&type=2';">Create Series</button-->
                 <button onclick="location.href = 'list?searchfor=persons&type=2';">View Persons</button>
-                <button onclick="location.href = '/create?create=persons&type=2';">Create Person</button>
+                <!--button onclick="location.href = '/create?create=persons&type=2';">Create Person</button-->
             </div>
             <div class="sub_side_menu_div" style="display: none;">
                 <button onclick="location.href = 'list?searchfor=docs&type=1';">View Docs</button>
-                <button onclick="location.href = '/create-doc?type=1';">Create Docs</button>
+                <!--button onclick="location.href = '/create-doc?type=1';">Create Docs</button-->
                 <button onclick="location.href = 'list?searchfor=series&type=1';">View Series</button>
-                <button onclick="location.href = '/create?create=series&type=1';">Create Series</button>
+                <!--button onclick="location.href = '/create?create=series&type=1';">Create Series</button-->
                 <button onclick="location.href = 'list?searchfor=persons&type=1';">View Persons</button>
-                <button onclick="location.href = '/create?create=persons&type=1';">Create Person</button>
+                <!--button onclick="location.href = '/create?create=persons&type=1';">Create Person</button-->
             </div>
             <div class="sub_side_menu_div" style="display: none;">
-                <button onclick="location.href = '/create?create=Warehouse';">Create Warehouse</button>
+                <!--button onclick="location.href = '/create?create=Warehouse';">Create Warehouse</button-->
                 <button onclick="location.href = 'list?searchfor=Warehouse';">View Warehouses</button>
-                <button onclick="location.href = '/create?create=items&type=2';">Create Item Buy</button>
-                <button onclick="location.href = '/create?create=items&type=1';">Create Item Shell</button>
+                <!--button onclick="location.href = '/create?create=items&type=2';">Create Item Buy</button>
+                <button onclick="location.href = '/create?create=items&type=1';">Create Item Shell</button-->
                 <button onclick="location.href = 'list?searchfor=items&type=2';">View Items Buy</button>
                 <button onclick="location.href = 'list?searchfor=items&type=1';">View Items Shell</button>
             </div>
@@ -86,8 +86,10 @@
             var index = $(".main_side_menubtn.user").index(this);
             var down = index
 
-            /*$(".sub_side_menu_div").hide();
-            $(".sub_side_menu_div").eq(index).show();*/
+            if(index ==0){
+                return
+            }
+
             $('.sub_side_menu_div').css('display', 'none');
             $('.sub_side_menu_div').eq(index).css('display', 'block');
 
@@ -140,6 +142,17 @@
                 window.history.back();
             }
 
+        });
+
+        $(document).keydown(function(event) {
+            if (event.key === "Escape") {
+                $('.sub_side_menu_div').css('display', 'none');
+                $('.main_side_menubtn').removeClass('clicked');
+            }
+            if (event.key === "Tab") {
+                event.preventDefault();
+                $('.main_side_menubtn').first().focus();
+            }
         });
     });
 </script>

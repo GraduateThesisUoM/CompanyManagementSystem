@@ -1,6 +1,9 @@
 body{
-    margin: 0;
-    padding: 0;
+    margin: 0px;
+    padding: 0px;
+
+    background: rgb(20,74,187);
+    background: linear-gradient(45deg, rgba(20,74,187,1) 9%, rgba(46,45,45,1) 76%);
 }
 
 button{
@@ -16,7 +19,9 @@ button{
     gap: 20px;
     grid-template-columns: 90px auto;
     /*grid-template-columns: 200px auto;*/
-
+    padding: 0px;
+    margin: 0px;
+    height: 90vh;
 }
 
 #header{
@@ -32,7 +37,7 @@ button{
 }
 #footer{
     margin-top: auto;
-    position: relative;
+    position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
@@ -115,7 +120,6 @@ button{
     box-shadow: -10px 7px 15px -1px black;
 }
 
-
 .main_side_menubtn:hover{
     width: 90px;
     height: 80px;
@@ -132,19 +136,49 @@ button{
     margin: 10px ;
 }
 
-
 .sub_side_menu_div{
     width: 170px;
     display: block;
-    background-color:red;
+    border-radius: 10px;
+    /* From https://css.glass */
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(4.4px);
+    -webkit-backdrop-filter: blur(4.4px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px 0px;
 }
+
+.sub_side_menu_div button{
+    width: 100%;
+    padding: 10px;
+    border: none;
+    background-color: transparent;
+    color: rgb(0, 0, 0);
+    font-size: 1em;
+    text-align: left;
+    transition: 0.3s;
+    font-weight: 550;
+}
+
+.sub_side_menu_div button:hover{
+    background-color: rgba(255, 255, 255, 0.396);
+    /*color: rgb(30, 30, 30);*/
+    color: white;
+    font-size: 1.1em;
+    font-weight: 575;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0);
+    text-indent: 10px;
+}
+
 
 #column_two_menu_div{
     margin-left:10px;
     position: relative;
     z-index: 2;
     top: 100px;
-    left: -35px;
+    left: -60px;
     width: 170px;
 }
 
@@ -154,7 +188,7 @@ button{
     left: 0;
     z-index: 2;
 }
-
+/*
 table {
     border-collapse: collapse;
     border: 2px solid rgb(140, 140, 140);
@@ -170,7 +204,7 @@ table > tbody > tr > td> div{
     grid-template-columns: 70% 30%;
 }
 
-
+*/
 .btn_type_1{
     background-color: rgb(20,74,187);
     border-radius: 20px;
@@ -254,12 +288,6 @@ table > tbody > tr > td> div{
     color: rgb(200, 198, 198);
     background-color: rgba(0, 0, 0, 0.5);
 }
-
-/*.columns_two{
-    display: grid;
-
-    grid-template-columns: 50% 50%;
-}*/
 
 .button_group_1{
     display: flex;

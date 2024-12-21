@@ -1,0 +1,124 @@
+#list_filters{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding: 20px;
+    border: none;
+    border-radius: 15px;
+    background-color: rgb(186, 199, 234);   
+    display: grid;
+    grid-template-columns: 50% 50%; 
+}
+
+#list_filters_right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+}
+
+#list_count{
+    font-weight: bold;
+    font-size: 1.5em;
+    margin: 5px;
+}
+
+
+#list_filters h1{
+    margin: 5px;
+}
+
+#tottal_num{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+#go_to_create{
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    transition: transform 0.3s ease-in-out;
+}
+#go_to_create:hover{
+    transform: scale(1.2);
+}
+
+table{
+    /* From https://css.glass */
+    background: rgba(95, 95, 95, 0.65);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8.8px);
+    -webkit-backdrop-filter: blur(8.8px);
+    border-radius: 20px;
+    border-collapse: collapse;
+    width: 95%;
+    
+    border:none;
+}
+
+th,
+td {
+    border-collapse: collapse;
+    text-align: center;
+}
+
+#table_container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+#td_button_container {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 10px;
+}
+
+#td_button_container>div {
+    padding: 10px;
+    transition: transform 0.2s;
+    /* Smooth transition for scaling */
+}
+
+#td_button_container>div>button {
+    border: none;
+    padding: 5px;
+    /* Increase padding for better appearance */
+    cursor: pointer;
+    width: 100%;
+    /* Ensure buttons take full div width */
+    transition: 0.35s;
+    border-radius: 10px;
+}
+
+#td_button_container > div > button:not(:disabled):hover {
+    transform: scale(1.1);
+    /* Scale up the button on hover */
+    box-shadow: 3px 3px 10px black;
+}
+
+#td_button_container>div>.btn2 {
+    background-color: rgb(255, 0, 0);
+    color: white;
+}
+
+#td_button_container > div > .btn2:disabled {
+background-color: rgba(255, 0, 0, 0.33);
+}
+
+#td_button_container>div>.btn3 {
+    background-color: rgb(71, 71, 71);
+    color: white;
+}
+#td_button_container>div>.btn3:disabled {
+    background-color: rgba(71, 71, 71, 0.33);
+
+}
+
+#td_button_container>div>.btn1 {
+    background-color: rgb(110, 152, 231);
+    color: white;
+}

@@ -36,6 +36,10 @@ router.get("/", Authentication.checkNotAuthenticated, async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
+    // Check if the email is already in use
+    const email = req.body.email;
+
+    const companyName = req.body.companyName;
     const saltRounds = 10; // You can adjust the number of salt rounds for security
     const hashedPassword = await bcrypt.hash(req.body.password, saltRounds);
     // Create a new user instance with the provided data
@@ -43,8 +47,9 @@ router.post("/", async (req, res) => {
       var company;
       if (req.body.companyNewExisting == "0") {
         //New Company
+
         var data = {
-          name: req.body.companyName,
+          name: companyName,
           signupcode: 1,
           /*signupcode : generateRandomCode(length)*/
         };
@@ -55,13 +60,12 @@ router.post("/", async (req, res) => {
       } else {
         //Existing Company
         company = await Company.findOne({
-          name: req.body.companyName,
+          name: companyName,
           signupcode: req.body.companyRegisterCode,
         });
       }
-      console.log("Company : " + company);
+
       var companyOwner = 0;
-      console.log(req.body.companyNewExisting);
       if (req.body.companyNewExisting == "0") {
         companyOwner = 1;
       } else {
@@ -73,7 +77,7 @@ router.post("/", async (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: hashedPassword,
-        email: req.body.email,
+        email: email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakey,
         company: company._id,
@@ -84,8 +88,6 @@ router.post("/", async (req, res) => {
 
       // Save the new user to the database
 
-      console.log(newUser);
-
       if (req.body.self_accountant == "true") {
         clientAccountantFunctions.send_hiring_req_to_accountant(
           company._id,
@@ -95,22 +97,13 @@ router.post("/", async (req, res) => {
       }
       console.log("User created successfully");
     } else if (req.body.account_type == "accountant") {
-      /*const newAccountant = new Accountant({
-          type: req.body.account_type,
-          firstName: req.body.firstName,
-          lastName: req.body.lastName,
-          password: hashedPassword,
-          email: req.body.email,
-          afm: req.body.afm,
-          mydatakey: req.body.mydatakey,
-          clients:[]
-        });*/
+      console.log("accountant sign in");
       const newAccountant = new Accountant({
         type: req.body.account_type,
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: hashedPassword,
-        email: req.body.email,
+        email: email,
         afm: req.body.afm,
         mydatakey: req.body.mydatakeyS,
       });
@@ -124,7 +117,7 @@ router.post("/", async (req, res) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         password: hashedPassword,
-        email: req.body.email,
+        email: email,
       });
       // Save the new user to the database
       await newUser.save();
