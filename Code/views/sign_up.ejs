@@ -15,63 +15,93 @@
 
   </head>
 <body>
-  <div id="sign_in_container">
-    <h1>Εγγραφή</h1>
-    <button id ="user_btn">Χρήστης</button>
-    <button id ="accountant_btn">Λογιστής</button>
+  <div class="glass_container asap-condensed-regular">
+    <h1>Sign Up</h1>
+    <div class="button_group_1 columns_two">
+      <button class="selected" id ="user_btn">User</button>
+      <button id ="accountant_btn">Accountant</button>
+    </div>
+    
     <form class="display_block" action="/sign-up" method="POST" >
       <!--User-->
-      <h2 id="h2">Χρήστης</h2>
-      <input type="text" id="account_type" name="account_type" value="user" required>
-      <label for="firstName">Όνομα</label>
-      <input type="text" name="firstName" id="firstName" placeholder="Όνομα" required>
-      <label for="lastName">Επίθετο</label>
-      <input type="text" name="lastName" id="lastName" placeholder="Επίθετο" required>
-      <label for="email">Email</label>
-      <input type="email" name="email" id="email" placeholder="email" required>
-      <label for="password">Κωδικός</label>
-      <input type="password" id="password" name="password" placeholder="Κωδικός" required>
-      <label for="password_confirm">Επιβεβαίωση Κωδικού</label>
-      <input type="password" id="password_confirm" name="password_confirm" placeholder="Κωδικός" required>
+      <h2 id="h2"></h2>
+      <input class="input_type_1" type="text" id="account_type" name="account_type" value="user" required style="display: none;">
+      <div class="input_container">
+        <input class="input_type_1" type="text" name="firstName" id="firstName" placeholder=" " required>
+        <label for="firstName">First Name</label>
+      </div>
+      <div class="input_container">
+        <input class="input_type_1" type="text" name="lastName" id="lastName" placeholder=" " required>
+        <label for="lastName">Last Name</label>
+      </div>
+      <div class="input_container">
+        <input class="input_type_1" type="email" name="email" id="email" placeholder=" " required>
+        <label for="email">Email</label>
+      </div>
+      <div class="input_container">
+        <input class="input_type_1" type="password" name="password" id="password" placeholder=" " required>
+        <label for="password">Password</label>
+    </div>
+    <div class="input_container">
+      <input class="input_type_1" type="password" id="password_confirm" name="password_confirm" placeholder=" " required>
+        <label for="confirmPassword">Confirm Password</label>
+    </div>
+
       <div class="checkbox_conatainer">
         <input type="checkbox" id="showpasswordcheckbox">
-        <label for="showpasswordcheckbox">Εμφάνηση Κωδικού</label>
+        <label for="showpasswordcheckbox">Show Password</label>
       </div>
+      <br>
       <span id="admin_hide">
-        <label for="afm">Α.Φ.Μ.</label>
-        <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ.">
-  
-        <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
-        <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData (προαιρετικό)">
+        
+        <div class="input_container">
+          <input class="input_type_1" type="text"id="afm" name="afm" placeholder=" ">
+          <label for="afm">Α.Φ.Μ.</label>
+        </div>
+        
+        <div class="input_container">
+        <input class="input_type_1" type="text" name="mydatakey" id="mydatakey" placeholder=" ">
+        <label for="mydatakey"> MyData Key (optional)</label>
+        </div>
         <span id="accountant_hide">
-          <span style="display: flex;">
-            <button type="button" id="newCompanybtn">Νέα Εταιρία</button>
-            <button type="button" id="existingCompanybtn">Υπάρχουσα Εταιρία</button>
+
+          <br>
+          <div class="button_group_1 columns_two">
+            <button class="selected" type="button" id="newCompanybtn">New Company</button>
+            <button type="button" id="existingCompanybtn">Existing Company</button>
             <input id="companyNewExisting" name="companyNewExisting" value="-1" style="display: none;">
-          </span>
-          <label for="companyName" id="companyName_label" style="display: none;">'Ονομα εταιρείας:</label>
-          <input type="text" name="companyName" id="companyName" style="display: none;">
-          <span id="newCompany" style="display: none;">
-            <label for="companyLogo">Λογότυπο εταιρείας :</label>
-            <input type="text" name="companyLogo" id="companyLogo">
-          </span>
-          <span id="existingCompany" style="display: none;">
-            <label for="companyRegisterCode">Κωδικός Εταιρείας:</label>
-            <input type="text" name="companyRegisterCode" id="companyRegisterCode">
-          </span>
+          </div>
+          <div class="tab_1">
+            <div class="input_container">
+              <input class="input_type_1" type="text" name="companyName" id="companyName" style="display: none;" placeholder=" ">
+              <label for="companyName" id="companyName_label" style="display: none;">Company Name:</label>
+            </div>
+            <span id="newCompany">
+              <div class="input_container">
+                <input class="input_type_1" type="text" name="companyLogo" id="companyLogo" placeholder=" ">
+                <label for="companyLogo">Logo :</label>
+              </div>
+            </span>
+            <span id="existingCompany">
+              <div class="input_container">
+                <input class="input_type_1" type="text" name="companyRegisterCode" id="companyRegisterCode" placeholder=" ">
+                <label for="companyRegisterCode">Company Code:</label>
+              </div>
+            </span>
+          </div>
   
-          <div class="checkbox_conatainer">
+          <div class="checkbox_conatainer" id="self_accountant_check_box_container">
             <input type="checkbox" id="self_accountant_check_box">
-            <label for="self_accountant_check_box">Αυτοδιαχείριση Λογιστικών :</label>
+            <label for="self_accountant_check_box">Selfmanagign Accounting :</label>
             <input style="display: none;" type="text" name="self_accountant" id="self_accountant" value="false">
           </div>
         </span>
       </span>
-      <button style="display: none;" id="submit_btn" type="submit">Εγγραφή</button>
+      <button style="display: none;" id="submit_btn" type="submit">Sign up</button>
     </form>
 
-    <button id="sign_up_btn">Εγγραφή</button>
-  <button id="log_in_btn">Σύνδεση</button>
+    <button class="btn_type_1" id="sign_up_btn">Sign up</button>
+  <button class="btn_type_2" id="log_in_btn">Log in</button>
   </div>
   
   
@@ -89,10 +119,14 @@
       $("#companyName").prop("required", false);
       $("#user_btn").hide();
       $("#accountant_btn").hide();
-      $("#h2").text("Διαχειριστής");
+      $("#h2").text("Admin");
+
       $("#account_type").val("admin");
       
       $("#admin_hide").hide();
+    } else {
+      $("#user_btn").show();
+      $("#accountant_btn").show();
     }
 
     $("#log_in_btn").click(function(){
@@ -104,14 +138,16 @@
     }
 
     $("#user_btn").click(function(){
-      $("#h2").text("Χρήστης");
       $("#account_type").val("user");
       $("#accountant_hide").show();
+      $("#user_btn").addClass("selected");
+      $("#accountant_btn").removeClass("selected");
     });
     $("#accountant_btn").click(function(){
-      $("#h2").text("Λογιστής");
       $("#account_type").val("accountant");
       $("#accountant_hide").hide();
+      $("#user_btn").removeClass("selected");
+      $("#accountant_btn").addClass("selected");
     });
     $("#showpasswordcheckbox").click(function(){
       const passwordInput = $("#password");
@@ -130,18 +166,23 @@
       $('#companyName_label').css('display', 'block');
       $('#newCompany').css('display', 'block');
       $('#existingCompany').css('display', 'none');
-      $('#newCompanybtn').css('font-weight', 'bold');
-      $('#existingCompanybtn').css('font-weight', 'normal');
+      $('#newCompanybtn').addClass('selected');
+      $('#existingCompanybtn').removeClass('selected');
       $('#companyNewExisting').val("0");
+      $('#self_accountant_check_box_container').css('display', 'flex');
+
+      
     });
     $("#existingCompanybtn").click(function() {
       $('#companyName').css('display', 'block');
       $('#companyName_label').css('display', 'block');
       $('#newCompany').css('display', 'none');
       $('#existingCompany').css('display', 'block');
-      $('#newCompanybtn').css('font-weight', 'normal');
-      $('#existingCompanybtn').css('font-weight', 'bold');
+      $('#newCompanybtn').removeClass('selected');
+      $('#existingCompanybtn').addClass('selected');
       $('#companyNewExisting').val("1");
+      
+      $('#self_accountant_check_box_container').css('display', 'none');
       if($("#self_accountant_check_box").prop("checked")){
         $("#self_accountant_check_box").click();
       }

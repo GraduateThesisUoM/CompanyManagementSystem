@@ -1,62 +1,16 @@
 body{
-    background-color: red;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0;
-    padding: 0;
     height: 100vh;
 
     background: rgb(20,74,187);
     background: linear-gradient(45deg, rgba(20,74,187,1) 9%, rgba(46,45,45,1) 76%);
 }
-#log_in_container{
-    background-color: gray;
-    width: 30%;
-    aspect-ratio: 1/1;
-    border-radius: 50px;
-    padding: 40px;
 
-    /*Class*/
-    /* From https://css.glass */
-    background: rgba(95, 95, 95, 0.65);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(8.8px);
-    -webkit-backdrop-filter: blur(8.8px);
-}
-
-#log_in_container h1 {
-    text-align: center;
-    font-size: 7em;
-    font-weight: 500;
-    margin: 10px;
-    background: linear-gradient(45deg, rgba(20,74,187,1) 9%, rgba(46,45,45,1) 76%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent; /* Ensures the text is transparent */
-    background-clip: text; /* Fallback for other browsers */
-}
-
-#log_in_btn{
-    width: 100%;
-}
-button{
-    border: none;
-}
 label{
     font-size: 1.5em;
     color: rgb(185, 185, 185);
-}
-input[type="text"], input[type="password"]{
-    width: 100%;
-    height: 40px;
-    border-radius: 15px;
-    padding: 5px;
-    margin: 5px 0;
-    text-indent: 5px;
-    font-size: 1.5em;
-    border: none;
-    color: rgb(200, 198, 198);
-    background-color: rgba(0, 0, 0, 0.5);
 }
 
 input :focus{
@@ -69,44 +23,3 @@ input :focus{
     color: rgb(25, 25, 25);
 }
 
-#log_in_btn{
-    background-color: rgb(20,74,187);
-    border-radius: 20px;
-    font-size: 2em;
-    box-shadow: -2px 5px 7px rgba(0, 0, 0, 0.5);
-    padding: 5px 0px;
-    width: 80%;
-    margin-left: 10%;
-    margin-top: 15px;
-}
-
-#sign_up_btn{
-    background-color: transparent;
-    border: none;
-    width: 100%;
-    font-size: 2em;
-    margin-top: 10px;
-    transition: color 0.3s ease;
-    color: rgb(51, 54, 60);
-    margin-top: 15px;
-
-}
-
-
-#sign_up_btn:hover {
-    color: rgb(20,74,187);
-    border: 2px solid rgb(20,74,187);
-    border-radius: 10px;
-    text-shadow: 0 0 5px rgb(0, 0, 0);
-}
-
-#forgot_passsword_btn{
-    width: 100%;
-    background-color: transparent;
-    border: none;
-    margin-top: 10px;
-}
-
-#forgot_passsword_btn:hover{
-    font-weight: bold;
-}
