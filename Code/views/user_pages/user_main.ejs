@@ -1,46 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>U Main Page</title>
-        <!--ajax-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <!--CSS-->
-        <link rel="stylesheet" href="general_css.css">
-        <%- include('../partials/header'); %>
-    </head>
-    <body>
-        <div class="has_sidebar">
-            <%- include('../partials/sidebar'); %>
-            <div>
-                <h1>User main page</h1>
-                <h2>Welcome Username</h2>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>U Main Page</title>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css" />
+    <link rel="stylesheet" href="fonts_css.css">
 
-                <button id='my_accountant'>Ο Λογιστής Μου</button>
-                <button id='my_company'>Οι Εταιρία Μου</button>
-            </div>
-        </div>
-    </body>
-    <script>
-        $(document).ready(function(){
-            $("#my_accountant").click(function(){
-                if('<%= user.companyOwner %>' == '0'){
-                    alert("You do not have an accountant elevated rights to hire an accountant");
-                }
-                
-                else{
-                    window.location ="my-accountant"
-                }
-            });
-            $("#my_company").click(function(){
-                window.location ="my-company"
-            });
+    <!--Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
 
-            if('<%= user.companyOwner %>' == '0'){
-                $("#my_company").hide();
-            }
-        });
-      </script>
+    <%- include('../partials/header'); %>
+  </head>
+  <body>
+    <div class="has_sidebar asap-condensed-regular">
+      <%- include('../partials/sidebar'); %>
+      <div>
+        <h1>User main page</h1>
+        <h2>Welcome Username</h2>
 
+        <button id="my_accountant">Ο Λογιστής Μου</button>
+        <button id="my_company">Οι Εταιρία Μου</button>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(document).ready(function () {
+      $("#my_accountant").click(function () {
+        if ("<%= user.companyOwner %>" == "0") {
+          alert("You do not have an accountant elevated rights to hire an accountant");
+        } else {
+          window.location = "my-accountant";
+        }
+      });
+      $("#my_company").click(function () {
+        window.location = "my-company";
+      });
+
+      if ("<%= user.companyOwner %>" == "0") {
+        $("#my_company").hide();
+      }
+    });
+  </script>
 </html>

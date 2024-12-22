@@ -47,33 +47,47 @@
 }
 
 table{
-    /* From https://css.glass */
-    background: rgba(95, 95, 95, 0.65);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-    backdrop-filter: blur(8.8px);
-    -webkit-backdrop-filter: blur(8.8px);
-    border-radius: 20px;
     border-collapse: collapse;
     width: 95%;
-    
     border:none;
+}
+
+
+thead{
+    height: 50px;
 }
 
 th,
 td {
     border-collapse: collapse;
     text-align: center;
+    padding: 8px; /* Adds padding to table headers and table cells */
 }
+
+
+th {
+    transition: transform 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+table tr {
+    transition: transform 0.3s ease-in-out; /* Ensures smooth transition when mouse leaves */
+}
+
+table tr:hover {
+    transform: scale(1.02);
+}
+
 
 #table_container {
     width: 100%;
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 #td_button_container {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto;
     gap: 10px;
 }
 
@@ -121,4 +135,8 @@ background-color: rgba(255, 0, 0, 0.33);
 #td_button_container>div>.btn1 {
     background-color: rgb(110, 152, 231);
     color: white;
+}
+
+.glass_efect_2:hover{
+    background: rgba(255, 255, 255, 0.70);
 }

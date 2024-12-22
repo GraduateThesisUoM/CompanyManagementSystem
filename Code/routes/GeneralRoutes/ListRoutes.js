@@ -242,16 +242,20 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 router.post("/", Authentication.checkAuthenticated, async (req, res) => {
   
   try {
-    console.log(req.body.list_id);
-    console.log(req.body.list_action);
-
-    if(req.body.list_action == 2 || req.body.list_action == 0){
-      await generalFunctions.delete_deactivate({ _id: req.body.list_id }, req.query.searchfor, req.body.list_action);
-    }
     var has_type = ``;
     if(req.query.type){
       has_type = `&type=${req.query.type}`;
     }
+    
+    if(req.body.list_action == 2 || req.body.list_action == 0 || req.body.list_action == 1){
+      await generalFunctions.delete_deactivate({ _id: req.body.list_id }, req.query.searchfor, req.body.list_action);
+    }
+    if(req.body.list_action == 'filter'){
+      console.log("filter");
+      console.log(req.body.list_filters_input);
+      return res.redirect(`/list?searchfor=${req.query.searchfor}`+has_type+"&filter="+req.body.list_filters_input);
+    }
+    
 
     return res.redirect(`/list?searchfor=${req.query.searchfor}`+has_type);
 

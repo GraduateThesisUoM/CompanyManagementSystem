@@ -44,3 +44,7 @@
 - email : democms90@gmail.com
 - password : 45hey0demo@
 - key : wsznjxzusyjzjtbv
+
+
+# Shortcuts
+ shft - tab to go to the first of menus 

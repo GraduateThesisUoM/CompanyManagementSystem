@@ -1,158 +1,157 @@
 <div id="sidebar_div" class="asap-condensed-regular">
+  <div>
     <div>
-        <div>
-            <button class="main_side_menubtn user sidebar_btn" onclick="window.location='/'" >
-                <img src="https://img.icons8.com/glyph-neue/64/FFFFFF/home--v1.png" alt="home"/>
-                Home
-            </button>
-            <% if(user.type == 'admin') { %>
-                <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=companys'">
-                    <img src="https://img.icons8.com/ios-filled/100/FFFFFF/client-company.png" alt="client-company"/>
-                    Companys
-                </button>
-                <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=users'">
-                    <img src="https://img.icons8.com/external-basicons-solid-edtgraphics/50/FFFFFF/external-Users-users-basicons-solid-edtgraphics-4.png" alt="users"/>
-                    Users
-                </button>
-                <button class="main_side_menubtn" onclick="location.href = '/report-list-page'">
-                    <img src="https://img.icons8.com/wired/64/FFFFFF/siren.png" alt="reports"/>
-                    Reports
-                </button>
-                <button class="main_side_menubtn" onclick="location.href = '/database'">
-                    <img src="https://img.icons8.com/ios-filled/50/FFFFFF/database.png" alt="reports"/>
-                    DataBase
-                </button>
-            <%}else if(user.type == 'accountant') { %>
-                <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=clients'">
-                    <img src="https://img.icons8.com/ios-filled/50/FFFFFF/client-management.png" alt="client-management"/>
-                    Clients
-                </button>
-            <% } else { %>
-                <button class="main_side_menubtn user sidebar_btn">
-                    <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying"/>
-                    Buying
-                </button>
-                <button class="main_side_menubtn user sidebar_btn">
-                    <img src="https://img.icons8.com/ios-filled/100/FFFFFF/cash-register.png" alt="sales"/>
-                    Sales
-                </button>
-                <button class="main_side_menubtn user sidebar_btn">
-                    <img src="https://img.icons8.com/pastel-glyph/64/FFFFFF/box--v1.png" alt="warehouse"/>
-                    Warehouse
-                </button>
-            <% } %>
-        </div>
-        <div id='column_two_menu_div' >
-            <div class="sub_side_menu_div" style="display: none;"></div>
-            <div class="sub_side_menu_div" style="display: none;">
-                <button onclick="location.href = 'list?searchfor=docs&type=2';">View Docs</button>
-                <!--button onclick="location.href = '/create-doc?type=2';">Create Docs</button-->
-                <button onclick="location.href = 'list?searchfor=series&type=2';">View Series</button>
-                <!--button onclick="location.href = '/create?create=series&type=2';">Create Series</button-->
-                <button onclick="location.href = 'list?searchfor=persons&type=2';">View Persons</button>
-                <!--button onclick="location.href = '/create?create=persons&type=2';">Create Person</button-->
-            </div>
-            <div class="sub_side_menu_div" style="display: none;">
-                <button onclick="location.href = 'list?searchfor=docs&type=1';">View Docs</button>
-                <!--button onclick="location.href = '/create-doc?type=1';">Create Docs</button-->
-                <button onclick="location.href = 'list?searchfor=series&type=1';">View Series</button>
-                <!--button onclick="location.href = '/create?create=series&type=1';">Create Series</button-->
-                <button onclick="location.href = 'list?searchfor=persons&type=1';">View Persons</button>
-                <!--button onclick="location.href = '/create?create=persons&type=1';">Create Person</button-->
-            </div>
-            <div class="sub_side_menu_div" style="display: none;">
-                <!--button onclick="location.href = '/create?create=Warehouse';">Create Warehouse</button-->
-                <button onclick="location.href = 'list?searchfor=Warehouse';">View Warehouses</button>
-                <!--button onclick="location.href = '/create?create=items&type=2';">Create Item Buy</button>
+      <button class="main_side_menubtn user sidebar_btn" onclick="window.location='/'">
+        <img src="https://img.icons8.com/glyph-neue/64/FFFFFF/home--v1.png" alt="home" />
+        Home
+      </button>
+      <% if(user.type == 'admin') { %>
+      <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=companys'">
+        <img src="https://img.icons8.com/ios-filled/100/FFFFFF/client-company.png" alt="client-company" />
+        Companys
+      </button>
+      <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=users'">
+        <img src="https://img.icons8.com/external-basicons-solid-edtgraphics/50/FFFFFF/external-Users-users-basicons-solid-edtgraphics-4.png" alt="users" />
+        Users
+      </button>
+      <button class="main_side_menubtn" onclick="location.href = '/report-list-page'">
+        <img src="https://img.icons8.com/wired/64/FFFFFF/siren.png" alt="reports" />
+        Reports
+      </button>
+      <button class="main_side_menubtn" onclick="location.href = '/database'">
+        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/database.png" alt="reports" />
+        DataBase
+      </button>
+      <%}else if(user.type == 'accountant') { %>
+      <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=clients'">
+        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/client-management.png" alt="client-management" />
+        Clients
+      </button>
+      <% } else { %>
+      <button class="main_side_menubtn user sidebar_btn">
+        <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying" />
+        Buying
+      </button>
+      <button class="main_side_menubtn user sidebar_btn">
+        <img src="https://img.icons8.com/ios-filled/100/FFFFFF/cash-register.png" alt="sales" />
+        Sales
+      </button>
+      <button class="main_side_menubtn user sidebar_btn">
+        <img src="https://img.icons8.com/pastel-glyph/64/FFFFFF/box--v1.png" alt="warehouse" />
+        Warehouse
+      </button>
+      <% } %>
+    </div>
+    <div id="column_two_menu_div">
+      <div class="sub_side_menu_div" style="display: none"></div>
+      <div class="sub_side_menu_div" style="display: none">
+        <button onclick="location.href = 'list?searchfor=docs&type=2';">View Docs</button>
+        <!--button onclick="location.href = '/create-doc?type=2';">Create Docs</button-->
+        <button onclick="location.href = 'list?searchfor=series&type=2';">View Series</button>
+        <!--button onclick="location.href = '/create?create=series&type=2';">Create Series</button-->
+        <button onclick="location.href = 'list?searchfor=persons&type=2';">View Persons</button>
+        <!--button onclick="location.href = '/create?create=persons&type=2';">Create Person</button-->
+      </div>
+      <div class="sub_side_menu_div" style="display: none">
+        <button onclick="location.href = 'list?searchfor=docs&type=1';">View Docs</button>
+        <!--button onclick="location.href = '/create-doc?type=1';">Create Docs</button-->
+        <button onclick="location.href = 'list?searchfor=series&type=1';">View Series</button>
+        <!--button onclick="location.href = '/create?create=series&type=1';">Create Series</button-->
+        <button onclick="location.href = 'list?searchfor=persons&type=1';">View Persons</button>
+        <!--button onclick="location.href = '/create?create=persons&type=1';">Create Person</button-->
+      </div>
+      <div class="sub_side_menu_div" style="display: none">
+        <!--button onclick="location.href = '/create?create=Warehouse';">Create Warehouse</button-->
+        <button onclick="location.href = 'list?searchfor=Warehouse';">View Warehouses</button>
+        <!--button onclick="location.href = '/create?create=items&type=2';">Create Item Buy</button>
                 <button onclick="location.href = '/create?create=items&type=1';">Create Item Shell</button-->
-                <button onclick="location.href = 'list?searchfor=items&type=2';">View Items Buy</button>
-                <button onclick="location.href = 'list?searchfor=items&type=1';">View Items Shell</button>
-            </div>
-        </div>
+        <button onclick="location.href = 'list?searchfor=items&type=2';">View Items Buy</button>
+        <button onclick="location.href = 'list?searchfor=items&type=1';">View Items Shell</button>
+      </div>
     </div>
-    <div>
-        <button id="back_btn" class="main_side_menubtn">
-            <img src="https://img.icons8.com/sf-black/64/FFFFFF/back.png" alt="back"/>
-        </button>
-    </div>
+  </div>
+  <div>
+    <button id="back_btn" class="main_side_menubtn">
+      <img src="https://img.icons8.com/sf-black/64/FFFFFF/back.png" alt="back" />
+    </button>
+  </div>
 </div>
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 <script>
-    $(document).ready(function() {
-        /*$(".sub_side_menu_div").hide();*/
+  $(document).ready(function () {
+    /*$(".sub_side_menu_div").hide();*/
 
-        $(".main_side_menubtn.user").click(function() {
-            var index = $(".main_side_menubtn.user").index(this);
-            var down = index
+    $(".main_side_menubtn.user").click(function () {
+      var index = $(".main_side_menubtn.user").index(this);
+      var down = index;
 
-            if(index ==0){
-                return
-            }
+      if (index == 0) {
+        return;
+      }
 
-            $('.sub_side_menu_div').css('display', 'none');
-            $('.sub_side_menu_div').eq(index).css('display', 'block');
+      $(".sub_side_menu_div").css("display", "none");
+      $(".sub_side_menu_div").eq(index).css("display", "block");
 
-                let top = 45 + index*85
-                $("#column_two_menu_div").css("top", top+"px");
-            if (!$(this).hasClass('clicked')) {
-                /*$('.sub_side_menu_div').css('visibility', 'hidden');*/
-                $('.sub_side_menu_div').css('display', 'none');
+      let top = 45 + index * 85;
+      $("#column_two_menu_div").css("top", top + "px");
+      if (!$(this).hasClass("clicked")) {
+        /*$('.sub_side_menu_div').css('visibility', 'hidden');*/
+        $(".sub_side_menu_div").css("display", "none");
 
-                
-                $('.main_side_menubtn').removeClass('clicked');
+        $(".main_side_menubtn").removeClass("clicked");
 
-                $(this).addClass('clicked');
-                
-                var index = $('.main_side_menubtn').index($(this));
-                $('.sub_side_menu_div').eq(index).css('display', 'block');
-            }
-            else{
-                $('.sub_side_menu_div').css('display', 'none');
-                
-                $('.main_side_menubtn').removeClass('clicked');
-            }
-        });
-        $("#back_btn").click(function(){
-            try {
-                let previousLink = document.referrer;
+        $(this).addClass("clicked");
 
-                // Check if the referrer exists
-                if (previousLink) {
-                    // Create a new URL object from the previous link
-                    const url = new URL(previousLink);
-                    
-                    // Extract the pathname (e.g., /list)
-                    const previousPath = url.pathname;
+        var index = $(".main_side_menubtn").index($(this));
+        $(".sub_side_menu_div").eq(index).css("display", "block");
+      } else {
+        $(".sub_side_menu_div").css("display", "none");
 
-                    // Extract the search parameters (query string)
-                    const params = url.search; // This will include '?' at the start
-
-                    // Combine pathname and parameters if you want to navigate to the full path with parameters
-                    const newLocation = `${previousPath}${params}`;
-
-                    // Redirect to the combined pathname and parameters
-                    window.location = newLocation;
-                } else {
-                    // If no referrer, navigate back
-                    window.history.back();
-                }
-            } catch (e) {
-                console.log(e);
-                window.history.back();
-            }
-
-        });
-
-        $(document).keydown(function(event) {
-            if (event.key === "Escape") {
-                $('.sub_side_menu_div').css('display', 'none');
-                $('.main_side_menubtn').removeClass('clicked');
-            }
-            if (event.key === "Tab") {
-                event.preventDefault();
-                $('.main_side_menubtn').first().focus();
-            }
-        });
+        $(".main_side_menubtn").removeClass("clicked");
+      }
     });
+    $("#back_btn").click(function () {
+      try {
+        let previousLink = document.referrer;
+
+        // Check if the referrer exists
+        if (previousLink) {
+          // Create a new URL object from the previous link
+          const url = new URL(previousLink);
+
+          // Extract the pathname (e.g., /list)
+          const previousPath = url.pathname;
+
+          // Extract the search parameters (query string)
+          const params = url.search; // This will include '?' at the start
+
+          // Combine pathname and parameters if you want to navigate to the full path with parameters
+          const newLocation = `${previousPath}${params}`;
+
+          // Redirect to the combined pathname and parameters
+          window.location = newLocation;
+        } else {
+          // If no referrer, navigate back
+          window.history.back();
+        }
+      } catch (e) {
+        console.log(e);
+        window.history.back();
+      }
+    });
+
+    $(document).keydown(function (event) {
+      if (event.key === "Escape") {
+        $(".sub_side_menu_div").css("display", "none");
+        $(".main_side_menubtn").removeClass("clicked");
+      }
+      if (event.shiftKey) {
+        if (event.key === "Tab") {
+          event.preventDefault();
+          $(".main_side_menubtn").first().focus();
+        }
+      }
+    });
+  });
 </script>
