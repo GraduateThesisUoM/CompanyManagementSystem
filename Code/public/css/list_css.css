@@ -56,7 +56,10 @@ table{
 thead{
     height: 50px;
 }
-
+thead th{
+    color: rgb(197, 197, 197);
+    text-shadow: 0 0 5px black; 
+}
 th,
 td {
     border-collapse: collapse;

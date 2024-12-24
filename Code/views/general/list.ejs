@@ -30,7 +30,9 @@
                         <h1 id="list_header"></h1>
                         <div> Status<br>
                             <input class="filter" id="filter_active" type="checkbox"> Active <input class="filter" id="filter_non_active" type="checkbox"> Non Active </div>
-                        <div> From date <input type="date">  To date <input type="date"></div>
+                        <div> From date <input type="date" id="list_from_date">  To date <input type="date" id="list_to_date"></div>
+                        <button class="btn_type_4" onclick="location.reload();">Clear</button>
+
                     </div>
                     <div id="list_filters_right">
                         <div id="tottal_num">Tottal Number of&nbsp;<span id="span_number_of">companys</span> : <span id="list_count"><%=list_items.length%></span>
@@ -183,7 +185,12 @@
 
             $("#go_to_create").click(function () {
                 
-                var destination = '/create?create='+params.get('searchfor')+'&type='+params.get('type')
+                var destination = '/create?create='+params.get('searchfor')
+
+
+                if(params.get('type')){
+                    destination = destination +'&type='+params.get('type')
+                }
                 
                 if(params.get('searchfor')==='docs'){
                     destination = '/create-doc?type='+params.get('type')
@@ -198,22 +205,56 @@
                 }
             }*/
 
-           $(".filter").change(function(event){
-            $("#list_action").val('filter');
-            if($("#filter_active").prop('checked') && $("#filter_non_active").prop('checked')){
-                $("#list_filters_input").val(1);//all
+            function applyFilters() {
+    const isActiveChecked = $("#filter_active").prop('checked');
+    const isNonActiveChecked = $("#filter_non_active").prop('checked');
+    const fromDate = $('#list_from_date').val();
+    const toDate = $('#list_to_date').val();
+
+    $(".glass_efect_2").each(function(index) {
+        if (index > 0) { // Skip the first element (index 0)
+            const statusCell = $(this).find(".status");
+            const statusText = statusCell.text().trim();
+            const regDateCell = $(this).find(".reg_date");
+            const regDateText = regDateCell.text().trim();
+
+            let showRow = true;
+
+            // Status filter
+            if (isActiveChecked && statusText !== "Active" && !isNonActiveChecked) {
+                showRow = false;
             }
-            else if($("#filter_active").prop('checked')){
-                $("#list_filters_input").val(2);//active
+            if (isNonActiveChecked && statusText !== "Disabled" && !isActiveChecked) {
+                showRow = false;
             }
-            else if($("#filter_non_active").prop('checked')){
-                $("#list_filters_input").val(3);//non_active
+
+            // Date range filter
+            if (fromDate && regDateText < fromDate) {
+                showRow = false;
             }
-            else{
-                $("#list_filters_input").val(0);
+            if (toDate && regDateText > toDate) {
+                showRow = false;
             }
-            $("#list_form").submit();
-            });
+
+            // Show or hide the row
+            if (showRow) {
+                $(this).show();
+            } else {
+                $(this).hide();
+            }
+        }
+    });
+}
+
+// Attach the combined filter logic to all relevant events
+$(".filter, #list_from_date, #list_to_date").change(function() {
+    applyFilters();
+});
+
+
+
+
+
 
             function button_action(element, act){
                 var message = "this will block this obj"

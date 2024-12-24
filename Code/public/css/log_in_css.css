@@ -3,9 +3,6 @@ body{
     align-items: center;
     justify-content: center;
     height: 100vh;
-
-    background: rgb(20,74,187);
-    background: linear-gradient(45deg, rgba(20,74,187,1) 9%, rgba(46,45,45,1) 76%);
 }
 
 label{
@@ -23,3 +20,7 @@ input :focus{
     color: rgb(25, 25, 25);
 }
 
+
+#log_in_container{
+    box-shadow: -5px 5px 15px 0px black; 
+}

@@ -19,16 +19,10 @@
     <body>
         <div class="has_sidebar">
             <%- include('../partials/sidebar'); %>
-            <div>
+            <div class="glass_efect_1">
                 <h1>Create</h1>
-                <div id="create_menu">
-                    <button class = "create_menu_btn" id="Warehouse">Αποθήκη</button>
-                    <button class = "create_menu_btn" id="items">Είδος</button>
-                    <button class = "create_menu_btn" id="series">Σειρά</button>
-                    <button class = "create_menu_btn" id="person">Άτομο</button>
-                </div>
                 <form action="/create" method="POST" id="create_form">
-                    <input type="text" id="create_type"  name="create_type">
+                    <input type="text" id="create_type"  name="create_type" style="display: none;">
                     <div id = 'Warehouse_div' class="create_div">
                         <label for="warehouse_title">Title : </label>
                         <input type="text" id="warehouse_title" name="warehouse_title" class="required warehouse">
@@ -97,7 +91,6 @@
             </div>
         </div>
     </body>
-    <%- include('../partials/footer'); %>
     <script>
     $(document).ready(function(){
         const queryString = new URL(window.location.href).search;
@@ -117,28 +110,23 @@
                 window.location ="/";
             }
         });
-        $(".create_menu_btn").click(function(){
-            var type = $(this).attr("id");
-            $("#create_type").val(type);
-            $(".create_div").hide();
-            $("#"+type+"_div").show();
-            $("#my_submit_btn").show();
-
-            $(".required").attr('required', false);
-            $(".required." + type).attr('required', true);
-            
-
-            $(".create_menu_btn").removeClass("selected");
-    
-            $(this).addClass("selected");
-            
-        });
+        
         $("#my_submit_btn").click(my_submit);
         
         if (window.location.search) {
             if(params.get('create')){
                 
-                $("#"+params.get('create')).click();
+                $("#create_type").val(params.get('create'));
+                $(".create_div").hide();
+                $("#"+params.get('create')+"_div").show();
+                $("#my_submit_btn").show();
+
+                $(".required").attr('required', false);
+                $(".required." + params.get('create')).attr('required', true);
+                
+
+                $(".create_menu_btn").removeClass("selected");
+
                 if(params.get('create') != 'Warehouse'){
                     if(params.get('type')){
                         $("#obj_type").val(params.get('type'));

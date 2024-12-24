@@ -8,6 +8,7 @@ body{
 
 button{
     cursor: pointer;
+    border: none;
 }
 .display_block * {
     display: block;
@@ -198,6 +199,13 @@ button{
     width: 80%;
     margin-left: 10%;
     margin-top: 15px;
+    transition: 0.3 s;
+
+}
+
+.btn_type_1:hover {
+    transform: scale(1.1);
+    transition: transform 0.3s ease-in-out;
 }
 
 .btn_type_2{
@@ -231,6 +239,28 @@ button{
 .btn_type_3:hover{
     font-weight: bold;
 }
+
+.btn_type_4{
+    background-color: rgb(11, 135, 193);
+    border: none;
+    border-radius: 10px;
+    font-size: 1em;
+    margin-top: 10px;
+    padding: 5px 20px;
+    transition: color 0.3s ease;
+    color: rgb(51, 54, 60);
+    margin-top: 15px;
+    transition: ease-in-out 0.3s;
+
+}
+.btn_type_4:hover{
+    box-shadow: -2px 5px 7px rgba(0, 0, 0, 0.5);
+    transition: ease-in-out 0.3s;
+    transform: scale(1.1);
+    font-weight: bold;
+}
+
+
 
 .glass_container{
     background-color: gray;

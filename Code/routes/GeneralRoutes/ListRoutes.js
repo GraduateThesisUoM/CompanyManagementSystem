@@ -149,7 +149,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           //"Type",
           "Count",
           "Sealed",
-          "Reg Date",
+          "Reg_Date",
           "Status",
         ];
       } else if (req.query.searchfor == "persons") {
@@ -273,7 +273,8 @@ const formatDate = (dateString) => {
   const year = date.getFullYear();
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
+  //return `${day}/${month}/${year} ${hours}:${minutes}`;
+  return `${year}-${month}-${day}`;
 };
 
 const total_price = (price, discount, tax) => {
