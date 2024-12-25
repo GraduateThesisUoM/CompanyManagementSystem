@@ -302,13 +302,12 @@ border: 1px solid rgba(121, 121, 121, 0.3);
 
 .glass_efect_2{
     /* From https://css.glass */
-background: rgba(255, 255, 255, 0.50);
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(3.9px);
--webkit-backdrop-filter: blur(3.9px);
-border: none;
+    background: rgba(255, 255, 255, 0.50);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.9px);
+    -webkit-backdrop-filter: blur(3.9px);
+    border: none;
 }
-
 
 
 .input_type_1{
@@ -322,6 +321,33 @@ border: none;
     border: none;
     color: rgb(200, 198, 198);
     background-color: rgba(0, 0, 0, 0.5);
+}
+
+.input_type_2{
+    all: unset;
+    width: 100%;
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px 0;
+    text-indent: 5px;
+    border: none;
+    color: rgb(200, 198, 198);
+    background-color: rgba(0, 0, 0, 0.5);
+    transition: all 0.4s ease-in-out;
+}
+.input_type_2:focus{
+    box-shadow: -4px 5px 7px rgba(0, 0, 0, 0.8);
+    transition: all 0.4s ease-in-out;
+
+}
+.input_type_2:hover{
+    box-shadow: -4px 5px 7px rgba(0, 0, 0, 0.8);
+    transition: all 0.4s ease-in-out;
+
+}
+
+.box_shadow_1{
+    box-shadow: -4px 5px 7px rgba(0, 0, 0, 0.8);
 }
 
 .button_group_1{

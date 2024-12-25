@@ -8,19 +8,22 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="create_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+
         <!--Header-->
         <%- include('../partials/header'); %>
     </head>
-    <style>
-        .selected{
-            background-color: red;
-        }
-    </style>
     <body>
-        <div class="has_sidebar">
+        <div class="has_sidebar ">
             <%- include('../partials/sidebar'); %>
-            <div class="glass_efect_1">
-                <h1>Create</h1>
+            <div class="glass_efect_2 conatainer asap-condensed-regular">
+                <h1 class="asap-condensed-extralight">Create</h1>
                 <form action="/create" method="POST" id="create_form">
                     <input type="text" id="create_type"  name="create_type" style="display: none;">
                     <div id = 'Warehouse_div' class="create_div">
@@ -57,11 +60,15 @@
                         <label for="items_tax_w">Tax for Wholesale : </label>
                         <input type="number" id="items_tax_w" name="items_tax_w" min="0" value="0" max = "100" class="required items">
                     </div>
-                    <div id ='series_div' class="create_div">
-                        <label for="series_title">Title : </label>
-                        <input type="text" id="series_title" name="series_title"  class="required series">
+                    <div id ='series_div' class="create_div font_size_1">
+                        <div>
+                            <label for="series_title">Title : </label>
+                            <input type="text" id="series_title" name="series_title"  class="required series input_type_2 font_size_1">
+                        </div>
+                       <div>
                         <label for="series_acronym">Acronym : </label>
-                        <input type="text" id="series_acronym" name="series_acronym"  class="required series">
+                        <input type="text" id="series_acronym" name="series_acronym"  class="required series input_type_2 font_size_1">
+                       </div>
                         <div>Loked : <input type="checkbox" name="series_sealed"></div>
                         <div>Effects Warehouse : <input type="checkbox" name="effects_warehouse"></div>
                         <div>Credit : <input type="checkbox" name="credit"></div>
@@ -84,7 +91,7 @@
                         <label for="person_vat">VAT : </label>
                         <input type="number" id="person_vat" name="person_vat"  class="person">
                     </div>
-                    <input type="number" id="obj_type" name="obj_type">
+                    <input type="number" id="obj_type" name="obj_type" style="display: none;">
                     <button id="submit_btn" style="display: none;" type="submit">Καταχώρfηση</button>
                 </form>
                 <button id="my_submit_btn" type="button">Καταχώρηση</button>
