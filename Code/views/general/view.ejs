@@ -11,15 +11,21 @@
     <link rel="stylesheet" href="view_css.css" />
     <link rel="stylesheet" href="my_company_css.css" />
     <link rel="stylesheet" href="time_table_css.css" />
+    <link rel="stylesheet" href="list_css.css" />
+    <link rel="stylesheet" href="fonts_css.css">
+    <!--Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <!--Header-->
     <%- include('../partials/header'); %>
   </head>
 
   <body>
-    <div class="has_sidebar">
+    <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
       <div>
-        <form action="/view" method="POST" id="view_form">
+        <form action="/view" method="POST" id="view_form" class="glass_efect_2">
           <% if (isParamsEmpty) { %>
           <div>ERROR: No elements selected</div>
           <% } else { %> <% titles.forEach(function(title, index) { %>
@@ -41,13 +47,13 @@
             <br />
 
             <div>
-              Discount :
-              <input id="general_discount" class="general_discount" name="general_discount" type="number" value="0" min="0" max="100" required />
+              Discount :<br>
+              <input id="general_discount" class="general_discount input_type_2 my_width" name="general_discount" type="number" value="0" min="0" max="100" required />
               %
             </div>
             <div>
-              Discount Amount:
-              <input id="general_discount_amount" class="general_discount" name="general_discount_amount" type="number" value="0" min="0" required />
+              Discount Amount:<br>
+              <input id="general_discount_amount" class="general_discount input_type_2 my_width" name="general_discount_amount" type="number" value="0" min="0" required />
               €
             </div>
 
@@ -55,19 +61,20 @@
             <br />
 
             <input id="num_of_rows" name="num_of_rows" style="display: none" />
-            <table id="doc_table">
+            <table id="doc_table" class="box_shadow_1">
               <thead>
                 <tr>
-                  <th>A/A</th>
-                  <th>Title</th>
-                  <th>Qty</th>
-                  <th>Tax</th>
-                  <th>Discount</th>
-                  <th>Discount %</th>
-                  <th>U/P</th>
-                  <th>Value</th>
-                  <th>Price After Discount</th>
-                  <th>Final Price</th>
+                  <th class="view_column">A/A</th>
+                  <th class="view_column">Title</th>
+                  <th class="view_column">Qty</th>
+                  <th class="view_column">Tax</th>
+                  <th class="view_column">Discount</th>
+                  <th class="view_column">Discount %</th>
+                  <th class="view_column">U/P</th>
+                  <th class="view_column">Value</th>
+                  <th class="view_column">Price After Discount</th>
+                  <th class="view_column">Final Price</th>
+                  <th class="view_column"></th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -76,10 +83,12 @@
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
             <% }else if(type[index] == 4){ %> <%= title%> <input type="checkbox" id="<%= title %>" disabled <% if (data[index] == 1) {%> checked <%} %>> <% }else if(type[index] == 5){ %> <%= title %>
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
-            <input type="checkbox" id="<%= title %>_checkbox_<%= index %>" <% if (data[index] == 1) { %> checked <% } %> onclick="document.getElementById('<%= title %>').value = this.checked ? '1' : '0';"> <% }else if(type[index] == 6){ %> <%= title %>
-            <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" type="number" />
-            <% }else if(type[index] == 7){ %> <%= title %>
-            <input name="input<%= index %>" id="wholesale_retail" value="<%= data[index] %>" readonly />
+            <input type="checkbox" id="<%= title %>_checkbox_<%= index %>" <% if (data[index] == 1) { %> checked <% } %> onclick="document.getElementById('<%= title %>').value = this.checked ? '1' : '0';">
+            <% }else if(type[index] == 6){ %>
+              <%= title %><br>
+              <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" type="number" class="input_type_2 my_width"/>
+            <% }else if(type[index] == 7){ %>
+              <%= data[index] == 1 ? 'Retail' : 'Wholesale' %><input name="input<%= index %>" id="wholesale_retail" value="<%= data[index] %>" style="display: none;" />
             <% }else if(type[index] == 8){ %>
             <table>
               <thead>
@@ -130,12 +139,14 @@
                 <%});%>
                 <input type="text" id="series_transforms_list" name="series_transforms_list">
               </div>
+            <% }else if(type[index] == 13){ %>
+            <%= title %> : <%= data[index] %>
             <% }else{ %> <%= title %>
-            <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" />
+            <input name="input<%= index %>" id="<%= title %>" class="input_type_2" value="<%= data[index] %>" />
             <% }%>
           </div>
           <% }); %> <% } %>
-          <input type="text" name="action" id="action" style="display: inline" />
+          <input type="text" name="action" id="action" style="display: none" />
           <div id="day_data">
             <div>
               <div id="day_data_users">
@@ -173,11 +184,12 @@
               <button id="delete_event" type="button">Delete</button>
             </div>
           </div>
+          <button class="asap-condensed-regular" id="btn3">Save</button>
+
         </form>
-        <div id="message_div">Record has been deleted</div>
-        <button id="btn1">Delete</button>
-        <button id="btn2"></button>
-        <button id="btn3">Save</button>
+        <!--div id="message_div">Record has been deleted</div-->
+        <button class="asap-condensed-regular delete_btn" id="btn1">Delete</button>
+        <button class="asap-condensed-regular" id="btn2"></button>
         <div id="clients">
           <button>ΦΠΑ</button>
           <button id="time_table_btn">Time Table</button>
@@ -354,6 +366,7 @@
 
         var selected_items = JSON.parse(`<%- JSON.stringify(data) %>`)[8];
         var items = JSON.parse(`<%- JSON.stringify(data) %>`)[9];
+        console.log(items)
 
         addNewRow(0, items);
 
@@ -396,7 +409,15 @@
           } else {
             addNewRow(parseInt(i) + 1, items);
           }
+          $(".doc_line_select:eq(" + i + ") option:first-child").remove();
         }
+
+        $(".doc_line_select").change(function () {
+          if ($(this).val() != "-") {
+            $(this).find("option:first-child").remove();
+          }
+        });
+
 
         function keepOnlySelectedOption(selectId) {
           // Get the select element by its ID
@@ -548,6 +569,11 @@
           } else {
             removeRow(index, false);
           }
+        });
+
+        $("#btn3").click(function () {
+          $("#action").val("save");
+          $("#view_form").submit();
         });
       }
       else if (queryParams.type == "nodes") {

@@ -1,1 +1,19 @@
-[]
+[
+  {
+    "_id": "676dbe9ce30ad9f8099b5b44",
+    "company": "6744cd138aa03131f1a8251c",
+    "title": "si1",
+    "description": "sale item 1",
+    "type": 1,
+    "status": 1,
+    "unit_of_measurement": "pcs",
+    "price_r": 100,
+    "price_w": 100,
+    "tax_r": 0,
+    "tax_w": 0,
+    "discount_r": 0,
+    "discount_w": 0,
+    "registrationDate": "2024-12-26T20:37:48.924Z",
+    "__v": 0
+  }
+]
