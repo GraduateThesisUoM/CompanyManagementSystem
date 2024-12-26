@@ -110,7 +110,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         transforms_to : req.body.series_transforms_list
       };
       created_obj = await generalFunctions.createSeries(data);
-    } else if (req.body.create_type == "person") {
+    } else if (req.body.create_type == "persons") {
       data = {
         type: req.body.obj_type,
         firstName: req.body.person_firstName,
@@ -120,6 +120,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         phone: req.body.person_phone,
         company: company,
       };
+      console.log('dddd')
       created_obj = await generalFunctions.create_person(data);
     }
     else{

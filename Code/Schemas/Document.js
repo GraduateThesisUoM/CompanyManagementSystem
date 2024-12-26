@@ -29,7 +29,8 @@ const DocumentSchema = new mongoose.Schema({
     //2 deleted
     default: 1
   },
-  registrationDate: { type: Date, default: Date.now }
+  registrationDate: { type: Date, default: Date.now },
+  next:{ type: String,required: true, default:"-"}
 });
 
 // Export the invoice schema

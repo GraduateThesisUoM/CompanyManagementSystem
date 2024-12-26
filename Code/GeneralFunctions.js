@@ -387,8 +387,10 @@ async function create_doc(data) {
       retail_wholesale:data.retail_wholesale,
       warehouse : data.warehouse,
       generalDiscount: data.generalDiscount,
-      invoiceData: data.invoiceData,
+      invoiceData: data.invoiceData
     });
+
+    if(data.next) newDocument.next = data.next;
 
     // Save the document to the database
     await newDocument.save();
@@ -1006,6 +1008,16 @@ async function clear_db(){
   await drop_collection("Review");
 }
 
+async function get_persons_moves(data){
+  var docs = await Document({
+    company:data.company,
+    sender:data.sender,
+    status:1//active
+  });
+
+  return docs;
+}
+
 module.exports = {
   checkAccessRigts,
   createWarehouse,
@@ -1030,5 +1042,6 @@ module.exports = {
   item_get_inventory,
   importExport,
   clear_db,
-  get_accountant_node
+  get_accountant_node,
+  get_persons_moves
 };

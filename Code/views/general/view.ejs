@@ -27,6 +27,7 @@
             <%if(type[index] == 0){%> <%= title %>
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" readonly />
             <% }else if(type[index] == 2){ %>
+            <button id="turn_to_btn">Turn To</button>
             <div>Total Value : <span id="doc_total_value">0.00</span> €</div>
             <div>Total Discounts : <span id="doc_total_disc">0.00</span> €</div>
             <div>
@@ -281,11 +282,15 @@
             </div>
           </div>
         </div>
+        <div id="secondary_data" style="display: none;">f</div>
+
       </div>
     </div>
   </body>
   <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
   <script type="text/javascript" src="JSCalendarFunctions.js"></script>
+  <script type="text/javascript" src="JSDocumentFunctions.js"></script>
+
 
   <script>
     $(document).ready(function () {
@@ -518,6 +523,11 @@
             }
           }
         }
+
+        /*$("#turn_to_btn").click(function () {
+          $("#action").val("turn_to");
+          $("#view_form").submit();
+        });*/
 
         $(document).on("change", ".doc_line_select", function () {
           var index = $(this).closest("tr").index();
@@ -898,6 +908,13 @@
         $('#series_transforms_list').val(checkedIds.join(','));
       });
 
+      $("#turn_to_btn").click(function () {
+          secondary_data();
+        });
+
+      function secondary_data(){
+        alert('secondary_data');
+      }
     });
   </script>
 </html>

@@ -54,7 +54,14 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           if (type == "docs") {
             obj = await Document.findOne({ _id: id });
             var series = await Series.findOne({ _id: obj.series });
+            var series_to = await Series.find({ company: company, status: 1, type: obj.type, _id: { $in: series.transforms_to } });
             var person = await Person.findOne({ _id: obj.receiver });
+            
+            series_to = series_to.map(s => ({
+              name: s.name,
+              acronym: s.acronym,
+              _id: s._id
+            }));
 
             var warehouse = { title: "-" };
             if (obj.warehouse !== "0") {
@@ -88,6 +95,11 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data.type = [0, 0, 0, 6, 3, 7, 4, 1, 2]; //1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox,6 input type number
             //7 for docs wholesale_retail
             //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
+
+            secondery_data = {
+              series_to :series_to
+            }
+
           } else if (type == "Warehouse") {
             obj = await Warehouse.findOne({ _id: id });
             var inventory = await generalFunctions.warehose_get_inventory({
@@ -380,7 +392,30 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
           status: action,
         });
         return res.redirect(`/view?type=${req.query.type}&id=${new_node.id}`);
-      } else {
+      
+      }
+      else if(req.body.action == "turn_to"){
+        console.log("turn_to "+req.query.id);
+        const origin_doc = await Document.findOne({ _id: req.query.id });
+        const new_doc = await generalFunctions.create_doc({
+          company: origin_doc.company,
+          sender: origin_doc.sender,
+          receiver: origin_doc.receiver,
+          type: origin_doc.type,
+          generalDiscount: origin_doc.generalDiscount,
+          series: origin_doc.series,
+          doc_num: origin_doc.doc_num,
+          retail_wholesale: origin_doc.retail_wholesale,
+          warehouse: origin_doc.warehouse,
+          sealed: origin_doc.sealed,
+          invoiceData: origin_doc.invoiceData,
+        });
+
+        origin_doc.next = new_doc._id;
+        await origin_doc.save();
+        
+      }
+      else {
         await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);
       }
 
