@@ -17,3 +17,14 @@
 .create_div{
     display: block;
 }
+
+.submit_btn{
+    margin-top: 20px;
+    padding: 10px;
+    border-radius: 15px;
+    background-color: rgb(66, 63, 63);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}

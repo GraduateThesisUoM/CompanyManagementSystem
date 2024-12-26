@@ -66,8 +66,8 @@
                             <input type="text" id="series_title" name="series_title"  class="required series input_type_2 font_size_1">
                         </div>
                        <div>
-                        <label for="series_acronym">Acronym : </label>
-                        <input type="text" id="series_acronym" name="series_acronym"  class="required series input_type_2 font_size_1">
+                            <label for="series_acronym">Acronym : </label>
+                            <input type="text" id="series_acronym" name="series_acronym"  class="required series input_type_2 font_size_1">
                        </div>
                         <div>Loked : <input type="checkbox" name="series_sealed"></div>
                         <div>Effects Warehouse : <input type="checkbox" name="effects_warehouse"></div>
@@ -94,7 +94,7 @@
                     <input type="number" id="obj_type" name="obj_type" style="display: none;">
                     <button id="submit_btn" style="display: none;" type="submit">Καταχώρfηση</button>
                 </form>
-                <button id="my_submit_btn" type="button">Καταχώρηση</button>
+                <button id="my_submit_btn" class="submit_btn" type="button">Submit</button>
             </div>
         </div>
     </body>
@@ -109,14 +109,6 @@
         $(".create_div").hide();
         $("#my_submit_btn").hide();
         
-        $("#back_btn").click(function(){
-            if("<%= user.type %>" == "admin"){
-                window.location ="/client-profile?id=<%= companyId %>";
-            }
-            else{
-                window.location ="/";
-            }
-        });
         
         $("#my_submit_btn").click(my_submit);
         
