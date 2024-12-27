@@ -14,10 +14,10 @@
     <!--CSS-->
     <link rel="stylesheet" href="general_css.css" />
     <link rel="stylesheet" href="accountant_main_css.css" />
+    <link rel="stylesheet" href="list_css.css" />
+
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <%- include('../partials/header'); %>
-  </head>
   <body>
     <div class="has_sidebar">
       <%- include('../partials/sidebar'); %>
@@ -29,14 +29,13 @@
           <h2>Pending Requests</h2>
           <% if(pending_nodes_list.length > 0){%>
             <table>
-              <thead>
+              <thead class="glass_efect_1">
                 <tr>
                   <th class="">Type</th>
                   <th class="">Title</th>
                   <th class="">Registration Date</th>
                   <th class="">Due Date</th>
                   <th class="">Company</th>
-                  <th class=""></th>
                 </tr>
               </thead>
               <tbody>
@@ -44,15 +43,13 @@
                   if (row.status === 3){%>
                     <tr style="background-color: lime">
                   <%}else{%>
-                    <tr>
+                    <tr class="glass_efect_2">
                   <%}%>
                     <td><%=row.type%></td>
                     <td><%=row.title%></td>
                     <td><%=row.reg_date%></td>
                     <td><%=row.due_date%></td>
                     <td><%=row.company%></td>
-                    <td><button onclick="window.location.href = 'view?type=nodes&id=<%= row.id %>'">
-                      View</button></td>
                   </tr>
                 <% }); %>
               </tbody>
@@ -66,26 +63,23 @@
           <h2>Executed Requests</h2>
           <% if(executed_nodes_list.length > 0){%>
             <table>
-              <thead>
+              <thead class="glass_efect_1">
                 <tr>
                   <th class="">Type</th>
                   <th class="">Title</th>
                   <th class="">Registration Date</th>
                   <th class="">Due Date</th>
                   <th class="">Company</th>
-                  <th class=""></th>
                 </tr>
               </thead>
               <tbody>
                 <% executed_nodes_list.forEach(function(row, index) {%>
-                  <tr>
+                  <tr class="glass_efect_2" id="<%= row.id %>">
                     <td><%=row.type%></td>
                     <td><%=row.title%></td>
                     <td><%=row.reg_date%></td>
                     <td><%=row.due_date%></td>
                     <td><%=row.company%></td>
-                    <td><button           onclick="window.location.href = 'view?type=nodes&id=<%= row.id %>'">
-                      View</button></td>
                   </tr>
                 <% }); %>
               </tbody>
@@ -99,26 +93,23 @@
           <h2>Rejected Requests</h2>
           <% if(rejected_nodes_list.length > 0){%>
             <table>
-              <thead>
+              <thead class="glass_efect_1">
                 <tr>
                   <th class="">Type</th>
                   <th class="">Title</th>
                   <th class="">Registration Date</th>
                   <th class="">Due Date</th>
                   <th class="">Company</th>
-                  <th class=""></th>
                 </tr>
               </thead>
               <tbody>
                 <% rejected_nodes_list.forEach(function(row, index) {%>
-                  <tr>
+                  <tr class="glass_efect_2">
                     <td><%=row.type%></td>
                     <td><%=row.title%></td>
                     <td><%=row.reg_date%></td>
                     <td><%=row.due_date%></td>
                     <td><%=row.company%></td>
-                    <td><button           onclick="window.location.href = 'view?type=nodes&id=<%= row.id %>'">
-                      View</button></td>
                   </tr>
                 <% }); %>
               </tbody>
@@ -131,8 +122,11 @@
       </div>
     </div>
   </body>
-  <%- include('../partials/footer'); %>
   <script>
-
+    $(function() {
+        $(".glass_efect_2").click(function(){
+            window.location = "view?type=nodes&id="+$(this).attr('id');
+        });
+    });
   </script>
 </html>

@@ -81,7 +81,9 @@
             </table>
             <% }else if(type[index] == 3){ %>
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
-            <% }else if(type[index] == 4){ %> <%= title%> <input type="checkbox" id="<%= title %>" disabled <% if (data[index] == 1) {%> checked <%} %>> <% }else if(type[index] == 5){ %> <%= title %>
+            <% }else if(type[index] == 4){ %> <%= title%>
+              <input type="checkbox" id="<%= title %>" onclick="return false;" <%= data[index] == 1 ? 'checked' : '' %> />
+            <% }else if(type[index] == 5){ %> <%= title %>
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
             <input type="checkbox" id="<%= title %>_checkbox_<%= index %>" <% if (data[index] == 1) { %> checked <% } %> onclick="document.getElementById('<%= title %>').value = this.checked ? '1' : '0';">
             <% }else if(type[index] == 6){ %>
@@ -141,6 +143,8 @@
               </div>
             <% }else if(type[index] == 13){ %>
             <%= title %> : <%= data[index] %>
+            <% }else if(type[index] == 14){ %>
+              <%= title %> : <select id="select_warehose" name="select_warehose"></select>
             <% }else{ %> <%= title %>
             <input name="input<%= index %>" id="<%= title %>" class="input_type_2" value="<%= data[index] %>" />
             <% }%>
@@ -198,15 +202,16 @@
               <button class="calendar_date_reage_btn" id="tt_day">Day</button>
               <button class="calendar_date_reage_btn" id="tt_week">Week</button>
               <button class="calendar_date_reage_btn" id="tt_month">Month</button>
-              <input id="day_picker" type="date" onchange="day_picker" />
+              <input id="day_picker" type="date"/>
               <select id="user_select">
                 <option value="all">All</option>
               </select>
             </div>
-            <div id="calendar_div">
-              <div>
-                <div id="selected_month"></div>
+            <div id="calendar_div" class="asap-condensed-regular glass_efect_1">
+              <div id="calendar_header">
                 <div id="selected_year"></div>
+                <div id="selected_month"></div>
+                
               </div>
 
               <div id="day" class="day now day_date"></div>
@@ -310,7 +315,7 @@
       var calendar_spectrum = "-";
       var clients_users = [];
 
-      const secondery_data = JSON.parse(`<%- JSON.stringify(secondery_data) %>`);
+      const secondary_data = JSON.parse(`<%- JSON.stringify(secondary_data) %>`);
 
       $("#clients").hide();
       $("#message_div").hide();
@@ -364,9 +369,21 @@
       if (queryParams.type == "docs") {
         $("#btn2").hide();
 
+        if (secondary_data.warehouse._id == "-") {
+          $("#select_warehose").append(`<option value="-">-</option>`);
+        }
+        for (w of secondary_data.warehouses) {
+          $("#select_warehose").append(`<option value="${w._id}">${w.title}</option>`);
+        }
+        if (secondary_data.warehouse._id != "-") {
+          $("#select_warehose").val(secondary_data.warehouse._id);
+        }
+
+
         var selected_items = JSON.parse(`<%- JSON.stringify(data) %>`)[8];
         var items = JSON.parse(`<%- JSON.stringify(data) %>`)[9];
         console.log(items)
+        console.log("-----------")
 
         addNewRow(0, items);
 
@@ -409,6 +426,7 @@
           } else {
             addNewRow(parseInt(i) + 1, items);
           }
+         
           $(".doc_line_select:eq(" + i + ") option:first-child").remove();
         }
 
@@ -421,19 +439,24 @@
 
         function keepOnlySelectedOption(selectId) {
           // Get the select element by its ID
-          const selectElement = document.getElementById(selectId);
+          
 
-          // Check if the select element exists
+          const selectElement = $("#"+selectId);
+          const lastChar = selectId.slice(-1);
+          const parent = $(".item_column");
+          parent.get(parseInt(lastChar)).append(selectElement.find("option:selected").text());
+            selectElement.hide()
+           
+          /*// Check if the select element exists
           if (selectElement) {
-            // Get the selected option
-            const selectedOption = selectElement.options[selectElement.selectedIndex];
+            const selectedValue = selectElement.val(); // Get the value of the selected option
+            const selectedText = selectElement.find("option:selected").text(); // Get the text of the selected option
 
-            // Clear all options
-            selectElement.innerHTML = "";
+            selectElement.empty(); // Remove all options
 
             // Add back only the selected option
-            selectElement.appendChild(selectedOption.cloneNode(true));
-          }
+            selectElement.append("<option value='1'>" + selectedText + "</option>");
+          }*/
         }
 
         $(document).on("input", ".general_discount", function () {
@@ -600,7 +623,7 @@
         });
       }
       else if (queryParams.type == "clients") {
-        clients_users = secondery_data.users;
+        clients_users = secondary_data.users;
 
         for (client of clients_users) {
           $("#user_select").append(`<option value="${client._id}">${client.firstName} ${client.lastName}</option>`);
@@ -638,7 +661,7 @@
       }
 
       if (queryParams.type == "series") {
-        for( s of secondery_data.selected_series){
+        for( s of secondary_data.selected_series){
           $("#" + s).prop("checked", true);
           $('#series_transforms_list').val($('#series_transforms_list').val()+','+s)
         }
@@ -727,7 +750,7 @@
 
       $("#time_table_submit_btn").click(function (event) {
         event.preventDefault();
-        let c_e_o = check_event_overlap($("#day_data_input_user_id").val(), $("#day_data_input_date").val(), $("#time_table_hours_start").val(), $("#time_table_minutes_start").val(), $("#time_table_hours_end").val(), $("#time_table_minutes_end").val(), secondery_data.nodes);
+        let c_e_o = check_event_overlap($("#day_data_input_user_id").val(), $("#day_data_input_date").val(), $("#time_table_hours_start").val(), $("#time_table_minutes_start").val(), $("#time_table_hours_end").val(), $("#time_table_minutes_end").val(), secondary_data.nodes);
         $("#action").val("time_table");
         if (c_e_o == 0 && $('#day_data_input_node_id').val()=='') {
           if(confirm("This time overlaps with enother event")){
@@ -778,32 +801,46 @@
         days.each(function (index, element) {
           cal_days.push(parseInt($(element).text()));
         });
-        for (n of secondery_data.nodes) {
+        for (n of secondary_data.nodes) {
           if (selected_year == new Date(n.data.date).getFullYear()) {
-            if (selected_month == new Date(n.data.date).getMonth() + 1) {
-              if (cal_days.includes(new Date(n.data.date).getDate())) {
-                const index = cal_days.findIndex((day) => day === new Date(n.data.date).getDate());
-                // Get the events container div inside the selected day element
-                var eventsContainer = $(days[index]).find(".events_container");
-                if (selected_user == n.user._id || selected_user == "all") {
-                  var day_div = "<div class='day_line' id='" + n._id + "'>" + "<div class=event_id style='display:none'>" + n.user._id + "</div>" + "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" + "<div> From " + n.data.hour_start + " : " + n.data.minutes_start + "</div>" + "<div> To " + n.data.hour_end + " : " + n.data.minutes_end + "</div>";
-                  if(n.text){
-                    day_div = day_div + "<div> Notes : <br>" + n.text + "</div>";
-                  }
-                  
-                  day_div = day_div + "</div>"
+        if (selected_month == new Date(n.data.date).getMonth() + 1) {
+          if (cal_days.includes(new Date(n.data.date).getDate())) {
+            const index = cal_days.findIndex((day) => day === new Date(n.data.date).getDate());
+            // Get the events container div inside the selected day element
+            var eventsContainer = $(days[index]).find(".events_container");
+            if (selected_user == n.user._id || selected_user == "all") {
+          var day_div = "<div class='day_line' id='" + n._id + "'>" + "<div class=event_id style='display:none'>" + n.user._id + "</div>" + "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" + "<div> From " + n.data.hour_start + " : " + n.data.minutes_start + "</div>" + "<div> To " + n.data.hour_end + " : " + n.data.minutes_end + "</div>";
+          if(n.text){
+            day_div = day_div + "<div> Notes : <br>" + n.text + "</div>";
+          }
+          
+          day_div = day_div + "</div>"
 
-                  eventsContainer.append(day_div);
-                }
-              }
+          eventsContainer.append(day_div);
             }
           }
         }
+          }
+        }
+        // Add class 'today' if date matches today
+        var today = new Date();
+        days.each(function (index, element) {
+          var day = parseInt($(element).text());
+          var month = parseInt(selected_month);
+          var year = parseInt(selected_year);
+          if (day === today.getDate() && month === (today.getMonth() + 1) && year === today.getFullYear()) {
+        $(element).addClass("today");
+          }
+        });
       }
+
+      $("#day_picker").change(function () {
+        pick_date();
+      });
 
       $(".day_line").click(function (event) {
         $("#day_data_users").hide();
-        view_edit_event($(this).attr("id"), secondery_data.nodes);
+        view_edit_event($(this).attr("id"), secondary_data.nodes);
       });
 
       $("#time_table_hours_end").on("blur", function () {
@@ -886,7 +923,7 @@
         let day = $(this).attr("id").replace("add_event_for_", "").padStart(2, "0");
         let date = `${year}-${month}-${day}`;
 
-        new_event($(this).attr("id"), secondery_data.nodes, date, user_id);
+        new_event($(this).attr("id"), secondary_data.nodes, date, user_id);
       });
 
       function check_event_overlap(id, date, s_hour, s_min, e_hour, e_min, nodes) {
@@ -935,10 +972,24 @@
       });
 
       $("#turn_to_btn").click(function () {
-          secondary_data();
+        secondary_data_f();
         });
 
-      function secondary_data(){
+      $(".day.now").click(function(event){
+        let user_id = $("#user_select").val();
+        $("#day_data_users").show();
+
+
+        // Generate the date string
+        let year = $("#selected_year").text();
+        let month = $("#selected_month").text().padStart(2, "0");
+        let day = $(this).attr("id").replace("add_event_for_", "").padStart(2, "0");
+        let date = `${year}-${month}-${day}`;
+
+        new_event($(this).attr("id"), secondary_data.nodes, date, user_id);
+      })
+
+      function secondary_data_f(){
         alert('secondary_data');
       }
     });

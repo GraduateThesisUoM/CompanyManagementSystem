@@ -145,7 +145,7 @@ function addNewRow(index,items) {
     $('#num_of_rows').val(index);
     var newRow = `<tr id='row${index}'>
                         <td>${index + 1}</td>
-                        <td id='item_column'>
+                        <td class='item_column'>
                             <select id="doc_line_item_${index}" name="doc_line_item_${index}" class="doc_line_select"></select>
                         </td>
                         <td class = 'column'>

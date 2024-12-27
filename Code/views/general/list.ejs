@@ -198,58 +198,52 @@
                 window.location = destination;
             });
 
-            /*function print_doc() {
-                var doc_id = $(this).data('id')
-                if(confirm('After this point editing will not be possible, you want to continue')){
-                    window.location = "/list?searchfor=" + searchfor + "&type=" + type + "&printdoc=" + doc_id;
-                }
-            }*/
 
             function applyFilters() {
-    const isActiveChecked = $("#filter_active").prop('checked');
-    const isNonActiveChecked = $("#filter_non_active").prop('checked');
-    const fromDate = $('#list_from_date').val();
-    const toDate = $('#list_to_date').val();
+                const isActiveChecked = $("#filter_active").prop('checked');
+                const isNonActiveChecked = $("#filter_non_active").prop('checked');
+                const fromDate = $('#list_from_date').val();
+                const toDate = $('#list_to_date').val();
 
-    $(".glass_efect_2").each(function(index) {
-        if (index > 0) { // Skip the first element (index 0)
-            const statusCell = $(this).find(".status");
-            const statusText = statusCell.text().trim();
-            const regDateCell = $(this).find(".reg_date");
-            const regDateText = regDateCell.text().trim();
+                $(".glass_efect_2").each(function(index) {
+                    if (index > 0) { // Skip the first element (index 0)
+                        const statusCell = $(this).find(".status");
+                        const statusText = statusCell.text().trim();
+                        const regDateCell = $(this).find(".reg_date");
+                        const regDateText = regDateCell.text().trim();
 
-            let showRow = true;
+                        let showRow = true;
 
-            // Status filter
-            if (isActiveChecked && statusText !== "Active" && !isNonActiveChecked) {
-                showRow = false;
+                        // Status filter
+                        if (isActiveChecked && statusText !== "Active" && !isNonActiveChecked) {
+                            showRow = false;
+                        }
+                        if (isNonActiveChecked && statusText !== "Disabled" && !isActiveChecked) {
+                            showRow = false;
+                        }
+
+                        // Date range filter
+                        if (fromDate && regDateText < fromDate) {
+                            showRow = false;
+                        }
+                        if (toDate && regDateText > toDate) {
+                            showRow = false;
+                        }
+
+                        // Show or hide the row
+                        if (showRow) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    }
+                });
             }
-            if (isNonActiveChecked && statusText !== "Disabled" && !isActiveChecked) {
-                showRow = false;
-            }
 
-            // Date range filter
-            if (fromDate && regDateText < fromDate) {
-                showRow = false;
-            }
-            if (toDate && regDateText > toDate) {
-                showRow = false;
-            }
-
-            // Show or hide the row
-            if (showRow) {
-                $(this).show();
-            } else {
-                $(this).hide();
-            }
-        }
-    });
-}
-
-// Attach the combined filter logic to all relevant events
-$(".filter, #list_from_date, #list_to_date").change(function() {
-    applyFilters();
-});
+            // Attach the combined filter logic to all relevant events
+            $(".filter, #list_from_date, #list_to_date").change(function() {
+                applyFilters();
+            });
 
 
 
@@ -291,7 +285,7 @@ $(".filter, #list_from_date, #list_to_date").change(function() {
                 $(".glass_efect_2").click(function(){
                     var index = $(this).index();
                     var id = $(this).find('td').eq(0).text();
-                    window.location = "/view?type="+searchfor+"&id="+$(this).data('id');
+                    window.location = "/view?type="+searchfor+"&id="+$(this).data('id')+"&type2="+type;
                 });
             });
 

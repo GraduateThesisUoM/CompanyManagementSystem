@@ -121,6 +121,13 @@
             newLocation = newLocation + "&type="+current_url.searchParams.get("type");
           }
         }
+        else if(current_url.pathname == "/view"){
+          newLocation = "/list?searchfor="+current_url.searchParams.get("type");
+          if(current_url.searchParams.get("id")){
+            newLocation = newLocation + "&type="+current_url.searchParams.get("type2");
+          }
+          alert('view')
+        }
         else{
           let previousLink = document.referrer;
 

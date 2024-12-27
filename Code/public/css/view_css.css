@@ -58,7 +58,7 @@ tbody tr td div input{
     padding: 5px;
 }
 
-tbody tr td div input:focus{
+tbody tr td div input:focus:not([readonly]) {
     background-color: rgba(53, 53, 53, 0.651);
 }
 

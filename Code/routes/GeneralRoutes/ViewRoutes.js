@@ -29,7 +29,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
     if (access.response) {
       var company;
       var obj;
-      var secondery_data = {};
+      var secondary_data = {};
 
       if (req.user.type != "admin") {
         company = req.user.company;
@@ -63,7 +63,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               _id: s._id
             }));
 
-            var warehouse = { title: "-" };
+            var warehouse = { _id: "-" };
             if (obj.warehouse !== "0") {
               warehouse = await Warehouse.findOne({ _id: obj.warehouse });
             }
@@ -85,19 +85,21 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               obj.status,
               obj.retail_wholesale,
               obj.sealed,
-              warehouse.title,
+              warehouse._id,
               obj.invoiceData,
               //---
               await Item.find({ company: company, status: 1, type: obj.type }),
             ];
             data.titles = ["Doc", "Reg Date", person_type, "General Discount %", "Status", "Type", "Sealed", "Warehouse", "Data"];
 
-            data.type = [13, 13, 13, 6, 3, 7, 4, 1, 2]; //1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox,6 input type number
-            //7 for docs wholesale_retail
+            data.type = [13, 13, 13, 6, 3, 7, 4, 14, 2]; //1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox,6 input type number
+            //7 for docs wholesale_retail 14 select warehose
             //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
 
-            secondery_data = {
-              series_to :series_to
+            secondary_data = {
+              series_to :series_to,
+              warehouses : await Warehouse.find({ company: company, status: 1 }),
+              warehouse : warehouse
             }
 
           } else if (type == "Warehouse") {
@@ -118,7 +120,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data.titles = ["Title", "Acronym", "Type", "Count", "Sealed", "Effects Warehouse", "Credit", "Debit", "Reg Date", "Status","Transforms","Series"];
             data.type = [1, 1, 1, 1, 5, 5, 5, 5, 0, 0,5,12];
 
-            secondery_data = {
+            secondary_data = {
               selected_series :obj.transforms_to
             }
             //1=normal-text,0=text-readonly, 5 checkbox,12 series
@@ -214,7 +216,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               })
             );
 
-            secondery_data = {
+            secondary_data = {
               nodes: nodes,
               users: await Client.find({ company: id, status: 1 }),
             };
@@ -229,7 +231,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       /*else{
                 console.log(data.data)
             }*/
-      data.secondery_data = secondery_data;
+      data.secondary_data = secondary_data;
       res.render(path_constants.pages.view.view(), data);
     } else {
       res.redirect("/error?error=" + access.error);
@@ -275,6 +277,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 
           obj_data = {
             generalDiscount: 50,
+            warehouse: req.body.select_warehose,
             invoiceData: lines_of_doc,
           };
         }

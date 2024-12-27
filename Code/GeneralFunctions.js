@@ -572,6 +572,7 @@ async function update(id, schema , data){
 
     if (schema == 'documents') {
       obj.generalDiscount = data.generalDiscount; 
+      obj.warehouse = data.warehouse
       obj.invoiceData = data.invoiceData;
     }
     else if(schema == 'nodes') {
@@ -590,8 +591,16 @@ async function update(id, schema , data){
 
         obj.active = data["input8"];
         obj.transforms = data["input9"];
-        obj.transforms_to = data["series_transforms_list"].split(',');
+        console.log(data["series_transforms_list"])
+        if(data["series_transforms_list"] != ""){
+          obj.transforms_to = data["series_transforms_list"].split(',')
+        }
+        else{
+          obj.transforms_to = []
+        }
       }
+
+    console.log(obj);
       
     await obj.save();
   } catch (e) {

@@ -36,18 +36,7 @@ button{
     height: 10vh;
     padding: 0px 5% ;
 }
-#footer{
-    margin-top: auto;
-    position: fixed;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    background-color: green;
-    color: white;
-    text-align: center;
-    z-index: 1;
-    height: 10vh;
-}
+
 
 #footer_text{
     padding: 15px;

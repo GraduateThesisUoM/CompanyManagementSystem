@@ -65,6 +65,10 @@ function formatDate(date) {
 
 
 function put_dates(calendar_spectrum,date_selected){
+    for( d of $(".day")){
+        d.innerHTML = '';
+    }
+
     var dates = $("."+calendar_spectrum+"_date");
 
     $(".day").removeClass('old');
@@ -82,6 +86,13 @@ function put_dates(calendar_spectrum,date_selected){
         start = 1;
         startOffset = getMonthStartOffset(date_selected)
         end = days_of_month + startOffset;
+
+        if(startOffset > 4){
+            $(".week").eq(6).hide()
+        }
+        else{
+            $(".week").eq(6).show()
+        }
     }
     var text = '';
     for(let i=0;i<end;i++){
@@ -96,10 +107,11 @@ function put_dates(calendar_spectrum,date_selected){
         }
         else{
             //text=start;
-            text = "<div>"+start+"</div>";
+            text = "<div class='day_num'>"+start+"</div>";
             $(dates.get(i)).append(text);
             $(dates.get(i)).addClass('now');
-            $(dates.get(i)).append("<button id='add_event_for_"+start+"' class='add_event'>+</button>");
+            $(dates.get(i)).attr('id', 'add_event_for_' + start);
+            //$(dates.get(i)).append("<button id='add_event_for_"+start+"' class='add_event'>+</button>");
             $(dates.get(i)).append("<div class='events_container'></div>");
         }
         
