@@ -1,7 +1,8 @@
 const folders ={
   css: "./public/css",
   img: "./public/imgs",
-  js: "./public/js"
+  js: "./public/js",
+  svg: "./public/svg"
 };
 
 const schemas = {

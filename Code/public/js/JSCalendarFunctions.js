@@ -1,4 +1,9 @@
-function new_event(id,nodes,selected_date,user_id){    
+function new_event(id,nodes,selected_date,user_id){   
+    $("#day_data_users div").each((_, element) => {
+        const checkbox = $(element).find("input[type='checkbox']");
+        $(element).show();
+        checkbox.show();
+    });
 
     $("#day_data").show();
     $("#day_data_input_user_id").val(user_id);
@@ -15,12 +20,15 @@ function new_event(id,nodes,selected_date,user_id){
     return 1;
 }
 
-function view_edit_event(id, nodes) {
+function view_edit_event(id, nodes,users) {
     // Show the event edit/view container
     $("#day_data").show();
 
+    const dummys = $('.dummy');
+
     // Find the node with the matching ID
     let node = nodes.find(node => node._id === id);
+    let user = users.find(user => user._id === node.receiver_id);
 
     if (node) {       
         // Populate the inputs with the node's data
@@ -29,14 +37,35 @@ function view_edit_event(id, nodes) {
 
         let selectedDate = formatDate(new Date(node.data.date));
         $("#day_data_input_date").val(selectedDate);
+        dummys.eq(0).val(selectedDate);
+
+        dummys.eq(1).hide();
+
+        $("#day_data_users div").each((_, element) => {
+            const checkbox = $(element).find("input[type='checkbox']");
+            if (checkbox.val() === node.user._id) {
+                $(element).show();
+                checkbox.hide();
+            } else {
+                $(element).hide();
+            }
+        });
 
         $("#time_table_hours_start").val(String(node.data.hour_start).padStart(2, "0"));
         $("#time_table_minutes_start").val(String(node.data.minutes_start).padStart(2, "0"));
+        dummys.eq(2).val(String(node.data.hour_start).padStart(2, "0"));
+        dummys.eq(3).val(String(node.data.minutes_start).padStart(2, "0"));
 
         $("#time_table_hours_end").val(String(node.data.hour_end).padStart(2, "0"));
         $("#time_table_minutes_end").val(String(node.data.minutes_end).padStart(2, "0"));
+        dummys.eq(4).val(String(node.data.hour_end).padStart(2, "0"));
+        dummys.eq(5).val(String(node.data.minutes_end).padStart(2, "0"));
+
 
         $("#time_table_notes").val(node.text);
+        dummys.eq(6).val(node.text);
+
+        
 
     } else {
         // If no matching node is found, provide feedback

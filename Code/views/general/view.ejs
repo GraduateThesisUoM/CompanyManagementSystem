@@ -22,6 +22,7 @@
   </head>
 
   <body>
+    
     <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
       <div>
@@ -151,63 +152,53 @@
           </div>
           <% }); %> <% } %>
           <input type="text" name="action" id="action" style="display: none" />
-          <div id="day_data">
-            <div>
-              <div id="day_data_users">
-                <div>All <input class="all_selected_users" type="checkbox" value="all"></div>
-              </div>
-
-              <input name="day_data_input_user_id" id="day_data_input_user_id" />
-              <input name="day_data_input_node_id" id="day_data_input_node_id" />
-              <input name="calendar_view_selection" id="calendar_view_selection" />
-
-
-              <div id="day_data_div_client_name"></div>
-              <div>From : 
-              <input type="date" name="day_data_input_date" id="day_data_input_date" re/>
-              To : 
-              <input type="date" name="day_data_input_date_to" id="day_data_input_date_to" />
-
-            </div>
-              <div>
-                From
-                <input class="time_input" name="time_table_hours_start" id="time_table_hours_start" type="number" max="23" min="0"/>
-                :
-                <input class="time_input" name="time_table_minutes_start" id="time_table_minutes_start" type="number" max="59" min="0" />
-
-                To
-                <input class="time_input" name="time_table_hours_end" id="time_table_hours_end" type="number" max="23" min="0" />
-                :
-                <input class="time_input" name="time_table_minutes_end" id="time_table_minutes_end" type="number" max="59" min="0" />
-              </div>
-              <input id="new_edit_time_teble" name="new_edit_time_teble" style="display: none" />
-              <label for="time_table_notes">Notes</label><br />
-              <textarea placeholder="Notes..." name="time_table_notes" id="time_table_notes"></textarea>
-              <button id="time_table_submit_btn">Submit</button>
-              <button id="close_day_data" type="button">close</button>
-              <button id="delete_event" type="button">Delete</button>
-            </div>
+          <div id="button_container">
+            <button class="asap-condensed-regular" id="btn2"></button>
+            <button class="asap-condensed-regular" id="btn3">Save</button>
           </div>
-          <button class="asap-condensed-regular" id="btn3">Save</button>
+          
+
+          <div style="display: none;">
+            <input name="day_data_input_user_id" id="day_data_input_user_id" />
+            <input name="day_data_input_node_id" id="day_data_input_node_id" />
+            <input name="calendar_view_selection" id="calendar_view_selection" />
+
+            From : 
+            <input type="date" name="day_data_input_date" id="day_data_input_date"/>
+            To : 
+            <input type="date" name="day_data_input_date_to" id="day_data_input_date_to" />
+
+            <input name="time_table_hours_start" id="time_table_hours_start" type="number" max="23" min="0"/>
+            :
+            <input  name="time_table_minutes_start" id="time_table_minutes_start" type="number" max="59" min="0" />
+
+            To
+            <input name="time_table_hours_end" id="time_table_hours_end" type="number" max="23" min="0" />
+            :
+            <input name="time_table_minutes_end" id="time_table_minutes_end" type="number" max="59" min="0" />
+
+            <input name="time_table_notes" type="text" id="time_table_notes">
+          </div>
 
         </form>
         <!--div id="message_div">Record has been deleted</div-->
         <button class="asap-condensed-regular delete_btn" id="btn1">Delete</button>
-        <button class="asap-condensed-regular" id="btn2"></button>
+        
         <div id="clients">
           <button>ΦΠΑ</button>
           <button id="time_table_btn">Time Table</button>
           <div id="time_table_div">
-            <div>
-              <button class="calendar_date_reage_btn" id="tt_day">Day</button>
-              <button class="calendar_date_reage_btn" id="tt_week">Week</button>
-              <button class="calendar_date_reage_btn" id="tt_month">Month</button>
-              <input id="day_picker" type="date"/>
-              <select id="user_select">
-                <option value="all">All</option>
-              </select>
-            </div>
+            
             <div id="calendar_div" class="asap-condensed-regular glass_efect_1">
+              <div id="filter_div">
+                <button class="calendar_date_reage_btn" id="tt_day">Day</button>
+                <button class="calendar_date_reage_btn" id="tt_week">Week</button>
+                <button class="calendar_date_reage_btn" id="tt_month">Month</button>
+                <input id="day_picker" type="date"/>
+                <select id="user_select">
+                  <option value="all">All</option>
+                </select>
+              </div>
               <div id="calendar_header">
                 <div id="selected_year"></div>
                 <div id="selected_month"></div>
@@ -300,7 +291,51 @@
           </div>
         </div>
         <div id="secondary_data" style="display: none;">f</div>
+        <div id="day_data">
+          <div id="day_data_header">
+            <div>
+              <img id="close_btn" src="x.svg"/>
+            </div>
+            <div id="day_data_date_time">
+              <div> 
+                <input type="date" class="dummy asap-condensed-regular"/> <input type="date" class="dummy asap-condensed-regular" />
+    
+              </div>
+              <div>
+                <input class="dummy asap-condensed-regular" type="number" max="23" min="0" placeholder="0"/>
+                :
+                <input class="dummy" type="number" max="59" min="0" placeholder="0"/>
+  
+                -
+                <input class="dummy" type="number" max="23" min="0" placeholder="0"/>
+                :
+                <input class="dummy" type="number" max="59" min="0" placeholder="0"/>
+              </div>
+            </div>
+          </div>
 
+
+          <div id="day_data_body">
+            <div id="day_data_users">
+              <div>All <input class="all_selected_users" type="checkbox" value="all"></div>
+            </div>
+            <div>
+              <input id="new_edit_time_teble" name="new_edit_time_teble" style="display: none" />
+              <label for="time_table_notes">Notes</label><br />
+              <div id="textarea_conatainer">
+                <textarea class="dummy" placeholder="Notes..."></textarea>
+              </div>
+            </div>
+          </div>
+          <div id="day_data_footer">
+            <div>
+              <button id="delete_event" type="button">Delete</button>
+            </div>
+            <div>
+              <button id="time_table_submit_btn">Submit</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </body>
@@ -348,6 +383,7 @@
       }
       if (queryParams.timetable) {
         $("#calendar_view_selection").val(queryParams.timetable);
+        $("#tt_"+queryParams.timetable).addClass("selected")
       }
       $("#view_form").attr("action", formAction);
 
@@ -642,6 +678,11 @@
         } else {
           $("#user_select").val("all");
         }
+
+        $("#btn2").text("Remove");
+        $("#btn2").click(function(event){
+          event.preventDefault();
+          alert("Remove Client")});
       }
       else {
         $("#btn1").click(function () {
@@ -666,7 +707,6 @@
           $('#series_transforms_list').val($('#series_transforms_list').val()+','+s)
         }
       }
-      
 
       function calculate_total(class_id, target_id) {
         var tottal = 0;
@@ -732,7 +772,13 @@
       });
 
       function show_hide_time_table() {
-        $("#time_table_div").toggle();
+        if (queryParams.timetable) {
+          $("#time_table_div").toggle();
+        }
+        else{
+          day_week_month('month')
+        }
+        
         //$("#date_from").val(selected_date);
         $("#day_picker").val(selected_date);
       }
@@ -743,7 +789,7 @@
         put_dates(calendar_spectrum, $("#day_picker").val());
       }
 
-      $("#close_day_data").click(function (event) {
+      $("#close_btn").click(function (event) {
         event.preventDefault();
         $("#day_data").hide();
       });
@@ -809,7 +855,7 @@
             // Get the events container div inside the selected day element
             var eventsContainer = $(days[index]).find(".events_container");
             if (selected_user == n.user._id || selected_user == "all") {
-          var day_div = "<div class='day_line' id='" + n._id + "'>" + "<div class=event_id style='display:none'>" + n.user._id + "</div>" + "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" + "<div> From " + n.data.hour_start + " : " + n.data.minutes_start + "</div>" + "<div> To " + n.data.hour_end + " : " + n.data.minutes_end + "</div>";
+            var day_div = "<div class='day_line' id='" + n._id + "'>" + "<div class=event_id style='display:none'>" + n.user._id + "</div>" + "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" + "<div>" + (n.data.hour_start < 10 ? '0' : '') + n.data.hour_start + " : " + (n.data.minutes_start < 10 ? '0' : '') + n.data.minutes_start + " - " + (n.data.hour_end < 10 ? '0' : '') + n.data.hour_end + " : " + (n.data.minutes_end < 10 ? '0' : '') + n.data.minutes_end + "</div>";
           if(n.text){
             day_div = day_div + "<div> Notes : <br>" + n.text + "</div>";
           }
@@ -839,8 +885,10 @@
       });
 
       $(".day_line").click(function (event) {
-        $("#day_data_users").hide();
-        view_edit_event($(this).attr("id"), secondary_data.nodes);
+        event.stopPropagation();
+        //$("#day_data_users").hide();
+        view_edit_event($(this).attr("id"), secondary_data.nodes,secondary_data.users);
+        $('.dummy').eq(1).hide();
       });
 
       $("#time_table_hours_end").on("blur", function () {
@@ -848,43 +896,6 @@
         if ($("#time_table_hours_end").val() < start) {
           alert("time_table_hours_start < time_table_hours_end");
           $("#time_table_hours_end").val(parseInt(start) + 1);
-        }
-      });
-
-      $(".time_input").on("blur", function () {
-        // Ensure all time inputs have a default value of 0 if empty
-        $(".time_input").each(function () {
-          if ($(this).val() == null || $(this).val() === "") {
-            $(this).val(0); // Set value to 0
-          }
-        });
-
-        // Parse and calculate total start time in minutes
-        let m_start = parseInt($("#time_table_minutes_start").val(), 10) || 0;
-        let h_start = parseInt($("#time_table_hours_start").val(), 10) || 0;
-        let total_start = h_start * 60 + m_start;
-
-        // Parse _end values, setting defaults if empty
-        let m_end = $("#time_table_minutes_end").val();
-        let h_end = $("#time_table_hours_end").val();
-
-        if (m_end === "" || m_end == null) {
-          $("#time_table_minutes_end").val(0);
-          m_end = 0;
-        }
-        if (h_end === "" || h_end == null) {
-          $("#time_table_hours_end").val(0);
-          h_end = 0;
-        }
-
-        m_end = parseInt(m_end, 10) || 0;
-        h_end = parseInt(h_end, 10) || 0;
-        let total_end = h_end * 60 + m_end;
-
-        // Validate time range and adjust if needed
-        if (total_end <= total_start) {
-          $("#time_table_hours_end").val(h_start + 1); // Increment end hour
-          $("#time_table_minutes_end").val(0); // Reset end minutes to 0
         }
       });
 
@@ -912,18 +923,41 @@
         
       });
 
-      $(".add_event").click(function (event) {
-        let user_id = $("#user_select").val();
-        $("#day_data_users").show();
+      $(".dummy").change(function (event) {
+        const dummys = $(".dummy");  
+        $("#day_data_input_date").val(dummys.eq(0).val());
+        $("#day_data_input_date_to").val(dummys.eq(1).val());
+
+        var start = { hour: parseInt(dummys.eq(2).val(), 10), minutes: parseInt(dummys.eq(3).val(), 10) };
+
+        if (!start.hour) start.hour = 0;
+        if (!start.minutes) start.minutes = 0;
+
+        dummys.eq(2).val(start.hour);
+        dummys.eq(3).val(start.minutes);
+
+        var end = { hour: parseInt(dummys.eq(4).val(), 10), minutes: parseInt(dummys.eq(5).val(), 10) };
+
+        if (!end.hour) end.hour = 0;
+        if (!end.minutes) end.minutes = 0;
+
+        let total_start = start.hour * 60 + start.minutes;
+        let total_end = end.hour * 60 + end.minutes;
 
 
-        // Generate the date string
-        let year = $("#selected_year").text();
-        let month = $("#selected_month").text().padStart(2, "0");
-        let day = $(this).attr("id").replace("add_event_for_", "").padStart(2, "0");
-        let date = `${year}-${month}-${day}`;
+        if (total_end <= total_start) {
+          end.hour = start.hour + 1
+          end.minutes = 0;
+        }
 
-        new_event($(this).attr("id"), secondary_data.nodes, date, user_id);
+        dummys.eq(4).val(end.hour)
+        dummys.eq(5).val(end.minutes)
+
+        $("#time_table_hours_start").val(start.hour)
+        $("#time_table_minutes_start").val(start.hour)
+        $("#time_table_hours_end").val(end.hour)
+        $("#time_table_minutes_end").val(end.minutes)
+        $("#time_table_notes").val(dummys.eq(6).val())      
       });
 
       function check_event_overlap(id, date, s_hour, s_min, e_hour, e_min, nodes) {

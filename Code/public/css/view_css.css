@@ -114,11 +114,15 @@ tbody tr td div div{
 
 }
 
-#btn3{
-    background-color: rgb(4, 153, 54);
-    width: 20%;
-    margin-left: 80%;
+#button_container{
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap: 0%;
     margin-top: 30px;
+}
+
+#button_container button{
+    width: 40%;
     color: white;
     border: none;
     border-radius: 10px;
@@ -126,17 +130,22 @@ tbody tr td div div{
     cursor: pointer;
     padding: 5px 15px;
     font-size: 1.1em;
-    transition: 0.8s;
-
+    transition: 0.7s;
 }
-#btn3:hover{
-    scale: 1.1;
+#button_container button:hover{
+    scale: 1.05;
     font-size: 1.1em;
-    transition: 0.8s;
+    transition: 0.7s;
+    box-shadow: -3px 3px 10px rgb(0,0,0,1);
 }
 
-#btn1:hover{
-    scale: 1.1;
-    font-size: 1.1em;
+#btn2{
+    background-color: rgb(97, 97, 97);
+    margin-right: 60%;
+}
+
+#btn3{
+    background-color: rgb(4, 153, 54);
+    margin-left: 60%;
 }
 
