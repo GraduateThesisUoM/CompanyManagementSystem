@@ -4,25 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Report Form</title>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css" />
+    <link rel="stylesheet" href="fonts_css.css">
+    <!--Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <!--Header-->
     <%- include('../partials/header'); %>
-    <link rel="stylesheet" href="general_css.css">
 </head>
 <body>
     <h1>Report Client</h1>
-    <form action="" method="POST">
+    <form action="/report" method="POST">
         <h2>Select Reason For Report</h2>
-        <input type="radio" name="report_user_radio" id="report_user_radio_harassment" value="Harassment" onclick="disableReasonTextField();" required>
-        <label for="report_user_radio_harassment">Harassment</label><br>
-        <input type="radio" name="report_user_radio" id="report_user_radio_pretend" value="Pretending to be someone" onclick="disableReasonTextField();" required>
-        <label for="report_user_radio_pretend">Pretending to be someone</label><br>
-        <input type="radio" name="report_user_radio" id="report_user_radio_fraud" value="Fraud or Scam" onclick="disableReasonTextField();" required>
-        <label for="report_user_radio_fraud">Fraud/Scam</label><br>
-        <input type="radio" name="report_user_radio" id="report_user_radio_other" value="Other" onclick="enableReasonTextfield();" required>
-        <label for="report_user_radio_other">Something else</label><br>
-        <label for="report_title" name="report_title_label" id="report_title_label" style="display: none;">Please add a reason</label>
-        <input type="text" name="report_title" id="report_title" style="display: none;">
-        <hr>
+        <input type="text" name="report_reason" id="report_reason" style="display: none;">
 
+        <input type="radio" id="report_user_radio_harassment" name="reason" class="report_reason" value="1">
+        <label>Harassment</label><br>
+        <input type="radio" id="report_user_radio_pretend" name="reason" class="report_reason" value="2">
+        <label>Pretending to be someone</label><br>
+        <input type="radio" id="report_user_radio_fraud" name="reason" class="report_reason" value="3">
+        <label>Fraud/Scam/Malpractice</label><br>
+        <input type="radio" id="report_user_radio_other" name="reason" class="report_reason" value="4">
+        <label>Other</label><br>
+       
         <% if(user.type == "accountant"){%>
             <h2>Select User To Report</h2>
             <select name="company_users_select" id="company_users_select">
@@ -39,19 +47,10 @@
     
 </body>
 <script>
-
-    function disableReasonTextField(){
-        document.getElementById('report_title_label').style.display = "none";
-        document.getElementById('report_title').style.display = "none";
-        document.getElementById('report_title').required = false;
-        document.getElementById('report_title').value = "";
-    }
-
-    function enableReasonTextfield(){
-        document.getElementById('report_title_label').style.display = "block";
-        document.getElementById('report_title').style.display = "block";
-        document.getElementById('report_title').required = true;
-    }
+    $(document).ready(function () {
+        $(".report_reason").change(function(event) {
+            $("#report_reason").val($(this).val())
+        });
+    });
 </script>
-<%- include('../partials/footer'); %>
 </html>

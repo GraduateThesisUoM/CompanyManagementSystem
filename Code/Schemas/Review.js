@@ -9,7 +9,8 @@ const ReviewSchema = new mongoose.Schema({
   rating: { type: Number, required: true },
   type: {
     type: String,
-    enum: ['client', 'accountant'],
+    enum: [1, 2],
+    //1 = client 2 = accountant
     required: true
   },
   registrationDate: { type: Date, default: Date.now , required: true}

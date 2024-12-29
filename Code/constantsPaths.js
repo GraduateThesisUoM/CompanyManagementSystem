@@ -11,7 +11,6 @@ const schemas = {
     notification : "././Schemas/Notification",
     company : "././Schemas/Company",
     client : "././Schemas/Client",
-    report : "././Schemas/Report",
     series : "././Schemas/Series",
     accountant : "././Schemas/Accountant",
     item : "././Schemas/Item",
@@ -26,7 +25,6 @@ const schemas = {
     notification : "../../Schemas/Notification",
     company : "../../Schemas/Company",
     client : "../../Schemas/Client",
-    report : "../../Schemas/Report",
     series : "../../Schemas/Series",
     accountant : "../../Schemas/Accountant",
     item : "../../Schemas/Item",
@@ -263,29 +261,9 @@ const pages = {
     file: routes.admin+"RemoveReviewAdmin.js",
     view : ""
   },
-  review_report :{
-    url : "/review-report",
-    file: routes.admin+"ReviewReportAdmin.js",
-    view : ""
-  },
   remove_relationship :{
     url : "/remove-relationship",
     file: routes.admin+"RemoveRelationshipsAdmin.js",
-    view : ""
-  },
-  reevaluate_report :{
-    url : "/reevaluate-report",
-    file: routes.admin+"ReevaluateReportAdmin.js",
-    view : ""
-  },
-  dismiss_report :{
-    url : "/dismiss-report",
-    file: routes.admin+"DismissReportAdmin.js",
-    view : ""
-  },
-  report_list_page :{
-    url : "/report-list-page",
-    file: routes.admin+"ReportListPageRouters.js",
     view : ""
   },
   database :{

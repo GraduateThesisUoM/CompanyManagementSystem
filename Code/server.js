@@ -61,13 +61,7 @@ app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages
 //remove-review
 app.use(path_constants.pages.remove_review.url, require(path_constants.pages.remove_review.file));
 
-app.use(path_constants.pages.review_report.url, require(path_constants.pages.review_report.file));
-
 app.use(path_constants.pages.remove_relationship.url, require(path_constants.pages.remove_relationship.file));
-
-app.use(path_constants.pages.dismiss_report.url, require(path_constants.pages.dismiss_report.file));
-
-app.use(path_constants.pages.reevaluate_report.url, require(path_constants.pages.reevaluate_report.file));
 
 //log_in
 app.use(path_constants.pages.log_in.url, require(path_constants.pages.log_in.file));
@@ -98,9 +92,6 @@ app.use(path_constants.pages.create.url, require(path_constants.pages.create.fil
 
 //request_history
 app.use(path_constants.pages.request_history.url, require(path_constants.pages.request_history.file));
-
-//report_list_page
-app.use(path_constants.pages.report_list_page.url, require(path_constants.pages.report_list_page.file));
 
 //report
 app.use(path_constants.pages.report.url, require(path_constants.pages.report.file));

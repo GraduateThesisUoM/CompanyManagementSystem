@@ -16,7 +16,6 @@
     <link rel="stylesheet" href="accountant_main_css.css" />
     <link rel="stylesheet" href="list_css.css" />
 
-    <meta charset="UTF-8" />
     <%- include('../partials/header'); %>
   <body>
     <div class="has_sidebar">
@@ -41,7 +40,7 @@
               <tbody>
                 <% pending_nodes_list.forEach(function(row, index) {
                   if (row.status === 3){%>
-                    <tr style="background-color: lime">
+                    <tr  class="glass_efect_2" style="background-color: lime" id="<%=row.id%>">
                   <%}else{%>
                     <tr class="glass_efect_2">
                   <%}%>

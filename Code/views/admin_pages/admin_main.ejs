@@ -1,88 +1,63 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Main</title>
-    <link rel="stylesheet" href="modal.css">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Main Page</title>
+    <!-- fontawesome for icons -->
+    <script
+      src="https://kit.fontawesome.com/d2c306d566.js"
+      crossorigin="anonymous"
+    ></script>
+    <!--ajax-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css" />
+    <link rel="stylesheet" href="accountant_main_css.css" />
+    <link rel="stylesheet" href="list_css.css" />
+
     <%- include('../partials/header'); %>
-</head>
-<body>
+  <body>
     <div class="has_sidebar">
         <%- include('../partials/sidebar'); %>
 
         <div>
         <h1>Admin Main</h1>
         <h2>Welcome <%- user.firstName %></h2>
-        <div id="user-search-div" name="user-search-div">
-            <label for="adminQuery">Search</label>
-            <input type="text" name="adminQuery" id="adminQuery" onkeyup="sendData(this)">
-            <br>
-            <input type="checkbox" name="statusCheckbox" id="statusCheckbox" onchange="sendData($('#adminQuery').value)">
-            <label for="statusCheckbox">Search For Banned Users</label>
-            <br>
-            <input type="radio" id="everyone" name="userTypeSelection" value="everyone" checked="checked">
-            <label for="everyone">Search For Everyone</label><br>
-            <input type="radio" id="accountant" name="userTypeSelection" value="accountant">
-            <label for="accountant">Search For Accountants</label><br>
-            <input type="radio" id="user" name="userTypeSelection" value="user">
-            <label for="user">Search For Users</label>
-
-            <div id="search-results">
-                
-            </div>
-        </div>
+        
         <%if(pending_reports.length>0){%>
-            <div id="pending-reports-div" name="pending-reports-div">
-                <h2>Pending Reports</h2>
-                <%
-                    var list_summary_end = 0;
-                    if(pending_reports.length > 5){
-                        list_summary_end = pending_reports.length - 6;
-                    }
-                %>
-                <%for(var i=pending_reports.length - 1; i>=list_summary_end; i--){%>
-                    <span>Report Reason: <%= pending_reports[i].reason %></span>
-                    <br>
-                    <span>Reported on: <%= pending_reports[i].registrationDate %></span>
-                    <br>
-                    <% 
-                        var reporter = null;
-                        var company_name = null;
-                        for(var j=0;j < company_list.length;j++){
-                            if(company_list[j].id == pending_reports[i].reporter_id){
-                                reporter = company_list[j];
-                                if(reporter.type == "user"){
-                                    for(var y=0;y < company_list.length; y++){
-                                        if(reporter.company == company_list[y].id){
-                                            company_name = company_list[y].name;
-                                            break;
-                                        }
-                                    }
-                                }
-                                else if(reporter.type == "admin") {
-                                    company_name = "(Admin)";
-                                }
-                                else {
-                                    company_name = "(Accountant)";
-                                }
-                                
-                                break;
-                            }
-                        }
-                        
-                    %>
-                    <span>Reported by: <a href="/user-profile?id=<%=pending_reports[i].reporter_id%>"><%= reporter.name%></a></span>
-                    <br>
-                    <button class="reportButtons" id="visitReport" name="visitReport" onclick="modal.createAndOpen('<%- pending_reports[i]._id %>','<%- pending_reports[i].reason %>', '<%- pending_reports[i].text %>', '<%- pending_reports[i].registrationDate %>')">Details</button>
-                    <br>
-                    <br>
-                <%} %>
-                
-            </div>
+            <table>
+                <thead class="glass_efect_1">
+                    <tr>
+                        <th>A/A</th>
+                        <th>Reason</th>
+                        <th>Date</th>
+                        <th>Reporter</th>
+                        <th>Reported</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% pending_reports.forEach(function(row, index) { %>
+                        <tr class="glass_efect_2" style="background-color: lime" id="<%=row.id%>">
+                           <td><%=index+1%></td>
+                          <td><%=row.reason%></td>
+                          <td><%=row.registrationDate%></td>
+                          <td><%=row.reporter.firstName%> <%=row.reporter.lastName%></td>
+                          <td><%=row.reported.firstName%> <%=row.reported.lastName%></td>
+                        </tr>
+                      <% }); %>
+                      <% viewed_reports.forEach(function(row, index) { %>
+                        <tr class="glass_efect_2"id="<%=row.id%>">
+                           <td><%=index+1 + pending_reports.length%></td>
+                          <td><%=row.reason%></td>
+                          <td><%=row.registrationDate%></td>
+                          <td><%=row.reporter.firstName%> <%=row.reporter.lastName%></td>
+                          <td><%=row.reported.firstName%> <%=row.reported.lastName%></td>
+                        </tr>
+                      <% }); %>
+                </tbody>
+            </table>
         <%}%>
-        <a href="report-list-page">Show full list</a>
         <div id="stats-div" name="stats-div">
             <h2>Site Stats</h2>
             <%  var admins = 0;
@@ -114,224 +89,13 @@
 
 </div>
     <script>
-        function sendData(e){
-            const searchResults = document.getElementById('search-results');
-            let match = e.value.match(/^[a-zA-Z1-9 ]*/);
-            let match2 = e.value.match(/\s*/);
-            var status = 1;
-
-            if($('#statusCheckbox').is(':checked')){
-                status = 3;
-            }
-            var userType = $("input[type=radio][name=userTypeSelection]:checked").val();
-
-            if(match2[0] === e.value){
-                searchResults.innerHTML = '';
-                return; 
-            }
-            if(match[0] === e.value){
-                fetch('get-data', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({payload: e.value, status: status, type: userType}),
-                }).then(res => res.json()).then(data => {
-                    let payload = data.payload;
-                    searchResults.innerHTML = '';
-                    if(payload.length < 1){
-                        searchResults.innerHTML = '<p> No results </p>'
-                        return;
-                    }
-                    payload.forEach((user, index) => {
-                    if(index > 0) searchResults.innerHTML += '<hr>';
-                        searchResults.innerHTML += `<a href='/user-profile?id=${user._id}'>${user.firstName} ${user.lastName} ${user.email} ${user.type}</a>`;
-                    });
-                    return;
-                });
-            }
-        }
-    
-        class ReportModal{
-           constructor({
-               title,
-               details,
-               date,
-               reviewed,
-               dismissed,
-               cancel
-           }){
-               this.title = title;
-               this.details = details;
-               this.date = date;
-               this.reviewed = 'Mark as reviewed',
-               this.dismissed = 'Dismiss',
-               this.cancel = 'X'
-           }
-       
-           
-           createAndOpen(id, reason, text, date, resolve, reject){
-               this.modalElem = document.createElement('div');
-               this.modalElem.classList.add('modal');
-               setTimeout(()=>{
-                   this.modalElem.classList.add('open');
-               }, 400);
-       
-       
-               const modalContentElem = document.createElement('div');
-               modalContentElem.classList.add('content');
-       
-               this.modalElem.appendChild(modalContentElem);
-       
-               //cancel
-               const cancelTextElem = document.createElement('button');
-               cancelTextElem.classList.add('cancel');
-               cancelTextElem.textContent = this.cancel;
-       
-               modalContentElem.appendChild(cancelTextElem);
-       
-               cancelTextElem.addEventListener('click', () =>{
-                   this.close();
-               });
-       
-               this.modalElem.addEventListener('click', event => {
-                   if (event.target.className === 'modal open') {
-                       this.close()
-                   }
-               });
-       
-               
-               //title
-               const titleTextElem = document.createElement('p');
-               titleTextElem.classList.add('title');
-               titleTextElem.textContent = reason;
-       
-               modalContentElem.appendChild(titleTextElem);
-       
-               //date
-               const dateTextElem = document.createElement('p');
-               dateTextElem.classList.add('date');
-               dateTextElem.textContent = date;
-       
-               modalContentElem.appendChild(dateTextElem);
-       
-       
-               //details
-               const detailsTextElem = document.createElement('p');
-               detailsTextElem.classList.add('details');
-               detailsTextElem.textContent = text;
-       
-               modalContentElem.appendChild(detailsTextElem);
-
-               // Create the form element
-                const actionForm = document.createElement('form');
-                actionForm.setAttribute('method', 'POST');
-
-                // Create a hidden input field to dynamically set the action URL
-                const actionInput = document.createElement('input');
-                //actionInput.setAttribute('type', 'hidden');
-                actionForm.appendChild(actionInput);
-                actionInput.setAttribute('name', 'action');
-
-                // Function to handle button click events
-                function handleButtonClick(actionUrl) {
-                    actionInput.setAttribute('value', "");
-                    actionInput.setAttribute('value', actionUrl);
-                    actionForm.setAttribute('action', '/review-report?id='+id+"&action="+actionUrl);
-                    actionForm.submit();
-                }
-
-                // Create the reviewed button
-                const reviewedButton = document.createElement('input');
-                reviewedButton.setAttribute('type', 'button');
-                reviewedButton.classList.add('reviewed');
-                reviewedButton.value = 'Reviewed';
-                reviewedButton.addEventListener('click', function() {
-                    handleButtonClick('reviewed');
-                });
-
-                 // Create the Execute button
-                 const executeButton = document.createElement('input');
-                 executeButton.setAttribute('type', 'button');
-                 executeButton.classList.add('executed');
-                 executeButton.value = 'Execute';
-                 executeButton.addEventListener('click', function() {
-                    handleButtonClick('executed');
-                });
-
-                // Create the dismissed button
-                const dismissedButton = document.createElement('input');
-                dismissedButton.setAttribute('type', 'button');
-                dismissedButton.classList.add('dismissed');
-                dismissedButton.value = 'Dismissed';
-                dismissedButton.addEventListener('click', function() {
-                    handleButtonClick('dismissed');
-                });
-
-                // Append buttons to the form
-                actionForm.appendChild(executeButton);
-                actionForm.appendChild(reviewedButton);
-                actionForm.appendChild(dismissedButton);
-
-                // Append the form to modal content or body
-                modalContentElem.appendChild(actionForm);
-
-                /*
-               //reviewed
-               const reviewedButtonForm = document.createElement('form');
-               reviewedButtonForm.setAttribute('action', '/review-report?id='+id);
-               reviewedButtonForm.setAttribute('method', 'POST');
-               
-               const reviewedTextElem = document.createElement('input');
-               reviewedTextElem.setAttribute('type', 'submit');
-               reviewedTextElem.classList.add('reviewed');
-               reviewedTextElem.value = this.reviewed;
-       
-               reviewedButtonForm.appendChild(reviewedTextElem);
-               modalContentElem.appendChild(reviewedButtonForm);
-       
-       
-               //dismissed
-               const dismissedButtonForm = document.createElement('form');
-               dismissedButtonForm.setAttribute('action', '/dismiss-report?id='+id);
-               dismissedButtonForm.setAttribute('method', 'POST');
-       
-       
-               const dismissedTextElem = document.createElement('input');
-               dismissedTextElem.setAttribute('type', 'submit');
-               dismissedTextElem.classList.add('dismissed');
-               dismissedTextElem.value = this.dismissed;
-       
-               dismissedButtonForm.appendChild(dismissedTextElem);
-               modalContentElem.appendChild(dismissedButtonForm);*/
-       
-               document.body.appendChild(this.modalElem);
-           }
-       
-           open(){
-               return new Promise((resolve, reject)=>{
-                   this.createAndOpen(resolve, reject);
-               });
-           }
-       
-           close(){
-               this.modalElem.classList.remove('open');
-               setTimeout(()=>{
-                   document.body.removeChild(this.modalElem);
-               }, 400);
-           }
-       
-       }
-   
-       const modal = new ReportModal({
-           title: 'Title Goes Here',
-           details: 'These are the Details',
-           date: 'This is the Date',
-           reporter:'This is the Person Reporting',
-           reported:'This is the Person being Reported'
-       });
-   </script>
-
-<%- include('../partials/footer'); %>
-    
+        $(function() {
+            $(".glass_efect_2").click(function(){
+                var id = $(this).attr('id');
+                window.location = "/view?type=nodes&id="+id;
+            });
+        });
+   </script>    
 </body>
 
 </html>

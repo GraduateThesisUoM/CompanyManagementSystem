@@ -28,8 +28,13 @@
                 <div id="list_filters">
                     <div>
                         <h1 id="list_header"></h1>
-                        <div> Status<br>
-                            <input class="filter" id="filter_active" type="checkbox"> Active <input class="filter" id="filter_non_active" type="checkbox"> Non Active </div>
+                        <div class="filter_container"> Status<br>
+                            <input class="filter" id="filter_active" type="checkbox"> Active <input class="filter" id="filter_non_active" type="checkbox"> Non Active
+                        </div>
+                        <div class="filter_container"> Status<br>
+                            <input class="filter" id="filter_pending" type="checkbox"> Pending <input class="filter" id="filter_viewed" type="checkbox"> Viewed
+                        </div>
+
                         <div> From date <input type="date" id="list_from_date">  To date <input type="date" id="list_to_date"></div>
                         <button class="btn_type_4" onclick="location.reload();">Clear</button>
 
@@ -57,7 +62,7 @@
                                         <% } %>
                                             <% }); %>
 
-                                                <th></th>
+                                <th class="btn_column"></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -69,7 +74,7 @@
                                         <% } %>
                                     <% } %>
                                 <%} else{ list_items.forEach(function(list_item, index) { %>
-                                <tr class="glass_efect_2" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">
+                                <tr class="glass_efect_2" data-id="<%= list_item.data[0] %>" data-index="<%= index %>" id="<%= list_item.data[0] %>">
                                     <td>
                                         <%= index + 1 %>
                                     </td>
@@ -80,7 +85,7 @@
                                         
                                     <% } %>
 
-                                    <td>
+                                    <td class="btn_column">
                                         <div id="td_button_container">
                                             <div><button class="btn2" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Delete</button></div>
                                             <div><button class="btn3" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Disable</button></div>
@@ -111,7 +116,9 @@
             var params = new URLSearchParams(queryString);
             var searchfor = '';
             var type = '';
-            var printdoc = ""
+            var printdoc = "";
+            const filter_containers = $(".filter_container");
+            filter_containers.eq(1).hide(); // Hide the second filter container
 
             if (params.has('message')) {
                 alert(params.get('message'));
@@ -165,6 +172,11 @@
 
                         print_form(data);
                     }
+                }
+                else if (searchfor == 'reports') {
+                    $(".btn_column").hide();
+                    filter_containers.eq(0).hide();
+                    filter_containers.eq(1).show();
                 }
                 $("#searchfor").val(searchfor);
 
@@ -239,15 +251,63 @@
                     }
                 });
             }
+            function applyFilters_2() {
+                const isActiveChecked = $("#filter_active").prop('checked');
+                const isNonActiveChecked = $("#filter_non_active").prop('checked');
+                const isPendingChecked = $("#filter_pending").prop('checked');
+                const isViewedChecked = $("#filter_viewed").prop('checked');
+                const fromDate = $('#list_from_date').val();
+                const toDate = $('#list_to_date').val();
+
+                $(".glass_efect_2").each(function(index) {
+                    if (index > 0) { // Skip the first element (index 0)
+                        const statusCell = $(this).find(".status");
+                        const statusText = statusCell.text().trim();
+                        const regDateCell = $(this).find(".reg_date");
+                        const regDateText = regDateCell.text().trim();
+
+                        let showRow = true;
+
+                        // Status filter
+                        if (isActiveChecked && statusText !== "Active" && !isNonActiveChecked) {
+                            showRow = false;
+                        }
+                        if (isNonActiveChecked && statusText !== "Disabled" && !isActiveChecked) {
+                            showRow = false;
+                        }
+                        if (isPendingChecked && statusText !== "Pending" && !isViewedChecked) {
+                            showRow = false;
+                        }
+                        if (isViewedChecked && statusText !== "Viewed" && !isPendingChecked) {
+                            showRow = false;
+                        }
+
+                        // Date range filter
+                        if (fromDate && regDateText < fromDate) {
+                            showRow = false;
+                        }
+                        if (toDate && regDateText > toDate) {
+                            showRow = false;
+                        }
+
+                        // Show or hide the row
+                        if (showRow) {
+                            $(this).show();
+                        } else {
+                            $(this).hide();
+                        }
+                    }
+                });
+            }
 
             // Attach the combined filter logic to all relevant events
             $(".filter, #list_from_date, #list_to_date").change(function() {
+                if (searchfor == 'reports') {
+                    applyFilters_2();
+                    return
+                }
                 applyFilters();
             });
-
-
-
-
 
 
             function button_action(element, act){

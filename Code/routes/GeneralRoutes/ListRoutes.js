@@ -19,6 +19,8 @@ const Person = require(path_constants.schemas.two.person);
 const Document = require(path_constants.schemas.two.document);
 const Series = require(path_constants.schemas.two.series);
 const Warehouse = require(path_constants.schemas.two.warehouse);
+const Node = require(path_constants.schemas.two.node);
+
 
 
 /*--------   ADMIN - USER PROFILE*/
@@ -43,9 +45,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       if (req.query.searchfor == "companys") {
         list_items = await Company.find();
         list_items = list_items.map((item) => ({
-          data: [item.name, formatDate(item.registrationDate), item.status],
+          data: [item.id,item.name, generalFunctions.formatDate(item.registrationDate), item.status],
         }));
-        column_titles = ["Name", "Reg Date", "Status"];
+        column_titles = ["ID","Name", "Reg Date", "Status"];
       } else if (req.query.searchfor == "users") {
         list_items = await User.find();
         list_items = list_items.map((item) => ({
@@ -53,8 +55,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             item._id,
             item.firstName,
             item.lastName,
-            formatDate(item.registrationDate),
-            generalFunctions.get_status(item.status)
+            generalFunctions.formatDate(item.registrationDate),
+            generalFunctions.get_status_user(item.status)
           ],
         }));
         column_titles = ["ID", "First Name", "Last Name", "Reg Date", "Status"];
@@ -90,7 +92,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           data: [
             item._id,
             `${seriesMap.get(item.series.toString())}-${item.doc_num}`,
-            formatDate(item.registrationDate),
+            generalFunctions.formatDate(item.registrationDate),
             personsMap.get(item.receiver.toString()),
           ],
         }));
@@ -120,7 +122,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             item._id,
             item.title,
             item.location,
-            formatDate(item.registrationDate),
+            generalFunctions.formatDate(item.registrationDate),
             item.status,
           ],
         }));
@@ -138,7 +140,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             //item.type,
             item.count,
             item.sealed,
-            formatDate(item.registrationDate),
+            generalFunctions.formatDate(item.registrationDate),
             item.status,
           ],
         }));
@@ -167,7 +169,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             item.phone,
             item.afm,
             item.status,
-            formatDate(item.registrationDate),
+            generalFunctions.formatDate(item.registrationDate),
           ],
         }));
         column_titles = [
@@ -216,7 +218,24 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "ID",
           "Title"
         ]
-      }
+      }else if(req.query.searchfor == "reports"){
+      var list_items = await Node.find({type:7});
+      
+      list_items = list_items.map((report) => ({
+        data: [
+          report._id,
+          generalFunctions.formatDate(report.registrationDate),
+          generalFunctions.get_type2(report.type2),
+          generalFunctions.get_status(report.status)
+        ],
+      }));
+      column_titles = [
+        "ID",
+        "Date",
+        "Title",
+        "Status"
+      ]
+    }
 
       var data = {
         user: req.user,
@@ -265,17 +284,6 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 }
 });
 
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  const day = String(date.getDate()).padStart(2, "0");
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const year = date.getFullYear();
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  //return `${day}/${month}/${year} ${hours}:${minutes}`;
-  return `${year}-${month}-${day}`;
-};
 
 const total_price = (price, discount, tax) => {
   var total = price - discount;

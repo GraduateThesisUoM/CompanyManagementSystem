@@ -1,16 +1,26 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Σφάλμα</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error</title>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
     </head>
-    <body>
-        <h1>Σφάλμα</h1>
-        <div id="error"></div>
-        <button id="backButton">OK</button>
+    <body style="display: flex;align-items: center;justify-content: center;">
+        <div class="glass_efect_2 asap-condensed-regular" style="width: 50vw;margin-top: 15vh;padding: 25px;border-radius: 25px;">
+            <img width="100%" src="error.svg">
+            <!--h1 style="width: 100%; text-align: center;font-size: 3em;">Error...</h1-->
+            <div style="font-weight: 600;margin-bottom: 30px;" id="error"></div>
+            <button style="margin-bottom: 30px;" class="btn_type_1" id="backButton">OK</button>
+        </div>
 
     </body>
     <script>

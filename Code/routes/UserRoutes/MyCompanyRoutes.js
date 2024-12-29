@@ -10,7 +10,6 @@ const Company = require(path_constants.schemas.two.company);
 const Accountant = require(path_constants.schemas.two.accountant);
 const Node = require(path_constants.schemas.two.node);
 const Notification = require(path_constants.schemas.two.notification);
-const Report = require(path_constants.schemas.two.report);
 
 //Authentication Functions
 const Authentication = require("../../AuthenticationFunctions");

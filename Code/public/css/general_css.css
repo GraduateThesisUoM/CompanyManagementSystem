@@ -1,9 +1,19 @@
+/*body {
+    margin: 0px;
+    padding: 0px;
+    background-image: url('../svg/background.svg');
+    background-size: cover; /* Ensure it covers the viewport */
+    /*background-repeat: no-repeat; /* Avoid repetition */
+    /*background-position: center; /* Center the image */
+/*}*/
+
 body{
     margin: 0px;
     padding: 0px;
-
-    background: rgb(20,74,187);
-    background: linear-gradient(45deg, rgba(20,74,187,1) 9%, rgba(46,45,45,1) 76%);
+    background-image: url('background.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: top center;
 }
 
 button{
@@ -139,6 +149,7 @@ button{
     border: 1px solid rgba(255, 255, 255, 0.3);
     padding: 10px 0px;
 }
+
 
 .sub_side_menu_div button{
     width: 100%;

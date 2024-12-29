@@ -5,7 +5,6 @@ const ObjectId = require("mongodb").ObjectId;
 const path_constants = require("../../constantsPaths");
 
 //Models
-const Report = require(path_constants.schemas.two.report);
 const Review = require(path_constants.schemas.two.review);
 const User = require(path_constants.schemas.two.user);
 const Company = require(path_constants.schemas.two.company);
@@ -41,20 +40,21 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         user: req.user,
         target_user: await User.findOne({ _id: req.query.id }),
         target_company: target_company,
-        reports_for_user: await Report.find({
+        /*reports_for_user: await Report.find({
           $and: [
             { reported_id: req.query.id },
             { reporter_id: { $ne: req.query.id } },
             { status: "pending" },
           ],
-        }),
-        reports_by_user: await Report.find({
+        })*/reports_for_user:{},
+        /*reports_by_user: await Report.find({
           $and: [
             { reporter_id: req.query.id },
             { reported_id: { $ne: req.query.id } },
             { status: "pending" },
           ],
-        }),
+        })*/
+        reports_by_user:{},
         reviews_for_user: await Review.find({ reviewed_id: req.query.id }),
         user_list: await User.find(),
         company_list: await Company.find(),

@@ -1,16 +1,26 @@
 const express = require("express");
 const router = express.Router();
 
-//File with the paths
-const path_constants = require("../../constantsPaths");
+const path_constants = require('../../constantsPaths');
 
 //Models
-const Report = require(path_constants.schemas.two.report);
-const User = require(path_constants.schemas.two.user);
+const Accountant = require(path_constants.schemas.two.accountant);
+const Review = require(path_constants.schemas.two.review);
+const Notification = require(path_constants.schemas.two.notification);
 const Company = require(path_constants.schemas.two.company);
+const Node = require(path_constants.schemas.two.node);
+const Report = require(path_constants.schemas.two.report);
+const User = require(path_constants.schemas.two.report);
+
+
 
 //Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
+
+//Create Notification Function
+const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
+//Get General Functions
+const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 /*--------   REPORT LIST PAGE */
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {

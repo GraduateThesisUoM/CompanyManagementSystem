@@ -7,10 +7,11 @@ const path_constants = require("../../constantsPaths");
 //Models
 const User = require(path_constants.schemas.two.user);
 const Client = require(path_constants.schemas.two.client);
-const Report = require(path_constants.schemas.two.report);
 const Node = require(path_constants.schemas.two.node);
 const Notification = require(path_constants.schemas.two.notification);
 const Company = require(path_constants.schemas.two.company);
+const Accountant = require(path_constants.schemas.two.accountant);
+
 
 //Authentication Function
 const Authentication = require(path_constants.authenticationFunctions_folder
@@ -128,12 +129,51 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           }),
         };
       } else if (req.user.type == "admin") {
+        var pending_reports = await Node.find({type: 7, status: 3 });
+        var pending_reports_list = [];
+
+        for (let i = 0; i < 5 && i < pending_reports.length; i++) {
+          const report = pending_reports[i];
+          const reporter = await User.findOne({ _id: report.sender_id });
+          const reported = await User.findOne({ _id: report.receiver_id });
+          pending_reports_list.push({
+            id: report._id,
+            reason: generalFunctions.get_type2(report.type2),
+            registrationDate: generalFunctions.formatDate(report.registrationDate),
+            status: generalFunctions.get_status(report.status),
+            reporter: reporter,
+            reported: reported
+          });
+        }
+
+        var pending_viewed_reports_list = [];
+        
+        var pending_viewed_reports = await Node.find({type: 7, status: 1 });
+        
+        var limit = Math.min(5, pending_viewed_reports.length);
+        limit = limit -1
+        console.log(limit)
+        for (let i = 0; i < limit; i++) {
+          const report = pending_viewed_reports[i];
+          const reporter = await User.findOne({ _id: report.sender_id });
+          const reported = await User.findOne({ _id: report.receiver_id });
+          pending_viewed_reports_list.push({
+            id: report._id,
+            reason: generalFunctions.get_type2(report.type2),
+            registrationDate: generalFunctions.formatDate(report.registrationDate),
+            status: generalFunctions.get_status(report.status),
+            reporter: reporter,
+            reported: reported
+          });
+        }
+
         // index for admins
         data = {
           user: req.user,
           user_list: await User.find(),
           company_list: await Company.find(),
-          pending_reports: await Report.find({ status: "pending" }),
+          pending_reports: pending_reports_list,
+          viewed_reports:pending_viewed_reports_list
         };
       }
       //console.log(await generalFunctions.warehose_get_inventory({company : company._id}));

@@ -28,10 +28,11 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       if(access.response){
 
         const company = await Company.findOne({_id:req.user.company});
-        const company_accountant_node = await generalFunctions.get_accountant_node({company:company._id}) ;
+        const company_accountant_node = await generalFunctions.get_accountant_node({company: company._id, status: 2, next: { $ne: '-' }});
 
         console.log('company_accountant_node : '+company_accountant_node)
 
+        //has not anountant
         if(company_accountant_node == null /*||
           (company_accountant_node.type2 != 'hiring' && company_accountant_node.status != 'canceled') ||
           (company_accountant_node.type2 != 'firing' && company_accountant_node.status != 'executed')*/
@@ -44,8 +45,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             res.redirect('/?message="Access Denied"');
           }
         }
-        else{
-
+        else{//has  anountant
+          //self acountant
           if(company_accountant_node.company.equals(company_accountant_node.receiver_id)){
             console.log('3')
             if(req.user.companyOwner == 1){
@@ -58,7 +59,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
           }
           else{
             console.log('4')
-            const users_accountant = await Accountant.findOne({_id:company_accountant_node.receiver_id});
+            const users_accountant = await Accountant.findOne({_id:company_accountant_node.sender_id});
+            console.log("users_accountant : "+users_accountant)
             if(users_accountant == null ){
               if(req.user.companyOwner == 1){
                 res.redirect('pick-accountant');
@@ -68,9 +70,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
               }
             }
             else{
-              const users_accountant = await Accountant.findOne({_id:company_accountant_node.receiver_id});
-              const users_nodes = await Node.find({ sender_id :req.user._id, company_id:company._id , receiver_id :users_accountant._id, type:'request'});
-              var accountant_review = await Review.findOne({company_id:company._id,reviewer_id: req.user._id, reviewed_id: users_accountant._id, type:"client"});
+              const users_accountant = await Accountant.findOne({_id:company_accountant_node.sender_id});
+              const users_nodes = await Node.find({ sender_id :req.user._id, company_id:company._id , receiver_id :users_accountant._id, type:3/*Request*/});
+              var accountant_review = await Review.findOne({company_id:company._id,reviewer_id: req.user._id, reviewed_id: users_accountant._id, type:1});
               if (accountant_review == null){
                 accountant_review = new Review({
                   company_id: company._id,

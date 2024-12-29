@@ -5,7 +5,6 @@ const ObjectId = require("mongodb").ObjectId;
 const path_constants = require("../../constantsPaths");
 
 //Models
-const Report = require(path_constants.schemas.two.report);
 const Review = require(path_constants.schemas.two.review);
 const User = require(path_constants.schemas.two.user);
 const Company = require(path_constants.schemas.two.company);

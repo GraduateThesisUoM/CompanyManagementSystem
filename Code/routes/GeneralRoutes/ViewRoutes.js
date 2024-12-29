@@ -21,6 +21,8 @@ const Document = require(path_constants.schemas.two.document);
 const Series = require(path_constants.schemas.two.series);
 const Warehouse = require(path_constants.schemas.two.warehouse);
 const Client = require(path_constants.schemas.two.client);
+const Accountant = require(path_constants.schemas.two.accountant);
+
 
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
@@ -33,9 +35,10 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
       if (req.user.type != "admin") {
         company = req.user.company;
-      } /*else{ for delete
-                company = await Company.findOne({_id:req.query.id})
-            }*/
+      }
+      /*else{ for delete
+          company = await Company.findOne({_id:req.query.id})
+      }*/
       const isParamsEmpty = Object.keys(req.query).length === 0;
       var data = {
         user: req.user,
@@ -50,6 +53,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       if (!isParamsEmpty) {
         type = req.query.type;
         id = req.query.id;
+        console.log("ID : "+ id)
         if (type && id) {
           if (type == "docs") {
             obj = await Document.findOne({ _id: id });
@@ -160,8 +164,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             //1=normal-text,0=text-readonly
           } else if (type == "nodes") {
             obj = await Node.findOne({ _id: id });
-            if (obj.status == "pending") {
-              obj.status = "viewed";
+            if (obj.status == 3) {//pending
+              obj.status = 1;//viewed
               await obj.save();
             }
             var nodes = [];
@@ -220,6 +224,39 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               nodes: nodes,
               users: await Client.find({ company: id, status: 1 }),
             };
+          } else if (type == "companys") {
+            obj = await Company.findOne({ _id: id });
+            const users = await User.find({company: obj._id})
+            const ac_node = await Node.findOne({company:obj._id, status:2,next:'-'})
+            console.log(ac_node)
+            var accountant = "Not assigned"
+            if(ac_node){
+              const accountant_obj = await Accountant.findOne({_id:'6744cea94215507895961cc0'})
+              console.log(accountant_obj)
+              accountant = accountant_obj ? accountant_obj.firstName + " " + accountant_obj.lastName : "Not assigned"
+            }
+            data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate),users.length, accountant];
+            data.titles = ["Name", "Logo", "Reg Date","Number of Users","Accountant"];
+            data.type = [0, 11, 0,0,0];
+
+            /*let nodes = await Node.find({ company: id, type: 6, type2: 6, next: "-", status: 2 });
+
+            nodes = await Promise.all(
+              nodes.map(async (n) => {
+                const c = await Client.findOne({ _id: n.receiver_id });
+                return {
+                  _id: n._id,
+                  user: { _id: c._id, firstName: c.firstName, lastName: c.lastName },
+                  data: n.data,
+                  text: n.text,
+                };
+              })
+            );
+
+            secondary_data = {
+              nodes: nodes,
+              users: await Client.find({ company: id, status: 1 }),
+            };*/
           }
         } else {
           console.log("ERROR");

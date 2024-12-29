@@ -19,6 +19,9 @@
         <div class="glass_container" id="log_in_container">
             <form class="display_block asap-condensed-regular" action="/log-in" method="POST">
                 <h1>Log in</h1>
+                <% if (messages.error) { %>
+                    <%= messages.error %>
+                  <% } %>
                 <div class="input_container">
                     <input class="input_type_1" type="text" id="email" placeholder=" " name="email" required>
                     <label for="email">Email</label>

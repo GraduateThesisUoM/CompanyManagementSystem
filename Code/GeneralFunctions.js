@@ -13,7 +13,6 @@ const Company = require(path_constants.schemas.one.company);
 const Accountant = require(path_constants.schemas.one.accountant);
 const User = require(path_constants.schemas.one.user);
 const Series = require(path_constants.schemas.one.series);
-const Report = require(path_constants.schemas.one.report);
 const Person = require(path_constants.schemas.one.person);
 const Document = require(path_constants.schemas.one.document);
 const Notification = require(path_constants.schemas.one.notification);
@@ -25,7 +24,6 @@ const schemaMap = {
   notifications: Notification,
   companys: Company,
   clients: Client,
-  reports: Report,
   series: Series,
   items: Item,
   Warehouse: Warehouse,
@@ -316,25 +314,6 @@ async function createSeries(data) {
     console.log("seies " + series.title + " created");
 
     return series;
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-async function createReport(userID, reportedID, reportReason, reportText) {
-  try {
-    const report = new Report({
-      //report constructor
-      reporter_id: userID, //reporter id
-      reported_id: reportedID, //reported id
-      reason: reportReason, //reason for report (taken from a radio in report page or inserted by the user)
-      text: reportText, //report text-details
-    });
-
-    console.log("Report for " + reportReason + " created");
-    await report.save();
-
-    return report;
   } catch (e) {
     console.log(e);
   }
@@ -644,21 +623,80 @@ async function create_notification(
   }
 }
 
-function get_status(id){
-  if(id==0){
-    return 'Disabled'
+function get_status(id) {
+  switch (id) {
+    case 1:
+      return "Viewed";
+    case 2:
+      return "Executed";
+    case 3:
+      return "Pending";
+    case 4:
+      return "Rejected";
+    case 5:
+      return "Canceled";
+    case 6:
+      return "Temp";
+    default:
+      return "Unknown status";
   }
-  else if(id == 1){
-    return 'Active'
-  }
-  else if(id == 2){
-    return 'Deleted'
-  }
-  else if(id == 3){
-    return 'Banned'
-  }
-  return 'ERROR IN GENERAL FUNCTION get_status 420'
 }
+
+function get_status_user(id) {
+  switch (id) {
+    case 0:
+      return "Disabled";
+    case 1:
+      return "Active";
+    case 2:
+      return "Deleted";
+    case 3:
+      return "Baned";
+    default:
+      return "Unknown status";
+  }
+}
+
+function get_type2(id){
+  switch (id) {
+    case 1:
+      return "Hiring";
+    case 2:
+      return "Firing";
+    case 3:
+      return "Response";
+    case 4:
+      return "Request";
+    case 6:
+      return "Node";
+    case 7:
+      return "Shell";
+    case 8:
+      return "Buy";
+    case 71:
+      return "Harassment";
+    case 72:
+      return "Pretending to be someone";
+    case 73:
+      return "Fraud/Scam/Malpractice";
+    case 74:
+      return "Other";
+    case 75:
+      return "License for changes in the number of licenses";
+    default:
+      return "Unknown type";
+  }
+}
+
+const formatDateTime = (dateString) => {
+  const date = new Date(dateString);
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const year = date.getFullYear();
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  return `${day}/${month}/${year} ${hours}:${minutes}`;
+};
 
 const formatDate = (dateString) => {
   const date = new Date(dateString);
@@ -667,7 +705,8 @@ const formatDate = (dateString) => {
   const year = date.getFullYear();
   const hours = String(date.getHours()).padStart(2, "0");
   const minutes = String(date.getMinutes()).padStart(2, "0");
-  return `${day}/${month}/${year} ${hours}:${minutes}`;
+  //return `${day}/${month}/${year} ${hours}:${minutes}`;
+  return `${year}-${month}-${day}`;
 };
 
 async function importExport(action, company, schemas) {
@@ -1007,7 +1046,6 @@ async function clear_db(){
   await drop_collection("Node");
   await drop_collection("User");
   await drop_collection("Item");
-  await drop_collection("Report");
   await drop_collection("Warehouse");
   await drop_collection("Series");
   await drop_collection("Person");
@@ -1036,16 +1074,18 @@ module.exports = {
   create_accountant,
   create_company,
   createSeries,
-  createReport,
   create_person,
   drop_collection,
   create_doc,
   delete_deactivate,
   create_notification,
   formatDate,
+  formatDateTime,
   create_node,
   node_reply,
   get_status,
+  get_status_user,
+  get_type2,
   update,
   warehose_get_inventory,
   item_get_inventory,
