@@ -134,7 +134,8 @@
                     $(btn3_cells[i]).prop('disabled', true);
                     $(status_cells[i]).html('Deleted');
                 }
-                else if(status_cells[i].innerHTML == 0){
+                //else if(status_cells[i].innerHTML == 0){
+                else if(status_cells[i].innerHTML == "Disabled"){
                     $(btn3_cells[i]).text('Activate');
                     $(btn3_cells[i]).css('background-color', 'green');
                     $(status_cells[i]).html('Disabled');

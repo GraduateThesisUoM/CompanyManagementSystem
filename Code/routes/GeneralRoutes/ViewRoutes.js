@@ -158,7 +158,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             //1=normal-text,0=text-readonly
           } else if (type == "users") {
             obj = await User.findOne({ _id: id });
-            data.data = [obj.firstName, obj.lastName, obj.email, generalFunctions.get_status(obj.status), generalFunctions.formatDate(obj.registrationDate)];
+            data.data = [obj.firstName, obj.lastName, obj.email, generalFunctions.get_status_user(obj.status), generalFunctions.formatDate(obj.registrationDate)];
             data.titles = ["FirstName", "LastName", "email", "Status", "Reg Date"];
             data.type = [1, 1, 1, 0, 0];
             //1=normal-text,0=text-readonly
