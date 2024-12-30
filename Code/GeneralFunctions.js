@@ -545,6 +545,7 @@ async function get_obj_by_id(data, schema) {
 async function update(id, schema , data){
   try {
     console.log('update');
+    console.log(data);
 
     var obj = await get_obj_by_id(id, schema);
     var fieldsToUpdate;
@@ -578,6 +579,38 @@ async function update(id, schema , data){
           obj.transforms_to = []
         }
       }
+    else if (schema == 'users') {
+      obj.firstName = data.input0
+      obj.lastName = data.input1
+      obj.email = data.input2
+    }
+    else if (schema == 'Warehouse') {
+      obj.title = data.input0
+      obj.location = data.input1
+    }
+    else if (schema == 'items') {
+      obj.title = data.input0
+      obj.description= data.input1
+      obj.price_r = data.input4
+      obj.price_w = data.input5
+      obj.discount_r = data.input6
+      obj.discount_w = data.input7
+      obj.tax_r = data.input8
+      obj.tax_w  = data.input9
+    }
+    else if (schema == 'persons') {
+      obj.firstName = data.input0
+      obj.lastName = data.input1
+      obj.email = data.input2
+      obj.phone = data.input3
+      obj.afm = data.input4
+
+      obj.address = data.input7
+      obj.district = data.input8
+      obj.city = data.input9
+      obj.country = data.input10
+      obj.zip = data.input11
+    }
 
     console.log(obj);
       

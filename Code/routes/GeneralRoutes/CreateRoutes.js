@@ -119,6 +119,12 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         afm: req.body.person_vat,
         phone: req.body.person_phone,
         company: company,
+
+        address: req.body.person_address,
+        district: req.body.person_district,
+        city: req.body.person_city,
+        country: req.body.person_country,
+        zip: req.body.person_zip
       };
       console.log('dddd')
       created_obj = await generalFunctions.create_person(data);

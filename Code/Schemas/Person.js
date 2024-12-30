@@ -16,7 +16,6 @@ const PersonSchema = new mongoose.Schema({
       lastName: { type: String, required: true },
       email: { type: String, required: true },
       phone: { type: String, required: true },
-      phone2: { type: String, default: " "},
       afm: { type: String, required: false },
       address: { type: String, default: " "},
       district: { type: String, default: " "},

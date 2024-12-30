@@ -140,12 +140,16 @@
                 <% data[index].forEach(function(s, index) {%>
                   <div><input type="checkbox" id="<%= s._id%>" class="series_transforms_check"><%= s.acronym%> - <%= s.title%></div>
                 <%});%>
-                <input type="text" id="series_transforms_list" name="series_transforms_list">
+                <input type="text" id="series_transforms_list" name="series_transforms_list" style="display: none;">
               </div>
             <% }else if(type[index] == 13){ %>
             <%= title %> : <%= data[index] %>
             <% }else if(type[index] == 14){ %>
               <%= title %> : <select id="select_warehose" name="select_warehose"></select>
+            <% }else if(type[index] == 15){ %>
+                <%= title %> <%= data[index] == 1 ? ' : Active' : data[index] == 0 ? ' : Disabled' : data[index] == 2 ? ' : Deleted' : '' %>
+                <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
+
             <% }else{ %> <%= title %>
             <input name="input<%= index %>" id="<%= title %>" class="input_type_2" value="<%= data[index] %>" />
             <% }%>
@@ -396,7 +400,8 @@
         var btn_1_var = "disabled";
       } else if (delete_deactivate == 2) {
         $("#btn1").hide();
-        $("#btn2").hide();
+        //$("#btn2").hide();
+        $("#btn2").text("Activate");
         $("#btn3").hide();
         $("#message_div").show();
         $("#message_span").text(queryParams.type);
@@ -684,6 +689,11 @@
           event.preventDefault();
           alert("Remove Client")});
       }
+      else if (queryParams.type == "reports"){
+        $("#btn1").hide()
+        $("#btn2").hide()
+        $("#btn3").hide()
+      }
       else {
         $("#btn1").click(function () {
           if (confirm("Are you soure ?")) {
@@ -693,7 +703,7 @@
         });
         $("#btn2").click(function () {
           $("#action").val(btn_1_var);
-          $("#view_form").submit();
+          //$("#view_form").submit();
         });
         $("#btn3").click(function () {
           $("#action").val("save");

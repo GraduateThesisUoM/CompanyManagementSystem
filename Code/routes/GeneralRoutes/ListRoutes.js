@@ -45,7 +45,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       if (req.query.searchfor == "companys") {
         list_items = await Company.find();
         list_items = list_items.map((item) => ({
-          data: [item.id,item.name, generalFunctions.formatDate(item.registrationDate), item.status],
+          data: [item.id,item.name, generalFunctions.formatDate(item.registrationDate), generalFunctions.get_status_user(item.status)],
         }));
         column_titles = ["ID","Name", "Reg Date", "Status"];
       } else if (req.query.searchfor == "users") {
@@ -123,7 +123,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             item.title,
             item.location,
             generalFunctions.formatDate(item.registrationDate),
-            item.status,
+            generalFunctions.get_status_user(item.status)
           ],
         }));
         column_titles = ["ID", "Title", "location", "Reg Date", "Status"];
@@ -162,19 +162,17 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         list_items = list_items.map((item) => ({
           data: [
             item._id,
-            item.type,
             item.firstName,
             item.lastName,
             item.email,
             item.phone,
             item.afm,
-            item.status,
+            generalFunctions.get_status_user(item.status),
             generalFunctions.formatDate(item.registrationDate),
           ],
         }));
         column_titles = [
           "ID",
-          "Type",
           "firstName",
           "lastName",
           "email",
@@ -191,10 +189,10 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           data: [
             item._id,
             item.title,
-            formatDate(item.registrationDate),
+            generalFunctions.formatDate(item.registrationDate),
             total_price(item.price_r, item.discount_r, item.tax_r),
             total_price(item.price_w, item.discount_w, item.tax_w),
-            item.status,
+            generalFunctions.get_status_user( item.status)
           ],
         }));
         column_titles = [

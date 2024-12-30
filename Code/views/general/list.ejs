@@ -129,19 +129,15 @@
 
             var btn3_cells = $(".btn3");
             for(let i=0; i<status_cells.length;i++){
-                if(status_cells[i].innerHTML == 2){//active
+                if(status_cells[i].innerHTML == 'Deleted'){//active
                     $(btn2_cells[i]).prop('disabled', true);
-                    $(btn3_cells[i]).prop('disabled', true);
-                    $(status_cells[i]).html('Deleted');
+                    $(btn3_cells[i]).text('Activate');
+                    $(btn3_cells[i]).css('background-color', 'green');
                 }
                 //else if(status_cells[i].innerHTML == 0){
                 else if(status_cells[i].innerHTML == "Disabled"){
                     $(btn3_cells[i]).text('Activate');
                     $(btn3_cells[i]).css('background-color', 'green');
-                    $(status_cells[i]).html('Disabled');
-                }
-                else if(status_cells[i].innerHTML == 1){
-                    $(status_cells[i]).html('Active');
                 }
             }
  
@@ -151,8 +147,8 @@
             if (queryString.length > 0) {
                 searchfor = params.get('searchfor');
                 $("#span_number_of").html(searchfor);
-                type = type = params.get('type');
-                printdoc = type = params.get('printdoc');
+                type = params.get('type');
+                printdoc = params.get('printdoc');
                 $("#list_header").html(searchfor.charAt(0).toUpperCase() + searchfor.slice(1));
                 if (searchfor == 'docs') {
                     $('.btn3').text('Print')
@@ -178,6 +174,12 @@
                     $(".btn_column").hide();
                     filter_containers.eq(0).hide();
                     filter_containers.eq(1).show();
+                }
+                else if (searchfor == 'persons') {
+                    $("#list_header").text("Suplier")
+                    if (type == 1){
+                        $("#list_header").text("Client")
+                    }
                 }
                 $("#searchfor").val(searchfor);
 

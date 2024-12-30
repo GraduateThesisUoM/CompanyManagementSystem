@@ -23,6 +23,10 @@ const Warehouse = require(path_constants.schemas.two.warehouse);
 const Client = require(path_constants.schemas.two.client);
 const Accountant = require(path_constants.schemas.two.accountant);
 
+/*
+15 input hiden show text for status
+*/
+
 
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
@@ -114,7 +118,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             });
             data.data = [obj.title, obj.location, generalFunctions.formatDate(obj.registrationDate), obj.status, inventory];
             data.titles = ["Title", "location", "Reg Date", "Status", "Data"];
-            data.type = [1, 1, 0, 0, 8];
+            data.type = [1, 1, 0, 15, 8];
             //1=normal-text,0=text-readonly
             //8 table
           } else if (type == "series") {
@@ -122,7 +126,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             var series = await Series.find({company:company, status:1,type:obj.type,_id: { $ne: obj._id } /* Exclude the document with the same _id as `obj`*/})
             data.data = [obj.title, obj.acronym, obj.type, obj.count, obj.sealed, obj.effects_warehouse, obj.credit, obj.debit, generalFunctions.formatDate(obj.registrationDate), obj.status,obj.transforms,series];
             data.titles = ["Title", "Acronym", "Type", "Count", "Sealed", "Effects Warehouse", "Credit", "Debit", "Reg Date", "Status","Transforms","Series"];
-            data.type = [1, 1, 1, 1, 5, 5, 5, 5, 0, 0,5,12];
+            data.type = [1, 1, 1, 1, 5, 5, 5, 5, 0, 15,5,12];
 
             secondary_data = {
               selected_series :obj.transforms_to
@@ -130,9 +134,16 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             //1=normal-text,0=text-readonly, 5 checkbox,12 series
           } else if (type == "persons") {
             obj = await Person.findOne({ _id: id });
-            data.data = [obj.type, obj.firstName, obj.lastName, obj.email, obj.phone, obj.afm, obj.status, generalFunctions.formatDate(obj.registrationDate)];
-            data.titles = ["Type", "FirstName", "LastName", "email", "phone", "afm", "Status", "Reg Date"];
-            data.type = [1, 1, 1, 1, 1, 1, 0, 0];
+            data.data = [ obj.firstName, obj.lastName, obj.email, obj.phone, obj.afm, obj.status, 
+              generalFunctions.formatDate(obj.registrationDate),
+              obj.address,obj.district,obj.city,obj.country,obj.zip
+            ];
+            data.titles = ["FirstName", "LastName", "email", "phone", "afm", "Status", "Reg Date",
+              "Address","District", "City","Country", "ZIP"
+            ];
+            data.type = [1, 1, 1, 1, 1, 15, 13,
+              1,1,1,1,1
+            ];
             //1=normal-text,0=text-readonly
           } else if (type == "items") {
             obj = await Item.findOne({ _id: id });
@@ -154,13 +165,13 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               }),
             ];
             data.titles = ["Title", "Description", "Reg Date", "Unit of Peasurement", "Price Retail", "Price Wholesale", "Discount Retail", "Discount Wholesale", "Tax Retail", "Tax Wholesale", "Status", "Inventory"];
-            data.type = [1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0];
+            data.type = [1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 15, 0];
             //1=normal-text,0=text-readonly
           } else if (type == "users") {
             obj = await User.findOne({ _id: id });
-            data.data = [obj.firstName, obj.lastName, obj.email, generalFunctions.get_status_user(obj.status), generalFunctions.formatDate(obj.registrationDate)];
+            data.data = [obj.firstName, obj.lastName, obj.email, obj.status, generalFunctions.formatDate(obj.registrationDate)];
             data.titles = ["FirstName", "LastName", "email", "Status", "Reg Date"];
-            data.type = [1, 1, 1, 0, 0];
+            data.type = [1, 1, 1, 15, 0];
             //1=normal-text,0=text-readonly
           } else if (type == "nodes") {
             obj = await Node.findOne({ _id: id });
@@ -235,9 +246,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               console.log(accountant_obj)
               accountant = accountant_obj ? accountant_obj.firstName + " " + accountant_obj.lastName : "Not assigned"
             }
-            data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate),users.length, accountant];
-            data.titles = ["Name", "Logo", "Reg Date","Number of Users","Accountant"];
-            data.type = [0, 11, 0,0,0];
+            data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate),users.length, accountant,obj.status];
+            data.titles = ["Name", "Logo", "Reg Date","Number of Users","Accountant","Status"];
+            data.type = [0, 11, 0,0,0,0];
 
             /*let nodes = await Node.find({ company: id, type: 6, type2: 6, next: "-", status: 2 });
 
@@ -257,7 +268,31 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               nodes: nodes,
               users: await Client.find({ company: id, status: 1 }),
             };*/
+          } else if (type == "reports") {
+            obj = await Node.findOne({ _id: id });
+            const c = await Company.findOne({_id:obj.company});
+            const s = await User.findOne({_id:obj.sender_id})
+            const r = await User.findOne({_id:obj.receiver_id})
+            data.data = [c.name,
+              generalFunctions.formatDate(obj.registrationDate),
+              s.firstName + " " + s.lastName,
+              r.firstName + " " + r.lastName,
+              generalFunctions.get_type2(obj.type2),
+              obj.text
+
+            ];
+            data.titles = [
+              "Company Name","Reg Date", "Sender",
+              "Recever", "Category","Text"
+            ];
+            data.type = [0, 0, 0,0,0,9];
+
+            secondary_data = {
+              nodes: nodes,
+              users: await Client.find({ company: id, status: 1 }),
+            };
           }
+          
         } else {
           console.log("ERROR");
         }
