@@ -3,63 +3,83 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Προφίλ Χρήστη</title>
+        <title>Profile</title>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--QRCode.js-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.4.4/qrcode.js" integrity="sha512-oxrVyBhqnzQ0BzuM0A/6dEIk0alz0p4SpDRaWvtuUoarIc8rnL5lVniHG5Dp21MRFojcQcmKHjaskNXhSaUPPw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poiret+One&family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <div class="has_sidebar">
+        <div class="has_sidebar asap-condensed-regular">
             <%- include('../partials/sidebar'); %>
             <div>
                 <h1>Profile</h1>
-                <div id="accountant-info-div" name="accountant-info-div">
-                    <h2>Info</h2>
-
+                <div id="accountant-info-div" name="accountant-info-div" class="glass_efect_2 container">
                     <form class="display_block" action="/profile-page" method="POST" >
-                        <label for="firstName">Όνομα</label>
-                        <input type="text" name="firstName" id="firstName" required value="<%= user.firstName %>">
-                        <label for="lastName">Επίθετο</label>
-                        <input type="text" name="lastName" required value="<%= user.lastName %>">
+                        
+                        <label for="firstName">First Name</label>
+                        <input type="text" name="firstName" id="firstName" required value="<%= user.firstName %>" class="input_type_2">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" name="lastName" required value="<%= user.lastName %>" class="input_type_2">
                         <label for="email">Email</label>
-                        <input type="email" name="email" required value="<%= user.email %>">
-                        <span id="admin_hide">
-                            <label for="afm">Α.Φ.Μ.</label>
-                            <input type="text"id="afm" name="afm" placeholder="Α.Φ.Μ." value="<%= user.afm%>">
-
-                            <label for="mydatakey">Κλειδί MyData (προαιρετικό)</label>
-                            <input type="text" name="mydatakey" id="mydatakey" placeholder="Κλειδί MyData" value="<%= user.mydatakey%>">
-                        </span>
-                        <button type="submit" id="edit-info-button" name="edit-info-button">Save</button>
+                        <input type="email" name="email" required value="<%= user.email %>" class="input_type_2">
+                        <label for="afm" class="admin_hide">Tax Identification Number (TIN)</label>
+                        <input type="text"id="afm" name="afm" value="<%= user.afm%>" class="input_type_2 admin_hide border_type_1">
+                        <label for="mydatakey" class="admin_hide">MyData (προαιρετικό)</label>
+                        <input type="text" name="mydatakey" id="mydatakey" value="<%= user.mydatakey%>" class="input_type_2 admin_hide">
+                        <button type="submit" id="edit-info-button" name="edit-info-button" class="btn_type_1">Save</button>
+                        <div>
+                            <input type="text" id="user_id" value="<%=user._id%>" style="display:none">
+                            <img id="user_qr_code" style="cursor: pointer;">
+                        </div>
                     </form>
-                    <button onclick="window.location='/my-company'">Company</button>
+                    <button onclick="window.location='/my-company'" class="btn_type_4">Company</button>
                 </div>
-                <hr>
                 <div id="rating-div" name="rating-div">
                     <h2>Reviews and Comments</h2>
                 </div>
             </div>
         </div>
     </body>
-    <%- include('../partials/footer'); %>
     <script>
-     // Get the 'message' query parameter from the URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const message = urlParams.get('message');
+        $(document).ready(function(){
+                // Get the 'message' query parameter from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const message = urlParams.get('message');
 
-        // Check if the 'message' parameter is 'updatedatacopmlete'
-        if (message === 'updatedatacopmlete') {
-            // Show an alert with the specified message
-            alert('Data update complete!');
-        }
-    
-    $(document).ready(function(){
-         $("#back_btn").click(function(){
-                window.location ="/"
+            // Check if the 'message' parameter is 'updatedatacopmlete'
+            if (message === 'updatedatacopmlete') {
+                // Show an alert with the specified message
+                alert('Data update complete!');
+            }
+
+            async function generateQRCode() {
+                const dataurl = await QRCode.toDataURL($('#user_id').val());
+                $('#user_qr_code').attr('src', dataurl);
+            }
+            generateQRCode();
+
+            $("#user_qr_code").click(function(){
+                const user_id = $('#user_id').val();
+                const qr_code = $('#user_qr_code').attr('src');
+                const a = document.createElement('a');
+                a.href = qr_code;
+                a.download = user_id + '.png';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            });
+           
         });
-    });
     
     </script>
 

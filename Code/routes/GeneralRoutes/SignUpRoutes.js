@@ -85,7 +85,6 @@ router.post("/", async (req, res) => {
       };
 
       var newUser = await generalFunctions.create_user(data);
-
       // Save the new user to the database
 
       if (req.body.self_accountant == "true") {

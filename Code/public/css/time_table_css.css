@@ -7,8 +7,6 @@
     width: calc(85vw - 50px) ;
 }
 
-
-
 #selected_month{
     width: 100%;
     font-size: 1.8em;
@@ -101,11 +99,6 @@
 	background-color: #888888;
 }
 
-
-/*.day.old{
-    background-color: rgb(116, 116, 116);
-}*/
-
 .week {
     /*margin: 10px 10px 10px 10px;*/
     margin: 0px 10px 0px 10px;
@@ -118,10 +111,6 @@
     margin: 0px;
     padding: 0px;
 }
-
-/*.month {
-    background-color: blue;
-}*/
 
 #day_data {
     position: fixed; /* Use fixed for consistency across scrolling */

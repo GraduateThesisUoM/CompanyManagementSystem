@@ -14,6 +14,8 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
 
+        <!-- QR Code Scanner Library -->
+        <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     </head>
     <body>
         <div class="glass_container" id="log_in_container">
@@ -36,19 +38,26 @@
                 </div>
                 <button class="btn_type_1" id="log_in_btn" type="submit">Log in</button>
             </form>
+            <div id="reader" width="600px"></div>
             <button class="btn_type_2" id="sign_up_btn">Sign Up</button>
             <button class="btn_type_3" id="forgot_passsword_btn">Forgot my password</button>
+            <br><br>
+            <hr style="border-color: black;">
+            <button class="btn_type_3" id="scan_qr_btn">Scan QR Code</button>
 
         </div>
-</div>
     </body>
     <script>
         $(document).ready(function() {
+            // Button actions
             $("#sign_up_btn").click(function() {
                 window.location = "sign-up";
             });
             $("#forgot_passsword_btn").click(function() {
                 window.location = "forgot-password";
+            });
+            $("#scan_qr_btn").click(function() {
+                window.location = "/index?scan=tue";
             });
             $("#showpasswordcheckbox").click(function() {
                 const passwordInput = $("#password");
@@ -57,9 +66,12 @@
             });
 
             const urlParams = new URLSearchParams(window.location.search);
-            if(urlParams.get("message")=="success_sign_up") {
+            if (urlParams.get("message") == "success_sign_up") {
                 alert("Sign up was successful. You can now log in.");
             }
+
+            
+            
         });
     </script>
 </html>

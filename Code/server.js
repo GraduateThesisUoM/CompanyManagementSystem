@@ -9,7 +9,6 @@ const methodOverride = require('method-override');
 const connectDB = require('./db');
 const getUserByEmail = require('./getUserByEmail');
 const getUserById = require('./getUserById');
-const socketIO = require('./SocketIO.js');
 
 //File with the paths
 const path_constants = require('./constantsPaths');
@@ -39,15 +38,14 @@ app.use(express.static(path_constants.folders.img));
 app.use(express.static(path_constants.folders.js));
 app.use(express.static(path_constants.folders.svg));
 
+//homepage
+app.use(path_constants.pages.homepage.url, require(path_constants.pages.homepage.file));
 
 //Routes
 app.use(path_constants.pages.index.url, require(path_constants.pages.index.file));
 
 //View Request
 app.use(path_constants.pages.view_request.url, require(path_constants.pages.view_request.file));
-
-//notification-read
-app.use(path_constants.pages.notification_read.url, require(path_constants.pages.notification_read.file));
 
 //get-data
 app.use(path_constants.pages.get_data.url, require(path_constants.pages.get_data.file));
@@ -96,9 +94,6 @@ app.use(path_constants.pages.request_history.url, require(path_constants.pages.r
 //report
 app.use(path_constants.pages.report.url, require(path_constants.pages.report.file));
 
-//settings
-app.use(path_constants.pages.settings.url, require(path_constants.pages.settings.file));
-
 //profile_page
 app.use(path_constants.pages.profile_page.url, require(path_constants.pages.profile_page.file));
 
@@ -146,7 +141,6 @@ app.use(path_constants.pages.database.url, require(path_constants.pages.database
 
 
 const http = require('http').createServer(app);
-socketIO(http);
 http.listen(process.env.PORT, () => {
   console.log('Server started on port '+ process.env.PORT);
 });

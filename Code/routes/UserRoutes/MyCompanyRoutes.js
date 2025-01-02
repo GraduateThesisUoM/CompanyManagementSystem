@@ -21,7 +21,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
-      if (generalFunctions.checkAccessRigts(req, res)) {
         const data = {
           user: req.user,
           company: await Company.findOne({ _id: req.user.company }),
@@ -30,11 +29,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           }),
         };
         res.render("user_pages/my_company.ejs", data);
-      } else {
-        res.redirect("/error?origin_page=my-company&error=acces denid");
-      }
+      
     } else {
-      res.redirect("/error?error=" + access.error);
+      res.redirect("/error?origin_page=my-company&error=acces denid");
     }
   } catch (err) {
     console.error("Error :", err);
@@ -46,19 +43,14 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const company = await Company.findOne({ _id: req.user.company });
     if (company.license.requested > 0 || company.license.for_removal > 0) {
-      const report = await Report.findOne({
-        reporter_id: company._id,
-        reporter_id: company._id,
-        reason: "licence",
-        status: "pending",
+      const node = await Node.findOne({
+        company: company._id,
+        type: 10,
+        status: 3,//pending
+        next:"-"
       });
-      //report.status = 'canceled';
-      if (report != null) {
-        if (report.status == "pending") {
-          report.status = "canceled";
-          await report.save();
-        }
-      }
+      node.status = 5;
+      await node.save();
     }
 
     if (req.body.requested_license == -1) {
@@ -80,11 +72,12 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         company.license.requested = req.body.remove_license * -1;
         await company.save();
       }
-      const newReport = await generalFunctions.createReport(
-        company._id,
-        company._id,
-        "licence",
-        "-"
+      const newReport = await generalFunctions.create_node(
+        {
+          company: company,
+          sender_id: req.user.id,
+          type: 10,
+      }
       );
       console.log(newReport);
     }
@@ -101,16 +94,13 @@ router.post(
   Authentication.checkAuthenticated,
   async (req, res) => {
     try {
-      const access = generalFunctions.checkAccessRigts(req, res);
-      if (access.response) {
+
         const company = await Company.findOne({ _id: req.user.company });
         company.name = req.body.new_company_name;
         company.logo = req.body.new_company_logo;
         await company.save();
         res.redirect("/my-company?message=data-updated");
-      } else {
-        res.redirect("/error?error=" + access.error);
-      }
+      
     } catch (e) {
       console.error(e);
       res.redirect("/error?error=" + e);

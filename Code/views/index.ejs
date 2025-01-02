@@ -6,14 +6,95 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+
+
+        <!-- QR Code Scanner Library -->
+        <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     </head>
-    <body>
-        <h1>Hi <%= name %></h1>
-        <form action="/logout?_method=DELETE" method="POST">
-            <button type="submit">Log Out</button>
-        </form>
-        <a href="log-in">Σύνδεση</a>
-        <a href="sign-up">Εγγραφή</a>
+    <style>
+        #scaner_div{
+            width: 60vw;
+            margin-left: 20vw;
+            margin-top: 50px;
+        }
+        h1{
+            text-indent: 30px;
+            margin: 0px;
+        }
+    </style>
+    <body class="asap-condensed-regular">
+
+        <div id="scaner_div" class="glass_efect_2 container display_block" >
+            <h1>Welcome Please Scan</h1>
+            <div id="qr_reader" class="box_shadow_1" style="width: 50%; margin-top: 20px;margin-left: 25%; display: none;"></div>
+            <form id="scan_form" action="/index" method="POST" style="display: none;">
+                <input type="text" name="scan" id="scan" >
+            </form>
+            <button class="btn_type_1" id="scan_bnt">Scan</button>
+            <button class="btn_type_3" id="log_in_btn">Log in</button>
+
         </div>
     </body>
+    <script>
+        $(document).ready(function(){
+            // Get the 'message' query parameter from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+
+             // QR Code Scanner
+             const html5QrCode = new Html5Qrcode("qr_reader");
+
+            let isScanning = false;
+            
+            if(urlParams.get('scan')){
+                show_qr_scaner();
+                $("#scan_bnt").hide();
+            }
+
+            $("#log_in_btn").click(function(){
+                window.location = "/";
+            });
+
+            $("#scan_bnt").click(function(){
+                window.location = "/index?scan=tue";
+
+            });
+
+            // Start/Stop QR Code Scanner
+            function show_qr_scaner(){
+                if (!isScanning) {
+                    $("#qr_reader").show();
+                    html5QrCode
+                        .start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } },
+                            (decodedText, decodedResult) => {
+                                // Handle successful scan
+                                $("#scan").val(decodedText);
+                                html5QrCode.stop(); // Stop scanner after a successful scan
+                                $("#qr_reader").hide();
+                                isScanning = false;
+                                $("#scan_form").submit();
+                            })
+                        .catch((err) => {
+                            console.error(`Unable to start QR code scanning: ${err}`);
+                            alert("Error starting the QR code scanner.");
+                        });
+                    isScanning = true;
+                } else {
+                    html5QrCode.stop()
+                        .then(() => {
+                            $("#qr_reader").hide();
+                            isScanning = false;
+                        })
+                        .catch((err) => {
+                            console.error(`Error stopping the scanner: ${err}`);
+                        });
+                }
+            }
+        });
+    </script>
 </html>

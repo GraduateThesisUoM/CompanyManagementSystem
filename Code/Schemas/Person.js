@@ -22,11 +22,6 @@ const PersonSchema = new mongoose.Schema({
       city: { type: String, default: " "},
       country: { type: String, default: " "},
       zip: { type: String, default: " "},
-      shipping_address: { type: String, default: " "},
-      shipping_district: { type: String, default: " "},
-      shipping_city: { type: String, default: " "},
-      shipping_country: { type: String, default: " "},
-      shipping_zip: { type: String, default: " "},
       status: {
         type: Number,
         enum: [0, 1, 2],

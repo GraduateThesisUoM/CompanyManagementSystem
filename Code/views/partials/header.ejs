@@ -1,87 +1,105 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="general_css.css">
-    <!--socket.io-->
-    <script
-    src="https://cdn.socket.io/4.5.0/socket.io.min.js"
-    integrity="sha384-7EyYLQZgWBi67fBtVxw60/OWl1kjsfrPFcaU0pp0nAh+i8FD068QogUvg85Ewy1k"
-    crossorigin="anonymous"
-></script>
-</head>
-<header id="header" name="header">
-    <div id="app-name-div" name="app-name-div">
-        <a href="/"><h2>Our Web Application</h2></a>
-    </div>
-    <div id="menu" name="menu">
-        <a href="settings">Settings</a>
-        <!-- Will be a pop-up not a unique page-->
-        <%if(user.type != 'admin'){%>
-            <a href="profile-page">Profile</a>
-            <select name="notifications" id="notifications" onchange="NotificationClick(this.value)">
-                <option value="title" selected>Notifications <%= notification_list.length %></option>
-                    <%for(var i = 0; i < notification_list.length; i++){
-                        if(notification_list[i].type == "hiring-request-notification"){%>
-                            <option value="/clients^<%= notification_list[i]._id%>">People want to hire you!</option>
-                        <%}
-                        if(notification_list[i].type == "assigned-request-user-notification"){%>
-                            <option value="/my-accountant^<%= notification_list[i]._id%>">An accountant agreed to work with you!</option>
-                        <%}
-                        if(notification_list[i].type == "rejected-request-user-notification"){%>
-                            <option value="/my-accountant^<%= notification_list[i]._id%>">An accountant has chosen not to work with you!</option>
-                        <%}
-                        if(notification_list[i].type == "review-notification"){%>
-                            <option value="/profile-page^<%= notification_list[i]._id%>">Someone left a Review!</option>
-                        <%}
-                        if(notification_list[i].type == "assignments-status-notification"){%>
-                            <option value="/my-accountant^<%= notification_list[i]._id%>">An assignment changed status!</option>
-                        <%}
-                        if(notification_list[i].type == "admin-relationship-sever-user"){%>
-                            <option value="/my-accountant^<%= notification_list[i]._id%>">Admin has removed your accountant!</option>
-                        <%}
-                        if(notification_list[i].type == "admin-relationship-sever-acc"){%>
-                            <option value="/clients^<%= notification_list[i]._id%>">Admin has removed a client!</option>
-                        <%}
-                        if(notification_list[i].type == "firing-accountant-notification"){%>
-                            <option value="/clients^<%= notification_list[i]._id%>">One of your clients just fired you!</option>
-                        <%}
-                    }%>
-            </select>
-        <%}%>
-        <form action="/logout?_method=DELETE" method="POST">
-            <button type="submit">Log Out</button>
-        </form>
-    </div>
+   <!--ajax-->
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+   <!--CSS-->
+   <link rel="stylesheet" href="general_css.css">
+   <link rel="stylesheet" href="fonts_css.css">
 
+   <!--Fonts-->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<style>
+    #header{
+        position: relative;
+        z-index: 100;
+    }
+    #header_menu_img{
+        width: 100px;
+        margin-left: calc(100% - 175px);
+        margin-right: 75px;
+        cursor: pointer;
+        transition: 0.5s;
+        position: fixed; /* Use fixed for consistency across scrolling */
+        top: 0px;
+    }
+
+    #header_menu_img:hover{
+        transform: scale(1.1);
+        filter:drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+    }
+    #header_menu{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 0px;
+        border-radius: 10px;
+        width: 200px;
+        margin-left: calc(100% - 225px);
+        margin-right: 25px;
+        margin-top: 5px;
+        position: fixed; /* Use fixed for consistency across scrolling */
+        top: 100px;
+        box-shadow: -5px 5px 10px 5px rgba(0, 0, 0, 0.7);
+    }
+    #header_menu a{
+        font-size: 1.5em;
+        text-decoration: none;
+        color: rgb(0, 0, 0);
+        width: 100%;
+        text-align: center;
+        padding: 5px 0px;
+        transition: 0.3s;
+    }
+    #header_menu a:hover{
+        color: white;
+        font-weight: 450;
+        text-shadow: -2px 2px 4px rgba(0, 0, 0, 0.8);  
+        background-color: rgba(255, 255, 255, 0.396);
+
+    }
+
+
+</style>
+<header id="header" name="header" class=" asap-condensed-regular">
+    <!--a href="profile-page">Profile</a-->
+    <img id="header_menu_img" width="100" height="100" src="https://img.icons8.com/parakeet-line/100/FFFFFF/test-account.png" alt="test-account"/>
+    <div id="header_menu" class="glass_efect_1 border-radius">
+        <div></div>
+        <div></div><a href="/profile-page">Profile</a>
+        <div></div><a href="/my-company">Company</a>
+        <div></div><a href="/my-invoices">Invoices</a>
+        <div></div><a href="/my-qr-code">QR Code</a>
+        <div></div><a href="/my-reviews">Reviews</a>
+        <div></div><a href="/logout">Log Out</a>
+    </div>
+    <!--form action="/logout?_method=DELETE" method="POST" id="log_out_form">
+        <div>
+            <div id="log_out_img_1" class="img_container">
+                <img src="https://img.icons8.com/pastel-glyph/100/FFFFFF/logout-rounded.png" alt="logout-rounded"/>
+                <div id="log_out_text">Log Out</div>
+            </div>
+            <div id="log_out_img_2" class="img_container">
+                <img src="https://img.icons8.com/pastel-glyph/100/FF0000/logout-rounded.png" alt="logout-rounded"/>
+                <div id="log_out_text">Log Out</div>
+            </div>
+        </div>
+    </form-->
 </header>
 <script>
-        const socket = io('ws://localhost:3000', {
-            reconnectionDelay: 1000,
-            reconnection: true,
-            reconnectionAttemps: 10,
-            transports: ['websocket'],
-            agent: false,
-            upgrade: false,
-            rejectUnauthorized: false
-        });
-        var u_id = "<%= user.id %>";
-        data = {user_id: u_id};
-        socket.emit('log_user', data);
+            $(document).ready(function(){
+                $("#header_menu").hide();
+                $("#header_menu_img").click(function(){
+                    $("#header_menu").toggle();
+                });
+            });
 
 
-    function NotificationClick(value){
-      
-        var components = value.toString().split("^");
-        fetch("/notification-read", {
-            method: "POST",
-            headers: {'Content-Type': 'application/json'}, 
-            body: JSON.stringify({notification_id: components[1]})
-        }).then(res => {
-            if(res.ok){
-                window.location.replace(components[0]);
-            }
-        });  
-    }
+
       
 </script>
 </html>

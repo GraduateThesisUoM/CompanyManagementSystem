@@ -16,6 +16,15 @@ body{
     background-position: top center;
 }
 
+h1 {
+    font-family: "Asap Condensed", serif;
+    font-weight: 300;
+    font-style: normal;
+    color: white;
+    font-size: 4em;
+    text-shadow: 2px 2px 2px rgb(83, 83, 83);
+}
+
 button{
     cursor: pointer;
     border: none;
@@ -32,19 +41,7 @@ button{
     /*grid-template-columns: 200px auto;*/
     padding: 0px;
     margin: 0px;
-    height: 90vh;
-}
-
-#header{
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    background-color: greenyellow;
-    width: 90%;
-    top: 0;
-    left: 0;
-    height: 10vh;
-    padding: 0px 5% ;
+    height: 100vh;
 }
 
 
@@ -186,7 +183,7 @@ button{
 #back_btn{
     position: fixed;
     bottom: 0;
-    left: 0;
+    /*right: 0;*/
     z-index: 2;
 }
 
@@ -327,8 +324,8 @@ border: 1px solid rgba(121, 121, 121, 0.3);
 .input_type_2{
     all: unset;
     width: 100%;
-    border-radius: 10px;
-    padding: 5px;
+    /*border-radius: 10px;
+    padding: 5px;*/
     margin: 5px 0;
     text-indent: 5px;
     border: none;
@@ -384,17 +381,35 @@ border: 1px solid rgba(121, 121, 121, 0.3);
     color: #aaa;
     transition: all 0.2s ease-in-out;
     pointer-events: none;
-    font-size: 1.5em;
-
 }
-.input_type_1:focus + label,
-.input_type_1:not(:placeholder-shown) + label {
+
+.input_container input:not(:placeholder-shown) + label {
     top: -15px;
     left: 10px;
-    font-size: 1.5em;
-    color: #333;
+    color: #1d1d1d;
 }
-
 .input_container input{
     margin-top: 10px;
+}
+
+.container{
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.container input{
+    color: rgb(200, 198, 198) !important;
+    border-radius: 10px;
+    padding: 5px;
+}
+.container label{
+    color: rgb(0, 0, 0) !important;
+}
+
+.container .btn_type_1{
+    font-size: 1.5em;
+}
+
+.container .btn_type_2{
+    font-size: 1.5em;
 }

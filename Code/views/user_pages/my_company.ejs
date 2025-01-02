@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Οι Εταιρία Μου</title>
+        <title>My Company</title>
         <!-- fontawesome for icons -->
         <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
         <!--ajax-->
@@ -9,68 +9,86 @@
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
         <link rel="stylesheet" href="my_company_css.css">
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <div class="has_sidebar">
+        <div class="has_sidebar asap-condensed-regular">
             <%- include('../partials/sidebar'); %>
             <div>
-                <h1><%= company.name %></h1>
-                <form action="/my-company/edit-company" method="POST">
-                    <input type="text" value="<%= company.name %>" name="new_company_name">
-                    <br>
-                    <input type="text" value="<%= company.logo %>" name="new_company_logo">
-
-                    <button type="submit">submit</button>
-                </form>
-
-                <form action="/my-company/change-company-status" method="POST">
-                    <%if(company.status == '1' ){ %>
-                        <div>Company On </div>
-                        <button type="submit">Deactivate Company</button>
-                    <%}else{ %>
-                        <div>Company OFF </div>
-                        <button type="submit">Activate Company</button>
-
-                    <%} %>
-                </form>
-                <%if(company.logo == "" || company.logo == null){ %>
+                <h1><%if(company.logo == "" || company.logo == null){ %>
                     <img src="https://www.smartmoneymatch.com/images/company-logo.png.pagespeed.ce.-9qAfcmVqF.png" id="company_logo">
                 <%}else{ %>
                     <img src="<%= company.logo %>" id="company_logo">
 
-                <%} %>
-                <form action="/my-company" method="POST">
-                    <div class="div_display_license data_section">
-                        <div>Διαθέσημες Άδιες</div>
-                        <div id="bought_license"></div>
-                        <div>Άδιες Σε χρήση</div>
-                        <div id="used_licenses"></div>
-                        <div>Άδιες Σε Αναμονή</div>
-                        <input type="number" id="requested_license" name="requested_license" value='' readonly>
+                <%} %><%= company.name %></h1>
+                <div id="company_data_conatiner">
+                    <div class="glass_efect_2 company_data_item">
+                    <form action="/my-company/edit-company" method="POST" id="edit_company_form">
+                        <label for="new_company_name">Company Name :</label>
+                        <input type="text" value="<%= company.name %>" name="new_company_name" class="input_type_1">
+                        <br>
+                        <input type="text" value="<%= company.logo %>" name="new_company_logo" class="input_type_1">
+
+                        <button type="submit"  class="btn_type_1">Submit</button>
+                    </form>
+
+                    <form action="/my-company/change-company-status" method="POST">
+                        <%if(company.status == '1' ){ %>
+                            <div>Status : Active </div>
+                            <button id="deactivate_company" type="submit">Deactivate Company</button>
+                        <%}else{ %>
+                            
+                            <div>Status : Disabled</div>
+                            <button id="activate_company" type="submit">Activate Company</button>
+
+                        <%} %>
+                    </form>
                     </div>
-                    <div class="div_display_license btn_section">
-                        <button id="add_license">+</button>
-                        <button id="subtract_license">-</button>
-                    </div>
-                    <div class="div_display_license data_section">
-                        <div>Αφαίρεση Άδειας</div>
-                        <input type="number" id="remove_license" name="remove_license" value='' readonly>
-                    </div>
-                    <div class="div_display_license btn_section">
-                        <button id="add_remove_license">+</button>
-                        <button id="subtract_remove_license">-</button>
-                    </div>
-                    <button id="casel_license_requests">Ακύρωση Αιμάτων</button>
-                    <br>
-                    <button id = "submit_btn"type = "submit">Υποβολή</button>
-                </form>
+                    <form action="/my-company" method="POST" class="glass_efect_2 company_data_item">
+                        <div class="div_display_license data_section">
+                            <div class="div_display_license_row">
+                                <div>Available Licenses</div>
+                                <div id="bought_license"></div>
+                            </div>
+                            <div class="div_display_license_row">
+                                <div>Licenses in Use</div>
+                                <div id="used_licenses"></div>
+                            </div>
+
+                            <div class="div_display_license_row">
+                                <div>Licenses Pending</div>
+                            <input type="number" id="requested_license" name="requested_license" value='' readonly>
+                            </div>
+                            
+                            
+                        </div>
+                        <div class="div_display_license btn_section">
+                            <button id="add_license">+</button>
+                            <button id="subtract_license">-</button>
+                        </div>
+                        <div class="div_display_license_row">
+                            <div>Remove License Request</div>
+                            <input type="number" id="remove_license" name="remove_license" value='' readonly>
+                            </div>
+                        
+                        <div class="div_display_license btn_section">
+                            <button id="add_remove_license">+</button>
+                            <button id="subtract_remove_license">-</button>
+                        </div>
+                        <button id="casel_license_requests">Cancel License Request</button>
+                        <br>
+                        <button id = "submit_btn"type = "submit" class="btn_type_1">Submit</button>
+                    </form>
+                </div>
             </div>
         </div>
     </body>
-    <%- include('../partials/footer'); %>
     <script>
 
        $(document).ready(function(){

@@ -4,23 +4,26 @@ const mongoose = require('mongoose');
 const NodeShema = new mongoose.Schema({
   company: { type: mongoose.Schema.Types.ObjectId, required: true  },
   sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
-  receiver_id: { type: mongoose.Schema.Types.ObjectId, required: true },
+  receiver_id: { type: mongoose.Schema.Types.ObjectId, required: false },
   type: {
     type: Number,
-    enum: [1,2,3,4,5,6,7],
     /*1=relationship,
       2=response,
       3=request,
       4=node,
       5=warehouse,
       6 =time table
-      7 = report*/
+      7 = report
+      8 = enter
+      9 = leave
+      10 = licence
+      */
     required: true,
     default:4
   },
   type2: {
     type: Number,
-    enum: [1,2,3,4,5,6,7,8,71,72,73,74,75],
+
     //1=hiring,2=firing,3=response,4=request,6=node,7=shell,8=buy,
     // 71=Harassment,72=Pretending to be someone,73=Fraud/Scam/Malpractice,74=ohter,75= licence για αλλαγές στον αριθμό αδειών
     required: true,

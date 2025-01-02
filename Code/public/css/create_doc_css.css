@@ -1,0 +1,71 @@
+
+#aa{
+    width : 5%;
+}
+
+.item_column{
+    width : 10%;
+    padding: 0px;
+}
+
+.column{
+    width : 10%;
+}
+
+#btn_column{
+    width : 5%;
+}
+
+td>div>input:focus {
+    outline: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+.doc_line_select{
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+select {
+    outline: none;
+    padding: 0px;
+    margin: 0px;
+}
+
+
+#doc_data{
+    display: grid;
+    grid-template-columns: 40% 40%;
+    column-gap: 20%;
+    margin-bottom: 20px;
+    width: 90%;
+    margin-right: calc(5% + 25px);
+    margin-left: calc(5% - 25px);
+    border-radius: 25px;
+    padding: 20px;
+}
+
+.my_input{
+    all: unset;
+    background-color:  rgb(71,73,78);
+    /*font-size: 1.1em;*/
+    padding: 2px 5px;
+    border-radius: 5px;
+    color:rgb(200,198,198)
+}
+#doc_data div{
+    width: 100%;
+    display: block;
+    background-color:  rgb(71,73,78);
+    font-size: 1.1em;
+}
+#doc_data div div{
+    display: grid;
+    grid-template-columns: 40% 60%;
+}
+.hide{
+    visibility: hidden;
+}
+
+

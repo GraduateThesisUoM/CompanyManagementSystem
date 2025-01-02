@@ -3,6 +3,7 @@ const path_constants = require("./constantsPaths");
 const fs = require("fs");
 const path = require("path");
 var mongoose = require("mongoose");
+const { create } = require("./Schemas/Node");
 
 
 //Models
@@ -123,12 +124,15 @@ async function create_node(data) {
   new_data = {
     company: data.company,
     sender_id: data.sender_id,
-    receiver_id: data.receiver_id,
     type: data.type,
-    type2: data.type2,
     status: 3,//pending
     text: data.text
   };
+
+  if(data.type2) new_data.type2 = data.type2;
+  if(data.receiver_id) new_data.receiver_id = data.receiver_id;
+  
+  
   if (data.type == 1) {//relationship
     if(data.status != undefined){
       console.log("**************************************")
@@ -1073,6 +1077,27 @@ async function get_accountant_node(data){
   })
 }
 
+async function record_scan(data){
+  console.log(data)
+  const last_scan = await Node.findOne({sender_id : data.user._id,type: 8, next:'-'});
+  var new_node;
+
+  if(last_scan){
+    new_node = await node_reply({target_node : last_scan, reply: 9 ,user : data.user});
+
+    return 0 //leave
+
+  }
+  
+  new_node = await create_node({
+    company: data.user.company,
+    sender_id: data.user._id,
+    receiver_id: data.user._id,
+    type: 8
+  })
+  return 1 //entered
+
+}
 
 async function clear_db(){
   await drop_collection("Company");
@@ -1125,5 +1150,6 @@ module.exports = {
   importExport,
   clear_db,
   get_accountant_node,
-  get_persons_moves
+  get_persons_moves,
+  record_scan
 };

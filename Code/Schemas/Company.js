@@ -15,8 +15,8 @@ const CompanySchema = new mongoose.Schema({
     default: 1
   },
   license: {
-    used: { type: Number, default: 1 },
-    bought: { type: Number, default: 1 },
+    used: { type: Number, default: 2 },
+    bought: { type: Number, default: 2 },
     requested: { type: Number, default: 0 }
   },  
   signupcode: { type: String, required: true,default:1},

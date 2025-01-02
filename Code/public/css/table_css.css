@@ -1,0 +1,66 @@
+#table_container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#table_container table{
+    border-collapse: collapse;
+    width: 95%;
+    border:none;
+}
+
+#table_container table tr {
+    transition: transform 0.3s ease-in-out; /* Ensures smooth transition when mouse leaves */
+}
+
+#table_container table tr:hover {
+    transform: scale(1.01);
+}
+
+
+#table_container table thead{
+    height: 50px;
+    background: rgba(121, 121, 121, 0.43);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(3.9px);
+-webkit-backdrop-filter: blur(3.9px);
+border: 1px solid rgba(121, 121, 121, 0.3);
+}
+
+#table_container table thead th{
+    color: rgb(197, 197, 197);
+    text-shadow: 0 0 5px black; 
+}
+
+#table_container table th, #table_container table td {
+    border-collapse: collapse;
+    text-align: center;
+    padding: 8px; /* Adds padding to table headers and table cells */
+}
+
+
+#table_container table th {
+    transition: transform 0.3s ease-in-out, padding 0.3s ease-in-out;
+}
+
+#table_container table tr {
+    transition: transform 0.3s ease-in-out; /* Ensures smooth transition when mouse leaves */
+    
+}
+#table_container table tbody{
+    background: rgba(255, 255, 255, 0.50);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.9px);
+    -webkit-backdrop-filter: blur(3.9px);
+    border: none;
+}
+
+
+#table_container table tr:hover {
+    transform: scale(1.01);
+}
+
+

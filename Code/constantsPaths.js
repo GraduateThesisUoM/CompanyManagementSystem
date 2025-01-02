@@ -65,6 +65,13 @@ const views_folders= {
 
 const pages = {
   //General
+  homepage :{
+    url : "/index",
+    file: routes.general+"HomePageRoutes.js",
+    view : function(type) { {
+      return views_folders.all+"index.ejs"
+    }}
+  },
   index :{
     url : "/",
     file: routes.general+"IndexRoutes.js",
@@ -102,11 +109,6 @@ const pages = {
     file: routes.general+"ReportRoutes.js",
     view : ""
   },
-  settings :{
-    url : "/settings",
-    file: routes.general+"SettingsRoutes.js",
-    view : ""
-  },
   profile_page :{
     url : "/profile-page",
     file: routes.general+"ProfilePageRoutes.js",
@@ -125,7 +127,9 @@ const pages = {
   error :{
     url : "/error",
     file: routes.general+"ErrorPageRoutes.js",
-    view : ""
+    view : function() { {
+      return views_folders.general+"error_page.ejs"
+    }}
   },
   delete_account :{
     url : "/delete-account",

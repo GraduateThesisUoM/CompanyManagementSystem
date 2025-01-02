@@ -9,9 +9,133 @@
     gap: 10px;
 }
 .div_display_license.data_section{
-    grid-template-columns: 150px 50px;
+    grid-template-columns: 100%;
 }
+
+.div_display_license_row{
+    display:grid;
+    grid-template-columns: 47.5% 47.5%;
+    gap : 5%;
+    font-size: 1.2em;
+}
+
+.div_display_license_row div{
+    margin: 0px 10px;
+}
+
+.div_display_license_row div:nth-child(2){
+    text-align: right;
+    margin-right: 15px;
+}
+
+
 .div_display_license.btn_section{
     grid-template-columns: 100px 100px;
 }
 
+#company_data_conatiner{
+    display: grid;
+    grid-template-columns: 47.5% 47.5%;
+    gap : 5%;
+    padding-right: 20px;
+    width: calc(100% - 20px);
+}
+.company_data_item{
+    border-radius: 15px;
+    padding: 15px;
+}
+#submit_btn{
+    font-size: 1em;
+    transition: 0.5s;
+}
+
+#deactivate_company{
+    margin-top: 10px;
+    background-color: rgb(255, 0, 0, 0.7);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 1em;
+    transition: 0.3s;
+}
+
+#deactivate_company:hover{
+    background-color: red;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+#activate_company{
+    margin-top: 10px;
+    background-color: rgba(0, 156, 26, 0.7);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    font-size: 1em;
+    transition: 0.3s;
+}
+
+#activate_company:hover{
+    background-color: rgba(0, 156, 26,1 );
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+#edit_company_form label{
+    font-size: 1.2em;
+}
+#edit_company_form input{
+    width: 95%;
+    font-size: 1.2em;
+}
+#edit_company_form button{
+    font-size: 1em;
+    margin-bottom: 15px;
+}
+
+#requested_license{
+    all: unset;
+    text-align: right;
+}
+
+#remove_license{
+    all: unset;
+    text-align: right;
+}
+
+.btn_section button{
+    border-radius: 5px;
+    transition: transform 0.3s ease;
+}
+
+.btn_section button:disabled {
+    opacity: 0.5;
+}
+
+.btn_section button:not(:disabled):hover {
+    transform: scale(1.1);
+}
+
+.btn_section :nth-child(1){
+    background-color: rgb(255, 255, 255);
+    color: rgb(68, 68, 68);
+}
+
+.btn_section :nth-child(2){
+    background-color: rgb(68, 68, 68);
+    color: white;
+}
+
+#casel_license_requests{
+    background-color: rgb(255, 0, 0);
+    border-radius: 10px;
+    color: white;
+    font-size: 1.1em;
+    padding: 5px 25px;
+    margin-top: 15px;
+}
+#casel_license_requests:disabled {
+    opacity: 0.5;
+}
+#casel_license_requests:not(:disabled):hover {
+    transform: scale(1.1);
+}
