@@ -52,20 +52,102 @@ select {
     /*font-size: 1.1em;*/
     padding: 2px 5px;
     border-radius: 5px;
-    color:rgb(200,198,198)
+    color:rgb(200,198,198);
 }
 #doc_data div{
     width: 100%;
     display: block;
-    background-color:  rgb(71,73,78);
     font-size: 1.1em;
 }
 #doc_data div div{
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 65% 35%;
+    margin-top: 2px;
+}
+#doc_data div div span{
+    display: grid;
+    grid-template-columns: 60% 40%;
+}
+
+#doc_data div div  span:nth-child(2) span:nth-child(2) {
+    text-indent: 10px;
 }
 .hide{
     visibility: hidden;
 }
+.remove_row {
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.remove_row:hover:not(:disabled) {
+    background-color: rgba(255, 0, 0, 1);
+    box-shadow: -2px 2px 5px black;
+}
+
+.remove_row:disabled {
+    background-color: rgba(255, 0, 0, 0.3);
+    cursor: not-allowed;
+}
+
+#doc_btn_container{
+    display: grid;
+    grid-template-columns: 30% 30%;
+    column-gap: 40%;
+    margin-top: 20px;
+    width: 90%;
+    margin-right: calc(5% + 25px);
+    margin-left: calc(5% - 25px);
+    border-radius: 25px;
+    padding: 20px;
+}
+
+#clear{
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#clear:hover{
+    background-color: rgba(255, 0, 0, 1);
+    box-shadow: -2px 2px 5px black;
+}
+
+#submit_btn{
+    background-color: rgb(0, 134, 60);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#submit_btn:hover:not(:disabled) {
+    background-color: rgb(0, 177, 44);
+    box-shadow: -2px 2px 5px black;
+}
+
+#submit_btn:disabled {
+    background-color: rgba(0, 134, 60, 0.45);
+}
+
+.column div{
+    display: grid;
+    grid-template-columns: 50% 50%;
+}
+
 
 

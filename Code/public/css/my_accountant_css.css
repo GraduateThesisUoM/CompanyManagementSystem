@@ -1,32 +1,126 @@
-/*.rating_form >  .star_btn{
-    border: none;
-    text-align: center;
-    text-decoration: none;
+  #my_accountant_main_container{
+    margin-right: 10px;
+    width: calc(100% - 60px) !important;
+  }
+  
+  
+  #my_accountant_main_container > div {
+    display: grid;
+    grid-template-columns: 45% 45%;
+    gap: 10%;
+  }
+
+
+
+
+  .textarea_container {
+    width: calc(100% - 30px); /* Make the textarea take the full width of its parent */
+    height: 100px;
+    background-color: rgb(85, 85, 85);
+    padding: 15px;
+    border-radius: 20px;
+    margin-top: 15px;
+  }
+
+  .textarea_container textarea {
+    all:unset;
+    padding: 10px;
+    width: calc(100% - 20px); /* Make the textarea take the full width of its parent */
+    height: 80px;
+    resize: none; /* Make the textarea not resizable */
     background-color: transparent;
-    font-size: 50px;
-}*/
+    overflow-x: hidden;
 
-/*.star_selected{
-    color: gold;
-}*/
+  }
 
+  #send_request_form #req_data{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 
-#my_requests_record {
-    border-collapse: collapse; /* Collapse border spacing */
-    width: 100%; /* Make the table take up the full width of its container */
+  .my_accountant_form_div{
+    height: 60px;
+    display: block;
   }
-  
-  /* Style table header cells */
-  #my_requests_record > tbody > tr {
-    border: 1px solid #000; /* Add a 1px solid black border around th elements */
-    padding: 8px; /* Add some padding for better readability */
-    text-align: left; /* Align text to the left within th elements */
+
+  .my_accountant_form_div select{
+    background-color: rgb(85, 85, 85);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 5px;
+    margin-left: 5px;
   }
-  
-  /* Style table data cells */
-  #my_requests_record > tbody > tr > td , #my_requests_record > tbody > tr > th {
-    border: 1px solid #000; /* Add a 1px solid black border around td elements */
-    padding: 8px; /* Add some padding for better readability */
-    text-align: left; /* Align text to the left within td elements */
+
+  .my_accountant_form_div input{
+    all:unset;
+    background-color: rgb(85, 85, 85);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 5px;
+    margin-left: 5px;
   }
+
+  .my_accountant_main_container div form > button{
+    background-color: rgb(15, 96, 189);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    margin-left: 5px;
+    width: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .my_accountant_main_container div form > button:hover{
+    scale: 1.1;
+    font-size: 1.1em;
+  }
+
+  .textarea_container textarea::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 8px;
+	background-color: transparent;
+    margin-top: 10px; /* Adjust the track margin at the top */
+    margin-bottom: 10px; /* Adjust the track margin at the bottom */
+}
+
+.textarea_container textarea::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: transparent;
+}
+
+.textarea_container textarea::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #555;
+}
+
+#remove_accountant_form{
+  display: flex;
+  flex-direction: row;
+  justify-content: right;
+}
+
+#remove_accountant_form button{
+  background-color: rgba(189, 15, 15, 0.788);
+  color: white;
+  border: none;
+  border-radius: 15px;
+  padding: 10px;
+  margin-right: 5%;
+  width: 25%;
+  transition: all 0.3s ease;
+}
+
+#remove_accountant_form button:hover{
+  background-color: rgba(189, 15, 15,1);
+
+} 
+
 

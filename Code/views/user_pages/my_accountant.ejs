@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Ο Λογιστής Μου</title>
+        <title>My Accountant</title>
         <!-- fontawesome for icons -->
         <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
         <!--ajax-->
@@ -9,6 +9,14 @@
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
         <link rel="stylesheet" href="my_accountant_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+        <link rel="stylesheet" href="table_css.css">
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <%- include('../partials/header'); %>
@@ -17,94 +25,108 @@
         <div class="has_sidebar">
             <%- include('../partials/sidebar'); %>
             <div>
-        <h1>Ο Λογιστής Μου</h1>
-        <p>
-            First Name : <%= accountant.firstName %><br>
-            Last Name : <%= accountant.lastName %><br>
-            Email : <%= accountant.email %>
-        </p>
+            <div class="asap-condensed-regular">
+                <h1>My Accountant</h1>
+                <div class="glass_efect_2 container" id="my_accountant_main_container">
+                    <p>
+                        Accountant : <%= accountant.firstName %> <%= accountant.lastName %><br>
+                        Email : <%= accountant.email %>
+                    </p>
+                    <div>
+                        <form class="rating_form" action="/my-accountant-rate" method="POST">
+                            <h2>Rating</h2>
+                            <div class="my_accountant_form_div">
+                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                            </div>
+                            <input style="display: none;" type="text" id='rating_input' name='rating_input'>
+                            <div class="textarea_container">
+                                <textarea id='rating_textarea' name='rating_textarea'></textarea>
+                            </div>
+                            <br>
+                            <button type="submit">Submit</button>
+                        </form>
+                        <form action="/my-accountant-requests" method="POST" id="send_request_form">
+                                <h2>New Request</h2>
+                                <div id="req_data" class="my_accountant_form_div">
+                                    <div id="request_type_div">
+                                        <label for="request_type">Type : </label>
+                                        <select name = 'request_type' id = 'request_type'>
+                                            <option value="general">General</option>
+                                            <option value="request1">Something_1</option>
+                                            <option value="request2">Something_2</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label for="request_title">Title : </label>
+                                        <input placeholder="Tilte" id="request_title" name="request_title">
+                                    </div>
+            
+                                    <div>
+                                        <label for="request_due_date">Due Date : </label>
+                                        <input type="date" placeholder="Due Date" id="request_due_date" name="request_due_date">
+                                    </div>
+                                </div>
 
-
-        <form class="rating_form" action="/my-accountant-rate" method="POST">
-            <h2>Rating</h2>
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-            <br>
-            <input style="display: none;" type="text" id='rating_input' name='rating_input'>
-            <br>
-            <textarea id='rating_textarea' name='rating_textarea'></textarea>
-            <br>
-            <button type="submit">Submit</button>
-        </form>
-
-        <a href="/report">Report Accountant</a>
-
-        <div class ='requests'>
-                <h2>Request</h2>
-                <div id="my_requests_div">
+                                <div class="textarea_container"><textarea id='request_text' name='request_text'></textarea></div>
+                                <br>
+                                <button id="submit_from_request_btn" type="button">Submit</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+                
+        <div class ='requests asap-condensed-regular'>
+            <h2>Request</h2>
+            <div id="my_requests_div">
+                <div id="table_container">
                     <table id="my_requests_record">
+                        <thead>
                         <tr> <!-- This is a table row -->
                             <th>Type</th> <!-- Table header cell -->
                             <th>Title</th>
                             <th>Registration Date</th>
                             <th>Due Date</th>
                             <th>Status</th>
-                            <th> </th>
                         </tr>
+                    </thead>
+                    <body>
+                        <tr>
+                            <td>General</td>
+                            <td>Request 1</td>
+                            <td>2022-01-01 12:00:00</td>
+                            <td>2022-01-01</td>
+                            <td>Open</td>
+                        </tr>
+                    </body>
                     </table>
-                    <button id="more_requests_btn">More...</button>
-                    <div id="display_request">
-                        <p id="request_preview_status"></p>
-                        <p id="request_preview_type"></p>
-                        <p id="request_preview_title"></p>
-                        <p id="request_preview_reg_date"></p>
-                        <p id="request_preview_due_date"></p>
-                        <p id="request_preview_text"></p>
-                        <button id="show_hide_request_preview">Hide</button>
-                    </div>
-                    <form style="display: none;" action="/my-accountant-delete-request" method="POST" id="delete_request_from">
-                        <input name="request_id" id="request_id">
-                        <button id="submit_from_delete_request_btn" type="submit">Submit</button>
-                    </form>
                 </div>
-                <div id="new_request">
-                    <form action="/my-accountant-requests" method="POST" id="send_request_form">
-                        <h3>New Request</h3>
-                        <div>
-                            <label for="request_type">Type : </label>
-                            <select name = 'request_type' id = 'request_type'>
-                                <option value="general">General</option>
-                                <option value="request1">Something_1</option>
-                                <option value="request2">Something_2</option>
-                            </select>
-                        </div>
-                        
-                        <div>
-                            <label for="request_title">Title : </label>
-                            <input placeholder="Tilte" id="request_title" name="request_title">
-                        </div>
-
-                        <div>
-                            <label for="request_due_date">Due Date : </label>
-                            <input type="date" placeholder="Due Date" id="request_due_date" name="request_due_date">
-                        </div>
-                        
-                        <textarea name="request_text" id="request_text"></textarea></br>
-                        <button id="submit_from_request_btn" type="button">Submit</button>
-                    </form>
+                
+                <button id="more_requests_btn">More...</button>
+                <div id="display_request">
+                    <p id="request_preview_status"></p>
+                    <p id="request_preview_type"></p>
+                    <p id="request_preview_title"></p>
+                    <p id="request_preview_reg_date"></p>
+                    <p id="request_preview_due_date"></p>
+                    <p id="request_preview_text"></p>
+                    <button id="show_hide_request_preview">Hide</button>
                 </div>
-            
+                <form style="display: none;" action="/my-accountant-delete-request" method="POST" id="delete_request_from">
+                    <input name="request_id" id="request_id">
+                    <button id="submit_from_delete_request_btn" type="submit">Submit</button>
+                </form>
+            </div>
         </div>
-        <form id="my_accountant_form" action="/my-accountant"  method="POST">
+        <form id="remove_accountant_form" action="/my-accountant"  method="POST">
             <!--input type="hidden" name="accountant_id" value="<%=accountant._id%>"-->
             <!--button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button-->
             <button type="button" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
         </form>
         <button type="button" onclick="window.location = '/pick-accountant'">Προβολή Λογιστών</button>
-        
     </div>
 </div>
     </body>
@@ -142,7 +164,7 @@
             $("#remove_accountant_btn").click(function(){
                 if (confirm("Αν απολύσετε τον λογιστή σας όλα τα εκκρεμή αιτήματα θα ακυρωθούν.") == true) {
 
-                    $("#my_accountant_form").submit();
+                    $("#remove_accountant_form").submit();
                 }
             });
 
@@ -212,7 +234,7 @@
             hide_btn.hide();
 
             if(requests.length == 0){
-                requests_table.hide()
+                //requests_table.hide()
                 my_requests_div.append($("<p>").text("You haven't made any requests addressed to your current accountant"))
             }
             else{

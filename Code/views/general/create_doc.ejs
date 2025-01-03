@@ -71,29 +71,48 @@
                   <div class="hide">-</div>
             </div>
             <div>
-                <div>Total Value : <span id="doc_total_value">0.00</span> €</div>
-                <div>Discount : <input id="general_discount" class="general_discount" name="general_discount" type="number" value="0" min="0" max="100" required /> %</div>
-                <div>Discount Amount: <input id="general_discount_amount" class="general_discount" name="general_discount_amount" type="number" value="0" min="0" required /> €</div>
+                <div>
+                  <span>Total Value : </span>
+                  <span>
+                    <span id="doc_total_value">0.00</span>
+                    <span>€</span>
+                  </span>
+                </div>
+                <div>
+                  <span>Discount :</span>
+                  <span>
+                    <input id="general_discount" class="general_discount my_input" name="general_discount" type="number" value="0" min="0" max="100" required />
+                    <span> %</span>
+                  </span>
+                </div>
+                <div>
+                  <span>Discount Amount: </span>
+                  <span>
+                    <input id="general_discount_amount" class="general_discount my_input" name="general_discount_amount" type="number" value="0" min="0" required />
+                    <span> €</span>
+                  </span>
+                </div>
 
-                <div>Total Cost : <span id="doc_total_cost">0.00</span> €</div>
-                <div>Total Discounts : <span id="doc_total_disc">0.00</span> €</div>
-                <div>Total Price after Discounts : <span id="doc_total_after_disc">0.00</span> €</div>
-                <div>Total Price after Tax : <span id="doc_total_after_tax">0.00</span> €</div>
+                <div>
+                  <span>Total Cost : </span>
+                  <span><span id="doc_total_cost">0.00</span><span>€</span></span>
+                </div>
+
+                <div>
+                  <span>Total Discounts : </span>
+                  <span><span id="doc_total_disc">0.00</span><span>€</span></span>
+                </div>
+                <div>
+                  <span>Total Price after Discounts : </span>
+                  <span><span id="doc_total_after_disc">0.00</span><span>€</span></span>
+                </div>
+                <div>
+                  <span>Total Price after Tax : </span>
+                  <span><span id="doc_total_after_tax">0.00</span><span>€</span></span>
+                </div>
             </div>
-            <!--input type="text" id="doc_type" name="doc_type" style="display: none" />
-            
-            
-            
-            
-            
-            
-            
-            
-            <br />
-
-            
-            <br />
-            <input id="num_of_rows" name="num_of_rows" style="display: none" /-->
+            <input type="text" id="doc_type" name="doc_type" style="display: none" />
+            <input id="num_of_rows" name="num_of_rows" style="display: none" >
           </div>
           <div id="table_container">
             <table id="doc_table" class="my_table">
@@ -116,8 +135,10 @@
             </table>
           </div>
         </form>
-        <button id="submit_btn">Register</button>
-        <button id="clear">Clear</button>
+        <div id="doc_btn_container">
+          <button id="clear">Clear</button>
+          <button id="submit_btn">Register</button>
+        </div>
       </div>
     </div>
   </body>
