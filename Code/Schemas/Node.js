@@ -25,6 +25,7 @@ const NodeShema = new mongoose.Schema({
     type: Number,
 
     //1=hiring,2=firing,3=response,4=request,6=node,7=shell,8=buy,
+    //31 = other, 32 = Payroll 33 = Τimetable 34 = hire/fire
     // 71=Harassment,72=Pretending to be someone,73=Fraud/Scam/Malpractice,74=ohter,75= licence για αλλαγές στον αριθμό αδειών
     required: true,
     default:6

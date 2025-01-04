@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="time_table_css.css" />
     <link rel="stylesheet" href="list_css.css" />
     <link rel="stylesheet" href="fonts_css.css">
+    <link rel="stylesheet" href="textarea_css.css">
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -115,19 +116,23 @@
                 <%}) %>
               </tbody>
             </table>
-            <% }else if(type[index] == 9){ %> <%= title %><br />
-            <textarea name="input<%= index %>" id="<%= title %>"><%= data[index] %></textarea>
+            <% }else if(type[index] == 9){ %>
+              <br><div><%= title %></div>
+            <div class="textarea_container">
+              <textarea name="input<%= index %>" id="<%= title %>"><%= data[index] %></textarea>
+            </div>
             <% }else if(type[index] == 10){ %>
             <div>
               <% data[index].forEach(function(node, index) {%>
               <div id="nodes_conainer">
                 <div>
-                  Sender :
-                  <a><%=node.sender.firstName%> <%=node.sender.lastName%></a>
+                  <div class="message_header">
+                    <div class="person"><%=node.sender.firstName%> <%=node.sender.lastName%></div>
+                    <div class="reg_d"><%=node.registrationDate%></div>
+                  </div>
+                  <div class="node_text"><%=node.text%></div>
+                  <div class="node_status"><%=node.status%></div>
                 </div>
-                <div>Reg Date : <%=node.registrationDate%></div>
-                <div>Status : <span class="node_status"><%=node.status%></span></div>
-                <div>Text : <%=node.text%></div>
               </div>
               <%});%>
             </div>
@@ -143,7 +148,7 @@
                 <input type="text" id="series_transforms_list" name="series_transforms_list" style="display: none;">
               </div>
             <% }else if(type[index] == 13){ %>
-            <%= title %> : <%= data[index] %>
+            <div id="<%= title %>"><%= title %> : <%= data[index] %></div>
             <% }else if(type[index] == 14){ %>
               <%= title %> : <select id="select_warehose" name="select_warehose"></select>
             <% }else if(type[index] == 15){ %>
@@ -329,6 +334,7 @@
               <div id="textarea_conatainer">
                 <textarea class="dummy" placeholder="Notes..."></textarea>
               </div>
+              
             </div>
           </div>
           <div id="day_data_footer">
@@ -693,6 +699,12 @@
         $("#btn1").hide()
         $("#btn2").hide()
         $("#btn3").hide()
+      }
+      else if (queryParams.type == 'requests'){
+        $("#btn1").hide();
+        $("#btn2").css("visibility", "hidden");
+        //$("#btn3").html("<div id='btn_text_wiht_img'><div>Send</div><img width='50' height='50' src='https://img.icons8.com/wired/100/FFFFFF/paper-plane.png' alt='paper-plane'/></div>");
+        $("#btn3").html("<img width='35' height='35' src='https://img.icons8.com/wired/100/FFFFFF/paper-plane.png' alt='paper-plane'/>");
       }
       else {
         $("#btn1").click(function () {

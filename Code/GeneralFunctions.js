@@ -710,6 +710,14 @@ function get_type2(id){
       return "Shell";
     case 8:
       return "Buy";
+    case 31:
+      return "Other";
+    case 32:
+      return "Payroll";
+    case 33:
+      return "Timetable";
+    case 34:
+      return "Hire/Fire";
     case 71:
       return "Harassment";
     case 72:
@@ -736,6 +744,9 @@ const formatDateTime = (dateString) => {
 };
 
 const formatDate = (dateString) => {
+  if(dateString == null){
+    return "-"
+  }
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");

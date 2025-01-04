@@ -32,7 +32,6 @@
         filter:drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
     }
     #header_menu{
-        display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
@@ -45,6 +44,8 @@
         position: fixed; /* Use fixed for consistency across scrolling */
         top: 100px;
         box-shadow: -5px 5px 10px 5px rgba(0, 0, 0, 0.7);
+
+        display: none;
     }
     #header_menu a{
         font-size: 1.5em;
@@ -94,7 +95,11 @@
             $(document).ready(function(){
                 $("#header_menu").hide();
                 $("#header_menu_img").click(function(){
-                    $("#header_menu").toggle();
+                    if ($("#header_menu").css("display") === "flex") {
+                        $("#header_menu").css("display", "none");
+                    } else {
+                        $("#header_menu").css("display", "flex");
+                    }
                 });
             });
 

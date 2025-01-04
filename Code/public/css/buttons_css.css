@@ -1,0 +1,23 @@
+.button_1{
+    background-color: rgba(15, 96, 189, 0.7);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+.button_1:hover{
+    background-color: rgb(15, 96, 189);
+}
+
+.button_2{
+    background-color: rgba(189, 15, 15, 0.7);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+.button_2:hover{
+    background-color: rgba(189, 15, 15, 1);
+}

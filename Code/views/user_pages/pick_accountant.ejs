@@ -7,6 +7,10 @@
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
         <link rel="stylesheet" href="pick_accountant_css.css">
+        <link rel="stylesheet" href="buttons_css.css">
+        <link rel="stylesheet" href="table_css.css">
+
+
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <%- include('../partials/header'); %>
@@ -19,7 +23,24 @@
                 <!--form action="/self-accountant-register" method="POST">
                     <button style="display: none;" type="submit" id="self_accountant_submit_btn">Αυτοδιαχείριση λογιστικών</button>
                     </form-->
-                <button type="button" id="self_accountant_btn">Αυτοδιαχείριση λογιστικών</button>
+                <button style="margin-bottom: 20px;" type="button" class="button_1" id="self_accountant_btn">Αυτοδιαχείριση λογιστικών</button>
+
+                <div id="table_container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>4.5</td>
+                                <td>4.5</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <form action="/pick-accountant" method="POST" id="pick_accountant_form">
                 <input style="display: none;" name="accountant_id" id="accountant_id">
@@ -33,7 +54,6 @@
             </div>
         </div>
     </body>
-    <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
 
@@ -62,40 +82,6 @@
                     $("#pick_accountant_form").submit();
                 }
             });
-
-            
-            if(parseInt('<%= accountants.length%>') == 0){
-                alert("Δεν υπάρχουν διαθέσιμοι Λογιστές")
-            }
-            else{
-                const ratings = JSON.parse(`<%- JSON.stringify(ratings) %>`);
-
-                const accountantsJSON = `<%- JSON.stringify(accountants) %>`;
-                const accountantsArray = JSON.parse(accountantsJSON);
-
-                const accountantListDiv = $("#accountan_table");
-
-                var count = 0;
-                accountantsArray.forEach(accountant => {
-                    const accountantElement = $("<div>").addClass("accountant_element");
-                    const accountantElement_accountant_name = $("<div>").text(accountant.firstName + " " + accountant.lastName);
-                    const accountantElement_accountant_rating = $("<div>").text(" . . . . . . . av_rating : " + ratings[count]);
-
-                    accountantElement.append(accountantElement_accountant_name);
-                    accountantElement.append(accountantElement_accountant_rating);
-
-                    const buttonElement = $("<button>").text("Προφίλ").addClass("accountant_button").click(function() {
-                        $("#accountant_id").val(accountant._id);
-                        $("#accountant_id_submit_btn").click();
-                    });
-                    // Append the button element as a child of the accountantElement
-                    accountantElement.append(buttonElement);
-                    
-                    accountantListDiv.append(accountantElement, "<br>");
-
-                    count = count + 1;
-                });
-            }
         });
         
     </script>

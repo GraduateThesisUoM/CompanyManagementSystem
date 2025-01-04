@@ -70,26 +70,49 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
               }
             }
             else{
-              const users_accountant = await Accountant.findOne({_id:company_accountant_node.sender_id});
-              const users_nodes = await Node.find({ sender_id :req.user._id, company_id:company._id , receiver_id :users_accountant._id, type:3/*Request*/});
-              var accountant_review = await Review.findOne({company_id:company._id,reviewer_id: req.user._id, reviewed_id: users_accountant._id, type:1});
+              var accountant_review = await Review.findOne({
+                company:company._id,
+                reviewer_id: req.user._id,
+                reviewed_id: company_accountant_node.sender_id,
+                type:1});
+
               if (accountant_review == null){
                 accountant_review = new Review({
                   company_id: company._id,
                   reviewer_id: req.user._id,
-                  reviewed_id: users_accountant._id,
+                  reviewed_id: company_accountant_node.sender_id,
                   rating: -1,
                   registrationDate: ''
                 });
               }
 
-              const data = {
+                var nodes = await Node.find({
+                  company: company._id,
+                  sender_id: req.user._id,
+                  receiver_id: company_accountant_node.sender_id,
+                  type: 3,
+                  type2: { $in: [31, 32, 33, 34] }
+                }).sort({ registrationDate: -1 }).limit(5);
+
+                nodes = nodes.map(node => {
+                  return {
+                    _id: node._id,
+                    type: generalFunctions.get_type2(node.type2),
+                    title: node.title,
+                    text: node.text,
+                    due_date: generalFunctions.formatDate(node.due_date),
+                    status: generalFunctions.get_status(node.status),
+                    registrationDate: generalFunctions.formatDate(node.registrationDate)
+                  }
+                })
+
+                const data = {
                 user: req.user,
                 accountant: users_accountant,
-                review : accountant_review,
-                nodes : users_nodes,
-                notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})
-              }
+                review: accountant_review,
+                nodes : nodes
+                }
+
               res.render('user_pages/my_accountant.ejs', data);
             }
           }

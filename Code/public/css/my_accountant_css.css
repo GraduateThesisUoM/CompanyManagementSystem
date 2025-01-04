@@ -10,29 +10,6 @@
     gap: 10%;
   }
 
-
-
-
-  .textarea_container {
-    width: calc(100% - 30px); /* Make the textarea take the full width of its parent */
-    height: 100px;
-    background-color: rgb(85, 85, 85);
-    padding: 15px;
-    border-radius: 20px;
-    margin-top: 15px;
-  }
-
-  .textarea_container textarea {
-    all:unset;
-    padding: 10px;
-    width: calc(100% - 20px); /* Make the textarea take the full width of its parent */
-    height: 80px;
-    resize: none; /* Make the textarea not resizable */
-    background-color: transparent;
-    overflow-x: hidden;
-
-  }
-
   #send_request_form #req_data{
     display: flex;
     flex-direction: row;
@@ -63,7 +40,7 @@
     margin-left: 5px;
   }
 
-  .my_accountant_main_container div form > button{
+  #my_accountant_main_container > div  form > button{
     background-color: rgb(15, 96, 189);
     color: white;
     border: none;
@@ -74,53 +51,36 @@
     transition: all 0.3s ease;
   }
 
-  .my_accountant_main_container div form > button:hover{
+  #my_accountant_main_container > div form > button:hover{
     scale: 1.1;
     font-size: 1.1em;
   }
 
-  .textarea_container textarea::-webkit-scrollbar-track
-{
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
-	border-radius: 8px;
-	background-color: transparent;
-    margin-top: 10px; /* Adjust the track margin at the top */
-    margin-bottom: 10px; /* Adjust the track margin at the bottom */
+#new_accountan_div{
+  display: grid;
+  grid-template-columns: 45% 45%;
+  gap: 10%;
+  margin-right: 30px;
+  margin-top: 30px;
+  width: calc(100% - 30px) !important;
+  margin-bottom: 20px;
 }
 
-.textarea_container textarea::-webkit-scrollbar
-{
-	width: 12px;
-	background-color: transparent;
-}
-
-.textarea_container textarea::-webkit-scrollbar-thumb
-{
-	border-radius: 10px;
-	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-	background-color: #555;
-}
-
-#remove_accountant_form{
+#new_accountan_div > * {
   display: flex;
-  flex-direction: row;
-  justify-content: right;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-#remove_accountant_form button{
-  background-color: rgba(189, 15, 15, 0.788);
-  color: white;
+#new_accountan_div > * > button{
   border: none;
   border-radius: 15px;
   padding: 10px;
-  margin-right: 5%;
-  width: 25%;
+  margin-right: 0%;
+  width: 100%;
   transition: all 0.3s ease;
 }
 
-#remove_accountant_form button:hover{
-  background-color: rgba(189, 15, 15,1);
-
-} 
 
 

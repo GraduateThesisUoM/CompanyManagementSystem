@@ -24,6 +24,17 @@ const Client = require(path_constants.schemas.two.client);
 const Accountant = require(path_constants.schemas.two.accountant);
 
 /*
+0 text-readonly
+1 normal-text,
+2=doc-table
+3=display:none
+4 checkbox not editable
+5 checkbox
+6 input type number
+7 for docs wholesale_retail 
+10 nodes
+13 simple text display
+14 select warehose
 15 input hiden show text for status
 */
 
@@ -100,8 +111,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             ];
             data.titles = ["Doc", "Reg Date", person_type, "General Discount %", "Status", "Type", "Sealed", "Warehouse", "Data"];
 
-            data.type = [13, 13, 13, 6, 3, 7, 4, 14, 2]; //1=normal-text,0=text-readonly,2=doc-table,3=display:none,4 checkbox not editable,5 checkbox,6 input type number
-            //7 for docs wholesale_retail 14 select warehose
+            data.type = [13, 13, 13, 6, 3, 7, 4, 14, 2]; 
             //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
 
             secondary_data = {
@@ -166,14 +176,14 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             ];
             data.titles = ["Title", "Description", "Reg Date", "Unit of Peasurement", "Price Retail", "Price Wholesale", "Discount Retail", "Discount Wholesale", "Tax Retail", "Tax Wholesale", "Status", "Inventory"];
             data.type = [1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 15, 0];
-            //1=normal-text,0=text-readonly
+            
           } else if (type == "users") {
             obj = await User.findOne({ _id: id });
             data.data = [obj.firstName, obj.lastName, obj.email, obj.status, generalFunctions.formatDate(obj.registrationDate)];
             data.titles = ["FirstName", "LastName", "email", "Status", "Reg Date"];
             data.type = [1, 1, 1, 15, 0];
-            //1=normal-text,0=text-readonly
-          } else if (type == "nodes") {
+            
+          } else if (type == "nodes" || type == "requests") {
             obj = await Node.findOne({ _id: id });
             if (obj.status == 3) {//pending
               obj.status = 1;//viewed
@@ -183,12 +193,18 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             nodes.push(obj);
             var node = obj;
             while (true) {
-              node = await Node.findOne({ next: node._id });
-              if (node == undefined) {
-                break;
-              } else {
-                nodes.push(node);
+              if(node.next != "-"){
+                node = await Node.findOne({ _id: node.next });
+                if (node == undefined) {
+                  break;
+                } else {
+                  nodes.push(node);
+                }
               }
+              else{
+                break;
+              }
+              
             }
 
             const company = await Company.findOne({ _id: obj.company });
@@ -198,19 +214,19 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               var sender_user = await User.findOne({ _id: n.sender_id });
               node_data.push({
                 sender: sender_user,
-                registrationDate: generalFunctions.formatDate(obj.registrationDate),
+                registrationDate: generalFunctions.formatDateTime(obj.registrationDate),
                 title: n.title,
-                status: n.status,
+                status: generalFunctions.get_status(n.status),
                 text: n.text,
                 locked: n.locked,
               });
             }
             node_data.reverse();
 
-            data.data = [obj.title, obj.type, obj.type2, company.name, node_data, ""];
-            data.titles = ["Title", "Type", "Type2", "Company", "Data", "Answer"];
-            data.type = [0, 0, 0, 0, 10, 9];
-            //nodes10
+            data.data = [obj.title, generalFunctions.get_type2(obj.type2), company.name, node_data, ""];
+            data.titles = ["Title", "Type", "Company", "Data", "Reply"];
+            data.type = [13, 13, 13, 10, 9];
+            
           } else if (type == "clients") {
             obj = await Company.findOne({ _id: id });
             data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate)];
@@ -445,14 +461,11 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 
         }
 
-        var time_table_new_node;
-
-
         if (req.body.calendar_view_selection) {
           return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}&timetable=${req.body.calendar_view_selection}`);
         }
         return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
-      } else if (req.query.type == "nodes") {
+      } else if (req.query.type == "nodes" || req.query.type == "requests") {
         const node = await Node.findOne({ _id: req.query.id });
         let action = 4; //rejected
         if (req.body.action == "executed") {
@@ -463,7 +476,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
           user: req.user,
           target_node: node,
           reply: 1, //response
-          text: req.body.input5,
+          text: req.body.input4,
           status: action,
         });
         return res.redirect(`/view?type=${req.query.type}&id=${new_node.id}`);

@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="my_accountant_css.css">
         <link rel="stylesheet" href="fonts_css.css">
         <link rel="stylesheet" href="table_css.css">
+        <link rel="stylesheet" href="buttons_css.css">
+        <link rel="stylesheet" href="textarea_css.css">
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -36,15 +38,15 @@
                         <form class="rating_form" action="/my-accountant-rate" method="POST">
                             <h2>Rating</h2>
                             <div class="my_accountant_form_div">
-                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
-                                <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                                <%for (var i = 0; i < review.rating; i++) {%>
+                                <button type="button" class="star_btn star_selected"><i class="fa-solid fa-star"></i></button>
+                                <%}for (var i = review.rating; i < 5; i++) {%>
+                                    <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
+                                <%}%>
                             </div>
-                            <input style="display: none;" type="text" id='rating_input' name='rating_input'>
+                            <input style="display: none;" type="text" id='rating_input' name='rating_input' value="<%=review.rating%>">
                             <div class="textarea_container">
-                                <textarea id='rating_textarea' name='rating_textarea'></textarea>
+                                <textarea id='rating_textarea' name='rating_textarea'><%=review.text%></textarea>
                             </div>
                             <br>
                             <button type="submit">Submit</button>
@@ -55,9 +57,10 @@
                                     <div id="request_type_div">
                                         <label for="request_type">Type : </label>
                                         <select name = 'request_type' id = 'request_type'>
-                                            <option value="general">General</option>
-                                            <option value="request1">Something_1</option>
-                                            <option value="request2">Something_2</option>
+                                            <option value="31">General</option>
+                                            <option value="32">Payroll</option>
+                                            <option value="33">Τimetable</option>
+                                            <option value="34">Hire/fire</option>
                                         </select>
                                     </div>
                                     <div>
@@ -71,7 +74,7 @@
                                     </div>
                                 </div>
 
-                                <div class="textarea_container"><textarea id='request_text' name='request_text'></textarea></div>
+                                <div class="textarea_container"><textarea class="mytextarea" id='request_text' name='request_text'></textarea></div>
                                 <br>
                                 <button id="submit_from_request_btn" type="button">Submit</button>
                         </form>
@@ -83,50 +86,58 @@
             <h2>Request</h2>
             <div id="my_requests_div">
                 <div id="table_container">
-                    <table id="my_requests_record">
+                    <table>
                         <thead>
-                        <tr> <!-- This is a table row -->
-                            <th>Type</th> <!-- Table header cell -->
-                            <th>Title</th>
-                            <th>Registration Date</th>
-                            <th>Due Date</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <body>
-                        <tr>
-                            <td>General</td>
-                            <td>Request 1</td>
-                            <td>2022-01-01 12:00:00</td>
-                            <td>2022-01-01</td>
-                            <td>Open</td>
-                        </tr>
-                    </body>
+                            <tr> <!-- This is a table row -->
+                                <th>Type</th> <!-- Table header cell -->
+                                <th>Title</th>
+                                <th>Registration Date</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <%for (var i of nodes) {%>
+                                <tr class="glass_efect_2 go_to_list" id="<%=i._id%>">
+                                    <th><%=i.type%></th>
+                                    <th><%=i.title%></th>
+                                    <th><%=i.registrationDate%></th>
+                                    <th><%=i.due_date%></th>
+                                    <th><%=i.status%></th>
+                                </tr>
+                            <%}%>
+                            <tr id="more_btn" class="glass_efect_2">
+                                <th>More..</th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                                <th> </th>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
                 
-                <button id="more_requests_btn">More...</button>
-                <div id="display_request">
-                    <p id="request_preview_status"></p>
-                    <p id="request_preview_type"></p>
-                    <p id="request_preview_title"></p>
-                    <p id="request_preview_reg_date"></p>
-                    <p id="request_preview_due_date"></p>
-                    <p id="request_preview_text"></p>
-                    <button id="show_hide_request_preview">Hide</button>
-                </div>
                 <form style="display: none;" action="/my-accountant-delete-request" method="POST" id="delete_request_from">
                     <input name="request_id" id="request_id">
                     <button id="submit_from_delete_request_btn" type="submit">Submit</button>
                 </form>
             </div>
         </div>
-        <form id="remove_accountant_form" action="/my-accountant"  method="POST">
-            <!--input type="hidden" name="accountant_id" value="<%=accountant._id%>"-->
-            <!--button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button-->
-            <button type="button" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
-        </form>
-        <button type="button" onclick="window.location = '/pick-accountant'">Προβολή Λογιστών</button>
+        
+        <div id="new_accountan_div">
+            <div>
+                <button type="button" class="button_1" onclick="window.location = '/pick-accountant'">Προβολή Λογιστών</button>
+            </div>
+            
+            <form id="remove_accountant_form" action="/my-accountant"  method="POST">
+                <!--input type="hidden" name="accountant_id" value="<%=accountant._id%>"-->
+                <!--button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button-->
+                <button type="button" class="button_2" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
+            </form>
+        </div>
+
+        </div>
+
     </div>
 </div>
     </body>
@@ -157,129 +168,43 @@
             }
         }
 
-            $("#back_btn").click(function(){
-                window.location = "/"
-            });
+        $("#remove_accountant_btn").click(function(){
+            if (confirm("Αν απολύσετε τον λογιστή σας όλα τα εκκρεμή αιτήματα θα ακυρωθούν.") == true) {
 
-            $("#remove_accountant_btn").click(function(){
-                if (confirm("Αν απολύσετε τον λογιστή σας όλα τα εκκρεμή αιτήματα θα ακυρωθούν.") == true) {
-
-                    $("#remove_accountant_form").submit();
-                }
-            });
-
-            $("#more_requests_btn").click(function(){
-                request_table_expanded = !request_table_expanded;
-                if(request_table_expanded){
-                    $("#more_requests_btn").text("Less...");
-                    for (let i = visible_request_num; i <= requests.length; i++) {
-                    $("#row_"+i).show();
-                }
-                }
-                else{
-                    $("#more_requests_btn").text("More...");
-                    for (let i = visible_request_num; i <= id_count; i++) {
-                    $("#row_"+i).hide();
-                }
-                }
-            });
-
-            var starButtons = $(".star_btn");
-            for (var i = 0; i < starButtons.length; i++) {
-                (function(index) {
-                    $(starButtons[i]).click(function() {
-                        var rating_value = index+1
-                        if($("#rating_input").val() == index+1){
-                            rating_value = 0;
-                        }
-                        $("#rating_input").val(rating_value);
-                        for (var j = 0; j < starButtons.length; j++) {
-                            if(j < rating_value){
-                                starButtons[j].classList.add("star_selected");
-                            }
-                            else{
-                                if (starButtons[j].classList.contains("star_selected")) {
-                                    starButtons[j].classList.remove("star_selected");
-                                }
-                            }
-                        }
-
-                    });
-                })(i);
+                $("#remove_accountant_form").submit();
             }
-            if('<%= review.rating%>'!='-1'){
-                $("#rating_textarea").val('<%= review.text%>');
-                starButtons[parseInt('<%= review.rating%>')-1].click()
-            }
+        });
 
-            var requests;
-            try {
-                requests = JSON.parse(`<%- JSON.stringify(nodes) %>`);
-            } catch (error) {
-                console.error("Error parsing JSON:", error);
-            }
-            
-            const requests_table = $("#my_requests_record");
-            const my_requests_div = $("#my_requests_div");
-            const hide_btn = $("#show_hide_request_preview");
-            hide_btn.click(function() {
-                $("#request_preview_status").text("");
-                $("#request_preview_reg_date").text("");
-                $("#request_preview_due_date").text("");
-                $("#request_preview_title").text("");
-                $("#request_preview_type").text("");
-                $("#request_preview_text").text("");
-                hide_btn.hide();
-            });
-            hide_btn.hide();
-
-            if(requests.length == 0){
-                //requests_table.hide()
-                my_requests_div.append($("<p>").text("You haven't made any requests addressed to your current accountant"))
+        $(".star_btn").click(function(){
+            if($(this).hasClass("star_selected") && $(this).index() == 0){
+                $("#rating_input").val(0);
+                for(let s of $(".star_btn") ){
+                    $(s).removeClass("star_selected");
+                }
             }
             else{
-                var id_count = -1;
-                requests.forEach(request => {
-                    id_count = id_count + 1;
-                    const row = $("<tr>").attr("id", "row_"+id_count);
-                    const cell_type = $("<td>").text(request.type);
-                    const cell_title = $("<td>").text(request.title);
-                    const date = new Date(request.registrationDate);
-                    const cell_reg_date = $("<td>").text(date.toLocaleString('en-US', timestamp_options));
-                    const cell_due_date = $("<td>").text(request.due_date);
-                    const cell_status = $("<td>").text(request.status);
-                    const cell_actions = $("<td>");
-                    const btn_delete = $("<button>").text("Delete");
-                    btn_delete.click(function() {
-                        $("#request_id").val(request._id)
-                        $("#submit_from_delete_request_btn").click()
-                    });
-                    const btn_view = $("<button>").text("View");
-                    btn_view.click(function() {
-                        $("#request_preview_status").text("Status : " + request.status);
-                        $("#request_preview_reg_date").text("Type : " + request.type);
-                        $("#request_preview_due_date").text("Due Date : " + request.due_date);
-                        $("#request_preview_title").text("Registration Date : " + date);
-                        $("#request_preview_type").text("Title : " + request.title);
-                        $("#request_preview_text").text("Text : " + request.text);
-                        hide_btn.show();
-                    });
-                    
-                    requests_table.append(row);
-                    row.append(cell_type);
-                    row.append(cell_title);
-                    row.append(cell_reg_date);
-                    row.append(cell_due_date);
-                    row.append(cell_status);
-                    row.append(cell_actions);
-                    cell_actions.append(btn_delete);
-                    cell_actions.append(btn_view);
-                });
-                for (let i = visible_request_num; i <= id_count; i++) {
-                    $("#row_"+i).hide();
+                $("#rating_input").val($(this).index()+1);
+            
+                for(let s of $(".star_btn") ){
+                    if($(s).index() <= $(this).index()){
+                        $(s).addClass("star_selected");
+                    }
+                    else{
+                        $(s).removeClass("star_selected");
+                    }
                 }
             }
+        });
+
             
+        $("#more_btn").click(function(){
+            window.location = "/list?searchfor=requests";
+        });
+        
+
+        $(".go_to_list").click(function(){
+            
+            window.location = '/view?type=requests&id=' + $(this).attr("id") + '&type2=null';
         });
 
         $("#submit_from_request_btn").click(function() {
@@ -300,6 +225,7 @@
                 $("#send_request_form").submit();
             }
         });
+    });
 
     </script>
 

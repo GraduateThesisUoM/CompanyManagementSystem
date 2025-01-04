@@ -49,48 +49,6 @@
     transform: scale(1.2);
 }
 
-table{
-    border-collapse: collapse;
-    width: 95%;
-    border:none;
-}
-
-
-thead{
-    height: 50px;
-}
-thead th{
-    color: rgb(197, 197, 197);
-    text-shadow: 0 0 5px black; 
-}
-th,
-td {
-    border-collapse: collapse;
-    text-align: center;
-    padding: 8px; /* Adds padding to table headers and table cells */
-}
-
-
-th {
-    transition: transform 0.3s ease-in-out, padding 0.3s ease-in-out;
-}
-
-table tr {
-    transition: transform 0.3s ease-in-out; /* Ensures smooth transition when mouse leaves */
-}
-
-table tr:hover {
-    transform: scale(1.01);
-}
-
-
-#table_container {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
 #td_button_container {
     display: grid;
     grid-template-columns: auto auto;

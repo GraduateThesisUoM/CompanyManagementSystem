@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="general_css.css">
     <link rel="stylesheet" href="list_css.css">
     <link rel="stylesheet" href="fonts_css.css">
+
+    <link rel="stylesheet" href="table_css.css">
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -171,7 +173,7 @@
                         print_form(data);
                     }
                 }
-                else if (searchfor == 'reports') {
+                else if (searchfor == 'reports' || searchfor == 'requests') {
                     $(".btn_column").hide();
                     filter_containers.eq(0).hide();
                     filter_containers.eq(1).show();
@@ -182,6 +184,7 @@
                         $("#list_header").text("Client")
                     }
                 }
+                
                 $("#searchfor").val(searchfor);
 
 

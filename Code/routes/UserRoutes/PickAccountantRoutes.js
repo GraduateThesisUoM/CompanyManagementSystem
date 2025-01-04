@@ -55,8 +55,13 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         
       }
   
-      res.render('user_pages/pick_accountant.ejs', { user: req.user,company:company,company_node:company_node, accountants: accountants, ratings: ratings,
-        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})});
+      res.render('user_pages/pick_accountant.ejs', {
+        user: req.user,
+        company:company,
+        company_node:company_node,
+        accountants: accountants,
+        ratings: ratings,
+        });
 
     }
     else{

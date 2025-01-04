@@ -59,8 +59,6 @@ app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages
 //remove-review
 app.use(path_constants.pages.remove_review.url, require(path_constants.pages.remove_review.file));
 
-app.use(path_constants.pages.remove_relationship.url, require(path_constants.pages.remove_relationship.file));
-
 //log_in
 app.use(path_constants.pages.log_in.url, require(path_constants.pages.log_in.file));
 

@@ -265,11 +265,6 @@ const pages = {
     file: routes.admin+"RemoveReviewAdmin.js",
     view : ""
   },
-  remove_relationship :{
-    url : "/remove-relationship",
-    file: routes.admin+"RemoveRelationshipsAdmin.js",
-    view : ""
-  },
   database :{
     url : "/database",
     file: routes.admin+"DataBaseRoutes.js",
