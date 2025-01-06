@@ -17,14 +17,12 @@ const clientAccountantFunctions = require(path_constants.clientAccountantFunctio
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
       const company = await Company.findOne({_id:req.user.company});
-      const company_accountant_node = await Node.findOne({company: company._id, type: 1, type2: 1,next: "-"});
-
-      const users_accountant = await Accountant.findOne({_id:company_accountant_node.receiver_id});
+      const company_accountant_node =  await generalFunctions.get_accountant_node(company._id)
 
       const newNode = await generalFunctions.create_node({
         company: company._id,
         sender_id: req.user._id,
-        receiver_id: company_accountant_node.sender_id,
+        receiver_id: company_accountant_node.receiver_id,
         type: 3,
         type2: req.body.request_type,
         title: req.body.request_title,

@@ -124,22 +124,20 @@ async function create_node(data) {
   new_data = {
     company: data.company,
     sender_id: data.sender_id,
+    receiver_id: data.receiver_id,
     type: data.type,
     status: 3,//pending
     text: data.text
   };
 
-  if(data.type2) new_data.type2 = data.type2;
-  if(data.receiver_id) new_data.receiver_id = data.receiver_id;
   
   
   if (data.type == 1) {//relationship
-    if(data.status != undefined){
-      console.log("**************************************")
-      new_data.status = data.status;
-    }
-    else if ((data.company.equals(data.receiver_id) && data.type2 == 1)|| (data.type2 == 2)) {
+    if ((data.company.equals(data.receiver_id) && data.type2 == 1)|| (data.type2 == 2)) {
       new_data.status = 2 //executed;
+    }
+    else if (data.type2 == 3){
+      new_data.status = 2
     }
 
   } else if (data.type == 3) {//request
@@ -152,9 +150,10 @@ async function create_node(data) {
   else if (data.type == 6){
     new_data.status = 2;
   }
-  else{
-    new_data = data
-  }
+
+  if(data.type2) new_data.type2 = data.type2;
+  if(data.receiver_id) new_data.receiver_id = data.receiver_id;
+  
 
   const new_node = new Node(new_data);
   if(data.data) new_node.data = data.data;
@@ -169,6 +168,80 @@ async function node_reply(data) {
   console.log("node_reply")
   console.log(data)
   const target_node = await Node.findOne({ _id: data.target_node._id });
+  var new_node;
+
+  if( target_node.type == 1){//1=relationship
+    if( data.reply == 4){
+      target_node.status = 4;
+      new_node =  target_node;
+    }
+    else{
+      new_node = await create_node({
+        company: target_node.company,
+        sender_id: target_node.sender_id,
+        receiver_id: target_node.receiver_id,
+        type: 1,
+        type2: 3,
+      })
+      target_node.status = 2;
+      target_node.next = new_node._id;
+    }
+    await target_node.save()
+    return new_node
+  }
+  else if( target_node.type == 3){
+    var receiver = target_node.sender_id
+
+    if(data.user.equals(target_node.sender_id)){
+      receiver = target_node.receiver_id
+    }
+
+    new_node = await create_node({
+      company: target_node.company,
+      sender_id: data.user,
+      receiver_id: receiver,
+      due_date: target_node.due_date,
+      title : target_node.title,
+      type: 3,
+      type2: target_node.type2,
+      text : data.text
+    })
+
+    target_node.next = new_node._id
+    target_node.status = data.reply
+
+    await target_node.save()
+    return new_node
+  } 
+  
+  
+  /*if( target_node.type == 1){//1=relationship
+    reply_node.type2 = data.reply;
+    if(data.reply == 1){//1=hiring
+      reply_node.status = 2// executed
+    }
+    else{
+      reply_node.status = 4 // rejected
+    }
+  }
+  else if(target_node.type == 4){//request
+    var new_data = {
+      company: data.company,
+      type: target_node.type,
+      type2: target_node.type2,
+      status: 3,//pending
+      text: data.text
+    };
+    if(target_node.sender_id == data.sender_id){
+      new_data.sender_id = target_node.sender_id
+      new_data.receiver_id = target_node.receiver_id
+    }
+    else{
+      new_data.sender_id = target_node.receiver_id
+      new_data.receiver_id = target_node.sender_id
+    }
+    const new_node = new Node(new_data);
+  }
 
   // -------------receiver_id
   var receiver = target_node.sender_id;
@@ -183,30 +256,40 @@ async function node_reply(data) {
     receiver_id: receiver,
     type: target_node.type,
   });
+  if(data.user._id != target_node.sender_id){
+    reply_node.status = 2;//executed
+  }
+  reply_node.title = target_node.title;//executed
+
+  if( target_node.type == 1){
+    reply_node.type2 = data.reply;
+  }
+  if( target_node.type == 3){//request
+    reply_node.type2 = 3;//response
+  }
 
   // -------------type
-  if (data.reply) reply_node.type = data.reply;
+  /*if (data.reply) reply_node.type = data.reply;
 
   // -------------type2
-  if (data.type2) reply_node.type2 = data.type2;
-  else if (data.reply == 6) reply_node.type2 = 6;
+  if (data.reply == 6) reply_node.type2 = 6;
   else if (target_node.type2 == 1) reply_node.type2 = 1;
 
   // -------------status
   if (data.status)reply_node.status = data.status
-  else if ([2, 3, 6].includes(data.reply))reply_node.status = 2;
+  else if ([2, 3, 6].includes(data.reply))reply_node.status = 2;*/
 
-  if (data.text) reply_node.text = data.text;
+  /*if (data.text) reply_node.text = data.text;
   if (data.data) reply_node.data = data.data;
 
 
   await reply_node.save();
 
-  target_node.next = reply_node._id;
+  target_node.next = new mongoose.Types.ObjectId(reply_node._id);
   target_node.status = 2;//executed
   await target_node.save();
 
-  return reply_node;
+  return reply_node;*/
 }
 
 async function create_company(data) {
@@ -694,6 +777,33 @@ function get_status_user(id) {
   }
 }
 
+function get_type(id){
+  switch (id) {
+    case 1:
+      return "Clients";//Relationship
+    case 2:
+      return "Response";
+    case 3:
+      return "Request";
+    case 4:
+      return "Node";
+    case 6:
+      return "Warehouse";
+    case 7:
+      return "Time Table";
+    case 8:
+      return "Report";
+    case 31:
+      return "Enter";
+    case 32:
+      return "Leave";
+    case 33:
+      return "License";
+    default:
+      return "Unknown type";
+  }
+}
+
 function get_type2(id){
   switch (id) {
     case 1:
@@ -734,6 +844,9 @@ function get_type2(id){
 }
 
 const formatDateTime = (dateString) => {
+  if(dateString == null){
+    return ""
+  }
   const date = new Date(dateString);
   const day = String(date.getDate()).padStart(2, "0");
   const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -1076,18 +1189,6 @@ async function importAccountants() {
   }
 }
 
-async function get_accountant_node(data){
-  console.log('get_accountant_node');
-  console.log('data.company : '+data.company);
-  return  await Node.findOne({
-    company:data.company,
-    type: 1,//relationship
-    type2:1,
-    status: 2,//executed
-    next: "-"
-  })
-}
-
 async function record_scan(data){
   console.log(data)
   const last_scan = await Node.findOne({sender_id : data.user._id,type: 8, next:'-'});
@@ -1134,6 +1235,10 @@ async function get_persons_moves(data){
   return docs;
 }
 
+async function get_accountant_node(company_id){
+  return Node.findOne({company:company_id,next:'-',status:2,type:1,type2:3})
+}
+
 module.exports = {
   checkAccessRigts,
   createWarehouse,
@@ -1154,13 +1259,14 @@ module.exports = {
   node_reply,
   get_status,
   get_status_user,
+  get_type,
   get_type2,
   update,
   warehose_get_inventory,
   item_get_inventory,
   importExport,
   clear_db,
-  get_accountant_node,
   get_persons_moves,
-  record_scan
+  record_scan,
+  get_accountant_node
 };

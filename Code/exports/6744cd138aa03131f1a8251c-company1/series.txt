@@ -18,6 +18,7 @@
   },
   {
     "_id": "676dbe63e30ad9f8099b5b17",
+    "registrationDate": "2024-12-26T20:36:51.762Z",
     "company": "6744cd138aa03131f1a8251c",
     "title": "Sales_S1",
     "acronym": "S1",
@@ -30,7 +31,6 @@
     "status": 1,
     "transforms": 0,
     "transforms_to": [],
-    "registrationDate": "2024-12-26T20:36:51.762Z",
     "__v": 0
   }
 ]

@@ -1,12 +1,12 @@
 [
   {
     "_id": "676dbed4e30ad9f8099b5b9d",
+    "registrationDate": "2024-12-26T20:38:44.235Z",
     "company": "6744cd138aa03131f1a8251c",
     "title": "Warehouse1",
     "location": "wwww",
     "status": 1,
     "full": 0,
-    "registrationDate": "2024-12-26T20:38:44.235Z",
     "__v": 0
   }
 ]

@@ -22,5 +22,20 @@
     "status": 2,
     "registrationDate": "2024-12-08T21:14:17.545Z",
     "__v": 0
+  },
+  {
+    "_id": "6779b8a95b4f589ced3b44dd",
+    "company": "6744cd138aa03131f1a8251c",
+    "sender_id": "6744cd138aa03131f1a8251e",
+    "receiver_id": "6744cea94215507895961cc0",
+    "type": 3,
+    "type2": 31,
+    "text": "123",
+    "title": "test",
+    "due_date": null,
+    "next": "-",
+    "status": 3,
+    "registrationDate": "2025-01-04T22:39:37.418Z",
+    "__v": 0
   }
 ]

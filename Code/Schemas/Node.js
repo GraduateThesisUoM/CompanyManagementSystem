@@ -8,7 +8,6 @@ const NodeShema = new mongoose.Schema({
   type: {
     type: Number,
     /*1=relationship,
-      2=response,
       3=request,
       4=node,
       5=warehouse,
@@ -24,8 +23,7 @@ const NodeShema = new mongoose.Schema({
   type2: {
     type: Number,
 
-    //1=hiring,2=firing,3=response,4=request,6=node,7=shell,8=buy,
-    //31 = other, 32 = Payroll 33 = Τimetable 34 = hire/fire
+    //1=hiring,2=firing,3=relationship,4=request,6=node,7=shell,8=buy,
     // 71=Harassment,72=Pretending to be someone,73=Fraud/Scam/Malpractice,74=ohter,75= licence για αλλαγές στον αριθμό αδειών
     required: true,
     default:6

@@ -25,10 +25,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       const accountants = await Accountant.find({}); // Fetch all accountants from the database
       accountants.sort((a, b) => a.firstName.localeCompare(b.firstName));
       const company = await Company.findOne({_id:req.user.company});
-      var data = {
-        company: company._id
-      };
-      var company_node = await generalFunctions.get_accountant_node(data) ;
+
+      var company_node = await Node.findOne({company:company._id,next:'-',status:2,type:1,type2:3})
+      ;
       if (company_node == null){
         company_node = {
           company: '-',
@@ -36,31 +35,38 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         }
       }
   
-      const ratings = [];
+      const accountants_with_ratings = []
   
       for (const accountant of accountants){
         var average_rating = 0
       
-        const reviews = await Review.find({reviewed_id: accountant._id, type: "client"});
+        const reviews = await Review.find({reviewed_id: accountant._id, type: 1});
   
         for (const review of reviews){
           average_rating = average_rating + review.rating;
         }
         if(reviews.length > 0){
-          ratings.push((average_rating / reviews.length).toFixed(1));
+          accountants_with_ratings.push({
+            accountant: accountant ,
+            average_rating: (average_rating / reviews.length).toFixed(1)
+          })
         }
         else{
-          ratings.push("-");
+          accountants_with_ratings.push({
+            accountant: accountant ,
+            average_rating: "-"
+          })
         }
         
       }
+
+
   
       res.render('user_pages/pick_accountant.ejs', {
         user: req.user,
         company:company,
         company_node:company_node,
-        accountants: accountants,
-        ratings: ratings,
+        accountants: accountants_with_ratings,
         });
 
     }

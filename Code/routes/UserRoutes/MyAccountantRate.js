@@ -18,13 +18,13 @@ const clientAccountantFunctions = require(path_constants.clientAccountantFunctio
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
       const company = await Company.findOne({_id:req.user.company});
-      const company_accountant_node = await Node.findOne({company: company._id, type: 1, type2: 1,next: "-"});
+      const company_accountant_node = await generalFunctions.get_accountant_node(company._id) ;
 
       let newReview;
       const review = await Review.findOne({
         company: company._id,
         reviewer_id: req.user._id,
-        reviewed_id: company_accountant_node.sender_id,
+        reviewed_id: company_accountant_node.receiver_id,
         type: 1, // 1 = client
       });
   
@@ -32,7 +32,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
         newReview = new Review({
           company: company._id,
           reviewer_id: req.user._id,
-          reviewed_id: company_accountant_node.sender_id,
+          reviewed_id: company_accountant_node.receiver_id,
           text: req.body.rating_textarea,
           type: 1, // 1 = client
           rating: req.body.rating_input,

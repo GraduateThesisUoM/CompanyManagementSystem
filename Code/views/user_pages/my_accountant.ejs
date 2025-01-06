@@ -85,7 +85,7 @@
         <div class ='requests asap-condensed-regular'>
             <h2>Request</h2>
             <div id="my_requests_div">
-                <div id="table_container">
+                <div class="table_container">
                     <table>
                         <thead>
                             <tr> <!-- This is a table row -->
@@ -204,7 +204,7 @@
 
         $(".go_to_list").click(function(){
             
-            window.location = '/view?type=requests&id=' + $(this).attr("id") + '&type2=null';
+            window.location = '/view?type=nodes&id=' + $(this).attr("id") + '&type2=null';
         });
 
         $("#submit_from_request_btn").click(function() {

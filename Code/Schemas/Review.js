@@ -8,7 +8,7 @@ const ReviewSchema = new mongoose.Schema({
   text: { type: String, required: false },
   rating: { type: Number, required: true },
   type: {
-    type: String,
+    type: Number,
     enum: [1, 2],
     //1 = client 2 = accountant
     required: true

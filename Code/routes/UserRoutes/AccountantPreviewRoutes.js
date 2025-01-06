@@ -22,21 +22,27 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 router.get('/', Authentication.checkAuthenticated, async (req, res) => {
   try{
     console.log("AccountantPreviewRoutes")
+    const accountant = await Accountant.findOne({_id:req.query.id})
     const access = generalFunctions.checkAccessRigts(req,res);
     if(access.response){
-      const reviews = await Review.find({reviewed_id:req.session.accountant._id, type: "client"} )
+      const reviews = await Review.find({reviewed_id:accountant._id, type: 1} )//"client"
+      const clients = await Node.find({type:1,type2:3,status:2})
       const company = await Company.findOne(_id=req.user.company);
       var company_node = await Node.findOne({company:req.user.company,type:1,next:'-'}).sort({ registrationDate: -1 });
       console.log(company_node)
       if(company_node == null){
         company_node = {
-          receiver_id: req.session.accountant._id,
+          receiver_id: accountant._id,
           status: 6
         }
       }
     
-      const data = { accountant: req.session.accountant,company: company,company_node:company_node, user: req.user, reviews: reviews,
-        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]}) }
+      const data = { accountant: accountant,
+        company: company,
+        num_of_clients : clients.length,
+        company_node:company_node,
+         user: req.user,
+         reviews: reviews }
     
     
         res.render('user_pages/preview_accountant.ejs', data );  
@@ -56,8 +62,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
   try {
     console.log("AccountantPreviewRoutes")
+    
     const company = await Company.findOne({_id:req.user.company});
-    const company_node = await generalFunctions.get_accountant_node({company : company._id});
+    const company_node = await generalFunctions.get_accountant_node(company._id);
     console.log(company_node);
 
     
@@ -65,8 +72,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       console.log('2')
       clientAccountantFunctions.fire_accountant(company._id,req.user._id)
     }
-    console.log(req.session.accountant._id)
-    var accountant = await Accountant.findOne({_id:req.session.accountant._id});
+    const accountant = await Accountant.findOne({_id:req.body.accountant_id})
 
     if(req.body.user_action == "cancel_request"){
 

@@ -28,7 +28,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
       if(access.response){
 
         const company = await Company.findOne({_id:req.user.company});
-        const company_accountant_node = await generalFunctions.get_accountant_node({company: company._id, status: 2, next: { $ne: '-' }});
+        const company_accountant_node = await generalFunctions.get_accountant_node(company._id)
 
         console.log('company_accountant_node : '+company_accountant_node)
 
@@ -59,7 +59,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
           }
           else{
             console.log('4')
-            const users_accountant = await Accountant.findOne({_id:company_accountant_node.sender_id});
+            const users_accountant = await Accountant.findOne({_id:company_accountant_node.receiver_id});
             console.log("users_accountant : "+users_accountant)
             if(users_accountant == null ){
               if(req.user.companyOwner == 1){
@@ -73,25 +73,25 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
               var accountant_review = await Review.findOne({
                 company:company._id,
                 reviewer_id: req.user._id,
-                reviewed_id: company_accountant_node.sender_id,
+                reviewed_id: company_accountant_node.receiver_id,
                 type:1});
 
               if (accountant_review == null){
                 accountant_review = new Review({
                   company_id: company._id,
                   reviewer_id: req.user._id,
-                  reviewed_id: company_accountant_node.sender_id,
-                  rating: -1,
+                  reviewed_id: company_accountant_node.receiver_id,
+                  rating: 0,
                   registrationDate: ''
                 });
               }
 
                 var nodes = await Node.find({
                   company: company._id,
-                  sender_id: req.user._id,
-                  receiver_id: company_accountant_node.sender_id,
+                  $or: [{ receiver_id: req.user._id }, { sender_id: req.user._id }],
                   type: 3,
-                  type2: { $in: [31, 32, 33, 34] }
+                  next: '-',
+                  type2: { $in: [31, 32, 33, 34,3] }
                 }).sort({ registrationDate: -1 }).limit(5);
 
                 nodes = nodes.map(node => {

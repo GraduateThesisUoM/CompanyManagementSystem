@@ -15,10 +15,16 @@
     <link rel="stylesheet" href="general_css.css" />
     <link rel="stylesheet" href="accountant_main_css.css" />
     <link rel="stylesheet" href="list_css.css" />
+    <link rel="stylesheet" href="table_css.css" />
+
+      <!--Fonts-->
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
 
     <%- include('../partials/header'); %>
   <body>
-    <div class="has_sidebar">
+    <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
       <div>
         <h1>Accountant main page</h1>
@@ -26,33 +32,40 @@
         
         <div>
           <h2>Pending Requests</h2>
-          <% if(pending_nodes_list.length > 0){%>
-            <table>
-              <thead class="glass_efect_1">
-                <tr>
-                  <th class="">Type</th>
-                  <th class="">Title</th>
-                  <th class="">Registration Date</th>
-                  <th class="">Due Date</th>
-                  <th class="">Company</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% pending_nodes_list.forEach(function(row, index) {
-                  if (row.status === 3){%>
-                    <tr  class="glass_efect_2" style="background-color: lime" id="<%=row.id%>">
-                  <%}else{%>
-                    <tr class="glass_efect_2">
-                  <%}%>
-                    <td><%=row.type%></td>
-                    <td><%=row.title%></td>
-                    <td><%=row.reg_date%></td>
-                    <td><%=row.due_date%></td>
-                    <td><%=row.company%></td>
+          <% if(pending_nodes_list.length > 0 || viewed_nodes_list.length > 0){%>
+            <div class="table_container">
+              <table>
+                <thead class="glass_efect_1">
+                  <tr>
+                    <th class="">Type</th>
+                    <th class="">Title</th>
+                    <th class="">Registration Date</th>
+                    <th class="">Due Date</th>
+                    <th class="">Company</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% pending_nodes_list.forEach(function(row, index) { %>
+                      <tr  class="glass_efect_2" style="background-color: lime" id="<%=row.id%>">
+                      <th><%=row.type%></th>
+                      <th><%=row.title%></th>
+                      <th><%=row.reg_date%></th>
+                      <th><%=row.due_date%></th>
+                      <th><%=row.company%></th>
+                    </tr>
+                  <% }); %>
+                  <% viewed_nodes_list.forEach(function(row, index) { %>
+                    <tr class="glass_efect_2" id="<%=row.id%>">
+                    <th><%=row.type%></th>
+                    <th><%=row.title%></th>
+                    <th><%=row.reg_date%></th>
+                    <th><%=row.due_date%></th>
+                    <th><%=row.company%></th>
                   </tr>
                 <% }); %>
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           <%}else{%>
             <p>You have no pending requests at the moment</p>
             <%}%>
@@ -61,28 +74,30 @@
         <div>
           <h2>Executed Requests</h2>
           <% if(executed_nodes_list.length > 0){%>
-            <table>
-              <thead class="glass_efect_1">
-                <tr>
-                  <th class="">Type</th>
-                  <th class="">Title</th>
-                  <th class="">Registration Date</th>
-                  <th class="">Due Date</th>
-                  <th class="">Company</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% executed_nodes_list.forEach(function(row, index) {%>
-                  <tr class="glass_efect_2" id="<%= row.id %>">
-                    <td><%=row.type%></td>
-                    <td><%=row.title%></td>
-                    <td><%=row.reg_date%></td>
-                    <td><%=row.due_date%></td>
-                    <td><%=row.company%></td>
+            <div class="table_container">
+              <table>
+                <thead class="glass_efect_1">
+                  <tr>
+                    <th class="">Type</th>
+                    <th class="">Title</th>
+                    <th class="">Registration Date</th>
+                    <th class="">Due Date</th>
+                    <th class="">Company</th>
                   </tr>
-                <% }); %>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <% executed_nodes_list.forEach(function(row, index) {%>
+                    <tr class="glass_efect_2" id="<%= row.id %>">
+                      <th><%=row.type%></th>
+                      <th><%=row.title%></th>
+                      <th><%=row.reg_date%></th>
+                      <th><%=row.due_date%></th>
+                      <th><%=row.company%></th>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
           <%}else{%>
             <p>You have no executed requests at the moment</p>
             <%}%>
@@ -91,28 +106,30 @@
         <div>
           <h2>Rejected Requests</h2>
           <% if(rejected_nodes_list.length > 0){%>
-            <table>
-              <thead class="glass_efect_1">
-                <tr>
-                  <th class="">Type</th>
-                  <th class="">Title</th>
-                  <th class="">Registration Date</th>
-                  <th class="">Due Date</th>
-                  <th class="">Company</th>
-                </tr>
-              </thead>
-              <tbody>
-                <% rejected_nodes_list.forEach(function(row, index) {%>
-                  <tr class="glass_efect_2">
-                    <td><%=row.type%></td>
-                    <td><%=row.title%></td>
-                    <td><%=row.reg_date%></td>
-                    <td><%=row.due_date%></td>
-                    <td><%=row.company%></td>
+            <div class="table_container">
+              <table>
+                <thead class="glass_efect_1">
+                  <tr>
+                    <th class="">Type</th>
+                    <th class="">Title</th>
+                    <th class="">Registration Date</th>
+                    <th class="">Due Date</th>
+                    <th class="">Company</th>
                   </tr>
-                <% }); %>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <% rejected_nodes_list.forEach(function(row, index) {%>
+                    <tr class="glass_efect_2">
+                      <th><%=row.type%></th>
+                      <th><%=row.title%></th>
+                      <th><%=row.reg_date%></th>
+                      <th><%=row.due_date%></th>
+                      <th><%=row.company%></th>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
           <%}else{%>
             <p>You have no rejected requests at the moment</p>
             <%}%>

@@ -80,8 +80,7 @@ async function fire_accountant(companyId,senderId,accountantId){
             
         const new_company_node = await  generalFunctions.node_reply({
             target_node : company_node,
-            reply: 2,
-            text : ''
+            type2: 2,
         });
 
         //company_node.next = new_company_node._id;
@@ -108,29 +107,22 @@ async function fire_accountant(companyId,senderId,accountantId){
 
 async function fetchClients(accountantId,select){
     try{
+        console.log('fetchClients')
         var clients = [];
         var clients_Nodes;
-        var all_nodes = await Node.find({receiver_id:accountantId, type:1,type2:1, status: { $in: [2,3,4] } });
+        var nodes
 
         if(select == 'all'){
-            //clients_Nodes = await Node.find({receiver_id:accountantId, type:'relationship',type2:'hiring', status: { $in: ['executed','pending', 'rejected'] } });
-            for(node of all_nodes){
-                if(node.next != '-'){
-                    let n  = await Node.findOne({_id:node.next});
-                    if(n.status ==2 && n.next == '-'){
-                        clients.push(await Company.findOne({_id:n.company}))
-                    }
-                }
+            nodes = await Node.find({receiver_id:accountantId, type:1,type2:3, status:2  });
+            for(node of nodes){
+                clients.push(await Company.findOne({_id:node.company}))
             }
         }
         else if(select == 'fired'){
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:1,type2:2, status: 2, next: { $exists: false }  });
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:1,type2:3, status: 2, next: { $exists: false }  });
         }
         else if(select == 'curent'){
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:1,type2:1, status: 2, next: { $exists: false }  });
-        }
-        else{
-            clients_Nodes = await Node.find({receiver_id:accountantId, type:1,type2:1, status: select , next: { $exists: false }});
+            clients_Nodes = await Node.find({receiver_id:accountantId, type:1,type2:3, status: 2, next: { $exists: false }  });
         }
 
         /*for (let client of clients_Nodes) {
@@ -159,7 +151,7 @@ async function fetchOneClient(accountantId,clientId){
 
 async function relationship_accept_reject(companyId,action){
     try{
-        const relationshipNode = await generalFunctions.get_accountant_node({company:companyId});
+        const relationshipNode = await Node.findOne({company:companyId,next:'-',status:2,type:1,type2:3})
         relationshipNode.status = action;
         await relationshipNode.save();
         console.log(action+" done"); 

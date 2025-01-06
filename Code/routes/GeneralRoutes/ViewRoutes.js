@@ -59,10 +59,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         user: req.user,
         data: "",
         titles: [],
-        isParamsEmpty: isParamsEmpty,
-        notification_list: await Notification.find({
-          $and: [{ user_id: req.user._id }, { status: "unread" }],
-        }),
+        isParamsEmpty: isParamsEmpty
       };
 
       if (!isParamsEmpty) {
@@ -183,28 +180,27 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data.titles = ["FirstName", "LastName", "email", "Status", "Reg Date"];
             data.type = [1, 1, 1, 15, 0];
             
-          } else if (type == "nodes" || type == "requests") {
+          } else if (type == "nodes") {
             obj = await Node.findOne({ _id: id });
-            if (obj.status == 3) {//pending
+            console.log(obj)
+            console.log(req.user._id)
+            console.log(obj.receiver_id.equals( req.user._id))
+            if (obj.status == 3 && obj.receiver_id.equals( req.user._id)) {//pending and user is the receiver
               obj.status = 1;//viewed
               await obj.save();
             }
             var nodes = [];
             nodes.push(obj);
             var node = obj;
+            console.log(node)
             while (true) {
-              if(node.next != "-"){
-                node = await Node.findOne({ _id: node.next });
-                if (node == undefined) {
-                  break;
-                } else {
-                  nodes.push(node);
-                }
-              }
-              else{
+              node = await Node.findOne({ next: node._id });
+              console.log(node)
+              if (!node) {
                 break;
+              } else {
+                nodes.push(node);
               }
-              
             }
 
             const company = await Company.findOne({ _id: obj.company });
@@ -214,7 +210,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               var sender_user = await User.findOne({ _id: n.sender_id });
               node_data.push({
                 sender: sender_user,
-                registrationDate: generalFunctions.formatDateTime(obj.registrationDate),
+                registrationDate: generalFunctions.formatDateTime(n.registrationDate),
                 title: n.title,
                 status: generalFunctions.get_status(n.status),
                 text: n.text,
@@ -223,9 +219,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             }
             node_data.reverse();
 
-            data.data = [obj.title, generalFunctions.get_type2(obj.type2), company.name, node_data, ""];
-            data.titles = ["Title", "Type", "Company", "Data", "Reply"];
-            data.type = [13, 13, 13, 10, 9];
+            data.data = [generalFunctions.get_type2(obj.type2), obj.title, company.name,generalFunctions.formatDateTime(obj.due_date), node_data, ""];
+            data.titles = ["Type", "Title", "Company", "Data","Due Date", "Reply"];
+            data.type = [13, 13, 13,13, 10, 9];
             
           } else if (type == "clients") {
             obj = await Company.findOne({ _id: id });
@@ -335,6 +331,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     var data = {};
     const isParamsEmpty = Object.keys(req.query).length === 0;
     console.log("ViewRoutes");
+    console.log(req.body.action);
     if (isParamsEmpty) {
       console.log("ERROR ViewRoutes 2");
       return res.redirect("/error?origin_page=/&error=" + encodeURIComponent("Query parameters are missing"));
@@ -467,19 +464,25 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
       } else if (req.query.type == "nodes" || req.query.type == "requests") {
         const node = await Node.findOne({ _id: req.query.id });
-        let action = 4; //rejected
+        let action = 7; //rejected
         if (req.body.action == "executed") {
           action = 2;
+        }
+        else if (req.body.action == "rejected") {
+          action = 4;
         }
 
         const new_node = await generalFunctions.node_reply({
           user: req.user,
           target_node: node,
-          reply: 1, //response
           text: req.body.input4,
-          status: action,
+          reply: action
         });
-        return res.redirect(`/view?type=${req.query.type}&id=${new_node.id}`);
+
+        if(new_node.type == 1 && new_node.type2 == 3 ){
+          return res.redirect(`/list?searchfor=clients`);
+        }
+        return res.redirect(`/view?type=${req.query.type}&id=${new_node._id}`);
       
       }
       else if(req.body.action == "turn_to"){

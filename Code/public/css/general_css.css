@@ -61,12 +61,6 @@ button{
     color: gold;
 }
 
-.preview_review{
-    padding: 10px;
-    border: 2px solid black;
-    margin-bottom: 5px;
-}
-
 .checkbox_conatainer{
     display: flex;
 }

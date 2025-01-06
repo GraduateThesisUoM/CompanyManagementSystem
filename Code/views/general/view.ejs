@@ -27,6 +27,7 @@
     <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
       <div>
+        <h1 class="asap-condensed-extralight">View</h1>
         <form action="/view" method="POST" id="view_form" class="glass_efect_2">
           <% if (isParamsEmpty) { %>
           <div>ERROR: No elements selected</div>
@@ -122,20 +123,24 @@
               <textarea name="input<%= index %>" id="<%= title %>"><%= data[index] %></textarea>
             </div>
             <% }else if(type[index] == 10){ %>
-            <div>
-              <% data[index].forEach(function(node, index) {%>
+              
               <div id="nodes_conainer">
+                <% data[index].forEach(function(node, index) {%>
                 <div>
                   <div class="message_header">
                     <div class="person"><%=node.sender.firstName%> <%=node.sender.lastName%></div>
                     <div class="reg_d"><%=node.registrationDate%></div>
                   </div>
+                  
                   <div class="node_text"><%=node.text%></div>
-                  <div class="node_status"><%=node.status%></div>
+                  
+                    <% if (index === data.length - 1) { %>
+                      <div class="node_status"><%=node.status%></div>
+                    <% } %>
                 </div>
+                <%});%>
               </div>
-              <%});%>
-            </div>
+              
             <% }else if(type[index] == 11){ %>
             <div>
               <img src="<%= data[index] %>" id="company_logo" />
@@ -162,7 +167,7 @@
           <% }); %> <% } %>
           <input type="text" name="action" id="action" style="display: none" />
           <div id="button_container">
-            <button class="asap-condensed-regular" id="btn2"></button>
+            <button type="button" class="asap-condensed-regular" id="btn2"></button>
             <button class="asap-condensed-regular" id="btn3">Save</button>
           </div>
           
@@ -362,6 +367,10 @@
 
       const secondary_data = JSON.parse(`<%- JSON.stringify(secondary_data) %>`);
 
+      if($("#Title").text() == "Title : "){
+        $("#Title").hide()
+      }
+
       $("#clients").hide();
       $("#message_div").hide();
       //$("#day_data_users").hide();
@@ -482,7 +491,6 @@
             $(this).find("option:first-child").remove();
           }
         });
-
 
         function keepOnlySelectedOption(selectId) {
           // Get the select element by its ID
@@ -615,11 +623,6 @@
           }
         }
 
-        /*$("#turn_to_btn").click(function () {
-          $("#action").val("turn_to");
-          $("#view_form").submit();
-        });*/
-
         $(document).on("change", ".doc_line_select", function () {
           var index = $(this).closest("tr").index();
           if ($(".doc_line_select").eq(index).val() != "-") {
@@ -642,11 +645,24 @@
         });
 
         $("#btn3").click(function () {
+          event.preventDefault();
           $("#action").val("save");
           $("#view_form").submit();
         });
       }
       else if (queryParams.type == "nodes") {
+        $("#Type").css('text-align', 'center');
+        $("#Type").text($("#Type").text().replace("Type : ", ""));
+        if($("#Type").text()=="Hiring"){
+          $("#Title").hide()
+          $("#nodes_conainer").hide()
+          $(".textarea_container").parent().hide();
+          $("#btn3").text('Accept');
+          $("#btn2").text('Accept')
+        }
+        else{
+          $("#btn3").text("Ececute");
+        }
         var node = $(".node_status:last");
 
         if (node.text() == "2") {
@@ -658,13 +674,15 @@
 
         $("#btn1").hide();
 
-        $("#btn3").text("Ececuted");
+        
         $("#btn3").click(function () {
           $("#action").val("executed");
           $("#view_form").submit();
         });
         $("#btn2").text("Reject");
+        $("#btn2").css("background-color", "red");
         $("#btn2").click(function () {
+          event.preventDefault();
           $("#action").val("rejected");
           $("#view_form").submit();
         });
@@ -700,28 +718,29 @@
         $("#btn2").hide()
         $("#btn3").hide()
       }
-      else if (queryParams.type == 'requests'){
-        $("#btn1").hide();
-        $("#btn2").css("visibility", "hidden");
-        //$("#btn3").html("<div id='btn_text_wiht_img'><div>Send</div><img width='50' height='50' src='https://img.icons8.com/wired/100/FFFFFF/paper-plane.png' alt='paper-plane'/></div>");
-        $("#btn3").html("<img width='35' height='35' src='https://img.icons8.com/wired/100/FFFFFF/paper-plane.png' alt='paper-plane'/>");
-      }
       else {
         $("#btn1").click(function () {
+          event.preventDefault();
           if (confirm("Are you soure ?")) {
             $("#action").val("delete");
             $("#view_form").submit();
           }
         });
         $("#btn2").click(function () {
+          event.preventDefault();
           $("#action").val(btn_1_var);
           //$("#view_form").submit();
         });
         $("#btn3").click(function () {
+          event.preventDefault();
           $("#action").val("save");
           $("#view_form").submit();
         });
       }
+      
+      /*$("#btn3").click(function () {
+        if(){}
+      });*/
 
       if (queryParams.type == "series") {
         for( s of secondary_data.selected_series){

@@ -21,3 +21,15 @@
 .button_2:hover{
     background-color: rgba(189, 15, 15, 1);
 }
+
+.button_3{
+    background-color: rgba(13, 143, 6, 0.7);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+.button_3:hover{
+    background-color: rgb(13, 143, 6);
+}
