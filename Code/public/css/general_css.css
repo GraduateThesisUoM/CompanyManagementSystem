@@ -393,9 +393,11 @@ border: 1px solid rgba(121, 121, 121, 0.3);
 }
 
 .container input{
+    all:unset;
     color: rgb(200, 198, 198) !important;
     border-radius: 10px;
-    padding: 5px;
+    padding: 10px;
+    background-color: rgb(66, 63, 63);
 }
 .container label{
     color: rgb(0, 0, 0) !important;

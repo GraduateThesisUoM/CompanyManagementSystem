@@ -1239,6 +1239,29 @@ async function get_accountant_node(company_id){
   return Node.findOne({company:company_id,next:'-',status:2,type:1,type2:3})
 }
 
+function calculateDateDifference(inputDate) {
+  const now = new Date();
+  const date = new Date(inputDate);
+
+  let years = now.getFullYear() - date.getFullYear();
+  let months = now.getMonth() - date.getMonth();
+  let days = now.getDate() - date.getDate();
+
+  // Adjust for negative values
+  if (days < 0) {
+      months--;
+      const previousMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+      days += previousMonth.getDate();
+  }
+
+  if (months < 0) {
+      years--;
+      months += 12;
+  }
+
+  return { years, months, days };
+}
+
 module.exports = {
   checkAccessRigts,
   createWarehouse,
@@ -1268,5 +1291,6 @@ module.exports = {
   clear_db,
   get_persons_moves,
   record_scan,
-  get_accountant_node
+  get_accountant_node,
+  calculateDateDifference
 };

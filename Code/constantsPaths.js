@@ -18,7 +18,9 @@ const schemas = {
     node : "././Schemas/Node",
     person : "././Schemas/Person",
     review : "././Schemas/Review",
-    document : "././Schemas/Document"
+    document : "././Schemas/Document",
+    salary : "././Schemas/Salary"
+
   },
   two:{
     user : "../../Schemas/User",
@@ -32,7 +34,8 @@ const schemas = {
     node : "../../Schemas/Node",
     person : "../../Schemas/Person",
     review : "../../Schemas/Review",
-    document : "../../Schemas/Document"
+    document : "../../Schemas/Document",
+    salary : "../../Schemas/Salary"
   }
 };
 
@@ -148,20 +151,6 @@ const pages = {
       return views_folders.general+"create.ejs"
     }}
   },
-  search:{
-    url : "/search",
-    file: routes.general+"SearchRoutes.js",
-    view : function() { {
-      return views_folders.general+"search.ejs"
-    }}
-  },
-  filters:{
-    url : "/search-filters",
-    file: routes.general+"SearchFiltersRoutes.js",
-    view : function() { {
-      return views_folders.general+"searchfilters.ejs"
-    }}
-  },
   list :{
     url : "/list",
     file: routes.general+"ListRoutes.js",
@@ -238,6 +227,13 @@ const pages = {
     url : "/request-history",
     file: routes.accountant+"RequestHistoryRoutes.js",
     view : ""
+  },
+  payroll :{
+    url : "/payroll",
+    file: routes.accountant+"PayrollRoutes.js",
+    view : function() { {
+      return views_folders.accountant+"payroll.ejs"
+    }}
   },
   view_request :{
     url : "/view-request",

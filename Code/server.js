@@ -113,14 +113,11 @@ app.use(path_constants.pages.logout.url, require(path_constants.pages.logout.fil
 //self_accountant
 app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.self_accountant.file));
 
-//search
-app.use(path_constants.pages.search.url, require(path_constants.pages.search.file));
-
-//filters
-app.use(path_constants.pages.filters.url, require(path_constants.pages.filters.file));
-
 //change_ban_status
 app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));
+
+//payroll
+app.use(path_constants.pages.payroll.url, require(path_constants.pages.payroll.file));
 
 //my_company
 app.use(path_constants.pages.my_company.url, require(path_constants.pages.my_company.file));

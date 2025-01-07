@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>PayRoll</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="my_select_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+        <link rel="stylesheet" href="table_css.css">
+        <link rel="stylesheet" href="buttons_css.css">
+        <link rel="stylesheet" href="textarea_css.css">
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+        <!--Charts-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/0.7.0/chartjs-plugin-datalabels.min.js"></script>
+
+        <script src="JSFrontEndFunctions.js"></script>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <%- include('../partials/header'); %>
+    </head>
+    <style>
+        #client_select,#person_select{
+            width: calc(100% - 30px);
+            padding: 5px 15px;
+            border-radius: 10px;
+            color:white
+        }
+        #filter_container{
+            margin-right: 30px;
+            font-size: 1.1em;
+        }
+    </style>
+    <body>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <div class="asap-condensed-regular">
+                    <h1>PayRoll</h1>
+                    <div class="glass_efect_2 container" id="filter_container">
+                        <form action="/payroll" method="POST">
+                            <label for="client_select">Client</label>
+                            <select class="my_select" id="client_select" name="client_select">
+                                <% for(c of clients){%>
+                                    <option value="<%= c._id%>"><%= c.name%></option>
+                                <% }%>
+
+                            </select>
+                            <label for="person_select">Person</label>
+                            <select class="my_select" id="person_select" name="person_select">
+                                <% for(c of clients_users){%>
+                                    <option class="<%=c.c.company%> user" value="<%= c.u._id%>"><%= c.u.firstName %> <%= c.u.lastName %></option>
+                                <% }%>
+                            </select>
+                            <div id="persons_data">
+                                <p> First Name : <%=selected_user.firstName%></p>
+                                <p> Last Name : <%=selected_user.lastName%></p>
+                                <p> Time In the Company : <br>
+                                    Years  : <%=time_in_comp.years%><br>
+                                    Months : <%=time_in_comp.months%><br>
+                                    Days   : <%=time_in_comp.days%></p>
+                            </div>
+                            <div id="set_salary_cont">
+                                <input name="salary" id="salary" type="number"> €
+                                <button class="button_3"> Set €</button>
+                            </div>
+                       </form>
+                    </div>
+                    <div id="chart_container">
+                        <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>
+
+       $(document).ready(function(){
+
+            const queryString = new URL(window.location.href).search;
+            var params = new URLSearchParams(queryString);
+            if(params.get('comp')){
+                $("#client_select").val(params.get('comp'))
+            }
+            if(params.get('id')){
+                $("#person_select").val(params.get('id'))
+            }
+            
+            $("#client_select").change(function(){
+                window.location = '/payroll?comp='+$("#client_select").val()
+            })
+
+            $("#person_select").change(function(){
+                window.location = '/payroll?id='+$("#person_select").val()+'&comp='+$("#client_select").val()
+            })
+        
+            const xValues = ['hhh', 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+            const datasets = [
+                { 
+                    label: "Dataset 1",
+                    data: [860, 1140, 1060, 1060, 1070, 1110, 1330, 2210, 7830, 2478],
+                    borderColor: "red",
+                    fill: false
+                },
+                { 
+                    label: "Dataset 2",
+                    data: [1600, 1700, 1700, 1900, 2000, 2700, 4000, 5000, 6000, 7000],
+                    borderColor: "green",
+                    fill: false
+                },
+                { 
+                    label: "Dataset 3",
+                    data: [300, 700, 2000, 5000, 6000, 4000, 2000, 1000, 200, 100],
+                    borderColor: "blue",
+                    fill: true
+                }
+            ];
+
+            // Call the function
+            createLineChart("myChart", xValues, datasets);
+            
+        
+
+    });
+
+    </script>
+
+</html>

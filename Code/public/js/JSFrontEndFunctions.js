@@ -350,3 +350,39 @@ function get_item_from_list(list,id){
     return 'not found'
 }
 
+function createLineChart(canvasId, xValues, datasets, options = {}) {
+    const defaultOptions = {
+      legend: {
+        display: true,
+        position: 'top',
+      },
+      plugins: {
+        datalabels: {
+          display: true,
+          color: 'black',
+          align: 'top',
+          font: {
+            size: 10,
+            weight: 'bold',
+          },
+          formatter: function(value) {
+            return value; // Display the data point value
+          },
+        },
+      },
+    };
+  
+    // Merge default options with provided options
+    const finalOptions = Object.assign({}, defaultOptions, options);
+  
+    new Chart(canvasId, {
+      type: "line",
+      data: {
+        labels: xValues,
+        datasets: datasets,
+      },
+      options: finalOptions,
+      plugins: [ChartDataLabels],
+    });
+  }
+
