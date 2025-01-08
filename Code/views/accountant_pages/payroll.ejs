@@ -22,6 +22,8 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/0.7.0/chartjs-plugin-datalabels.min.js"></script>
 
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
         <script src="JSFrontEndFunctions.js"></script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -37,6 +39,25 @@
         #filter_container{
             margin-right: 30px;
             font-size: 1.1em;
+        }
+
+        #chart_container{
+            /* From https://css.glass */
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+
+            margin-right: 30px;
+            margin-top: 30px;
+            padding-top: 30px;
+        }
+
+        #chart_container canvas{
+            padding-top: 30px;
+
         }
     </style>
     <body>
@@ -69,13 +90,27 @@
                                     Days   : <%=time_in_comp.days%></p>
                             </div>
                             <div id="set_salary_cont">
-                                <input name="salary" id="salary" type="number"> €
-                                <button class="button_3"> Set €</button>
+                                <input name="salary" id="salary" type="number" step="0.01" value="<%=salary%>"> €
+                                <lable for="kids">Kids</lable>
+                                <input name="kids" id="kids" type="number" step="1"> €
+                                <div>
+                                    <lable for="married">Kids</lable>
+                                <input name="married" id="married" type="checkbox" > €
+                                </div>
+                                <div>
+                                    <button class="employment_type">FullTime</button>
+                                    <button class="employment_type">PartTime</button>
+                                    <button class="employment_type">Hourly</button>
+                                    <input name="employment_t" id="employment_t">
+                                </div>
+                                <button class="button_3">Set</button>
                             </div>
                        </form>
                     </div>
-                    <div id="chart_container">
-                        <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+                    <div id="chart_container" class="glass_efect_2">
+                        <!--canvas id="myChart" style="width:100%;max-width:600px"></canvas-->
+                        <div id="line_chart_div" style="width: 100%; height: 500px;"></div>
+
                     </div>
                 </div>
             </div>
@@ -84,7 +119,6 @@
     <script>
 
        $(document).ready(function(){
-
             const queryString = new URL(window.location.href).search;
             var params = new URLSearchParams(queryString);
             if(params.get('comp')){
@@ -101,35 +135,69 @@
             $("#person_select").change(function(){
                 window.location = '/payroll?id='+$("#person_select").val()+'&comp='+$("#client_select").val()
             })
-        
-            const xValues = ['hhh', 200, 300, 400, 500, 600, 700, 800, 900, 1000];
-            const datasets = [
-                { 
-                    label: "Dataset 1",
-                    data: [860, 1140, 1060, 1060, 1070, 1110, 1330, 2210, 7830, 2478],
-                    borderColor: "red",
-                    fill: false
-                },
-                { 
-                    label: "Dataset 2",
-                    data: [1600, 1700, 1700, 1900, 2000, 2700, 4000, 5000, 6000, 7000],
-                    borderColor: "green",
-                    fill: false
-                },
-                { 
-                    label: "Dataset 3",
-                    data: [300, 700, 2000, 5000, 6000, 4000, 2000, 1000, 200, 100],
-                    borderColor: "blue",
-                    fill: true
-                }
-            ];
 
-            // Call the function
-            createLineChart("myChart", xValues, datasets);
+            const payroll_months = JSON.parse(`<%- JSON.stringify(payroll_months) %>`);
+            const payroll_amounts = JSON.parse(`<%- JSON.stringify(payroll_amounts) %>`);
+
             
-        
+            const today = new Date();
+            const formattedToday = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
 
-    });
+            drawLineChart(payroll_months, payroll_amounts);
+
+            function drawLineChart(xData, lineData,name) {
+                google.charts.load('current', {'packages':['corechart']});
+                google.charts.setOnLoadCallback(function() {
+                    var data = new google.visualization.DataTable();
+                    data.addColumn('string', 'Month');  // X-axis
+                    data.addColumn('number', 'Salary');  // Line data
+            
+                    for (var i = 0; i < xData.length; i++) {
+                        data.addRow([xData[i], lineData[i]]);
+                    }
+
+                    var minAmount = Math.min(...lineData) - 10;  // Calculate the minimum of payroll_amounts
+                    var maxAmount = Math.max(...lineData) + 10;  // Calculate the max and add 10
+        
+                    var options = {
+                        hAxis: {
+                            slantedTextAngle: 0,  // Angle for slanted text
+                            minValue: 0,  // Start point for ticks (first label)
+                            ticks: xData,  // Horizontal axis labels
+                            textStyle: { color: 'black' }  // Color of the text labels
+
+                        },
+                        vAxis: {
+                            minValue: minAmount,
+                            maxValue: maxAmount,
+                            textStyle: { color: 'black' } ,
+                            gridlines: { count: 6 } 
+                        },
+                        lineWidth: 4,
+                        pointSize: 4,
+                        backgroundColor: 'transparent',
+                        lineTension: 0.2,
+                        pointSize: 6,  // Adjust point size for better visibility
+                        tooltip: { isHtml: true },  // Enable tooltip for points
+                        series: {
+                            0: {
+                                pointLabelFontSize: 10,
+                                pointLabelOffset: 15,  // Offset from the point
+                                pointLabel: { show: true, color: '#12357E' },
+                                color: '#12357E' 
+                            }
+                        },
+                        legend: { position: 'none' }
+                    };
+
+                    var chart = new google.visualization.LineChart(document.getElementById('line_chart_div'));
+                    chart.draw(data, options);
+                });
+            }
+
+
+
+        });
 
     </script>
 

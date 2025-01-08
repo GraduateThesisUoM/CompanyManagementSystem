@@ -223,11 +223,6 @@ const pages = {
     view : ""
   },
   //Acountant
-  request_history :{
-    url : "/request-history",
-    file: routes.accountant+"RequestHistoryRoutes.js",
-    view : ""
-  },
   payroll :{
     url : "/payroll",
     file: routes.accountant+"PayrollRoutes.js",

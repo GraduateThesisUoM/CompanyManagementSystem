@@ -392,7 +392,7 @@ border: 1px solid rgba(121, 121, 121, 0.3);
     border-radius: 20px;
 }
 
-.container input{
+.container input[type="text"],input[type="number"]{
     all:unset;
     color: rgb(200, 198, 198) !important;
     border-radius: 10px;

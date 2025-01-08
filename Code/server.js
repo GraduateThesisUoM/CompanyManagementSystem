@@ -86,9 +86,6 @@ app.use(path_constants.pages.preview_accountant.url, require(path_constants.page
 //create
 app.use(path_constants.pages.create.url, require(path_constants.pages.create.file));
 
-//request_history
-app.use(path_constants.pages.request_history.url, require(path_constants.pages.request_history.file));
-
 //report
 app.use(path_constants.pages.report.url, require(path_constants.pages.report.file));
 

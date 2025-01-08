@@ -23,6 +23,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         const access = generalFunctions.checkAccessRigts(req,res);
         if(access.response){
             console.log("PayRoll")
+            var salary = 0;
             const clients = await clientAccountantFunctions.fetchClients(req.user._id,'all');
             var comp = clients[0]._id;
             if( req.query.comp){
@@ -43,13 +44,32 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                 comp = req.query.comp
                 selected_user = await Client.findOne({company:comp,type:'user', status:1})
             }
-           
+
+            var payrolls = await Salary.find({company: comp, user:selected_user})
+
+            payrolls.sort((a, b) => new Date(b.registrationDate) - new Date(a.registrationDate));
+
+            
+
+            var payroll_months = []
+            var payroll_amounts = [];
+            for( payroll of payrolls){
+                payroll_months.push(generalFunctions.formatDate(payroll.registrationDate));
+                payroll_amounts.push(payroll.amount);
+            }
+
+            if(payrolls.length > 0){
+                salary = payroll_amounts[0]; 
+            }
 
             var data ={
                 user : req.user,
                 clients : clients,
                 clients_users: clients_users,
                 selected_user : selected_user,
+                payroll_months: payroll_months,
+                payroll_amounts: payroll_amounts,
+                salary : salary,
                 time_in_comp : generalFunctions.calculateDateDifference(selected_user.registrationDate)
             }
             res.render( path_constants.pages.payroll.view(),data );  
@@ -73,10 +93,10 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       const s = await new Salary({
         company : u.company,
         user : u._id,
-        amount : 0.0
+        amount : req.body.salary
       })
       await s.save();
-      res.redirect('/payroll');
+      res.redirect('/payroll?id='+u._id+"&comp="+u.company);
     }
     catch (err) {
       console.error('Error updating user data:', err);
