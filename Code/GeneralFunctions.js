@@ -19,6 +19,8 @@ const Document = require(path_constants.schemas.one.document);
 const Notification = require(path_constants.schemas.one.notification);
 const Node = require(path_constants.schemas.one.node);
 const Review = require(path_constants.schemas.one.review);
+const Attendance = require(path_constants.schemas.one.attendance);
+
 
 const schemaMap = {
   users: User,
@@ -1191,23 +1193,36 @@ async function importAccountants() {
 
 async function record_scan(data){
   console.log(data)
-  const last_scan = await Node.findOne({sender_id : data.user._id,type: 8, next:'-'});
+  // Get today's date in UTC
+  const today = new Date();
+  today.setUTCHours(0, 0, 0, 0);
+
+  // Find the last scan where clock_out is not set and registrationDate is today
+  const last_scan = await Attendance.findOne({
+    user: data.user._id, // Match the user ID
+    company: data.user.company, // Match the company
+    clock_out: { $exists: false }, // Ensure clock_out is not set
+    registrationDate: { $gt: today }
+  });
+
   var new_node;
 
   if(last_scan){
-    new_node = await node_reply({target_node : last_scan, reply: 9 ,user : data.user});
-
-    return 0 //leave
-
+    last_scan.clock_out = new Date(); // Set the current timestamp
+    await last_scan.save();
+    console.log('Clock-out time recorded:', last_scan);
+    return 0; // Leave
   }
   
-  new_node = await create_node({
-    company: data.user.company,
-    sender_id: data.user._id,
-    receiver_id: data.user._id,
-    type: 8
-  })
-  return 1 //entered
+   // Create a new attendance record if no open attendance exists
+   new_node = new Attendance({
+    user: data.user._id,
+    company: data.user.company
+  });
+
+  await new_node.save();
+  console.log('New attendance record created:', new_node);
+  return 1; // Entered
 
 }
 

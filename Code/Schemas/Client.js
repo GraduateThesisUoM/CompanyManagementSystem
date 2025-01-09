@@ -5,8 +5,7 @@ const User = require('./User');
 const ClientSchema = new mongoose.Schema({
   company : {
     type: mongoose.Schema.Types.ObjectId,
-    required: false,
-    default: null
+    required: true
   },
   companyOwner : {
     type: Number,

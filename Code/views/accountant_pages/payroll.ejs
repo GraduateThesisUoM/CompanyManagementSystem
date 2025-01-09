@@ -21,7 +21,6 @@
         <!--Charts-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/0.7.0/chartjs-plugin-datalabels.min.js"></script>
-
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
         <script src="JSFrontEndFunctions.js"></script>
@@ -59,6 +58,13 @@
             padding-top: 30px;
 
         }
+        #table_container{
+            margin: 30px 0px;
+        }
+        .my_select{
+            padding: 5px 10px;
+            border-radius: 10px;
+        }
     </style>
     <body>
         <div class="has_sidebar">
@@ -68,6 +74,27 @@
                     <h1>PayRoll</h1>
                     <div class="glass_efect_2 container" id="filter_container">
                         <form action="/payroll" method="POST">
+                            <div id="time_gap">
+                                <label for="year">Year</label>
+                                <select class="my_select" id="year" id="year">
+                                    <% for(let i=2020; i<2100; i++){ %>
+                                        <option value="<%= i %>"><%= i %></option>
+                                    <% } %>                                
+                                </select>
+                                <label for="from_month">From</label>
+                                <select class="my_select" id="from_month" id="from_month">
+                                    <% for(let i=1; i<13; i++){ %>
+                                        <option value="<%= i %>"><%= i %></option>
+                                    <% } %>                                 
+                                </select>
+                                <label for="to_month">To</label>
+                                <select class="my_select" name="to_month" id="to_month">
+                                    <% for(let i=1; i<13; i++){ %>
+                                        <option value="<%= i %>"><%= i %></option>
+                                    <% } %>                                 
+                                </select>
+                            </div>
+                            
                             <label for="client_select">Client</label>
                             <select class="my_select" id="client_select" name="client_select">
                                 <% for(c of clients){%>
@@ -89,19 +116,40 @@
                                     Months : <%=time_in_comp.months%><br>
                                     Days   : <%=time_in_comp.days%></p>
                             </div>
-                            <div id="set_salary_cont">
-                                <input name="salary" id="salary" type="number" step="0.01" value="<%=salary%>"> €
-                                <lable for="kids">Kids</lable>
-                                <input name="kids" id="kids" type="number" step="1"> €
+                            <div id="salary_data_cont">
                                 <div>
-                                    <lable for="married">Kids</lable>
-                                <input name="married" id="married" type="checkbox" > €
+                                    Full Salary : <span id="fullsalry">0</span>
                                 </div>
                                 <div>
-                                    <button class="employment_type">FullTime</button>
-                                    <button class="employment_type">PartTime</button>
-                                    <button class="employment_type">Hourly</button>
-                                    <input name="employment_t" id="employment_t">
+                                    Christmas Gift : <span id="christmasgift">0</span>
+                                </div>
+                                <div>
+                                    Leave Pay: <span id="leavepay">0</span>
+                                </div>
+                                <div>
+                                    Leave Allowance: <span id="leaveallowance">0</span>
+                                </div>
+                                <div>
+                                    Overtime: <span id="overtime">0</span>
+                                </div>
+                                <div>
+                                    €/hour: <span id="hourpay">0</span>
+                                </div>
+                                <div>
+                                    Employer Contributions: <span id="employercontributions">0</span>
+                                </div>
+                                <div>
+                                    Employee Contributions: <span id="employeecontributions">0</span>
+                                </div>
+                            </div>
+                            <div id="set_salary_cont">
+                                <div>
+                                    <input name="salary" id="salary" type="number" step="0.01" value="<%=salary%>">
+                                    <lable for="salary">€</lable>
+                                </div>
+                                <div>
+                                    <input name="kids" id="kids" type="number" step="1">
+                                    <lable for="kids">Kids</lable>
                                 </div>
                                 <button class="button_3">Set</button>
                             </div>
@@ -111,6 +159,28 @@
                         <!--canvas id="myChart" style="width:100%;max-width:600px"></canvas-->
                         <div id="line_chart_div" style="width: 100%; height: 500px;"></div>
 
+                    </div>
+                    <div class="table_container" id="table_container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Month</th>
+                                    <th>Day</th>
+                                    <th>Clock In</th>
+                                    <th>Clock Out</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for(a of attendance){%>
+                                    <tr class="glass_efect_2">
+                                        <th><%=a.month%></th>
+                                        <th><%=a.day%></th>
+                                        <th><%=a.clock_in%></th>
+                                        <th><%=a.clock_out%></th>
+                                    </tr>
+                                <%}%>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -127,14 +197,51 @@
             if(params.get('id')){
                 $("#person_select").val(params.get('id'))
             }
+            if (params.get('year')){
+                $("#year").val(params.get('year'))
+            }
+            else{
+                $("#year").val(new Date().getFullYear())
+            }
+            if (params.get('from_month')){
+                $("#from_month").val(params.get('from_month'))
+            }
+            else{
+                $("#from_month").val(new Date().getMonth() + 1) 
+            }
+            if (params.get('to_month')){
+                $("#to_month").val(params.get('to_month'))
+            }
+            else{
+                $("#to_month").val(new Date().getMonth() + 1) 
+            }
+            if($("#to_month").val() < $("#from_month").val()){
+                $("#to_month").val($("#from_month").val());
+            }
+            
             
             $("#client_select").change(function(){
                 window.location = '/payroll?comp='+$("#client_select").val()
             })
 
+
             $("#person_select").change(function(){
                 window.location = '/payroll?id='+$("#person_select").val()+'&comp='+$("#client_select").val()
             })
+
+            $(".my_select").change(function(){
+                var from_month = $("#from_month").val();
+                var to_month = $("#to_month").val()
+                if(to_month < from_month){
+                    to_month = from_month;
+                }
+                window.location = '/payroll?id='+$("#person_select").val()+
+                '&comp='+$("#client_select").val()+
+                "&year="+$("#year").val()+
+                "&from_month="+from_month+
+                "&to_month="+to_month
+            })
+            
 
             const payroll_months = JSON.parse(`<%- JSON.stringify(payroll_months) %>`);
             const payroll_amounts = JSON.parse(`<%- JSON.stringify(payroll_amounts) %>`);
@@ -193,6 +300,33 @@
                     var chart = new google.visualization.LineChart(document.getElementById('line_chart_div'));
                     chart.draw(data, options);
                 });
+            }
+
+            calculateSalary()
+
+
+            function calculateSalary(salary) {
+                var fullSalary = $("#salary").val();
+                var christmasGift = 300;
+                var leavePay = 200;
+                var leaveAllowance = 100;
+                
+                var overtimeHours = 4;
+                var hourPay = 4;
+                var netSalary = fullSalary + christmasGift + leavePay + leaveAllowance + (overtimeHours * hourPay);
+                
+                var employerContributions = fullSalary * 0.2; // Example calculation, could vary based on your requirements
+                var employeeContributions = fullSalary * 0.3; // Example calculation, could vary
+                
+                $("#fullsalry").html(fullSalary);
+                $("#christmasgift").html(christmasGift);
+                $("#leavepay").html(leavePay);
+                $("#leaveallowance").html(leaveAllowance);
+                $("#overtime").html(overtimeHours);
+                $("#hourpay").html(hourPay);
+                $("#netsalary").html(netSalary);
+                $("#employercontributions").html(employerContributions);
+                $("#employeecontributions").html(employeeContributions);
             }
 
 

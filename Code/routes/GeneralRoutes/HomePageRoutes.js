@@ -20,7 +20,7 @@ router.get('/', (req, res) => {
 router.post("/", Authentication.checkNotAuthenticated, async (req, res) => {
         try {
                 const user = await User.findOne({_id : req.body.scan})
-                var scan =await generalFunctions.record_scan({user : user, date : new Date()})
+                var scan =await generalFunctions.record_scan({user : user})
                 console.log(scan)
                 res.redirect('/index?scan=true&action='+scan)
         }

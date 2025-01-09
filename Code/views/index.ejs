@@ -27,11 +27,18 @@
             text-indent: 30px;
             margin: 0px;
         }
+        #message{
+            text-align: center;
+            font-size: 3em;
+            color:rgb(255, 255, 255);
+            text-shadow: -2px 2px 5px black;
+        }
     </style>
     <body class="asap-condensed-regular">
 
         <div id="scaner_div" class="glass_efect_2 container display_block" >
             <h1>Welcome Please Scan</h1>
+            <div id="message"></div>
             <div id="qr_reader" class="box_shadow_1" style="width: 50%; margin-top: 20px;margin-left: 25%; display: none;"></div>
             <form id="scan_form" action="/index" method="POST" style="display: none;">
                 <input type="text" name="scan" id="scan" >
@@ -54,6 +61,15 @@
             if(urlParams.get('scan')){
                 show_qr_scaner();
                 $("#scan_bnt").hide();
+            }
+
+            if(urlParams.get('action')){
+                if(urlParams.get('action')==1){
+                    $("#message").html("Welcome")
+                }
+                else if(urlParams.get('action')=="0"){
+                    $("#message").html("Good By")
+                } 
             }
 
             $("#log_in_btn").click(function(){

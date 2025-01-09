@@ -8,6 +8,11 @@ const NodeShema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  amount: {
+    type: Number,
+    required: true,
+    default : 1
+  },
   next:{ type: String,required: true, default:"-"},
   registrationDate: { type: Date, default: Date.now , required: true}
 });
