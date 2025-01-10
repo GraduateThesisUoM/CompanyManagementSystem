@@ -10,6 +10,8 @@
         <link rel="stylesheet" href="general_css.css">
         <link rel="stylesheet" href="create_css.css">
         <link rel="stylesheet" href="fonts_css.css">
+        <link rel="stylesheet" href="Switch_css.css">
+
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -70,13 +72,48 @@
                             <input type="text" id="series_acronym" name="series_acronym"  class="required series input_type_2 font_size_1">
                        </div>
                         <div>Loked : <input type="checkbox" name="series_sealed"></div>
-                        <div>Effects Warehouse : <input type="checkbox" name="effects_warehouse"></div>
-                        <div>Credit : <input type="checkbox" name="credit"></div>
-                        <div>Debit : <input type="checkbox" name="debit"></div>
-                        <div>Transforms : <input type="checkbox" name="transforms"></div>
-                        <div id = 'transforms_to_div'>Transforms To:
-                            <input type="text" name="series_transforms_list" id="series_transforms_list" style="display: none;">
+                        <div>
+                            Effects Warehouse : <input type="checkbox" id="effects_warehouse">
+                            <div class="switch_container" id="effects_warehouse_switch">
+                                
+                                <div class="switch">
+                                    <div class="back_text">
+                                      <div></div>
+                                      <div></div>
+                                    </div>
+                                    <div class="slider">
+                                      <button class="slider-button" id="effects_warehouse_switch_btn"></button>
+                                    </div>
+                                </div>
+                                <div class="switch_label" id="effects_warehouse_label">Adds</div>
+                            </div>
+                            <input id = 'effects_warehouse_input' name="effects_warehouse_input" value="0" style="display: none;">
                         </div>
+                        <div>
+                            Effects Accounts : <input type="checkbox" id="effects_accounts">
+                            <div class="switch_container" id="effects_accounts_switch">
+                                
+                                <div class="switch">
+                                    <div class="back_text">
+                                      <div></div>
+                                      <div></div>
+                                    </div>
+                                    <div class="slider">
+                                      <button class="slider-button" id="effects_accounts_switch_btn"></button>
+                                    </div>
+                                </div>
+                                <div class="switch_label" id="effects_accounts_label">Adds</div>
+                            </div>
+                            <input id = 'effects_accounts_input' name="effects_accounts_input" value="0" style="display: none;">
+
+                        </div>
+                        <div>Transforms : <input type="checkbox" id="transforms"></div>
+                        <div id = 'transforms_to_div'>Transforms To:
+                            <input type="text" name="series_transforms_list" id="series_transforms_list">
+                        </div>
+                          
+                        
+                        
 
                     </div>
                     <div id ='persons_div' class="create_div">
@@ -148,7 +185,20 @@
                 if(params.get('create') == 'series'){
                     for(s of secondery_data){
                         console.log(s.title)
-                        $("#transforms_to_div").append(`<div><input type='checkbox' class='series_transforms_check' id=${s._id}'>${s.acronym}- ${s.title}</div>`);
+                        $("#transforms_to_div").append(`
+                        <div class="switch_container">
+                            <div class="switch">
+                            <div class="back_text">
+                                <div></div>
+                                <div></div>
+                            </div>
+                            <div class="slider">
+                                <button id='${s._id}' class="slider-button transfomrs_to_s" ></button>
+                            </div>
+                            </div>
+                            <div class="switch_label">${s.acronym}- ${s.title}</div>
+                        </div>
+                        `);
                     }
                 }
 
@@ -235,7 +285,7 @@
         $('.percent').on('input', price_dicount_input);
         $('.price').on('input', price_dicount_input);
 
-        $('.series_transforms_check').on('change', function(){
+        /*$('.series_transforms_check').on('change', function(){
         // Get all checked checkboxes and map their values (IDs) into an array
         const checkedIds = $('.series_transforms_check:checked').map(function () {
             return $(this).attr('id').replace(/'/g, "");
@@ -243,7 +293,93 @@
 
         // Update the input field with a comma-separated list of IDs
         $('#series_transforms_list').val(checkedIds.join(','));
-      });
+      });*/
+
+      $("#effects_warehouse_switch").hide();
+      $("#effects_accounts_switch").hide();
+      $("#transforms_to_div").hide();
+
+
+
+    $("#effects_warehouse").change(function () {
+        event.preventDefault;
+        if ($(this).is(":checked")) {
+            $("#effects_warehouse_switch").show();
+            $("#effects_warehouse_input").val(1)
+
+        } else {
+            $("#effects_warehouse_switch").hide();
+            $("#effects_warehouse_input").val(0)
+
+        }
+    });
+
+    $("#effects_accounts").change(function () {
+        event.preventDefault;
+        if ($(this).is(":checked")) {
+            $("#add_warehouse").hide();
+            $("#effects_accounts_switch").show();
+            $("#effects_accounts_input").val(1)
+
+        } else {
+            $("#add_warehouse").show();
+            $("#effects_accounts_switch").hide();
+            $("#effects_accounts_input").val(0)
+
+        }
+    });
+
+    $("#transforms").change(function () {
+        $("#transforms_to_div").toggle();
+    })
+
+    $(".switch_warehouse").click(function(event){
+        event.preventDefault();
+        $(".switch_warehouse").removeClass('selected')
+        $(this).addClass('selected')
+    })
+
+    $("#effects_accounts_switch_btn").click(function(event){
+        event.preventDefault();
+        event.preventDefault(); // Prevent the default action
+        this.classList.toggle('active'); // Toggle the `active` class
+        if ($("#effects_accounts_input").val() == 1 ) {
+            $("#effects_accounts_label").html('Subtracts'); // Change text to "+"
+            $("#effects_accounts_input").val(-1)
+        } else {
+            $("#effects_accounts_label").html('Adds');
+            $("#effects_accounts_input").val(1)
+
+        }
+    })
+
+    $("#effects_warehouse_switch_btn").click(function(event){
+        event.preventDefault();
+        event.preventDefault(); // Prevent the default action
+        this.classList.toggle('active'); // Toggle the `active` class
+        if ($("#effects_warehouse_input").val() == 1 ) {
+            $("#effects_warehouse_label").html('Subtracts'); // Change text to "+"
+            $("#effects_warehouse_input").val(-1)
+        } else {
+            $("#effects_warehouse_label").html('Adds');
+            $("#effects_warehouse_input").val(1)
+
+        }
+    })
+
+    $(".transfomrs_to_s").click(function(event){
+        event.preventDefault();
+        this.classList.toggle('active'); // Toggle the `active` class
+        $("#series_transforms_list").val(0)
+
+        var series = $(".transfomrs_to_s.active")
+        for(s of series){
+            $("#series_transforms_list").val($(s).attr('id')+";")
+        }
+    })
+
+
+
 
     });
     
