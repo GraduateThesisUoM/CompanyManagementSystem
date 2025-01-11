@@ -11,9 +11,8 @@ const SeriesSchema = new mongoose.Schema({
       type: Number,
       enum: [0, 1],
       default: 0},
-    effects_warehouse :{type: Number,enum: [0, 1],default: 0},
-    credit : {type: Number,enum: [0,1],default:0},
-    debit : {type: Number,enum: [0,1],default:0},
+    effects_warehouse :{type: Number,enum: [0, 1,-1],default: 0},
+    effects_account :{type: Number,enum: [0, 1,-1],default: 0},
     type : { type: Number, required: true },
     //buy = 2,sale=1
     status: {
@@ -24,7 +23,6 @@ const SeriesSchema = new mongoose.Schema({
       //2 deleted
       default: 1
     },
-    transforms : {type: Number,enum: [0,1],default:0},
     transforms_to: [{ type: mongoose.Schema.Types.ObjectId }] // Array of Series IDs
 });
 

@@ -384,6 +384,8 @@ async function createItem(data) {
 
 async function createSeries(data) {
   try {
+    console.log("fffffffffffffffffffffffffffffff")
+    console.log(data.transforms_to)
     const series = new Series({
       company: data.company,
       title: data.title,
@@ -391,12 +393,18 @@ async function createSeries(data) {
       type: data.type,
       sealed: data.sealed,
       effects_warehouse: data.effects_warehouse,
-      credit : data.credit ,
-      debit : data.debit
+      effects_account: data.effects_account,
     });
-    if (data.transforms) series.transforms = data.transforms;
-    console.log(data.transforms_to)
-    if(data.transforms_to)series.transforms_to = data.transforms_to.split(',');
+    if (data.transforms_to != 0){
+      series.transforms_to = data.transforms_to.split(';');
+      console.log(series.transforms_to)
+      series.transforms_to = series.transforms_to.map(id => new mongoose.Types.ObjectId(id));
+
+    }
+    else{
+      console.log("000000000000")
+      series.transforms_to = []
+    }
 
     await series.save();
 

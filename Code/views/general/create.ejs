@@ -11,7 +11,7 @@
         <link rel="stylesheet" href="create_css.css">
         <link rel="stylesheet" href="fonts_css.css">
         <link rel="stylesheet" href="Switch_css.css">
-
+        <link rel="stylesheet" href="Lock_css.css">
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -71,9 +71,34 @@
                             <label for="series_acronym">Acronym : </label>
                             <input type="text" id="series_acronym" name="series_acronym"  class="required series input_type_2 font_size_1">
                        </div>
-                        <div>Loked : <input type="checkbox" name="series_sealed"></div>
                         <div>
-                            Effects Warehouse : <input type="checkbox" id="effects_warehouse">
+                            <div class="lock_container">
+                                <div class="lock">
+                                    <div class="top_lock"></div>
+                                    <div class="bottom_lock locked"></div>
+                                </div>
+                                <label>Unlocked</label>
+                                <input name = "series_sealed" value="0" style="display: none;">
+                            </div>
+                        </div>
+                        <div>
+                            <div class="switch_container" id="effects_warehouse_y_n">
+                                <div class="switch">
+                                    <div class="back_text">
+                                      <div></div>
+                                      <div></div>
+                                    </div>
+                                    <div class="slider">
+                                      <button class="slider-button active" id="effects_warehouse_y_n_switch_btn"></button>
+                                    </div>
+                                </div>
+                                <div class="switch_label" id="effects_warehouse_y_n_label">Does Not Effects Warehouse</div>
+                            </div>
+                            <input id = 'effects_warehouse_y_n_input' name="effects_warehouse_y_n_input" value="0" style="display: none;">
+
+
+
+
                             <div class="switch_container" id="effects_warehouse_switch">
                                 
                                 <div class="switch">
@@ -87,10 +112,23 @@
                                 </div>
                                 <div class="switch_label" id="effects_warehouse_label">Adds</div>
                             </div>
-                            <input id = 'effects_warehouse_input' name="effects_warehouse_input" value="0" style="display: none;">
                         </div>
                         <div>
-                            Effects Accounts : <input type="checkbox" id="effects_accounts">
+                            <div class="switch_container" id="effects_accounts_y_n">
+                                
+                                <div class="switch">
+                                    <div class="back_text">
+                                      <div></div>
+                                      <div></div>
+                                    </div>
+                                    <div class="slider">
+                                      <button class="slider-button active" id="effects_accounts_y_n_switch_btn"></button>
+                                    </div>
+                                </div>
+                                <div class="switch_label" id="effects_accounts_y_n_label">Does Not Affects Account</div>
+                            </div>
+                            <input id = 'effects_accounts_y_n_input' name="effects_accounts_y_n_input" value="0" style="display: none;">
+
                             <div class="switch_container" id="effects_accounts_switch">
                                 
                                 <div class="switch">
@@ -104,17 +142,27 @@
                                 </div>
                                 <div class="switch_label" id="effects_accounts_label">Adds</div>
                             </div>
-                            <input id = 'effects_accounts_input' name="effects_accounts_input" value="0" style="display: none;">
-
+                            
                         </div>
-                        <div>Transforms : <input type="checkbox" id="transforms"></div>
-                        <div id = 'transforms_to_div'>Transforms To:
-                            <input type="text" name="series_transforms_list" id="series_transforms_list">
+                        
+                        <div class="switch_container" id="transforms_y_n">
+                                
+                            <div class="switch">
+                                <div class="back_text">
+                                  <div></div>
+                                  <div></div>
+                                </div>
+                                <div class="slider">
+                                  <button class="slider-button active" id="transforms_y_n_switch_btn"></button>
+                                </div>
+                            </div>
+                            <div class="switch_label" id="transforms_y_n_label">Does Not Transforms</div>
                         </div>
-                          
-                        
-                        
+                        <input id = 'transforms_y_n_input' name="transforms_y_n_input" value="0" style="display: none;">
 
+
+                        <div id = 'transforms_to_div'>
+                        </div>
                     </div>
                     <div id ='persons_div' class="create_div">
                         <label for="person_firstName">First Name : </label>
@@ -193,13 +241,18 @@
                                 <div></div>
                             </div>
                             <div class="slider">
-                                <button id='${s._id}' class="slider-button transfomrs_to_s" ></button>
+                                <button id='${s._id}' class="slider-button transfomrs_to_s active" ></button>
                             </div>
                             </div>
                             <div class="switch_label">${s.acronym}- ${s.title}</div>
                         </div>
                         `);
                     }
+                    if(secondery_data.length==0){
+                        $("#transforms_y_n").hide();
+                        $("#transforms_to_div").hide();
+                    }
+                    
                 }
 
             }
@@ -285,102 +338,137 @@
         $('.percent').on('input', price_dicount_input);
         $('.price').on('input', price_dicount_input);
 
-        /*$('.series_transforms_check').on('change', function(){
-        // Get all checked checkboxes and map their values (IDs) into an array
-        const checkedIds = $('.series_transforms_check:checked').map(function () {
-            return $(this).attr('id').replace(/'/g, "");
-        }).get(); // Convert the jQuery object to an array
-
-        // Update the input field with a comma-separated list of IDs
-        $('#series_transforms_list').val(checkedIds.join(','));
-      });*/
-
       $("#effects_warehouse_switch").hide();
       $("#effects_accounts_switch").hide();
-      $("#transforms_to_div").hide();
+      $("#transforms_to_div").hide();    
 
+        $("#effects_warehouse").change(function () {
+            event.preventDefault;
+            if ($(this).is(":checked")) {
+                $("#effects_warehouse_switch").show();
+                $("#effects_warehouse_input").val(1)
 
+            } else {
+                $("#effects_warehouse_switch").hide();
+                $("#effects_warehouse_input").val(0)
 
-    $("#effects_warehouse").change(function () {
-        event.preventDefault;
-        if ($(this).is(":checked")) {
-            $("#effects_warehouse_switch").show();
-            $("#effects_warehouse_input").val(1)
+            }
+        });
 
+        $("#effects_accounts_switch_btn").click(function(event){
+            event.preventDefault();
+            event.preventDefault(); // Prevent the default action
+            this.classList.toggle('active'); // Toggle the `active` class
+            if($(this).hasClass('active')){
+                $("#effects_accounts_label").html('Subtracts'); // Change text to "+"
+                $("#effects_accounts_y_n_input").val(-1)
+            } else {
+                $("#effects_accounts_label").html('Adds');
+                $("#effects_accounts_y_n_input").val(1)
+            }
+        })
+
+        $("#effects_accounts_y_n_switch_btn").click(function(event){
+            event.preventDefault();
+            event.preventDefault(); // Prevent the default action
+            this.classList.toggle('active'); // Toggle the `active` class
+            $("#effects_accounts_switch").toggle();
+
+            if($(this).hasClass('active')){
+                $("#effects_accounts_y_n_input").val(0);
+                $("#effects_accounts_y_n_label").html("Does Not Affects Account")
+            }
+            else{
+                $("#effects_accounts_y_n_input").val(1);
+                $("#effects_accounts_y_n_label").html("Affects Account")
+
+            }
+        })
+
+        $("#transforms_y_n_switch_btn").click(function(event){
+            event.preventDefault(); // Prevent the default action
+            this.classList.toggle('active'); // Toggle the `active` class
+            $("#transforms_to_div").toggle();
+            
+            if($(this).hasClass('active')){
+                $("#transforms_y_n_label").html("Does Not Transforms")
+                $("#transforms_y_n_input").val(0);
+            }
+            else{
+                $("#transforms_y_n_label").html("Transforms");
+                $("#transforms_y_n_input").val(1);
+
+            }
+        })
+
+        $("#effects_warehouse_switch_btn").click(function(event){
+            event.preventDefault(); // Prevent the default action
+            this.classList.toggle('active'); // Toggle the `active` class
+            if($(this).hasClass('active')){
+                $("#effects_warehouse_label").html('Subtracts'); // Change text to "+"
+                $("#effects_warehouse_y_n_input").val(-1)
+            } else {
+                $("#effects_warehouse_label").html('Adds');
+                $("#effects_warehouse_y_n_input").val(1)
+            }
+        })
+
+        $("#effects_warehouse_y_n_switch_btn").click(function(event){
+            event.preventDefault(); // Prevent the default action
+            this.classList.toggle('active'); // Toggle the `active` class
+            $("#effects_warehouse_switch").toggle();
+
+            if($(this).hasClass('active')){
+                $("#effects_warehouse_y_n_label").html("Does Not Affects Warehouse")
+                $("#effects_warehouse_y_n_input").val(0);
+            }
+            else{
+                $("#effects_warehouse_y_n_label").html("Affects Warehouse");
+                $("#effects_warehouse_y_n_input").val(1);
+
+            }
+        })
+
+        $(".lock").click(function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        // Find the .top_lock inside the clicked .lock and toggle the locked class
+        const lockContainer = $(this).closest(".lock_container");
+        const topLock = $(this).find(".top_lock");
+        const label = lockContainer.find("label");
+        const input = lockContainer.find("input");
+
+        // Toggle the locked class
+        topLock.toggleClass("locked");
+
+        // Update the label text and input value based on the lock state
+        if (topLock.hasClass("locked")) {
+            label.text("Locked"); // Update label text
+            input.val(1); // Update input value
         } else {
-            $("#effects_warehouse_switch").hide();
-            $("#effects_warehouse_input").val(0)
-
+            label.text("Unlocked"); // Update label text
+            input.val(0); // Update input value
         }
     });
 
-    $("#effects_accounts").change(function () {
-        event.preventDefault;
-        if ($(this).is(":checked")) {
-            $("#add_warehouse").hide();
-            $("#effects_accounts_switch").show();
-            $("#effects_accounts_input").val(1)
-
-        } else {
-            $("#add_warehouse").show();
-            $("#effects_accounts_switch").hide();
-            $("#effects_accounts_input").val(0)
-
-        }
-    });
-
-    $("#transforms").change(function () {
-        $("#transforms_to_div").toggle();
-    })
-
-    $(".switch_warehouse").click(function(event){
-        event.preventDefault();
-        $(".switch_warehouse").removeClass('selected')
-        $(this).addClass('selected')
-    })
-
-    $("#effects_accounts_switch_btn").click(function(event){
-        event.preventDefault();
-        event.preventDefault(); // Prevent the default action
-        this.classList.toggle('active'); // Toggle the `active` class
-        if ($("#effects_accounts_input").val() == 1 ) {
-            $("#effects_accounts_label").html('Subtracts'); // Change text to "+"
-            $("#effects_accounts_input").val(-1)
-        } else {
-            $("#effects_accounts_label").html('Adds');
-            $("#effects_accounts_input").val(1)
-
-        }
-    })
-
-    $("#effects_warehouse_switch_btn").click(function(event){
-        event.preventDefault();
-        event.preventDefault(); // Prevent the default action
-        this.classList.toggle('active'); // Toggle the `active` class
-        if ($("#effects_warehouse_input").val() == 1 ) {
-            $("#effects_warehouse_label").html('Subtracts'); // Change text to "+"
-            $("#effects_warehouse_input").val(-1)
-        } else {
-            $("#effects_warehouse_label").html('Adds');
-            $("#effects_warehouse_input").val(1)
-
-        }
-    })
-
-    $(".transfomrs_to_s").click(function(event){
-        event.preventDefault();
-        this.classList.toggle('active'); // Toggle the `active` class
-        $("#series_transforms_list").val(0)
-
-        var series = $(".transfomrs_to_s.active")
-        for(s of series){
-            $("#series_transforms_list").val($(s).attr('id')+";")
-        }
-    })
-
-
-
-
+        $(".transfomrs_to_s").click(function(event){
+            event.preventDefault();
+            this.classList.toggle('active'); // Toggle the `active` class
+            $("#transforms_y_n_input").val("");
+            for(s of $(".transfomrs_to_s:not(.active)")){
+                if($("#transforms_y_n_input").val() ==""){
+                    $("#transforms_y_n_input").val($(s).attr('id'))
+                }
+                else{
+                    $("#transforms_y_n_input").val(
+                        $("#transforms_y_n_input").val()+
+                        ";"+
+                        $(s).attr('id')
+                    );
+                }
+            }
+        })
     });
     
     </script>

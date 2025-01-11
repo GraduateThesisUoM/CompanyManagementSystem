@@ -91,23 +91,16 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       };
       created_obj = await generalFunctions.createItem(data);
     } else if (req.body.create_type == "series") {
-      const isSealed = req.body.series_sealed === "on" ? 1 : 0;
-      const effects_warehouse = req.body.effects_warehouse === "on" ? 1 : 0;
-      const credit = req.body.credit === "on" ? 1 : 0;
-      const debit = req.body.debit === "on" ? 1 : 0;
-      const transforms = req.body.transforms === "on" ? 1 : 0;
-
+      console.log("series_sealed"+req.body.series_sealed)
       data = {
         company: company._id,
         title: req.body.series_title,
         acronym: req.body.series_acronym,
         type: req.body.obj_type,
-        sealed: isSealed,
-        effects_warehouse: effects_warehouse,
-        credit : credit ,
-        debit : debit,
-        transforms : transforms,
-        transforms_to : req.body.series_transforms_list
+        sealed: req.body.series_sealed,
+        effects_warehouse: req.body.effects_warehouse_y_n_input,
+        effects_account : req.body.effects_accounts_y_n_input ,
+        transforms_to : req.body.transforms_y_n_input
       };
       created_obj = await generalFunctions.createSeries(data);
     } else if (req.body.create_type == "persons") {
