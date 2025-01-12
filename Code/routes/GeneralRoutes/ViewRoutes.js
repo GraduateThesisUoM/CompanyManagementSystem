@@ -70,6 +70,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           if (type == "docs") {
             obj = await Document.findOne({ _id: id });
             var series = await Series.findOne({ _id: obj.series });
+            var series_list = await Series.find({ company: obj.company, status:1, type:req.query.type2 });
             var series_to = await Series.find({ company: company, status: 1, type: obj.type, _id: { $in: series.transforms_to } });
             var person = await Person.findOne({ _id: obj.receiver });
             
@@ -88,12 +89,30 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             if (person.type == 1) {
               person_type = "Supplier";
             }
+            var persons = await Person.find({ company: obj.company, status:1, type:req.query.type2 })
+            persons = persons.map(p => ({
+              name: p.lastName+" "+p.firstName,
+              _id: p._id
+            }));
+
             var items_id_list = [];
             for (let i = 0; i < Object.keys(obj.invoiceData).length; i++) {
               items_id_list.push(obj.invoiceData[i].lineItem); // Add the lineItem ID to the list
             }
 
-            data.data = [
+            data = {
+              doc : obj,
+              registrationDate : generalFunctions.formatDate(obj.registrationDate),
+              series : series,
+              series_list : series_list,
+              person_type : person_type,
+              person:person,
+              persons: persons,
+              user: req.user,
+              warehouses : await Warehouse.find({ company: company, status: 1 }),
+            }
+
+            /*data.data = [
               series.acronym + "-" + obj.doc_num,
               generalFunctions.formatDate(obj.registrationDate),
               person.firstName + " " + person.lastName,
@@ -115,7 +134,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               series_to :series_to,
               warehouses : await Warehouse.find({ company: company, status: 1 }),
               warehouse : warehouse
-            }
+            }*/
 
           } else if (type == "Warehouse") {
             obj = await Warehouse.findOne({ _id: id });
@@ -222,6 +241,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data.data = [generalFunctions.get_type2(obj.type2), obj.title, company.name,generalFunctions.formatDateTime(obj.due_date), node_data, ""];
             data.titles = ["Type", "Title", "Company", "Data","Due Date", "Reply"];
             data.type = [13, 13, 13,13, 10, 9];
+
+
             
           } else if (type == "clients") {
             obj = await Company.findOne({ _id: id });
@@ -312,11 +333,20 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       if (!data.data || (Array.isArray(data.data) && data.data.length === 0)) {
         console.error("Error: Data is empty");
       }
-      /*else{
-                console.log(data.data)
-            }*/
+
       data.secondary_data = secondary_data;
-      res.render(path_constants.pages.view.view(), data);
+
+      if (type && id) {
+        if (type == "docs") {
+          res.render(path_constants.pages.view.view('doc'), data);
+        }
+        else{
+          res.render(path_constants.pages.view.view(), data);
+        }
+      }
+      else{
+        res.render(path_constants.pages.view.view(), data);
+      }
     } else {
       res.redirect("/error?error=" + access.error);
     }

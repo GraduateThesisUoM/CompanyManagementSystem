@@ -33,11 +33,10 @@ select {
     margin: 0px;
 }
 
-
 #doc_data{
     display: grid;
-    grid-template-columns: 40% 40%;
-    column-gap: 20%;
+    grid-template-columns: 45% 45%;
+    column-gap: 10%;
     margin-bottom: 20px;
     width: 90%;
     margin-right: calc(5% + 25px);
@@ -50,10 +49,11 @@ select {
     all: unset;
     background-color:  rgb(71,73,78);
     /*font-size: 1.1em;*/
-    padding: 2px 5px;
-    border-radius: 5px;
+    padding: 2px 5px !important;
+    border-radius: 5px !important;
     color:rgb(200,198,198);
 }
+
 #doc_data div{
     width: 100%;
     display: block;
@@ -61,7 +61,7 @@ select {
 }
 #doc_data div div{
     display: grid;
-    grid-template-columns: 65% 35%;
+    grid-template-columns: 55% 45%;
     margin-top: 2px;
 }
 #doc_data div div span{
@@ -69,9 +69,10 @@ select {
     grid-template-columns: 60% 40%;
 }
 
-#doc_data div div  span:nth-child(2) span:nth-child(2) {
+
+/*#doc_data div div  span:nth-child(2) span:nth-child(2) {
     text-indent: 10px;
-}
+}*/
 .hide{
     visibility: hidden;
 }

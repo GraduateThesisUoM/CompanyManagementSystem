@@ -32,12 +32,12 @@
                 <input type="date" id="doc_date" name="doc_date" class="my_input" required />
               </div>
               <div class="customer_div">
-                <label id="from_label"></label>
+                <label id="from_label"><%=person_type%></label>
                 <select name="customer_id" id="customer_id" class="my_input">
                   <% if (persons.length > 1) { %>
                   <option value="0">-</option>
                   <% } %> <% persons.forEach(function(person) { %>
-                  <option value="<%= person.id %>"><%= person.firstName %> <%= person.lastName %></option>
+                  <option value="<%= person.id %>"><%= person.name %></option>
                   <% }); %>
                 </select>
               </div>
@@ -60,10 +60,10 @@
               <div>
                 <label for="doc_series">Series : </label>
                 <select id="doc_series" name="doc_series" class="my_input">
-                  <% if (series.length > 1) { %>
+                  <% if (series_list.length > 1) { %>
                   <option value="0">-</option>
-                  <% } %> <% series.forEach(function(s) { %>
-                  <option value="<%= s._id %>"><%= s.title %></option>
+                  <% } %> <% series_list.forEach(function(s) { %>
+                  <option value="<%= s._id %>"><%= s.acronym %> - <%= s.title %></option>
                   <% }); %>
                 </select>
               </div>
@@ -142,161 +142,10 @@
 
   <script type="text/javascript" src="JSDocumentFunctions.js"></script>
   <script>
-    const items = JSON.parse(`<%- JSON.stringify(items) %>`);
-
     $(document).ready(function () {
-      var type = "";
 
-      if (window.location.search) {
-        type = new URLSearchParams(window.location.search).get("type");
-        if (type == 1) {
-          //sale
-          $("#list_header").html("Create Sales Document");
-          $("#from_label").html("Customer&nbsp&nbsp");
-        } else if (type == 2) {
-          //buy
-          $("#list_header").html("Create Buy Document");
-          $("#from_label").html("Buying from &nbsp&nbsp");
-          $(".wholesale_retail").hide();
-          $("#wholesale_retail_label").hide();
-        }
-      }
-      $("#doc_type").val(type);
-      $("#doc_date").val(new Date().toISOString().split("T")[0]);
 
-      $("#back_btn").click(function () {
-        window.location = "/";
-      });
-
-      addNewRow(0, items);
-
-      $(document).on("change", ".doc_line_select", function () {
-        var index = $(this).closest("tr").index();
-        if ($(".doc_line_select").eq(index).val() != "-") {
-          $(".remove_row").eq(index).prop("disabled", false);
-
-          $("#quantity_" + index).css("visibility", "visible");
-          $("#tax_" + index).css("visibility", "visible");
-          $("#discount_" + index).css("visibility", "visible");
-          $("#discount_p_" + index).css("visibility", "visible");
-          $("#price_of_unit_" + index).css("visibility", "visible");
-
-          put_data_on_row(index, items);
-
-          if ($(this).closest("tr").is(":last-child")) {
-            addNewRow(index + 1, items);
-          }
-        } else {
-          removeRow(index, false);
-        }
-      });
-
-      allow_submit();
-
-      $(document).on("change", "#wholesale_retail", function () {
-        console.log("#wholesale_retail");
-        retail_wholesale(items);
-      });
-
-      $(document).on("click", "#submit_btn", function () {
-        removeRow($("#num_of_rows").val(), true);
-        $("#create_doc_form").submit();
-      });
-
-      $(document).on("click", ".remove_row", function () {
-        removeRow($(this).closest("tr").index(), false);
-      });
-
-      $(document).on("input", ".input", function () {
-        var index = $(this).closest("tr").index();
-        var quantity = $("#quantity_" + index).val();
-        var price_of_unit = $("#price_of_unit_" + index).val();
-
-        if ($(this).attr("id") == "discount_" + index) {
-          $("#discount_p_" + index).val((100 * $("#discount_" + index).val()) / (quantity * price_of_unit));
-        } else {
-          $("#discount_" + index).val(quantity * price_of_unit * ($("#discount_p_" + index).val() / 100));
-        }
-
-        calculate_row_prices(index);
-      });
-
-      $(document).on("click", "#clear", function () {
-        location.reload();
-      });
-
-      $(document).on("change", "#customer_id", allow_submit);
-
-      $(document).on("change", "#doc_series", allow_submit);
-
-      $(document).on("change", ".doc_line_select", allow_submit);
-
-      $(document).on("input", ".general_discount", function () {
-        let totalAfterTax = parseFloat($("#doc_total_after_tax").html()) || 0;
-
-        if ($(this).attr("id") === "general_discount_amount") {
-          let discountAmount = parseFloat($(this).val()) || 0;
-          let totalCost = totalAfterTax - discountAmount;
-          $("#doc_total_cost").html(totalCost.toFixed(2));
-
-          let discountPercentage = (discountAmount / totalAfterTax) * 100;
-          $("#general_discount").val(discountPercentage.toFixed(2));
-        } else {
-          let discountPercentage = parseFloat($(this).val()) || 0;
-          let discountAmount = totalAfterTax * (discountPercentage / 100);
-          $("#general_discount_amount").val(discountAmount.toFixed(2));
-
-          let totalCost = totalAfterTax - discountAmount;
-          $("#doc_total_cost").html(totalCost.toFixed(2));
-        }
-      });
-
-      function removeRow(index, submit) {
-        $("#row" + index).remove();
-
-        // Update row indices
-        $("#doc_table tbody tr").each(function (i) {
-          $(this).attr("id", "row" + i);
-          $(this)
-            .find("td:first")
-            .text(i + 1);
-          $(this)
-            .find(".remove_row")
-            .attr("onclick", "removeRow(" + i + ")");
-          $(this)
-            .find("#discount_" + i)
-            .attr("id", "discount_" + i);
-          $(this)
-            .find("#price_of_unit_" + i)
-            .attr("id", "price_of_unit_" + i);
-          $(this)
-            .find("#total_price_of_line_" + i)
-            .attr("id", "total_price_of_line_" + i);
-        });
-
-        calculate_total_cost();
-        if (!submit) {
-          $("#num_of_rows").val($("#num_of_rows").val() - 1);
-        }
-        allow_submit();
-      }
-
-      function allow_submit() {
-        var inputs = $(".input");
-
-        // Loop through each input to check if it's empty
-        inputs.each(function () {
-          if ($(this).val() === "") {
-            $(this).val("0"); // Set empty inputs to 0
-          }
-        });
-
-        if ($("#num_of_rows").val() == 0 || $('select[name="customer_id"]').val() == 0 || $('select[name="doc_series"]').val() == 0) {
-          $("#submit_btn").prop("disabled", true);
-        } else {
-          $("#submit_btn").prop("disabled", false);
-        }
-      }
+        
     });
   </script>
 </html>

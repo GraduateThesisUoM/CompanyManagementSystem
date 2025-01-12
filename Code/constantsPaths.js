@@ -168,13 +168,19 @@ const pages = {
       return views_folders.general+"create_doc.ejs"
     }}
   },
-  view:{
-    url : "/view",
-    file: routes.general+"ViewRoutes.js",
-    view : function() { {
-      return views_folders.general+"view.ejs"
-    }}
-  },
+  view: {
+    url: "/view",
+    file: routes.general + "ViewRoutes.js",
+    view: function(input) {
+      if (input) {
+        if (input === 'doc') {
+          return views_folders.general + "view_doc.ejs";
+        }
+      }
+      // Fallback to default view
+      return views_folders.general + "view.ejs";
+    }
+  },  
   //User
   my_accountant :{
     url : "/my-accountant",
