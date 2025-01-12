@@ -74,9 +74,6 @@ app.use(path_constants.pages.my_accountant_rate.url, require(path_constants.page
 //my_accountant_requests
 app.use(path_constants.pages.my_accountant_requests.url, require(path_constants.pages.my_accountant_requests.file));
 
-//my_accountant_delete_request
-app.use(path_constants.pages.my_accountant_delete_request.url, require(path_constants.pages.my_accountant_delete_request.file));
-
 //pick_accountant
 app.use(path_constants.pages.pick_accountant.url, require(path_constants.pages.pick_accountant.file));
 
@@ -131,6 +128,8 @@ app.use(path_constants.pages.view.url, require(path_constants.pages.view.file));
 //database
 app.use(path_constants.pages.database.url, require(path_constants.pages.database.file));
 
+//transfrom doc
+app.use(path_constants.pages.transfrom_doc.url, require(path_constants.pages.transfrom_doc.file));
 
 const http = require('http').createServer(app);
 http.listen(process.env.PORT, () => {

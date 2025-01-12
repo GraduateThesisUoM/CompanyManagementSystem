@@ -97,7 +97,7 @@ router.post("/", async (req, res) => {
       warehouse : req.body.warehouse_id,
       type: req.body.doc_type,
       series: req.body.doc_series,
-      generalDiscount: req.body.general_discount,
+      generalDiscount: req.body.general_discount_amount,
       invoiceData: lines_of_doc,
     };
 

@@ -32,7 +32,7 @@
                 <input type="date" id="doc_date" name="doc_date" class="my_input" required />
               </div>
               <div class="customer_div">
-                <label id="from_label"></label>
+                <label for="customer_id" id="from_label"></label>
                 <select name="customer_id" id="customer_id" class="my_input">
                   <% if (persons.length > 1) { %>
                   <option value="0">-</option>
@@ -42,7 +42,7 @@
                 </select>
               </div>
               <div class="warehouse_div">
-                <label>Warehouse</label>
+                <label for="warehouse_id">Warehouse</label>
                 <select name="warehouse_id" class="my_input">
                   <option value="0">-</option>
                   <% warehouses.forEach(function(warehouse) { %>
@@ -72,7 +72,7 @@
 
             <div>
               <div>
-                <label>Total Value : </label>
+                <label for="doc_total_value">Total Value : </label>
                 <span>
                   <span id="doc_total_value">0.00</span>
                   <span style="text-indent: 5px;">€</span>
@@ -82,7 +82,7 @@
                 <label>Discount Value : </label>
                 <span>
                   <span style="display: grid;grid-template-columns: 35% 30% 35%;">
-                    <input id="general_discount" class="general_discount my_input" name="general_discount" type="number" value="0" min="0" max="100" required />
+                    <input id="general_discount_amount" class="general_discount my_input" name="general_discount_amount" type="number" value="0" min="0" required />
                     <span>€</span>
                     <input id="general_discount" class="general_discount my_input" name="general_discount" type="number" value="0" min="0" max="100" required />
                   </span>

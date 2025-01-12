@@ -64,10 +64,35 @@ td{
     border: none;
 }
 
+.table_container table tbody input[type="text"],
+.table_container table tbody input[type="number"]{
+    all:unset;
+    color: rgb(255, 255, 255);
+    border-radius: 5px;
+    padding: 2px;
+    width: 100%;
+    background-color: rgb(66, 63, 63);
+}
+
+.table_container table tbody select{
+    all:unset;
+    width: 80%;
+    background-color: rgb(66, 63, 63);
+    border-radius: 5px;
+    padding: 2px;
+    color: rgb(255, 255, 255);
+
+}
+
 
 .table_container table tr:hover {
     transform: scale(1.01);
     cursor: pointer;
+}
+
+.table_container.no_scale table tr:hover {
+    cursor: pointer;
+    transform: scale(1);
 }
 
 

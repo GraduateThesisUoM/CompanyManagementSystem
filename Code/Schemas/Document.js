@@ -31,7 +31,7 @@ const DocumentSchema = new mongoose.Schema({
   },
   registrationDate: { type: Date, default: Date.now },
   next:{ type: String,required: true, default:"-"}
-});
+  });
 
 // Export the invoice schema
 module.exports = mongoose.model("Document", DocumentSchema)

@@ -16,11 +16,20 @@
     width : 5%;
 }
 
-td>div>input:focus {
+/*td>div>input:focus {
     outline: none;
     padding: 0px;
     margin: 0px;
 }
+
+/*td>div>input {
+    outline: none !important;
+    padding: 0px !important;
+    margin: 0px !important;
+    background-color: transparent!important;
+    color: rgb(255, 255, 255)!important;
+    text-shadow: 2px 2px 2px black!important;
+}*/
 
 .doc_line_select{
     width: 100%;
@@ -149,6 +158,85 @@ select {
     display: grid;
     grid-template-columns: 50% 50%;
 }
+
+#transforms_to_div{
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+
+/* From https://css.glass */
+background: rgba(51, 51, 51, 0.69);
+border-radius: 16px;
+box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+backdrop-filter: blur(8.6px);
+-webkit-backdrop-filter: blur(8.6px);
+}
+
+#transforms_to_div_header{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    min-height: 5vh;
+    background-color: blue;
+}
+
+#transforms_to_div_main{
+    width: 50vw;
+    margin-left: 25vw;
+    margin-top: 20vh;
+    display: flex;
+    flex-direction: column;
+}
+
+#transforms_to_div_main > button {
+    background-color: transparent;
+    color: white;
+    font-size: 1.2em;
+    position: relative;
+    padding-bottom: 5px; /* to create space for the underline */
+    overflow: hidden;
+    display: inline-block; /* Ensures inline-block for positioning */
+    font-weight: 450; /* Maintains bold text on hover */
+
+}
+
+#transforms_to_div_main > button::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: rgb(6, 107, 190); /* Underline color */
+    transition: width 0.3s ease;
+}
+
+#transforms_to_div_main > button:hover::after {
+    width: 100%;
+}
+
+#transforms_to_div_main > button:hover {
+    color: rgb(6, 107, 190); /* Change text color on hover */
+}
+
+#history_container{
+    margin-top: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
+.doc_history_point{
+    background-color: red;
+    padding: 10px;
+    cursor: pointer;
+}
+
+
+
 
 
 

@@ -201,6 +201,11 @@ const pages = {
     file: routes.user+"MyAccountantRate.js",
     view : ""
   },
+  transfrom_doc :{
+    url : "/transfrom-doc",
+    file: routes.user+"TransformDocRoutes",
+    view : ""
+  },
   my_accountant_requests :{
     url : "/my-accountant-requests",
     file: routes.user+"MyAccountantRequests.js",

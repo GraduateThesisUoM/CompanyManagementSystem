@@ -65,7 +65,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       if (!isParamsEmpty) {
         type = req.query.type;
         id = req.query.id;
-        console.log("ID : "+ id)
         if (type && id) {
           if (type == "docs") {
             obj = await Document.findOne({ _id: id });
@@ -74,16 +73,65 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             var series_to = await Series.find({ company: company, status: 1, type: obj.type, _id: { $in: series.transforms_to } });
             var person = await Person.findOne({ _id: obj.receiver });
             
+            var history = [];
+            var d = obj;
+            var p;
+
+            while(true){
+              p = await Document.findOne({next: d._id})
+              if(p){
+                d = p;
+              }
+              else{
+                break;
+              }
+            }
+            //history.push(d)
+            var s = await Series.findOne({_id: d.series})
+            history.push({
+              _id:d._id,
+              name: s.acronym+"-"+d.doc_num,
+              registrationDate : generalFunctions.formatDateTime(d.registrationDate)
+            })
+
+            while(true){
+              if(d.next != '-'){
+                p = await Document.findOne({_id: d.next})
+                if(p){
+                  d=p
+                  //history.push(d)
+                  s = await Series.findOne({_id: d.series})
+                  history.push({
+                    _id:d._id,
+                    name: s.acronym+"-"+d.doc_num,
+                    registrationDate : generalFunctions.formatDateTime(d.registrationDate)
+                  })
+                }
+                else{
+                  break;
+                }
+              }
+              else{
+                break;
+              }              
+            }
+
+            console.log(history)
+
             series_to = series_to.map(s => ({
               name: s.name,
               acronym: s.acronym,
               _id: s._id
             }));
-
-            var warehouse = { _id: "-" };
-            if (obj.warehouse !== "0") {
-              warehouse = await Warehouse.findOne({ _id: obj.warehouse });
+            
+            var transforms_to = []
+            for(s of series.transforms_to){
+              transforms_to.push(await Series.findOne({_id:s}))
             }
+            transforms_to = transforms_to.map(s => ({
+              _id: s._id,
+              name: s.acronym+"-"+s.title
+            }));
 
             var person_type = "Customer";
             if (person.type == 1) {
@@ -103,14 +151,14 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data = {
               doc : obj,
               registrationDate : generalFunctions.formatDate(obj.registrationDate),
-              series : series,
               series_list : series_list,
               person_type : person_type,
-              person:person,
               persons: persons,
               user: req.user,
               warehouses : await Warehouse.find({ company: company, status: 1 }),
-              items : await Item.find({ company: company, status: 1, type: obj.type })
+              items : await Item.find({ company: company, status: 1, type: obj.type }),
+              transforms_to : transforms_to,
+              history : history
             }
 
             /*data.data = [
@@ -331,9 +379,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           console.log("ERROR");
         }
       }
-      if (!data.data || (Array.isArray(data.data) && data.data.length === 0)) {
-        console.error("Error: Data is empty");
-      }
 
       data.secondary_data = secondary_data;
 
@@ -551,5 +596,6 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     return res.redirect("/error?origin_page=/&error=" + encodeURIComponent(e.message));
   }
 });
+
 
 module.exports = router;

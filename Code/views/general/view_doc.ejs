@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="general_css.css" />
     <link rel="stylesheet" href="create_doc_css.css" />
     <link rel="stylesheet" href="table_css.css" />
+    <link rel="stylesheet" href="buttons_css.css" />
+
 
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -19,6 +21,7 @@
     <!--Header-->
     <%- include('../partials/header'); %>
   </head>
+
   <body>
     <div class="has_sidebar asap-condensed-extralight">
       <%- include('../partials/sidebar'); %>
@@ -32,18 +35,18 @@
                 <input type="date" id="doc_date" name="doc_date" class="my_input" required />
               </div>
               <div class="customer_div">
-                <label id="from_label"><%=person_type%></label>
+                <label for="customer_id"><%=person_type%></label>
                 <select name="customer_id" id="customer_id" class="my_input">
                   <% if (persons.length > 1) { %>
                   <option value="0">-</option>
                   <% } %> <% persons.forEach(function(person) { %>
-                  <option value="<%= person.id %>"><%= person.name %></option>
+                  <option value="<%= person._id %>"><%= person.name %></option>
                   <% }); %>
                 </select>
               </div>
               <div class="warehouse_div">
-                <label>Warehouse</label>
-                <select name="warehouse_id" class="my_input">
+                <label for="warehouse_id">Warehouse</label>
+                <select name="warehouse_id" id="warehouse_id" class="my_input">
                   <option value="0">-</option>
                   <% warehouses.forEach(function(warehouse) { %>
                   <option value="<%= warehouse.id %>"><%= warehouse.title %></option>
@@ -67,28 +70,31 @@
                   <% }); %>
                 </select>
               </div>
-              <div class="hide">-</div>
+              <div>
+                <label for="general_discount_amount">Discount : </label>
+                <span>
+                  <span style="display: grid; grid-template-columns: 65% 25%">
+                    <input id="general_discount_amount" class="general_discount my_input" name="general_discount_amount" type="number" value="0" min="0" required />
+                    <span>€</span>
+                  </span>
+                  <span style="display: grid; grid-template-columns: 65% 25%">
+                    <input id="general_discount" class="general_discount my_input" name="general_discount" type="number" value="0" min="0" max="100" required />
+                    <span style="text-indent: 5px"><strong>%</strong></span>
+
+                  </span>
+                </span>
+              </div>
             </div>
 
             <div>
               <div>
-                <label>Total Value : </label>
+                <label for="doc_total_value">Total Value : </label>
                 <span>
                   <span id="doc_total_value">0.00</span>
-                  <span style="text-indent: 5px">€</span>
+                  <span >€</span>
                 </span>
               </div>
-              <div>
-                <label>Discount Value : </label>
-                <span>
-                  <span style="display: grid; grid-template-columns: 35% 30% 35%">
-                    <input id="general_discount" class="general_discount my_input" name="general_discount" type="number" value="0" min="0" max="100" required />
-                    <span>€</span>
-                    <input id="general_discount" class="general_discount my_input" name="general_discount" type="number" value="0" min="0" max="100" required />
-                  </span>
-                  <span style="text-indent: 5px"><strong>%</strong></span>
-                </span>
-              </div>
+              
               <div>
                 <span>Total Cost : </span>
                 <span><span id="doc_total_cost">0.00</span><span>€</span></span>
@@ -111,7 +117,7 @@
             <input type="text" id="doc_type" name="doc_type" style="display: none" />
             <input id="num_of_rows" name="num_of_rows" style="display: none" />
           </div>
-          <div class="table_container">
+          <div class="table_container no_scale">
             <table id="doc_table" class="my_table">
               <thead>
                 <tr>
@@ -132,9 +138,35 @@
             </table>
           </div>
         </form>
-        <div id="doc_btn_container">
-          <button id="clear">Clear</button>
-          <button id="submit_btn">Register</button>
+        <div style="display: grid;grid-template-columns: 30% 30% 30%;gap:5%;margin-top: 20px;width:80%;margin-left:10%">
+          <button class="button_2">Dellete</button>
+          <button id="transforms_btn" class="button_1">Transform</button>
+          <button class="button_3">Save</button>
+          <!--button id="clear">Clear</button>
+          <button id="submit_btn">Register</button-->
+        </div>
+        <div id="transforms_to_div" class="asap-condensed-regular" style="display: none;">
+          <div id="transforms_to_div_header">
+            <button id="close_transforms_to_div">X</button>
+          </div>
+          <div id="transforms_to_div_main" >
+            <form id="transform_doc" action="/transfrom-doc" method="POST">
+              <input id="transforms_to_div_main_input" name="series_to" type="text">
+              <input type="text" name="doc_id" value="<%= doc._id%>">
+              <input type="text" name="url" id="url" readonly>
+            </form>
+          <% for(s of transforms_to){%>
+            <button class="transforms_to_btn" id="<%= s._id%>"><%= s.name%></button>
+          <%}%>
+          </div>
+        </div>
+        <div id = history_container>
+          <% for (h of history){%>
+            <div id="<%=h._id%>" class="doc_history_point">
+              <div><%=h.name%></div>
+              <div><%=h.registrationDate%></div>
+            </div>
+          <%}%>
         </div>
       </div>
     </div>
@@ -143,23 +175,18 @@
   <script type="text/javascript" src="JSDocumentFunctions.js"></script>
   <script>
     $(document).ready(function () {
-      $("#btn2").hide();
-
-      /*if (secondary_data.warehouse._id == "-") {
-        $("#select_warehose").append(`<option value="-">-</option>`);
-      }
-      for (w of secondary_data.warehouses) {
-        $("#select_warehose").append(`<option value="${w._id}">${w.title}</option>`);
-      }
-      if (secondary_data.warehouse._id != "-") {
-        $("#select_warehose").val(secondary_data.warehouse._id);
-      }*/
+      //$("#transforms_to_div").hide();
+      const params = new URLSearchParams(window.location.search);
+      $("#url").val(window.location.pathname + window.location.search)
+      
 
       var selected_items = JSON.parse(`<%- JSON.stringify(doc.invoiceData) %>`);
-      console.log(selected_items)
       var items = JSON.parse(`<%- JSON.stringify(items) %>`);
-      console.log(items);
-      console.log("-----------");
+      var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
+
+      $("#doc_series").val(doc.series);
+      $("#customer_id").val(doc.receiver)
+      $("#warehouse_id").val(doc.warehouse)
 
       addNewRow(0, items);
 
@@ -206,6 +233,23 @@
         $(".doc_line_select:eq(" + i + ") option:first-child").remove();
       }
 
+      $("#general_discount_amount").val(doc.generalDiscount);
+      calculate_total_cost()
+      $("#general_discount").val(
+        ((doc.generalDiscount*100)/parseInt($("#doc_total_value").text())).toFixed(2)
+      );
+
+      var totalAfterTax = parseFloat($("#doc_total_after_tax").html()) || 0;
+    
+      /*calculate_total_cost()
+      
+      alert(doc.generalDiscount)
+      alert(totalAfterTax)
+      $("#general_discount_amount").val(doc.generalDiscount)
+      
+      $("#general_discount").val(((doc.generalDiscount / totalAfterTax) * 100).toFixed(2)); */
+      
+
       $(".doc_line_select").change(function () {
         if ($(this).val() != "-") {
           $(this).find("option:first-child").remove();
@@ -220,23 +264,11 @@
         const parent = $(".item_column");
         parent.get(parseInt(lastChar)).append(selectElement.find("option:selected").text());
         selectElement.hide();
-
-        /*// Check if the select element exists
-  if (selectElement) {
-    const selectedValue = selectElement.val(); // Get the value of the selected option
-    const selectedText = selectElement.find("option:selected").text(); // Get the text of the selected option
-
-    selectElement.empty(); // Remove all options
-
-    // Add back only the selected option
-    selectElement.append("<option value='1'>" + selectedText + "</option>");
-  }*/
       }
 
       $(document).on("input", ".general_discount", function () {
-        let totalAfterTax = parseFloat($("#doc_total_after_tax").html()) || 0;
-
-        if ($(this).attr("id") === "general_discount_amount") {
+        discounts(this.id);
+        /*if ($(this).attr("id") === "general_discount_amount") {
           let discountAmount = parseFloat($(this).val()) || 0;
           let totalCost = totalAfterTax - discountAmount;
           $("#doc_total_cost").html(totalCost.toFixed(2));
@@ -250,8 +282,30 @@
 
           let totalCost = totalAfterTax - discountAmount;
           $("#doc_total_cost").html(totalCost.toFixed(2));
-        }
+        }*/
       });
+
+      function discounts(id) {
+        // Select the element dynamically based on the passed ID
+        let element = $("#" + id);
+
+        if (id === "general_discount_amount") {
+          let discountAmount = parseFloat(element.val()) || 0;
+          let totalCost = totalAfterTax - discountAmount;
+          $("#doc_total_cost").html(totalCost.toFixed(2));
+          alert(element.val())
+          let discountPercentage = (discountAmount / totalAfterTax) * 100;
+          alert(discountPercentage)
+          $("#general_discount").val(discountPercentage.toFixed(2));
+        } else if (id === "general_discount") {
+          let discountPercentage = parseFloat(element.val()) || 0;
+          let discountAmount = totalAfterTax * (discountPercentage / 100);
+          $("#general_discount_amount").val(discountAmount.toFixed(2));
+
+          let totalCost = totalAfterTax - discountAmount;
+          $("#doc_total_cost").html(totalCost.toFixed(2));
+        }
+      }
 
       $(document).on("input", ".input", function () {
         var index = $(this).closest("tr").index();
@@ -362,11 +416,30 @@
         }
       });
 
-      $("#btn3").click(function () {
+      $("#transforms_btn").click(function(event){
+        $("#transforms_to_div").show();
+      });
+
+      $("#close_transforms_to_div").click(function(event){
+        $("#transforms_to_div").hide();
+      });
+
+      $(".transforms_to_btn").click(function(event){
+        $("#transforms_to_div_main_input").val($(this).attr('id'));
+        $("#transform_doc").submit()
+      });
+
+      $('.doc_history_point').click(function(event){
+        alert($(this).attr('id'))
+      })
+
+      
+
+      /*$("#btn3").click(function () {
         event.preventDefault();
         $("#action").val("save");
         $("#view_form").submit();
-      });
+      });*/
     });
   </script>
 </html>
