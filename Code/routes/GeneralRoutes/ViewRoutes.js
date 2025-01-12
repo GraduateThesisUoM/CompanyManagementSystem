@@ -110,6 +110,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               persons: persons,
               user: req.user,
               warehouses : await Warehouse.find({ company: company, status: 1 }),
+              items : await Item.find({ company: company, status: 1, type: obj.type })
             }
 
             /*data.data = [

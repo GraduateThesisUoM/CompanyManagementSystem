@@ -75,18 +75,18 @@
                 <label>Total Value : </label>
                 <span>
                   <span id="doc_total_value">0.00</span>
-                  <span style="text-indent: 5px;">€</span>
+                  <span style="text-indent: 5px">€</span>
                 </span>
               </div>
               <div>
                 <label>Discount Value : </label>
                 <span>
-                  <span style="display: grid;grid-template-columns: 35% 30% 35%;">
+                  <span style="display: grid; grid-template-columns: 35% 30% 35%">
                     <input id="general_discount" class="general_discount my_input" name="general_discount" type="number" value="0" min="0" max="100" required />
                     <span>€</span>
                     <input id="general_discount" class="general_discount my_input" name="general_discount" type="number" value="0" min="0" max="100" required />
                   </span>
-                  <span style="text-indent: 5px;"><strong>%</strong></span>
+                  <span style="text-indent: 5px"><strong>%</strong></span>
                 </span>
               </div>
               <div>
@@ -143,9 +143,230 @@
   <script type="text/javascript" src="JSDocumentFunctions.js"></script>
   <script>
     $(document).ready(function () {
+      $("#btn2").hide();
 
+      /*if (secondary_data.warehouse._id == "-") {
+        $("#select_warehose").append(`<option value="-">-</option>`);
+      }
+      for (w of secondary_data.warehouses) {
+        $("#select_warehose").append(`<option value="${w._id}">${w.title}</option>`);
+      }
+      if (secondary_data.warehouse._id != "-") {
+        $("#select_warehose").val(secondary_data.warehouse._id);
+      }*/
 
-        
+      var selected_items = JSON.parse(`<%- JSON.stringify(doc.invoiceData) %>`);
+      console.log(selected_items)
+      var items = JSON.parse(`<%- JSON.stringify(items) %>`);
+      console.log(items);
+      console.log("-----------");
+
+      addNewRow(0, items);
+
+      for (i in selected_items) {
+        $(".doc_line_select:eq(" + i + ') option[value="' + selected_items[i].lineItem + '"]').prop("selected", true);
+
+        put_data_on_row(0, items);
+        let quantity = selected_items[i].quantity;
+        let price_of_unit = selected_items[i].price_of_unit;
+        let total = quantity * price_of_unit;
+        let tax = selected_items[i].tax;
+        let totalAfterTax = total + total * (tax / 100);
+        let discount = selected_items[i].discount;
+        let discount_p = ((discount / total) * 100).toFixed(2);
+
+        $("#quantity_" + i).val(quantity);
+        $("#tax_" + i).val(tax);
+        $("#discount_" + i).val(discount);
+        $("#discount_p_" + i).val(discount_p);
+        $("#price_of_unit_" + i).val(price_of_unit);
+        $("#total_price_of_line_" + i).text(total);
+        $("#total_price_of_line_after_disc_" + i).text(total - discount);
+        $("#final_price_of_line_" + i).text(total - discount + (total - discount) * (tax / 100));
+
+        $(".remove_row").eq(i).prop("disabled", false);
+
+        $("#quantity_" + i).css("visibility", "visible");
+        $("#tax_" + i).css("visibility", "visible");
+        $("#discount_" + i).css("visibility", "visible");
+        $("#discount_p_" + i).css("visibility", "visible");
+        $("#price_of_unit_" + i).css("visibility", "visible");
+
+        if ($("#Sealed").is(":checked")) {
+          $(".input").val(quantity).prop("readonly", true);
+          keepOnlySelectedOption("doc_line_item_" + i);
+
+          if (i < Object.keys(selected_items).length - 1) {
+            addNewRow(parseInt(i) + 1, items);
+          }
+        } else {
+          addNewRow(parseInt(i) + 1, items);
+        }
+
+        $(".doc_line_select:eq(" + i + ") option:first-child").remove();
+      }
+
+      $(".doc_line_select").change(function () {
+        if ($(this).val() != "-") {
+          $(this).find("option:first-child").remove();
+        }
+      });
+
+      function keepOnlySelectedOption(selectId) {
+        // Get the select element by its ID
+
+        const selectElement = $("#" + selectId);
+        const lastChar = selectId.slice(-1);
+        const parent = $(".item_column");
+        parent.get(parseInt(lastChar)).append(selectElement.find("option:selected").text());
+        selectElement.hide();
+
+        /*// Check if the select element exists
+  if (selectElement) {
+    const selectedValue = selectElement.val(); // Get the value of the selected option
+    const selectedText = selectElement.find("option:selected").text(); // Get the text of the selected option
+
+    selectElement.empty(); // Remove all options
+
+    // Add back only the selected option
+    selectElement.append("<option value='1'>" + selectedText + "</option>");
+  }*/
+      }
+
+      $(document).on("input", ".general_discount", function () {
+        let totalAfterTax = parseFloat($("#doc_total_after_tax").html()) || 0;
+
+        if ($(this).attr("id") === "general_discount_amount") {
+          let discountAmount = parseFloat($(this).val()) || 0;
+          let totalCost = totalAfterTax - discountAmount;
+          $("#doc_total_cost").html(totalCost.toFixed(2));
+
+          let discountPercentage = (discountAmount / totalAfterTax) * 100;
+          $("#general_discount").val(discountPercentage.toFixed(2));
+        } else {
+          let discountPercentage = parseFloat($(this).val()) || 0;
+          let discountAmount = totalAfterTax * (discountPercentage / 100);
+          $("#general_discount_amount").val(discountAmount.toFixed(2));
+
+          let totalCost = totalAfterTax - discountAmount;
+          $("#doc_total_cost").html(totalCost.toFixed(2));
+        }
+      });
+
+      $(document).on("input", ".input", function () {
+        var index = $(this).closest("tr").index();
+        var quantity = $("#quantity_" + index).val();
+        var price_of_unit = $("#price_of_unit_" + index).val();
+
+        if ($(this).attr("id") == "discount_" + index) {
+          $("#discount_p_" + index).val(((100 * $("#discount_" + index).val()) / (quantity * price_of_unit)).toFixed(2));
+        } else {
+          $("#discount_" + index).val((quantity * price_of_unit * ($("#discount_p_" + index).val() / 100)).toFixed(2));
+        }
+
+        calculate_row_prices(index);
+      });
+
+      function allow_submit() {
+        var inputs = $(".input");
+
+        // Loop through each input to check if it's empty
+        inputs.each(function () {
+          if ($(this).val() === "") {
+            $(this).val("0"); // Set empty inputs to 0
+          }
+        });
+      }
+
+      function removeRow(index, submit) {
+        $("#row" + index).remove();
+
+        // Update row indices
+        $("#doc_table tbody tr").each(function (i) {
+          $(this).attr("id", "row" + i);
+          $(this)
+            .find("td:first")
+            .text(i + 1);
+          $(this)
+            .find(".remove_row")
+            .attr("onclick", "removeRow(" + i + ")");
+          $(this)
+            .find("#discount_" + i)
+            .attr("id", "discount_" + i);
+          $(this)
+            .find("#price_of_unit_" + i)
+            .attr("id", "price_of_unit_" + i);
+          $(this)
+            .find("#total_price_of_line_" + i)
+            .attr("id", "total_price_of_line_" + i);
+        });
+
+        calculate_total_cost();
+        if (!submit) {
+          $("#num_of_rows").val($("#num_of_rows").val() - 1);
+        }
+        allow_submit();
+      }
+
+      $(document).on("click", ".remove_row", function () {
+        removeRow($(this).closest("tr").index(), false);
+      });
+
+      $(document).on("change", ".doc_line_select", function () {
+        var index = $(this).closest("tr").index();
+        if ($(".doc_line_select").eq(index).val() != "-") {
+          $(".remove_row").eq(index).prop("disabled", false);
+
+          $("#quantity_" + index).css("visibility", "visible");
+          $("#tax_" + index).css("visibility", "visible");
+          $("#discount_" + index).css("visibility", "visible");
+          $("#discount_p_" + index).css("visibility", "visible");
+          $("#price_of_unit_" + index).css("visibility", "visible");
+
+          put_data_on_row(index, items);
+
+          if ($(this).closest("tr").is(":last-child")) {
+            addNewRow(index + 1, items);
+          }
+        } else {
+          removeRow(index, false);
+        }
+      });
+
+      function get_item_index_from_id(index) {
+        for (let i = 0; i < items.length; i++) {
+          if (items[i]._id == $(".doc_line_select").eq(index).val()) {
+            return i;
+          }
+        }
+      }
+
+      $(document).on("change", ".doc_line_select", function () {
+        var index = $(this).closest("tr").index();
+        if ($(".doc_line_select").eq(index).val() != "-") {
+          $(".remove_row").eq(index).prop("disabled", false);
+
+          $("#quantity_" + index).css("visibility", "visible");
+          $("#tax_" + index).css("visibility", "visible");
+          $("#discount_" + index).css("visibility", "visible");
+          $("#discount_p_" + index).css("visibility", "visible");
+          $("#price_of_unit_" + index).css("visibility", "visible");
+
+          put_data_on_row(index, items);
+
+          if ($(this).closest("tr").is(":last-child")) {
+            addNewRow(index + 1);
+          }
+        } else {
+          removeRow(index, false);
+        }
+      });
+
+      $("#btn3").click(function () {
+        event.preventDefault();
+        $("#action").val("save");
+        $("#view_form").submit();
+      });
     });
   </script>
 </html>
