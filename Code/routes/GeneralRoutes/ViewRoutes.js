@@ -26,7 +26,6 @@ const Accountant = require(path_constants.schemas.two.accountant);
 /*
 0 text-readonly
 1 normal-text,
-2=doc-table
 3=display:none
 4 checkbox not editable
 5 checkbox
@@ -88,10 +87,12 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             }
             //history.push(d)
             var s = await Series.findOne({_id: d.series})
+            let u = await User.findOne({_id: d.sender})
             history.push({
               _id:d._id,
               name: s.acronym+"-"+d.doc_num,
-              registrationDate : generalFunctions.formatDateTime(d.registrationDate)
+              registrationDate : generalFunctions.formatDateTime(d.registrationDate),
+              user : u.lastName+" "+u.firstName
             })
 
             while(true){
@@ -101,10 +102,12 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
                   d=p
                   //history.push(d)
                   s = await Series.findOne({_id: d.series})
+                  let u = await User.findOne({_id: d.sender})
                   history.push({
                     _id:d._id,
                     name: s.acronym+"-"+d.doc_num,
-                    registrationDate : generalFunctions.formatDateTime(d.registrationDate)
+                    registrationDate : generalFunctions.formatDateTime(d.registrationDate),
+                    user : u.lastName+" "+u.firstName
                   })
                 }
                 else{
@@ -149,6 +152,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             }
 
             data = {
+              doc_name : series.acronym+"-"+obj.doc_num,
               doc : obj,
               registrationDate : generalFunctions.formatDate(obj.registrationDate),
               series_list : series_list,
@@ -199,9 +203,13 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           } else if (type == "series") {
             obj = await Series.findOne({ _id: id });
             var series = await Series.find({company:company, status:1,type:obj.type,_id: { $ne: obj._id } /* Exclude the document with the same _id as `obj`*/})
-            data.data = [obj.title, obj.acronym, obj.type, obj.count, obj.sealed, obj.effects_warehouse, obj.credit, obj.debit, generalFunctions.formatDate(obj.registrationDate), obj.status,obj.transforms,series];
+            let type = 'Buy'
+            if(obj.type == 2){
+              type = "Shell"
+            }
+            data.data = [obj.title, obj.acronym, type/*obj.type*/, obj.count, obj.sealed, obj.effects_warehouse, obj.credit, obj.debit, generalFunctions.formatDate(obj.registrationDate), obj.status,obj.transforms,series];
             data.titles = ["Title", "Acronym", "Type", "Count", "Sealed", "Effects Warehouse", "Credit", "Debit", "Reg Date", "Status","Transforms","Series"];
-            data.type = [1, 1, 1, 1, 5, 5, 5, 5, 0, 15,5,12];
+            data.type = [1, 1, 13, 1, 5, 5, 5, 5, 13, 15,5,12];
 
             secondary_data = {
               selected_series :obj.transforms_to

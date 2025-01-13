@@ -35,53 +35,6 @@
           <div>
             <%if(type[index] == 0){%> <%= title %>
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" readonly />
-            <% }else if(type[index] == 2){ %>
-            <button id="turn_to_btn">Turn To</button>
-            <div>Total Value : <span id="doc_total_value">0.00</span> €</div>
-            <div>Total Discounts : <span id="doc_total_disc">0.00</span> €</div>
-            <div>
-              Total Price after Discounts :
-              <span id="doc_total_after_disc">0.00</span> €
-            </div>
-            <div>
-              Total Price after Tax :
-              <span id="doc_total_after_tax">0.00</span> €
-            </div>
-            <br />
-
-            <div>
-              Discount :<br>
-              <input id="general_discount" class="general_discount input_type_2 my_width" name="general_discount" type="number" value="0" min="0" max="100" required />
-              %
-            </div>
-            <div>
-              Discount Amount:<br>
-              <input id="general_discount_amount" class="general_discount input_type_2 my_width" name="general_discount_amount" type="number" value="0" min="0" required />
-              €
-            </div>
-
-            <div>Total Cost : <span id="doc_total_cost">0.00</span> €</div>
-            <br />
-
-            <input id="num_of_rows" name="num_of_rows" style="display: none" />
-            <table id="doc_table" class="box_shadow_1">
-              <thead>
-                <tr>
-                  <th class="view_column">A/A</th>
-                  <th class="view_column">Title</th>
-                  <th class="view_column">Qty</th>
-                  <th class="view_column">Tax</th>
-                  <th class="view_column">Discount</th>
-                  <th class="view_column">Discount %</th>
-                  <th class="view_column">U/P</th>
-                  <th class="view_column">Value</th>
-                  <th class="view_column">Price After Discount</th>
-                  <th class="view_column">Final Price</th>
-                  <th class="view_column"></th>
-                </tr>
-              </thead>
-              <tbody></tbody>
-            </table>
             <% }else if(type[index] == 3){ %>
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
             <% }else if(type[index] == 4){ %> <%= title%>
@@ -153,15 +106,15 @@
                 <input type="text" id="series_transforms_list" name="series_transforms_list" style="display: none;">
               </div>
             <% }else if(type[index] == 13){ %>
-            <div id="<%= title %>"><%= title %> : <%= data[index] %></div>
+            <div id="<%= title %>" class="my_label_1"><%= title %> : <%= data[index] %></div>
             <% }else if(type[index] == 14){ %>
               <%= title %> : <select id="select_warehose" name="select_warehose"></select>
             <% }else if(type[index] == 15){ %>
                 <%= title %> <%= data[index] == 1 ? ' : Active' : data[index] == 0 ? ' : Disabled' : data[index] == 2 ? ' : Deleted' : '' %>
                 <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
 
-            <% }else{ %> <%= title %>
-            <input name="input<%= index %>" id="<%= title %>" class="input_type_2" value="<%= data[index] %>" />
+            <% }else{ %> <lable class="my_label_1" for="<%= title %>"><%= title %></lable>
+            <input name="input<%= index %>" id="<%= title %>" class="input_type_1" value="<%= data[index] %>" />
             <% }%>
           </div>
           <% }); %> <% } %>

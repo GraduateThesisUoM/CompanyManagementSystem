@@ -161,19 +161,21 @@ select {
 
 #transforms_to_div{
     width: 100%;
-    height: 100vh;
+    height: 100%;
     position: absolute;
     top: 0;
     left: 0;
     display: flex;
     flex-direction: column;
 
-/* From https://css.glass */
-background: rgba(51, 51, 51, 0.69);
-border-radius: 16px;
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(8.6px);
--webkit-backdrop-filter: blur(8.6px);
+    /* From https://css.glass */
+    background: rgba(51, 51, 51, 0.69);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(8.6px);
+    -webkit-backdrop-filter: blur(8.6px);
+    border-radius: 0px;
+    z-index: 100;
 }
 
 #transforms_to_div_header{
@@ -181,27 +183,36 @@ backdrop-filter: blur(8.6px);
     display: flex;
     justify-content: flex-end;
     min-height: 5vh;
-    background-color: blue;
+}
+#transforms_to_div_header>img{
+    width: 40px;
+    cursor: pointer;
+    margin: 20px;
 }
 
 #transforms_to_div_main{
     width: 50vw;
+    height: 25vh;
     margin-left: 25vw;
     margin-top: 20vh;
     display: flex;
     flex-direction: column;
+    overflow-y:scroll;
+    scroll-behavior: smooth;
 }
 
 #transforms_to_div_main > button {
     background-color: transparent;
     color: white;
+    height: 50px;
     font-size: 1.2em;
     position: relative;
     padding-bottom: 5px; /* to create space for the underline */
     overflow: hidden;
     display: inline-block; /* Ensures inline-block for positioning */
     font-weight: 450; /* Maintains bold text on hover */
-
+    flex-shrink: 0;
+    font-size: 1.3em;
 }
 
 #transforms_to_div_main > button::after {
@@ -226,14 +237,52 @@ backdrop-filter: blur(8.6px);
 #history_container{
     margin-top: 30px;
     display: flex;
-    flex-direction: row;
+    overflow-x:scroll;
+    width: 90vw;
     justify-content: space-around;
+    gap: 100px;
+    margin-bottom: 30px;
 }
-.doc_history_point{
-    background-color: red;
-    padding: 10px;
+
+.doc_history_point {
+    flex-shrink: 0;
     cursor: pointer;
+    padding: 10px;      
+    width: 300px; /* Fixed width */
+    height: 100px; /* Fixed height (adjust as needed) */
+    box-sizing: border-box; /* Ensures padding doesn't increase the size */
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    border-radius: 15px;
+    font-weight: 500;
+    font-size: 1.2em;
+    transition: ease-in-out 0.5s;
 }
+
+
+.doc_history_point:not(.curent_doc) {
+    color: black;
+
+}
+.doc_history_point:not(.curent_doc):hover {
+    text-shadow: 0px 0px 2px white;
+
+}
+
+
+.doc_history_point.curent_doc{
+    color:white;
+    text-shadow: -2px 1px 2px black;
+}
+
+.doc_history_point.curent_doc:hover {
+    text-shadow: -4px 2px 2px black;
+    font-size: 1.3em;
+}
+
 
 
 
