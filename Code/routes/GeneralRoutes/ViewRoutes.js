@@ -66,6 +66,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         type = req.query.type;
         id = req.query.id;
         if (type && id) {
+          
           if (type == "Warehouse") {
             obj = await Warehouse.findOne({ _id: id });
             var inventory = await generalFunctions.warehose_get_inventory({
@@ -81,9 +82,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             obj = await Series.findOne({ _id: id });
             var series = await Series.find({company:company, status:1,type:obj.type,_id: { $ne: obj._id } /* Exclude the document with the same _id as `obj`*/})
 
-            data.data = [obj.title, obj.acronym, obj.count, obj.sealed, obj.effects_warehouse, obj.credit, obj.debit,obj.transforms,series];
-            data.titles = ["Title", "Acronym", "Count", "Sealed", "Effects Warehouse", "Credit", "Debit", "Transforms","Series"];
-            data.type = [1, 1, 13, 1, 5, 5, 5, 5,12];
+            data.data = [obj.title, obj.acronym, obj.count, obj.sealed, obj.effects_warehouse, obj.effects_account,series];
+            data.titles = ["Title", "Acronym", "Count", "Sealed", "Effects Warehouse", "Effects Account","Series"];
+            data.type = [1, 1, 13, 1, 5, 5,12];
 
             secondary_data = {
               selected_series :obj.transforms_to

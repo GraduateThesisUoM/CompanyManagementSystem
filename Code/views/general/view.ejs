@@ -130,7 +130,7 @@
                     <label class="my_label_1"><%= s.acronym%> - <%= s.title%></label>
                   </div>
                 <%});%>
-                <input type="text" id="series_transforms_list" name="series_transforms_list">
+                <input type="text" id="series_transforms_list" name="series_transforms_list" style="display: none;">
               </div>
             <% }else if(type[index] == 13){ %>
             <div id="<%= title %>" class="my_label_1"><%= title %> : <%= data[index] %></div>
@@ -501,7 +501,7 @@
 
       if (queryParams.type == "series") {
         for( s of secondary_data.selected_series){
-          $("#" + s).prop("checked", true);
+          $("#" + s).removeClass("active");
           $('#series_transforms_list').val($('#series_transforms_list').val()+','+s)
         }
       }
@@ -818,7 +818,7 @@
             $("#series_transforms_list").val("");
             for(s of $(".series_transforms_check:not(.active)")){
               if($("#series_transforms_list").val() == ""){
-                $("#series_transforms_list").val($(s).attr('id')+';')
+                $("#series_transforms_list").val($(s).attr('id'))
               }
               else{
                 $("#series_transforms_list").val(

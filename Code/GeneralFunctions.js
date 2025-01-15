@@ -658,19 +658,16 @@ async function update(id, schema , data){
     else if (schema == 'series') {
         obj.title = data["input0"];
         obj.acronym = data["input1"];
-        obj.type = data["input2"];
-        obj.count = data["input3"];
 
-        obj.sealed = data["input4"];
+        /*obj.sealed = data["input4"];
         obj.effects_warehouse = data["input5"];
         obj.credit = data["input6"];
         obj.debit = data["input7"];
 
-        obj.active = data["input8"];
-        obj.transforms = data["input9"];
+        obj.active = data["input8"];*/
         console.log(data["series_transforms_list"])
         if(data["series_transforms_list"] != ""){
-          obj.transforms_to = data["series_transforms_list"].split(',')
+          obj.transforms_to = data["series_transforms_list"].split(';')
         }
         else{
           obj.transforms_to = []
