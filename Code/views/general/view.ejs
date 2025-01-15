@@ -12,56 +12,54 @@
     <link rel="stylesheet" href="my_company_css.css" />
     <link rel="stylesheet" href="time_table_css.css" />
     <link rel="stylesheet" href="list_css.css" />
-    <link rel="stylesheet" href="fonts_css.css">
-    <link rel="stylesheet" href="textarea_css.css">
-    <link rel="stylesheet" href="Switch_css.css">
+    <link rel="stylesheet" href="fonts_css.css" />
+    <link rel="stylesheet" href="textarea_css.css" />
+    <link rel="stylesheet" href="Switch_css.css" />
+    <link rel="stylesheet" href="Lock_css.css" />
 
     <!--Fonts-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
     <!--Header-->
     <%- include('../partials/header'); %>
   </head>
 
   <body>
-    
     <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
       <div>
         <h1 class="asap-condensed-extralight">View</h1>
         <form action="/view" method="POST" id="view_form" class="glass_efect_2">
-          <input type="text" id="status" name="status" value="<%=status%>" style="display: none;" >
-          <input type="text" id="obj_id" name="obj_id" style="display: none;" >
-          <input type="text" id="obj_type2" name="obj_type2" style="display: none;" >
-          <input type="text" id="obj_type" name="obj_type" style="display: none;" >
-
-
-          <div style="display: grid;grid-template-columns: 50% 50%;">
-            <div id="type2" style="display: flex;justify-content: left;">
-            </div>
-            <div style="display: flex;justify-content: right;"><%=registrationDate%></div>
+          <input type="text" id="status" name="status" value="<%=status%>" style="display: block;"/>
+          <div id="status_div" style="display: flex; flex-direction: row;">
+            <div id="status_mark"></div>
+            <div id="status_label">Active</div>
           </div>
-          <input type="text" id="Status" value="<%=status%>" style="display: none;" >
-          
+          <input type="text" id="obj_id" name="obj_id" style="display: none" />
+          <input type="text" id="obj_type2" name="obj_type2" style="display: none" />
+          <input type="text" id="obj_type" name="obj_type" style="display: none" />
+
+          <div style="display: grid; grid-template-columns: 50% 50%">
+            <div id="type2" style="display: flex; justify-content: left"></div>
+            <div style="display: flex; justify-content: right"><%=registrationDate%></div>
+          </div>
+          <input type="text" id="Status" value="<%=status%>" style="display: none" />
+
           <% if (isParamsEmpty) { %>
           <div>ERROR: No elements selected</div>
           <% } else { %> <% titles.forEach(function(title, index) { %>
           <div>
             <%if(type[index] == 0){%> <%= title %>
-            <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" readonly />
+            <label class="my_label_1" for="<%= title %>"></label>
+            <input class="input_type_1" name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" readonly />
             <% }else if(type[index] == 3){ %>
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
-            <% }else if(type[index] == 4){ %> <%= title%>
-              <input type="checkbox" id="<%= title %>" onclick="return false;" <%= data[index] == 1 ? 'checked' : '' %> />
-            <% }else if(type[index] == 5){ %> <%= title %>
+            <% }else if(type[index] == 4){ %> <%= title%> <input type="checkbox" id="<%= title %>" onclick="return false;" <%= data[index] == 1 ? 'checked' : '' %> /> <% }else if(type[index] == 5){ %> <%= title %>
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
-            <input type="checkbox" id="<%= title %>_checkbox_<%= index %>" <% if (data[index] == 1) { %> checked <% } %> onclick="document.getElementById('<%= title %>').value = this.checked ? '1' : '0';">
-            <% }else if(type[index] == 6){ %>
-              <%= title %><br>
-              <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" type="number" class="input_type_2 my_width"/>
-            <% }else if(type[index] == 7){ %>
-              <%= data[index] == 1 ? 'Retail' : 'Wholesale' %><input name="input<%= index %>" id="wholesale_retail" value="<%= data[index] %>" style="display: none;" />
+            <input type="checkbox" id="<%= title %>_checkbox_<%= index %>" <% if (data[index] == 1) { %> checked <% } %> onclick="document.getElementById('<%= title %>').value = this.checked ? '1' : '0';"> <% }else if(type[index] == 6){ %> <%= title %><br />
+            <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" type="number" class="input_type_2 my_width" />
+            <% }else if(type[index] == 7){ %> <%= data[index] == 1 ? 'Retail' : 'Wholesale' %><input name="input<%= index %>" id="wholesale_retail" value="<%= data[index] %>" style="display: none" />
             <% }else if(type[index] == 8){ %>
             <table>
               <thead>
@@ -86,56 +84,127 @@
               </tbody>
             </table>
             <% }else if(type[index] == 9){ %>
-              <br><div><%= title %></div>
+            <br />
+            <div><%= title %></div>
             <div class="textarea_container">
               <textarea name="input<%= index %>" id="<%= title %>"><%= data[index] %></textarea>
             </div>
             <% }else if(type[index] == 10){ %>
-              
-              <div id="nodes_conainer">
-                <% data[index].forEach(function(node, index) {%>
-                <div>
-                  <div class="message_header">
-                    <div class="person"><%=node.sender.firstName%> <%=node.sender.lastName%></div>
-                    <div class="reg_d"><%=node.registrationDate%></div>
-                  </div>
-                  
-                  <div class="node_text"><%=node.text%></div>
-                  
-                    <% if (index === data.length - 1) { %>
-                      <div class="node_status"><%=node.status%></div>
-                    <% } %>
+
+            <div id="nodes_conainer">
+              <% data[index].forEach(function(node, index) {%>
+              <div>
+                <div class="message_header">
+                  <div class="person"><%=node.sender.firstName%> <%=node.sender.lastName%></div>
+                  <div class="reg_d"><%=node.registrationDate%></div>
                 </div>
-                <%});%>
+
+                <div class="node_text"><%=node.text%></div>
+
+                <% if (index === data.length - 1) { %>
+                <div class="node_status"><%=node.status%></div>
+                <% } %>
               </div>
-              
+              <%});%>
+            </div>
+
             <% }else if(type[index] == 11){ %>
             <div>
               <img src="<%= data[index] %>" id="company_logo" />
             </div>
             <% }else if(type[index] == 12){ %>
-              <div style="display: grid;grid-template-columns: 50% 50%;">
-                <% data[index].forEach(function(s, index) {%>
-                  <div style="display: flex;flex-direction: row;">
-
-                    <div class="switch">
-                      <div class="back_text">
-                        <div></div>
-                        <div></div>
-                      </div>
-                      <div class="slider">
-                        <button class="slider-button active series_transforms_check" id="<%= s._id%>"></button>
-                      </div>
-                    </div>
-                    <label class="my_label_1"><%= s.acronym%> - <%= s.title%></label>
+            <div style="display: grid; grid-template-columns: 50% 50%">
+              <% data[index].forEach(function(s, index) {%>
+              <div style="display: flex; flex-direction: row">
+                <div class="switch">
+                  <div class="back_text">
+                    <div></div>
+                    <div></div>
                   </div>
-                <%});%>
-                <input type="text" id="series_transforms_list" name="series_transforms_list" style="display: none;">
+                  <div class="slider">
+                    <button class="slider-button active series_transforms_check" id="<%= s._id%>"></button>
+                  </div>
+                </div>
+                <label class="my_label_1"><%= s.acronym%> - <%= s.title%></label>
               </div>
+              <%});%>
+              <input type="text" id="series_transforms_list" name="series_transforms_list" style="display: none;"/>
+            </div>
             <% }else if(type[index] == 13){ %>
             <div id="<%= title %>" class="my_label_1"><%= title %> : <%= data[index] %></div>
-            <% }else if(type[index] == 14){ %>
-              <%= title %> : <select id="select_warehose" name="select_warehose"></select>
+            <% }else if(type[index] == 14){ %> <%= title %> :
+            <select id="select_warehose" name="select_warehose"></select>
+            <% }else if(type[index] == 15){ %>
+            <div style="display: grid; grid-template-columns: 30% 30% 30%; gap: 5%">
+              <div class="lock_container">
+                <label id="lock_label" for="">Unsealed</label>
+
+                <div class="lock">
+                  <div id="lock_div" class="top_lock"></div>
+                  <div class="bottom_lock"></div>
+                </div>
+                <input id="series_sealed" name="series_sealed" value="<%= data[index].sealed %>" style="display: none" />
+              </div>
+
+              <div>
+                <div class="switch_container" id="effects_warehouse_y_n">
+                  <div class="switch">
+                    <div class="back_text">
+                      <div></div>
+                      <div></div>
+                    </div>
+                    <div class="slider">
+                      <button class="slider-button active" id="effects_warehouse_y_n_switch_btn"></button>
+                    </div>
+                  </div>
+                  <div class="switch_label" id="effects_warehouse_y_n_label">Does Not Effects Warehouse</div>
+                </div>
+                <input id="effects_warehouse_y_n_input" name="effects_warehouse_y_n_input" value="<%= data[index].effects_warehouse %>" style="display: none" />
+
+                <div class="switch_container" id="effects_warehouse_switch">
+                  <div class="switch">
+                    <div class="back_text">
+                      <div></div>
+                      <div></div>
+                    </div>
+                    <div class="slider">
+                      <button class="slider-button" id="effects_warehouse_switch_btn"></button>
+                    </div>
+                  </div>
+                  <div class="switch_label" id="effects_warehouse_label">Adds</div>
+                </div>
+              </div>
+
+              <div>
+                <div class="switch_container" id="effects_accounts_y_n">
+                  <div class="switch">
+                    <div class="back_text">
+                      <div></div>
+                      <div></div>
+                    </div>
+                    <div class="slider">
+                      <button class="slider-button active" id="effects_accounts_y_n_switch_btn"></button>
+                    </div>
+                  </div>
+                  <div class="switch_label" id="effects_accounts_y_n_label">Does Not Affects Account</div>
+                </div>
+                <input id="effects_accounts_y_n_input" name="effects_accounts_y_n_input" value="<%= data[index].effects_account %>" style="display: none" />
+
+                <div class="switch_container" id="effects_accounts_switch">
+                  <div class="switch">
+                    <div class="back_text">
+                      <div></div>
+                      <div></div>
+                    </div>
+                    <div class="slider">
+                      <button class="slider-button" id="effects_accounts_switch_btn"></button>
+                    </div>
+                  </div>
+                  <div class="switch_label" id="effects_accounts_label">Adds</div>
+                </div>
+              </div>
+              <br>
+            </div>
             <% }else{ %> <lable class="my_label_1" for="<%= title %>"><%= title %></lable>
             <input name="input<%= index %>" id="<%= title %>" class="input_type_1" value="<%= data[index] %>" />
             <% }%>
@@ -146,46 +215,43 @@
             <button type="button" class="asap-condensed-regular" id="btn2"></button>
             <button class="asap-condensed-regular" id="btn3">Save</button>
           </div>
-          
 
-          <div style="display: none;">
+          <div style="display: none">
             <input name="day_data_input_user_id" id="day_data_input_user_id" />
             <input name="day_data_input_node_id" id="day_data_input_node_id" />
             <input name="calendar_view_selection" id="calendar_view_selection" />
 
-            From : 
-            <input type="date" name="day_data_input_date" id="day_data_input_date"/>
-            To : 
+            From :
+            <input type="date" name="day_data_input_date" id="day_data_input_date" />
+            To :
             <input type="date" name="day_data_input_date_to" id="day_data_input_date_to" />
 
-            <input name="time_table_hours_start" id="time_table_hours_start" type="number" max="23" min="0"/>
+            <input name="time_table_hours_start" id="time_table_hours_start" type="number" max="23" min="0" />
             :
-            <input  name="time_table_minutes_start" id="time_table_minutes_start" type="number" max="59" min="0" />
+            <input name="time_table_minutes_start" id="time_table_minutes_start" type="number" max="59" min="0" />
 
             To
             <input name="time_table_hours_end" id="time_table_hours_end" type="number" max="23" min="0" />
             :
             <input name="time_table_minutes_end" id="time_table_minutes_end" type="number" max="59" min="0" />
 
-            <input name="time_table_notes" type="text" id="time_table_notes">
+            <input name="time_table_notes" type="text" id="time_table_notes" />
           </div>
-
         </form>
         <!--div id="message_div">Record has been deleted</div-->
-        <button class="asap-condensed-regular delete_btn" id="btn1">Delete</button>
-        
+        <button class="asap-condensed-regular delete_btn" id="btn1" style="margin-bottom: 50px;">Delete</button>
+
         <div id="clients">
           <button>ΦΠΑ</button>
           <button id="time_table_btn">Time Table</button>
           <button id="time_table_btn">PayRoll</button>
           <div id="time_table_div">
-            
             <div id="calendar_div" class="asap-condensed-regular glass_efect_1">
               <div id="filter_div">
                 <button class="calendar_date_reage_btn" id="tt_day">Day</button>
                 <button class="calendar_date_reage_btn" id="tt_week">Week</button>
                 <button class="calendar_date_reage_btn" id="tt_month">Month</button>
-                <input id="day_picker" type="date"/>
+                <input id="day_picker" type="date" />
                 <select id="user_select">
                   <option value="all">All</option>
                 </select>
@@ -193,7 +259,6 @@
               <div id="calendar_header">
                 <div id="selected_year"></div>
                 <div id="selected_month"></div>
-                
               </div>
 
               <div id="day" class="day now day_date"></div>
@@ -281,34 +346,30 @@
             </div>
           </div>
         </div>
-        <div id="secondary_data" style="display: none;">f</div>
+        <div id="secondary_data" style="display: none">f</div>
         <div id="day_data">
           <div id="day_data_header">
             <div>
-              <img id="close_btn" src="x.svg"/>
+              <img id="close_btn" src="x.svg" />
             </div>
             <div id="day_data_date_time">
-              <div> 
-                <input type="date" class="dummy asap-condensed-regular"/> <input type="date" class="dummy asap-condensed-regular" />
-    
-              </div>
+              <div><input type="date" class="dummy asap-condensed-regular" /> <input type="date" class="dummy asap-condensed-regular" /></div>
               <div>
-                <input class="dummy asap-condensed-regular" type="number" max="23" min="0" placeholder="0"/>
+                <input class="dummy asap-condensed-regular" type="number" max="23" min="0" placeholder="0" />
                 :
-                <input class="dummy" type="number" max="59" min="0" placeholder="0"/>
-  
+                <input class="dummy" type="number" max="59" min="0" placeholder="0" />
+
                 -
-                <input class="dummy" type="number" max="23" min="0" placeholder="0"/>
+                <input class="dummy" type="number" max="23" min="0" placeholder="0" />
                 :
-                <input class="dummy" type="number" max="59" min="0" placeholder="0"/>
+                <input class="dummy" type="number" max="59" min="0" placeholder="0" />
               </div>
             </div>
           </div>
 
-
           <div id="day_data_body">
             <div id="day_data_users">
-              <div>All <input class="all_selected_users" type="checkbox" value="all"></div>
+              <div>All <input class="all_selected_users" type="checkbox" value="all" /></div>
             </div>
             <div>
               <input id="new_edit_time_teble" name="new_edit_time_teble" style="display: none" />
@@ -316,7 +377,6 @@
               <div id="textarea_conatainer">
                 <textarea class="dummy" placeholder="Notes..."></textarea>
               </div>
-              
             </div>
           </div>
           <div id="day_data_footer">
@@ -335,7 +395,6 @@
   <script type="text/javascript" src="JSCalendarFunctions.js"></script>
   <script type="text/javascript" src="JSDocumentFunctions.js"></script>
 
-
   <script>
     $(document).ready(function () {
       var selected_date = get_today();
@@ -344,8 +403,13 @@
 
       const secondary_data = JSON.parse(`<%- JSON.stringify(secondary_data) %>`);
 
-      if($("#Title").text() == "Title : "){
-        $("#Title").hide()
+      if($("#status").val()==1){
+        $("#status_label").html("Active")
+        $("#status_mark").addClass('active')
+      }
+
+      if ($("#Title").text() == "Title : ") {
+        $("#Title").hide();
       }
 
       $("#clients").hide();
@@ -371,8 +435,8 @@
       }
 
       $("#obj_id").val(queryParams.id);
-      $("#obj_type2").val(queryParams.type2)
-      $("#obj_type").val(queryParams.type)
+      $("#obj_type2").val(queryParams.type2);
+      $("#obj_type").val(queryParams.type);
 
       let formAction = "/view";
       if (queryParams.type) {
@@ -383,15 +447,15 @@
       }
       if (queryParams.timetable) {
         $("#calendar_view_selection").val(queryParams.timetable);
-        $("#tt_"+queryParams.timetable).addClass("selected")
+        $("#tt_" + queryParams.timetable).addClass("selected");
       }
-      if (queryParams.type2 && queryParams.type2!=null && queryParams.type2 !== 'null') {
-        if(queryParams.type2 == 1){
-          $("#type2").html('Sales')
+      if (queryParams.type2 && queryParams.type2 != null && queryParams.type2 !== "null") {
+        if (queryParams.type2 == 1) {
+          $("#type2").html("Sales");
         }
-        $("#type2").html('Purchases')
+        $("#type2").html("Purchases");
       }
-      
+
       $("#view_form").attr("action", formAction);
 
       var delete_deactivate = $("#Status").val();
@@ -411,16 +475,15 @@
       }
 
       if (queryParams.type == "nodes") {
-        $("#Type").css('text-align', 'center');
+        $("#Type").css("text-align", "center");
         $("#Type").text($("#Type").text().replace("Type : ", ""));
-        if($("#Type").text()=="Hiring"){
-          $("#Title").hide()
-          $("#nodes_conainer").hide()
+        if ($("#Type").text() == "Hiring") {
+          $("#Title").hide();
+          $("#nodes_conainer").hide();
           $(".textarea_container").parent().hide();
-          $("#btn3").text('Accept');
-          $("#btn2").text('Accept')
-        }
-        else{
+          $("#btn3").text("Accept");
+          $("#btn2").text("Accept");
+        } else {
           $("#btn3").text("Ececute");
         }
         var node = $(".node_status:last");
@@ -434,7 +497,6 @@
 
         $("#btn1").hide();
 
-        
         $("#btn3").click(function () {
           $("#action").val("executed");
           $("#view_form").submit();
@@ -446,14 +508,12 @@
           $("#action").val("rejected");
           $("#view_form").submit();
         });
-      }
-      else if (queryParams.type == "clients") {
+      } else if (queryParams.type == "clients") {
         clients_users = secondary_data.users;
 
         for (client of clients_users) {
           $("#user_select").append(`<option value="${client._id}">${client.firstName} ${client.lastName}</option>`);
           $("#day_data_users").append(`<div>${client.firstName} ${client.lastName} <input class="all_selected_users" type="checkbox" value="${client._id}"></div>`);
-
         }
         $("#clients").show();
 
@@ -469,16 +529,15 @@
         }
 
         $("#btn2").text("Remove");
-        $("#btn2").click(function(event){
+        $("#btn2").click(function (event) {
           event.preventDefault();
-          alert("Remove Client")});
-      }
-      else if (queryParams.type == "reports"){
-        $("#btn1").hide()
-        $("#btn2").hide()
-        $("#btn3").hide()
-      }
-      else {
+          alert("Remove Client");
+        });
+      } else if (queryParams.type == "reports") {
+        $("#btn1").hide();
+        $("#btn2").hide();
+        $("#btn3").hide();
+      } else {
         $("#btn1").click(function () {
           event.preventDefault();
           if (confirm("Are you soure ?")) {
@@ -497,12 +556,48 @@
           $("#view_form").submit();
         });
       }
-      
 
       if (queryParams.type == "series") {
-        for( s of secondary_data.selected_series){
+        for (s of secondary_data.selected_series) {
           $("#" + s).removeClass("active");
-          $('#series_transforms_list').val($('#series_transforms_list').val()+','+s)
+          if ($("#series_transforms_list").val() == "") {
+            $("#series_transforms_list").val(s);
+          } else {
+            $("#series_transforms_list").val($("#series_transforms_list").val() + ";" + s);
+          }
+        }
+
+        if ($("#series_sealed").val() == 1) {
+          $("#lock_label").html("Sealed");
+          $("#lock_div").addClass("locked");
+        }
+
+        $("#effects_warehouse_switch").hide();
+        $("#effects_accounts_switch").hide();
+        if ($("#effects_warehouse_y_n_input").val() == 1) {
+          $("#effects_warehouse_y_n_switch_btn").removeClass("active");
+          $("#effects_warehouse_y_n_label").html("Effects Warehouse");
+          $("#effects_warehouse_switch").show();
+        }
+        if ($("#effects_warehouse_y_n_input").val() == -1) {
+          $("#effects_warehouse_y_n_switch_btn").removeClass("active");
+          $("#effects_warehouse_y_n_label").html("Effects Warehouse");
+          $("#effects_warehouse_switch").show();
+          $("#effects_warehouse_switch_btn").addClass("active");
+          $("#effects_warehouse_label").html("Subtracts");
+        }
+
+        if ($("#effects_accounts_y_n_input").val() == 1) {
+          $("#effects_accounts_y_n_switch_btn").removeClass("active");
+          $("#effects_accounts_y_n_label").html("Effects Accounts");
+          $("#effects_accounts_switch").show();
+        }
+        if ($("#effects_accounts_y_n_input").val() == -1) {
+          $("#effects_accounts_y_n_switch_btn").removeClass("active");
+          $("#effects_accounts_y_n_label").html("Effects Accounts");
+          $("#effects_accounts_switch").show();
+          $("#effects_accounts_switch_btn").addClass("active");
+          $("#effects_accounts_label").html("Subtracts");
         }
       }
 
@@ -525,6 +620,83 @@
           url_id = $(this).attr("id");
         }
         window.location = "/view?type=" + url_page + "&id=" + url_id;
+      });
+
+      $(".lock").click(function (event) {
+        event.stopPropagation();
+        event.preventDefault();
+
+        // Find the .top_lock inside the clicked .lock and toggle the locked class
+        const lockContainer = $(this).closest(".lock_container");
+        const topLock = $(this).find(".top_lock");
+        const label = lockContainer.find("label");
+        const input = lockContainer.find("input");
+
+        // Toggle the locked class
+        topLock.toggleClass("locked");
+
+        // Update the label text and input value based on the lock state
+        if (topLock.hasClass("locked")) {
+          label.text("Sealed"); // Update label text
+          input.val(1); // Update input value
+        } else {
+          label.text("Unsealed"); // Update label text
+          input.val(0); // Update input value
+        }
+      });
+
+      $("#effects_accounts_switch_btn").click(function (event) {
+        event.preventDefault();
+        event.preventDefault(); // Prevent the default action
+        this.classList.toggle("active"); // Toggle the `active` class
+        if ($(this).hasClass("active")) {
+          $("#effects_accounts_label").html("Subtracts"); // Change text to "+"
+          $("#effects_accounts_y_n_input").val(-1);
+        } else {
+          $("#effects_accounts_label").html("Adds");
+          $("#effects_accounts_y_n_input").val(1);
+        }
+      });
+
+      $("#effects_accounts_y_n_switch_btn").click(function (event) {
+        event.preventDefault();
+        event.preventDefault(); // Prevent the default action
+        this.classList.toggle("active"); // Toggle the `active` class
+        $("#effects_accounts_switch").toggle();
+
+        if ($(this).hasClass("active")) {
+          $("#effects_accounts_y_n_input").val(0);
+          $("#effects_accounts_y_n_label").html("Does Not Affects Account");
+        } else {
+          $("#effects_accounts_y_n_input").val(1);
+          $("#effects_accounts_y_n_label").html("Affects Account");
+        }
+      });
+
+      $("#effects_warehouse_switch_btn").click(function (event) {
+        event.preventDefault(); // Prevent the default action
+        this.classList.toggle("active"); // Toggle the `active` class
+        if ($(this).hasClass("active")) {
+          $("#effects_warehouse_label").html("Subtracts"); // Change text to "+"
+          $("#effects_warehouse_y_n_input").val(-1);
+        } else {
+          $("#effects_warehouse_label").html("Adds");
+          $("#effects_warehouse_y_n_input").val(1);
+        }
+      });
+
+      $("#effects_warehouse_y_n_switch_btn").click(function (event) {
+        event.preventDefault(); // Prevent the default action
+        this.classList.toggle("active"); // Toggle the `active` class
+        $("#effects_warehouse_switch").toggle();
+
+        if ($(this).hasClass("active")) {
+          $("#effects_warehouse_y_n_label").html("Does Not Affects Warehouse");
+          $("#effects_warehouse_y_n_input").val(0);
+        } else {
+          $("#effects_warehouse_y_n_label").html("Affects Warehouse");
+          $("#effects_warehouse_y_n_input").val(1);
+        }
       });
 
       $(".calendar_date_reage_btn").click(function () {
@@ -572,11 +744,10 @@
       function show_hide_time_table() {
         if (queryParams.timetable) {
           $("#time_table_div").toggle();
+        } else {
+          day_week_month("month");
         }
-        else{
-          day_week_month('month')
-        }
-        
+
         //$("#date_from").val(selected_date);
         $("#day_picker").val(selected_date);
       }
@@ -596,27 +767,15 @@
         event.preventDefault();
         let c_e_o = check_event_overlap($("#day_data_input_user_id").val(), $("#day_data_input_date").val(), $("#time_table_hours_start").val(), $("#time_table_minutes_start").val(), $("#time_table_hours_end").val(), $("#time_table_minutes_end").val(), secondary_data.nodes);
         $("#action").val("time_table");
-        if (c_e_o == 0 && $('#day_data_input_node_id').val()=='') {
-          if(confirm("This time overlaps with enother event")){
-            if(confirm("This will replace existing with new are you sure ?")){
+        if (c_e_o == 0 && $("#day_data_input_node_id").val() == "") {
+          if (confirm("This time overlaps with enother event")) {
+            if (confirm("This will replace existing with new are you sure ?")) {
               $("#view_form").submit();
             }
           }
-        }
-        else if(
-          ($("#day_data_input_user_id").val() == 'all' ||
-          $("#day_data_input_user_id").val() == '' ||
-          $("#day_data_input_date").val() == '' ||
-          $("#day_data_input_date_to").val() == '' ||
-          $("#time_table_hours_start").val() == '' ||
-          $("#time_table_minutes_start").val() == '' ||
-          $("#time_table_hours_end").val() == '' ||
-          $("#time_table_minutes_end").val() == '')&&
-          $('#day_data_input_node_id').val()==''
-        ){
-          alert("missing data")
-        }
-        else {
+        } else if (($("#day_data_input_user_id").val() == "all" || $("#day_data_input_user_id").val() == "" || $("#day_data_input_date").val() == "" || $("#day_data_input_date_to").val() == "" || $("#time_table_hours_start").val() == "" || $("#time_table_minutes_start").val() == "" || $("#time_table_hours_end").val() == "" || $("#time_table_minutes_end").val() == "") && $("#day_data_input_node_id").val() == "") {
+          alert("missing data");
+        } else {
           $("#view_form").submit();
         }
       });
@@ -647,23 +806,23 @@
         });
         for (n of secondary_data.nodes) {
           if (selected_year == new Date(n.data.date).getFullYear()) {
-        if (selected_month == new Date(n.data.date).getMonth() + 1) {
-          if (cal_days.includes(new Date(n.data.date).getDate())) {
-            const index = cal_days.findIndex((day) => day === new Date(n.data.date).getDate());
-            // Get the events container div inside the selected day element
-            var eventsContainer = $(days[index]).find(".events_container");
-            if (selected_user == n.user._id || selected_user == "all") {
-            var day_div = "<div class='day_line' id='" + n._id + "'>" + "<div class=event_id style='display:none'>" + n.user._id + "</div>" + "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" + "<div>" + (n.data.hour_start < 10 ? '0' : '') + n.data.hour_start + " : " + (n.data.minutes_start < 10 ? '0' : '') + n.data.minutes_start + " - " + (n.data.hour_end < 10 ? '0' : '') + n.data.hour_end + " : " + (n.data.minutes_end < 10 ? '0' : '') + n.data.minutes_end + "</div>";
-          if(n.text){
-            day_div = day_div + "<div> Notes : <br>" + n.text + "</div>";
-          }
-          
-          day_div = day_div + "</div>"
+            if (selected_month == new Date(n.data.date).getMonth() + 1) {
+              if (cal_days.includes(new Date(n.data.date).getDate())) {
+                const index = cal_days.findIndex((day) => day === new Date(n.data.date).getDate());
+                // Get the events container div inside the selected day element
+                var eventsContainer = $(days[index]).find(".events_container");
+                if (selected_user == n.user._id || selected_user == "all") {
+                  var day_div = "<div class='day_line' id='" + n._id + "'>" + "<div class=event_id style='display:none'>" + n.user._id + "</div>" + "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" + "<div>" + (n.data.hour_start < 10 ? "0" : "") + n.data.hour_start + " : " + (n.data.minutes_start < 10 ? "0" : "") + n.data.minutes_start + " - " + (n.data.hour_end < 10 ? "0" : "") + n.data.hour_end + " : " + (n.data.minutes_end < 10 ? "0" : "") + n.data.minutes_end + "</div>";
+                  if (n.text) {
+                    day_div = day_div + "<div> Notes : <br>" + n.text + "</div>";
+                  }
 
-          eventsContainer.append(day_div);
+                  day_div = day_div + "</div>";
+
+                  eventsContainer.append(day_div);
+                }
+              }
             }
-          }
-        }
           }
         }
         // Add class 'today' if date matches today
@@ -672,8 +831,8 @@
           var day = parseInt($(element).text());
           var month = parseInt(selected_month);
           var year = parseInt(selected_year);
-          if (day === today.getDate() && month === (today.getMonth() + 1) && year === today.getFullYear()) {
-        $(element).addClass("today");
+          if (day === today.getDate() && month === today.getMonth() + 1 && year === today.getFullYear()) {
+            $(element).addClass("today");
           }
         });
       }
@@ -685,8 +844,8 @@
       $(".day_line").click(function (event) {
         event.stopPropagation();
         //$("#day_data_users").hide();
-        view_edit_event($(this).attr("id"), secondary_data.nodes,secondary_data.users);
-        $('.dummy').eq(1).hide();
+        view_edit_event($(this).attr("id"), secondary_data.nodes, secondary_data.users);
+        $(".dummy").eq(1).hide();
       });
 
       $("#time_table_hours_end").on("blur", function () {
@@ -697,32 +856,31 @@
         }
       });
 
-      $(".all_selected_users").change(function (event){
-        var checkboxes = $('.all_selected_users');
+      $(".all_selected_users").change(function (event) {
+        var checkboxes = $(".all_selected_users");
 
-        if($(this).val() == 'all'){
+        if ($(this).val() == "all") {
           var set_value = false;
-          if($(this).prop('checked')){
+          if ($(this).prop("checked")) {
             set_value = true;
           }
-          for( c of checkboxes){
-            $(c).prop('checked', set_value);
+          for (c of checkboxes) {
+            $(c).prop("checked", set_value);
           }
         }
 
-        var selected_users =''
-        for( c of checkboxes){
-          if($(c).prop('checked') == true){
-            selected_users=selected_users + $(c).val()+";"
+        var selected_users = "";
+        for (c of checkboxes) {
+          if ($(c).prop("checked") == true) {
+            selected_users = selected_users + $(c).val() + ";";
           }
         }
-        selected_users = selected_users.replace('all;', '').slice(0, -1);;
-        $('#day_data_input_user_id').val(selected_users);
-        
+        selected_users = selected_users.replace("all;", "").slice(0, -1);
+        $("#day_data_input_user_id").val(selected_users);
       });
 
       $(".dummy").change(function (event) {
-        const dummys = $(".dummy");  
+        const dummys = $(".dummy");
         $("#day_data_input_date").val(dummys.eq(0).val());
         $("#day_data_input_date_to").val(dummys.eq(1).val());
 
@@ -742,20 +900,19 @@
         let total_start = start.hour * 60 + start.minutes;
         let total_end = end.hour * 60 + end.minutes;
 
-
         if (total_end <= total_start) {
-          end.hour = start.hour + 1
+          end.hour = start.hour + 1;
           end.minutes = 0;
         }
 
-        dummys.eq(4).val(end.hour)
-        dummys.eq(5).val(end.minutes)
+        dummys.eq(4).val(end.hour);
+        dummys.eq(5).val(end.minutes);
 
-        $("#time_table_hours_start").val(start.hour)
-        $("#time_table_minutes_start").val(start.hour)
-        $("#time_table_hours_end").val(end.hour)
-        $("#time_table_minutes_end").val(end.minutes)
-        $("#time_table_notes").val(dummys.eq(6).val())      
+        $("#time_table_hours_start").val(start.hour);
+        $("#time_table_minutes_start").val(start.hour);
+        $("#time_table_hours_end").val(end.hour);
+        $("#time_table_minutes_end").val(end.minutes);
+        $("#time_table_notes").val(dummys.eq(6).val());
       });
 
       function check_event_overlap(id, date, s_hour, s_min, e_hour, e_min, nodes) {
@@ -786,22 +943,20 @@
             isTimeOverlapping = true;
           }
 
-          if (isIdMatching && isTimeOverlapping && isDateMatching){
+          if (isIdMatching && isTimeOverlapping && isDateMatching) {
             return 0;
           }
         }
         return 1;
       }
 
-
       $("#turn_to_btn").click(function () {
         secondary_data_f();
-        });
+      });
 
-      $(".day.now").click(function(event){
+      $(".day.now").click(function (event) {
         let user_id = $("#user_select").val();
         $("#day_data_users").show();
-
 
         // Generate the date string
         let year = $("#selected_year").text();
@@ -810,24 +965,20 @@
         let date = `${year}-${month}-${day}`;
 
         new_event($(this).attr("id"), secondary_data.nodes, date, user_id);
-      })
+      });
 
-      $(".series_transforms_check").click(function(event){
-            event.preventDefault(); // Prevent the default action
-            this.classList.toggle('active'); // Toggle the `active` class
-            $("#series_transforms_list").val("");
-            for(s of $(".series_transforms_check:not(.active)")){
-              if($("#series_transforms_list").val() == ""){
-                $("#series_transforms_list").val($(s).attr('id'))
-              }
-              else{
-                $("#series_transforms_list").val(
-                  $("#series_transforms_list").val()+
-                  ';'+$(s).attr('id')
-                )
-              }
-            }
-        })
+      $(".series_transforms_check").click(function (event) {
+        event.preventDefault(); // Prevent the default action
+        this.classList.toggle("active"); // Toggle the `active` class
+        $("#series_transforms_list").val("");
+        for (s of $(".series_transforms_check:not(.active)")) {
+          if ($("#series_transforms_list").val() == "") {
+            $("#series_transforms_list").val($(s).attr("id"));
+          } else {
+            $("#series_transforms_list").val($("#series_transforms_list").val() + ";" + $(s).attr("id"));
+          }
+        }
+      });
     });
   </script>
 </html>

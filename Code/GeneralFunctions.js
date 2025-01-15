@@ -659,9 +659,10 @@ async function update(id, schema , data){
         obj.title = data["input0"];
         obj.acronym = data["input1"];
 
-        /*obj.sealed = data["input4"];
-        obj.effects_warehouse = data["input5"];
-        obj.credit = data["input6"];
+        obj.sealed = data["series_sealed"];
+        obj.effects_warehouse = data["effects_warehouse_y_n_input"];
+        obj.effects_account = data["effects_accounts_y_n_input"];
+        /*obj.credit = data["input6"];
         obj.debit = data["input7"];
 
         obj.active = data["input8"];*/

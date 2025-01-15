@@ -28,6 +28,7 @@
       <div>
         <h1 id="list_header"><%=doc_name%></h1>
         <form action="/create-doc" method="POST" id="create_doc_form">
+          
           <div id="doc_data" class="glass_efect_2">
             <div>
               <div>
@@ -182,6 +183,7 @@
       
 
       var selected_items = JSON.parse(`<%- JSON.stringify(doc.invoiceData) %>`);
+      console.log(selected_items)
       var items = JSON.parse(`<%- JSON.stringify(items) %>`);
       var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
 

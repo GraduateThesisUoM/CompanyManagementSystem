@@ -370,18 +370,6 @@
       $("#effects_accounts_switch").hide();
       $("#transforms_to_div").hide();    
 
-        $("#effects_warehouse").change(function () {
-            event.preventDefault;
-            if ($(this).is(":checked")) {
-                $("#effects_warehouse_switch").show();
-                $("#effects_warehouse_input").val(1)
-
-            } else {
-                $("#effects_warehouse_switch").hide();
-                $("#effects_warehouse_input").val(0)
-
-            }
-        });
 
         $("#effects_accounts_switch_btn").click(function(event){
             event.preventDefault();
@@ -413,21 +401,7 @@
             }
         })
 
-        $("#transforms_y_n_switch_btn").click(function(event){
-            event.preventDefault(); // Prevent the default action
-            this.classList.toggle('active'); // Toggle the `active` class
-            $("#transforms_to_div").toggle();
-            
-            if($(this).hasClass('active')){
-                $("#transforms_y_n_label").html("Does Not Transforms")
-                $("#transforms_y_n_input").val(0);
-            }
-            else{
-                $("#transforms_y_n_label").html("Transforms");
-                $("#transforms_y_n_input").val(1);
-
-            }
-        })
+       
 
         $("#effects_warehouse_switch_btn").click(function(event){
             event.preventDefault(); // Prevent the default action
@@ -456,6 +430,24 @@
 
             }
         })
+
+
+        $("#transforms_y_n_switch_btn").click(function(event){
+            event.preventDefault(); // Prevent the default action
+            this.classList.toggle('active'); // Toggle the `active` class
+            $("#transforms_to_div").toggle();
+            
+            if($(this).hasClass('active')){
+                $("#transforms_y_n_label").html("Does Not Transforms")
+                $("#transforms_y_n_input").val(0);
+            }
+            else{
+                $("#transforms_y_n_label").html("Transforms");
+                $("#transforms_y_n_input").val(1);
+
+            }
+        })
+
 
         $(".lock").click(function (event) {
         event.stopPropagation();

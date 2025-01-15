@@ -421,3 +421,20 @@ border: 1px solid rgba(121, 121, 121, 0.3);
     font-size: 1.5em;
 }
 
+#status_mark{
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+#status_mark.active{
+    background-color: green;
+}
+#status_mark.delleted{
+    background-color: red;
+}
+#status_mark.desabled{
+    background-color: rgb(179, 179, 179);
+}
+
+
