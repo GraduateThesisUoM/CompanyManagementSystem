@@ -301,6 +301,16 @@ border: 1px solid rgba(121, 121, 121, 0.3);
     border: none;
 }
 
+.my_label_1{
+    font-size: 1.3em;
+}
+
+.center_1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+}
 
 .input_type_1{
     all: unset;

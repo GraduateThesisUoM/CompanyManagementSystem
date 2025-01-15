@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>items</title>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css" />
+    <link rel="stylesheet" href="view_css.css" />
+    <link rel="stylesheet" href="my_company_css.css" />
+    <link rel="stylesheet" href="time_table_css.css" />
+    <link rel="stylesheet" href="list_css.css" />
+    <link rel="stylesheet" href="fonts_css.css">
+    <link rel="stylesheet" href="buttons_css.css">
+    <link rel="stylesheet" href="textarea_css.css">
+    <link rel="stylesheet" href="my_select_css.css">
+    <!--Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <!--Header-->
+    <%- include('../partials/header'); %>
+  </head>
+
+  <body>
+    
+    <div class="has_sidebar asap-condensed-regular">
+      <%- include('../partials/sidebar'); %>
+      <div style="padding-bottom: 30px;">
+        <h1 class="asap-condensed-extralight">View</h1>
+        <form action="/view" method="POST" id="view_form" class="glass_efect_2">
+          <div style="display: grid;grid-template-columns: 50% 50%;">
+            <div id="type2" style="display: flex;justify-content: left;">
+            </div>
+            <div style="display: flex;justify-content: right;"><%=registrationDate%></div>
+          </div>
+          <input type="text" id="status" name="status" value="<%=status%>" style="display: none;" >
+          <input type="text" id="obj_id" name="obj_id" style="display: none;" >
+          <input type="text" id="obj_type2" name="obj_type2" style="display: none;" >
+          <input type="text" name="obj_type" style="display: none;"  value="items">
+
+          <div id = 'items_div' class="create_div">
+            <label class="my_label_1" for="items_title">Title : </label>
+            <input class="input_type_1" type="text" id="items_title" name="items_title" class="required items" value="<%= item.title%>">
+            <label class="my_label_1" for="items_description">Description : </label>
+            <div class="textarea_container">
+                <textarea id = "items_description" name = "items_description" class="required items "><%= item.description%></textarea>
+            </div>
+
+            <div style="display: flex;flex-direction: column;margin-top: 20px;">
+                <label style="width: 100%;"  class="my_label_1">Unit Of Measure : </label>
+            <select style="width: 50%; padding: 10px;border-radius: 10px; font-size: 1.53em;" class="my_select" id="select_uom">
+                <option value="<%=item.unit_of_measurement%>"><%=item.unit_of_measurement%></option>
+            </select>
+            </div>
+
+            <div style="display: grid;grid-template-columns: 5% 45% 45%;margin-top: 20px; gap:2.5%; margin-bottom:30px">
+                <label class="my_label_1" style="visibility: hidden;">- </label>
+                <label class="my_label_1">Retail : </label>
+                <label class="my_label_1">Wholesale : </label>
+
+                <label class="my_label_1 center_1">Price € : </label>
+                <input type="number" id="items_price_r" name="items_price_r"  class="required items price retale input_type_1" value="<%= item.price_r%>">
+                <input type="number" id="items_price_w" name="items_price_w" class="required items price wholesale input_type_1" value="<%= item.price_w%>">
+
+                <label class="my_label_1 center_1">Disc € : </label>
+                <input type="number" id="items_price_r_disc" name="items_price_r_disc" min="0" class="required items disc retale input_type_1" value="<%= item.discount_r%>">
+                <input type="number" id="items_price_w_disc" name="items_price_w_disc" min="0" class="required items disc wholesale input_type_1"value="<%= item.discount_w%>">
+
+                <label class="my_label_1 center_1">Disc % : </label>
+                <input type="number" id="items_price_r_disc_p" name="items_price_r_disc_p" min="0" max = "100" class="required items percent retale input_type_1">
+                <input type="number" id="items_price_w_disc_p" name="items_price_w_disc_p" min="0" max = "100" class="required items percent wholesale input_type_1">
+            
+                <label class="my_label_1 center_1">Tax € : </label>
+                <input type="number" id="items_tax_r" name="items_tax_r" min="0" max = "100" class="required items input_type_1" value="<%= item.tax_r%>">
+                <input type="number" id="items_tax_w" name="items_tax_w" min="0" max = "100" class="required items input_type_1" value="<%= item.discount_w%>">
+
+                <label class="my_label_1 center_1">Tottal € : </label>
+                <label class="my_label_1 center_1" id="tottal_r">0,00</label>
+                <label class="my_label_1 center_1" id="tottal_w">0,00</label>
+                
+            </div>
+            <br>
+        </div>
+          
+
+          <input type="text" name="action" id="action" style="display: none" />
+          <div id="button_container">
+            <button type="button" class="asap-condensed-regular" id="btn2"></button>
+            <button class="asap-condensed-regular" id="btn3">Save</button>
+          </div>
+
+        </form>
+        <!--div id="message_div">Record has been deleted</div-->
+        <button class="asap-condensed-regular delete_btn" id="btn1">Delete</button>
+
+      </div>
+    </div>
+  </body>
+
+  <script>
+    $(document).ready(function () {
+
+      const params = new URLSearchParams(window.location.search);
+      var queryParams = {};
+      for (const [key, value] of params.entries()) {
+        queryParams[key] = value;
+      }
+
+      if (queryParams.type2 && queryParams.type2!=null && queryParams.type2 !== 'null') {
+        if(queryParams.type2 == 1){
+          $("#type2").html('Sales')
+        }
+        $("#type2").html('Purchases')
+      }
+
+      $("#obj_id").val(queryParams.id);
+      $("#obj_type2").val(queryParams.type2)
+      
+
+      const item = JSON.parse(`<%- JSON.stringify(item) %>`);
+
+      $("#select_uom").val(item.unit_of_measurement);
+      $("#items_price_r_disc_p").val((item.discount_r*100)/item.price_r);
+      $("#items_price_w_disc_p").val((item.discount_w*100)/item.price_w);
+
+      $("#tottal_r").html((parseInt($("#items_price_r").val())+parseInt($("#items_tax_r").val()))-parseInt($("#items_price_r_disc").val()));
+      $("#tottal_w").html((parseInt($("#items_price_w").val())+parseInt($("#items_tax_w").val()))-parseInt($("#items_price_w_disc").val()));
+
+
+
+      var delete_deactivate = $("#status").val();
+      var btn_1_var = "activate";
+      if (delete_deactivate == 0) {
+        $("#btn2").text("Activate");
+      } else if (delete_deactivate == 1) {
+        $("#btn2").text("Disable");
+        var btn_1_var = "disabled";
+      } else if (delete_deactivate == 2) {
+        $("#btn1").hide();
+        //$("#btn2").hide();
+        $("#btn2").text("Activate");
+        $("#btn3").hide();
+        $("#message_div").show();
+        $("#message_span").text(queryParams.type);
+      }
+
+      $("#btn1").click(function () {
+          event.preventDefault();
+          if (confirm("Are you soure ?")) {
+            $("#action").val("delete");
+            $("#view_form").submit();
+          }
+        });
+        $("#btn2").click(function () {
+          event.preventDefault();
+          $("#status").val(1);
+          if(delete_deactivate == 1){
+            $("#status").val(0);
+          }
+          $("#action").val('save');
+          $("#view_form").submit();
+        });
+        $("#btn3").click(function () {
+          event.preventDefault();
+          $("#action").val("save");
+          $("#view_form").submit();
+        });
+
+        $("#items_price_r").on('input', function(event) {
+          var p = $("#items_price_r").val();
+          var d = $("#items_price_r_disc").val();
+          $("#items_price_r_disc_p").val((d*100)/p); 
+
+          var t = $("#items_tax_r").val();
+          $("#tottal_r").html((p+t)-d);
+        })
+        $("#items_price_w").on('input', function(event) {
+          var p = $("#items_price_w").val();
+          var d = $("#items_price_w_disc").val();
+          $("#items_price_w_disc_p").val((d*100)/p);
+          
+          var t = $("#items_tax_w").val();
+          $("#tottal_w").html((p+t)-d);
+        })
+
+        $("#items_price_r_disc").on('input', function(event) {
+          var p = $("#items_price_r").val();
+          var d = $("#items_price_r_disc").val();
+          $("#items_price_r_disc_p").val((d*100)/p);  
+          
+          var t = $("#items_tax_r").val();
+          $("#tottal_r").html((p+t)-d);
+          
+        })
+        $("#items_price_w_disc").on('input', function(event) {
+          var p = $("#items_price_w").val();
+          var d = $("#items_price_w_disc").val();
+          $("#items_price_w_disc_p").val((d*100)/p); 
+          
+          var t = $("#items_tax_w").val();
+          $("#tottal_w").html((p+t)-d);
+          
+        })
+
+        $("#items_price_r_disc_p").on('input', function(event) {
+          var p = $("#items_price_r").val();
+          var d = $("#items_price_r_disc_p").val();
+          $("#items_price_r_disc").val(p*(d/100));
+          
+          var t = $("#items_tax_r").val();
+          $("#tottal_r").html((p+t)-((p+t)*(d/100)));
+          
+        })
+        $("#items_price_w_disc_p").on('input', function(event) {
+          var p = $("#items_price_w").val();
+          var d = $("#items_price_w_disc_p").val();
+          $("#items_price_w_disc").val(p*(d/100)); 
+          
+          var t = $("#items_tax_w").val();
+
+          $("#tottal_w").html((p+t)-((p+t)*(d/100)));
+        })
+
+        $("#items_tax_r").on('input', function(event) {
+          $("#tottal_r").html((parseInt($("#items_price_r").val())+parseInt($("#items_tax_r").val()))-parseInt($("#items_price_r_disc").val()));
+        })
+
+        $("#items_tax_w").on('input', function(event) {
+          $("#tottal_w").html((parseInt($("#items_price_w").val())+parseInt($("#items_tax_w").val()))-parseInt($("#items_price_w_disc").val()));
+        })
+
+
+      
+    });
+  </script>
+</html>

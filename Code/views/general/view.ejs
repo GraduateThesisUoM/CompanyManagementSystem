@@ -14,6 +14,8 @@
     <link rel="stylesheet" href="list_css.css" />
     <link rel="stylesheet" href="fonts_css.css">
     <link rel="stylesheet" href="textarea_css.css">
+    <link rel="stylesheet" href="Switch_css.css">
+
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -29,6 +31,19 @@
       <div>
         <h1 class="asap-condensed-extralight">View</h1>
         <form action="/view" method="POST" id="view_form" class="glass_efect_2">
+          <input type="text" id="status" name="status" value="<%=status%>" style="display: none;" >
+          <input type="text" id="obj_id" name="obj_id" style="display: none;" >
+          <input type="text" id="obj_type2" name="obj_type2" style="display: none;" >
+          <input type="text" id="obj_type" name="obj_type" style="display: none;" >
+
+
+          <div style="display: grid;grid-template-columns: 50% 50%;">
+            <div id="type2" style="display: flex;justify-content: left;">
+            </div>
+            <div style="display: flex;justify-content: right;"><%=registrationDate%></div>
+          </div>
+          <input type="text" id="Status" value="<%=status%>" style="display: none;" >
+          
           <% if (isParamsEmpty) { %>
           <div>ERROR: No elements selected</div>
           <% } else { %> <% titles.forEach(function(title, index) { %>
@@ -99,20 +114,28 @@
               <img src="<%= data[index] %>" id="company_logo" />
             </div>
             <% }else if(type[index] == 12){ %>
-              <div>
+              <div style="display: grid;grid-template-columns: 50% 50%;">
                 <% data[index].forEach(function(s, index) {%>
-                  <div><input type="checkbox" id="<%= s._id%>" class="series_transforms_check"><%= s.acronym%> - <%= s.title%></div>
+                  <div style="display: flex;flex-direction: row;">
+
+                    <div class="switch">
+                      <div class="back_text">
+                        <div></div>
+                        <div></div>
+                      </div>
+                      <div class="slider">
+                        <button class="slider-button active series_transforms_check" id="<%= s._id%>"></button>
+                      </div>
+                    </div>
+                    <label class="my_label_1"><%= s.acronym%> - <%= s.title%></label>
+                  </div>
                 <%});%>
-                <input type="text" id="series_transforms_list" name="series_transforms_list" style="display: none;">
+                <input type="text" id="series_transforms_list" name="series_transforms_list">
               </div>
             <% }else if(type[index] == 13){ %>
             <div id="<%= title %>" class="my_label_1"><%= title %> : <%= data[index] %></div>
             <% }else if(type[index] == 14){ %>
               <%= title %> : <select id="select_warehose" name="select_warehose"></select>
-            <% }else if(type[index] == 15){ %>
-                <%= title %> <%= data[index] == 1 ? ' : Active' : data[index] == 0 ? ' : Disabled' : data[index] == 2 ? ' : Deleted' : '' %>
-                <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" style="display: none" />
-
             <% }else{ %> <lable class="my_label_1" for="<%= title %>"><%= title %></lable>
             <input name="input<%= index %>" id="<%= title %>" class="input_type_1" value="<%= data[index] %>" />
             <% }%>
@@ -347,6 +370,10 @@
         queryParams[key] = value;
       }
 
+      $("#obj_id").val(queryParams.id);
+      $("#obj_type2").val(queryParams.type2)
+      $("#obj_type").val(queryParams.type)
+
       let formAction = "/view";
       if (queryParams.type) {
         formAction += "?type=" + encodeURIComponent(queryParams.type);
@@ -358,6 +385,13 @@
         $("#calendar_view_selection").val(queryParams.timetable);
         $("#tt_"+queryParams.timetable).addClass("selected")
       }
+      if (queryParams.type2 && queryParams.type2!=null && queryParams.type2 !== 'null') {
+        if(queryParams.type2 == 1){
+          $("#type2").html('Sales')
+        }
+        $("#type2").html('Purchases')
+      }
+      
       $("#view_form").attr("action", formAction);
 
       var delete_deactivate = $("#Status").val();
@@ -376,235 +410,7 @@
         $("#message_span").text(queryParams.type);
       }
 
-      if (queryParams.type == "docs") {
-        $("#btn2").hide();
-
-        if (secondary_data.warehouse._id == "-") {
-          $("#select_warehose").append(`<option value="-">-</option>`);
-        }
-        for (w of secondary_data.warehouses) {
-          $("#select_warehose").append(`<option value="${w._id}">${w.title}</option>`);
-        }
-        if (secondary_data.warehouse._id != "-") {
-          $("#select_warehose").val(secondary_data.warehouse._id);
-        }
-
-
-        var selected_items = JSON.parse(`<%- JSON.stringify(data) %>`)[8];
-        var items = JSON.parse(`<%- JSON.stringify(data) %>`)[9];
-        console.log(items)
-        console.log("-----------")
-
-        addNewRow(0, items);
-
-        for (i in selected_items) {
-          $(".doc_line_select:eq(" + i + ') option[value="' + selected_items[i].lineItem + '"]').prop("selected", true);
-
-          put_data_on_row(0, items);
-          let quantity = selected_items[i].quantity;
-          let price_of_unit = selected_items[i].price_of_unit;
-          let total = quantity * price_of_unit;
-          let tax = selected_items[i].tax;
-          let totalAfterTax = total + total * (tax / 100);
-          let discount = selected_items[i].discount;
-          let discount_p = ((discount / total) * 100).toFixed(2);
-
-          $("#quantity_" + i).val(quantity);
-          $("#tax_" + i).val(tax);
-          $("#discount_" + i).val(discount);
-          $("#discount_p_" + i).val(discount_p);
-          $("#price_of_unit_" + i).val(price_of_unit);
-          $("#total_price_of_line_" + i).text(total);
-          $("#total_price_of_line_after_disc_" + i).text(total - discount);
-          $("#final_price_of_line_" + i).text(total - discount + (total - discount) * (tax / 100));
-
-          $(".remove_row").eq(i).prop("disabled", false);
-
-          $("#quantity_" + i).css("visibility", "visible");
-          $("#tax_" + i).css("visibility", "visible");
-          $("#discount_" + i).css("visibility", "visible");
-          $("#discount_p_" + i).css("visibility", "visible");
-          $("#price_of_unit_" + i).css("visibility", "visible");
-
-          if ($("#Sealed").is(":checked")) {
-            $(".input").val(quantity).prop("readonly", true);
-            keepOnlySelectedOption("doc_line_item_" + i);
-
-            if (i < Object.keys(selected_items).length - 1) {
-              addNewRow(parseInt(i) + 1, items);
-            }
-          } else {
-            addNewRow(parseInt(i) + 1, items);
-          }
-         
-          $(".doc_line_select:eq(" + i + ") option:first-child").remove();
-        }
-
-        $(".doc_line_select").change(function () {
-          if ($(this).val() != "-") {
-            $(this).find("option:first-child").remove();
-          }
-        });
-
-        function keepOnlySelectedOption(selectId) {
-          // Get the select element by its ID
-          
-
-          const selectElement = $("#"+selectId);
-          const lastChar = selectId.slice(-1);
-          const parent = $(".item_column");
-          parent.get(parseInt(lastChar)).append(selectElement.find("option:selected").text());
-            selectElement.hide()
-           
-          /*// Check if the select element exists
-          if (selectElement) {
-            const selectedValue = selectElement.val(); // Get the value of the selected option
-            const selectedText = selectElement.find("option:selected").text(); // Get the text of the selected option
-
-            selectElement.empty(); // Remove all options
-
-            // Add back only the selected option
-            selectElement.append("<option value='1'>" + selectedText + "</option>");
-          }*/
-        }
-
-        $(document).on("input", ".general_discount", function () {
-          let totalAfterTax = parseFloat($("#doc_total_after_tax").html()) || 0;
-
-          if ($(this).attr("id") === "general_discount_amount") {
-            let discountAmount = parseFloat($(this).val()) || 0;
-            let totalCost = totalAfterTax - discountAmount;
-            $("#doc_total_cost").html(totalCost.toFixed(2));
-
-            let discountPercentage = (discountAmount / totalAfterTax) * 100;
-            $("#general_discount").val(discountPercentage.toFixed(2));
-          } else {
-            let discountPercentage = parseFloat($(this).val()) || 0;
-            let discountAmount = totalAfterTax * (discountPercentage / 100);
-            $("#general_discount_amount").val(discountAmount.toFixed(2));
-
-            let totalCost = totalAfterTax - discountAmount;
-            $("#doc_total_cost").html(totalCost.toFixed(2));
-          }
-        });
-
-        $(document).on("input", ".input", function () {
-          var index = $(this).closest("tr").index();
-          var quantity = $("#quantity_" + index).val();
-          var price_of_unit = $("#price_of_unit_" + index).val();
-
-          if ($(this).attr("id") == "discount_" + index) {
-            $("#discount_p_" + index).val(((100 * $("#discount_" + index).val()) / (quantity * price_of_unit)).toFixed(2));
-          } else {
-            $("#discount_" + index).val((quantity * price_of_unit * ($("#discount_p_" + index).val() / 100)).toFixed(2));
-          }
-
-          calculate_row_prices(index);
-        });
-
-        function allow_submit() {
-          var inputs = $(".input");
-
-          // Loop through each input to check if it's empty
-          inputs.each(function () {
-            if ($(this).val() === "") {
-              $(this).val("0"); // Set empty inputs to 0
-            }
-          });
-        }
-
-        function removeRow(index, submit) {
-          $("#row" + index).remove();
-
-          // Update row indices
-          $("#doc_table tbody tr").each(function (i) {
-            $(this).attr("id", "row" + i);
-            $(this)
-              .find("td:first")
-              .text(i + 1);
-            $(this)
-              .find(".remove_row")
-              .attr("onclick", "removeRow(" + i + ")");
-            $(this)
-              .find("#discount_" + i)
-              .attr("id", "discount_" + i);
-            $(this)
-              .find("#price_of_unit_" + i)
-              .attr("id", "price_of_unit_" + i);
-            $(this)
-              .find("#total_price_of_line_" + i)
-              .attr("id", "total_price_of_line_" + i);
-          });
-
-          calculate_total_cost();
-          if (!submit) {
-            $("#num_of_rows").val($("#num_of_rows").val() - 1);
-          }
-          allow_submit();
-        }
-
-        $(document).on("click", ".remove_row", function () {
-          removeRow($(this).closest("tr").index(), false);
-        });
-
-        
-        $(document).on("change", ".doc_line_select", function () {
-          var index = $(this).closest("tr").index();
-          if ($(".doc_line_select").eq(index).val() != "-") {
-            $(".remove_row").eq(index).prop("disabled", false);
-
-            $("#quantity_" + index).css("visibility", "visible");
-            $("#tax_" + index).css("visibility", "visible");
-            $("#discount_" + index).css("visibility", "visible");
-            $("#discount_p_" + index).css("visibility", "visible");
-            $("#price_of_unit_" + index).css("visibility", "visible");
-
-            put_data_on_row(index, items);
-
-            if ($(this).closest("tr").is(":last-child")) {
-              addNewRow(index + 1, items);
-            }
-          } else {
-            removeRow(index, false);
-          }
-        });
-
-        function get_item_index_from_id(index) {
-          for (let i = 0; i < items.length; i++) {
-            if (items[i]._id == $(".doc_line_select").eq(index).val()) {
-              return i;
-            }
-          }
-        }
-
-        $(document).on("change", ".doc_line_select", function () {
-          var index = $(this).closest("tr").index();
-          if ($(".doc_line_select").eq(index).val() != "-") {
-            $(".remove_row").eq(index).prop("disabled", false);
-
-            $("#quantity_" + index).css("visibility", "visible");
-            $("#tax_" + index).css("visibility", "visible");
-            $("#discount_" + index).css("visibility", "visible");
-            $("#discount_p_" + index).css("visibility", "visible");
-            $("#price_of_unit_" + index).css("visibility", "visible");
-
-            put_data_on_row(index, items);
-
-            if ($(this).closest("tr").is(":last-child")) {
-              addNewRow(index + 1);
-            }
-          } else {
-            removeRow(index, false);
-          }
-        });
-
-        $("#btn3").click(function () {
-          event.preventDefault();
-          $("#action").val("save");
-          $("#view_form").submit();
-        });
-      }
-      else if (queryParams.type == "nodes") {
+      if (queryParams.type == "nodes") {
         $("#Type").css('text-align', 'center');
         $("#Type").text($("#Type").text().replace("Type : ", ""));
         if($("#Type").text()=="Hiring"){
@@ -683,7 +489,7 @@
         $("#btn2").click(function () {
           event.preventDefault();
           $("#action").val(btn_1_var);
-          //$("#view_form").submit();
+          $("#view_form").submit();
         });
         $("#btn3").click(function () {
           event.preventDefault();
@@ -692,9 +498,6 @@
         });
       }
       
-      /*$("#btn3").click(function () {
-        if(){}
-      });*/
 
       if (queryParams.type == "series") {
         for( s of secondary_data.selected_series){
@@ -990,15 +793,6 @@
         return 1;
       }
 
-      $('.series_transforms_check').on('change', function(){
-        // Get all checked checkboxes and map their values (IDs) into an array
-        const checkedIds = $('.series_transforms_check:checked').map(function () {
-          return $(this).attr('id').replace(/'/g, "");
-        }).get(); // Convert the jQuery object to an array
-
-        // Update the input field with a comma-separated list of IDs
-        $('#series_transforms_list').val(checkedIds.join(','));
-      });
 
       $("#turn_to_btn").click(function () {
         secondary_data_f();
@@ -1018,9 +812,22 @@
         new_event($(this).attr("id"), secondary_data.nodes, date, user_id);
       })
 
-      function secondary_data_f(){
-        alert('secondary_data');
-      }
+      $(".series_transforms_check").click(function(event){
+            event.preventDefault(); // Prevent the default action
+            this.classList.toggle('active'); // Toggle the `active` class
+            $("#series_transforms_list").val("");
+            for(s of $(".series_transforms_check:not(.active)")){
+              if($("#series_transforms_list").val() == ""){
+                $("#series_transforms_list").val($(s).attr('id')+';')
+              }
+              else{
+                $("#series_transforms_list").val(
+                  $("#series_transforms_list").val()+
+                  ';'+$(s).attr('id')
+                )
+              }
+            }
+        })
     });
   </script>
 </html>

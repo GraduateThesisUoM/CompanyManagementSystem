@@ -1,7 +1,7 @@
 .textarea_container {
     width: calc(100% - 30px); /* Make the textarea take the full width of its parent */
     height: 100px;
-    background-color: rgb(85, 85, 85);
+    background-color: rgba(0, 0, 0, 0.5);
     padding: 15px;
     border-radius: 20px;
     margin-top: 15px;
@@ -9,14 +9,15 @@
 
 
 .textarea_container textarea {
-all:unset ;
-padding: 10px;
-width: calc(100% - 20px); /* Make the textarea take the full width of its parent */
-height: 80px;
-resize: none; /* Make the textarea not resizable */
-background-color: transparent;
-overflow-x: hidden;
-
+  all:unset ;
+  padding: 10px;
+  width: calc(100% - 20px); /* Make the textarea take the full width of its parent */
+  height: 80px;
+  resize: none; /* Make the textarea not resizable */
+  background-color: transparent;
+  overflow-x: hidden;
+  font-size: 1.5em;
+    color: rgb(200, 198, 198);
 }
 
 .textarea_container textarea::-webkit-scrollbar-track

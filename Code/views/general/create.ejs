@@ -12,6 +12,11 @@
         <link rel="stylesheet" href="fonts_css.css">
         <link rel="stylesheet" href="Switch_css.css">
         <link rel="stylesheet" href="Lock_css.css">
+        <link rel="stylesheet" href="buttons_css.css">
+        <link rel="stylesheet" href="textarea_css.css">
+        <link rel="stylesheet" href="my_select_css.css">
+        
+
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -24,43 +29,69 @@
     <body>
         <div class="has_sidebar ">
             <%- include('../partials/sidebar'); %>
-            <div class="glass_efect_2 conatainer asap-condensed-regular">
+            <div>
                 <h1 class="asap-condensed-extralight">Create</h1>
-                <form action="/create" method="POST" id="create_form">
+
+                <form action="/create" method="POST" id="create_form" class="glass_efect_2 conatainer asap-condensed-regular">
                     <input type="text" id="create_type"  name="create_type" style="display: none;">
                     <div id = 'Warehouse_div' class="create_div">
-                        <label for="warehouse_title">Title : </label>
-                        <input type="text" id="warehouse_title" name="warehouse_title" class="required warehouse">
-                        <br>
-                        <label for="warehouse_address">Address : </label>
-                        <input type="text" id="warehouse_address" name="warehouse_address" class="required warehouse">
+                        <label class="my_label_1" for="warehouse_title">Title : </label>
+                        <input class="input_type_1" type="text" id="warehouse_title" name="warehouse_title" class="required warehouse">
+                        <label class="my_label_1" for="warehouse_address">Address : </label>
+                        <input class="input_type_1" type="text" id="warehouse_address" name="warehouse_address" class="required warehouse">
                     </div>
                     <div id = 'items_div' class="create_div">
-                        <label for="items_title">Title : </label>
-                        <input type="text" id="items_title" name="items_title" class="required items">
-                        <br>
-                        <label for="items_description">Description : </label>
-                        <br>
-                        <textarea id = "items_description" name = "items_description" class="required items "></textarea>
-                        <br>
-                        <label for="items_price_r">Price Retail : </label>
-                        <input type="number" id="items_price_r" name="items_price_r"  class="required items price retale">
-                        <br>
-                        <div>
-                            Discount for Retail : <input type="number" id="items_price_r_disc" name="items_price_r_disc" min="0" value="0" class="required items disc retale" > €<br>
-                            Discount for Retail : <input type="number" id="items_price_r_disc_p" name="items_price_r_disc_p" min="0" value="0" max = "100" class="required items percent retale"> %
-                        </div>                        
-                        <label for="items_tax_r">Tax for Retail : </label>
-                        <input type="number" id="items_tax_r" name="items_tax_r" min="0" value="0" max = "100" class="required items">
-                        <br>
-                        <label for="items_price_w">Price Wholesale : </label>
-                        <input type="number" id="items_price_w" name="items_price_w" class="required items price wholesale">
-                        <div>
-                            Discount for Wholesale : <input type="number" id="items_price_w_disc" name="items_price_w_disc" min="0" value="0" class="required items disc wholesale"> €<br>
-                            Discount for Wholesale : <input type="number" id="items_price_w_disc_p" name="items_price_w_disc_p" min="0" value="0" max = "100" class="required items percent wholesale"> %
-                        </div>  
-                        <label for="items_tax_w">Tax for Wholesale : </label>
-                        <input type="number" id="items_tax_w" name="items_tax_w" min="0" value="0" max = "100" class="required items">
+                        <label class="my_label_1" for="items_title">Title : </label>
+                        <input class="input_type_1" type="text" id="items_title" name="items_title" class="required items">
+                        <label class="my_label_1" for="items_description">Description : </label>
+                        <div class="textarea_container">
+                            <textarea id = "items_description" name = "items_description" class="required items "></textarea>
+                        </div>
+
+                        <div style="display: flex;flex-direction: column;margin-top: 20px;">
+                            <label style="width: 100%;"  class="my_label_1">Unit Of Measure : </label>
+                        <select style="width: 50%; padding: 10px;border-radius: 10px; font-size: 1.53em;" class="my_select">
+                            <option value="pcs">Pcs</option>
+                            <option value="m">m</option>
+                            <option value="cm">cm</option>
+                            <option value="box">Box</option>
+                            <option value="l">L</option>
+                            <option value="ml">ml</option>
+                            <option value="kg">Kg</option>
+                            <option value="grms">Grms</option>
+                        </select>
+                        </div>
+
+                        
+
+
+                        <div style="display: grid;grid-template-columns: 5% 45% 45%;margin-top: 20px; gap:2.5%; margin-bottom:30px">
+                            <label class="my_label_1" style="visibility: hidden;">- </label>
+                            <label class="my_label_1">Retail : </label>
+                            <label class="my_label_1">Wholesale : </label>
+
+                            <label class="my_label_1 center_1">Price € : </label>
+                            <input type="number" id="items_price_r" name="items_price_r" value="0"  class="required items price retale input_type_1">
+                            <input type="number" id="items_price_w" name="items_price_w" value="0" class="required items price wholesale input_type_1">
+
+                            <label class="my_label_1 center_1">Disc € : </label>
+                            <input type="number" id="items_price_r_disc" name="items_price_r_disc" min="0" value="0" class="required items disc retale input_type_1" >
+                            <input type="number" id="items_price_w_disc" name="items_price_w_disc" min="0" value="0" class="required items disc wholesale input_type_1">
+
+                            <label class="my_label_1 center_1">Disc % : </label>
+                            <input type="number" id="items_price_r_disc_p" name="items_price_w_disc_p" min="0" value="0" max = "100" class="required items percent wholesale input_type_1">
+                            <input type="number" id="items_price_w_disc_p" name="items_price_w_disc_p" min="0" value="0" max = "100" class="required items percent wholesale input_type_1">
+                        
+                            <label class="my_label_1 center_1">Tax € : </label>
+                            <input type="number" id="items_tax_r" name="items_tax_r" min="0" value="0" max = "100" class="required items input_type_1">
+                            <input type="number" id="items_tax_w" name="items_tax_w" min="0" value="0" max = "100" class="required items input_type_1">
+                        </div>
+
+
+
+
+                                         
+                     
                     </div>
                     <div id ='series_div' class="create_div font_size_1">
                         <div>
@@ -95,9 +126,6 @@
                                 <div class="switch_label" id="effects_warehouse_y_n_label">Does Not Effects Warehouse</div>
                             </div>
                             <input id = 'effects_warehouse_y_n_input' name="effects_warehouse_y_n_input" value="0" style="display: none;">
-
-
-
 
                             <div class="switch_container" id="effects_warehouse_switch">
                                 
@@ -190,7 +218,7 @@
                     <input type="number" id="obj_type" name="obj_type" style="display: none;">
                     <button id="submit_btn" style="display: none;" type="submit">Καταχώρfηση</button>
                 </form>
-                <button id="my_submit_btn" class="submit_btn" type="button">Submit</button>
+                <button id="my_submit_btn" class="submit_btn button_4" style="margin-bottom:50px" type="button">Submit</button>
             </div>
         </div>
     </body>

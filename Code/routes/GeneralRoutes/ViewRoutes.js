@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const url = require('url');
 
 const path_constants = require("../../constantsPaths");
 
@@ -34,7 +35,6 @@ const Accountant = require(path_constants.schemas.two.accountant);
 10 nodes
 13 simple text display
 14 select warehose
-15 input hiden show text for status
 */
 
 
@@ -46,6 +46,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       var company;
       var obj;
       var secondary_data = {};
+      var status = '';
 
       if (req.user.type != "admin") {
         company = req.user.company;
@@ -65,151 +66,24 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         type = req.query.type;
         id = req.query.id;
         if (type && id) {
-          if (type == "docs") {
-            obj = await Document.findOne({ _id: id });
-            var series = await Series.findOne({ _id: obj.series });
-            var series_list = await Series.find({ company: obj.company, status:1, type:req.query.type2 });
-            var series_to = await Series.find({ company: company, status: 1, type: obj.type, _id: { $in: series.transforms_to } });
-            var person = await Person.findOne({ _id: obj.receiver });
-            
-            var history = [];
-            var d = obj;
-            var p;
-
-            while(true){
-              p = await Document.findOne({next: d._id})
-              if(p){
-                d = p;
-              }
-              else{
-                break;
-              }
-            }
-            //history.push(d)
-            var s = await Series.findOne({_id: d.series})
-            let u = await User.findOne({_id: d.sender})
-            history.push({
-              _id:d._id,
-              name: s.acronym+"-"+d.doc_num,
-              registrationDate : generalFunctions.formatDateTime(d.registrationDate),
-              user : u.lastName+" "+u.firstName
-            })
-
-            while(true){
-              if(d.next != '-'){
-                p = await Document.findOne({_id: d.next})
-                if(p){
-                  d=p
-                  //history.push(d)
-                  s = await Series.findOne({_id: d.series})
-                  let u = await User.findOne({_id: d.sender})
-                  history.push({
-                    _id:d._id,
-                    name: s.acronym+"-"+d.doc_num,
-                    registrationDate : generalFunctions.formatDateTime(d.registrationDate),
-                    user : u.lastName+" "+u.firstName
-                  })
-                }
-                else{
-                  break;
-                }
-              }
-              else{
-                break;
-              }              
-            }
-
-            console.log(history)
-
-            series_to = series_to.map(s => ({
-              name: s.name,
-              acronym: s.acronym,
-              _id: s._id
-            }));
-            
-            var transforms_to = []
-            for(s of series.transforms_to){
-              transforms_to.push(await Series.findOne({_id:s}))
-            }
-            transforms_to = transforms_to.map(s => ({
-              _id: s._id,
-              name: s.acronym+"-"+s.title
-            }));
-
-            var person_type = "Customer";
-            if (person.type == 1) {
-              person_type = "Supplier";
-            }
-            var persons = await Person.find({ company: obj.company, status:1, type:req.query.type2 })
-            persons = persons.map(p => ({
-              name: p.lastName+" "+p.firstName,
-              _id: p._id
-            }));
-
-            var items_id_list = [];
-            for (let i = 0; i < Object.keys(obj.invoiceData).length; i++) {
-              items_id_list.push(obj.invoiceData[i].lineItem); // Add the lineItem ID to the list
-            }
-
-            data = {
-              doc_name : series.acronym+"-"+obj.doc_num,
-              doc : obj,
-              registrationDate : generalFunctions.formatDate(obj.registrationDate),
-              series_list : series_list,
-              person_type : person_type,
-              persons: persons,
-              user: req.user,
-              warehouses : await Warehouse.find({ company: company, status: 1 }),
-              items : await Item.find({ company: company, status: 1, type: obj.type }),
-              transforms_to : transforms_to,
-              history : history
-            }
-
-            /*data.data = [
-              series.acronym + "-" + obj.doc_num,
-              generalFunctions.formatDate(obj.registrationDate),
-              person.firstName + " " + person.lastName,
-              obj.generalDiscount,
-              obj.status,
-              obj.retail_wholesale,
-              obj.sealed,
-              warehouse._id,
-              obj.invoiceData,
-              //---
-              await Item.find({ company: company, status: 1, type: obj.type }),
-            ];
-            data.titles = ["Doc", "Reg Date", person_type, "General Discount %", "Status", "Type", "Sealed", "Warehouse", "Data"];
-
-            data.type = [13, 13, 13, 6, 3, 7, 4, 14, 2]; 
-            //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
-
-            secondary_data = {
-              series_to :series_to,
-              warehouses : await Warehouse.find({ company: company, status: 1 }),
-              warehouse : warehouse
-            }*/
-
-          } else if (type == "Warehouse") {
+          if (type == "Warehouse") {
             obj = await Warehouse.findOne({ _id: id });
             var inventory = await generalFunctions.warehose_get_inventory({
               company: company,
               id: obj._id,
             });
-            data.data = [obj.title, obj.location, generalFunctions.formatDate(obj.registrationDate), obj.status, inventory];
-            data.titles = ["Title", "location", "Reg Date", "Status", "Data"];
-            data.type = [1, 1, 0, 15, 8];
+            data.data = [obj.title, obj.location, inventory];
+            data.titles = ["Title", "location", "Data"];
+            data.type = [1, 1, 0, 8];
             //1=normal-text,0=text-readonly
             //8 table
           } else if (type == "series") {
             obj = await Series.findOne({ _id: id });
             var series = await Series.find({company:company, status:1,type:obj.type,_id: { $ne: obj._id } /* Exclude the document with the same _id as `obj`*/})
-            let type = 'Buy'
-            if(obj.type == 2){
-              type = "Shell"
-            }
-            data.data = [obj.title, obj.acronym, type/*obj.type*/, obj.count, obj.sealed, obj.effects_warehouse, obj.credit, obj.debit, generalFunctions.formatDate(obj.registrationDate), obj.status,obj.transforms,series];
-            data.titles = ["Title", "Acronym", "Type", "Count", "Sealed", "Effects Warehouse", "Credit", "Debit", "Reg Date", "Status","Transforms","Series"];
-            data.type = [1, 1, 13, 1, 5, 5, 5, 5, 13, 15,5,12];
+
+            data.data = [obj.title, obj.acronym, obj.count, obj.sealed, obj.effects_warehouse, obj.credit, obj.debit,obj.transforms,series];
+            data.titles = ["Title", "Acronym", "Count", "Sealed", "Effects Warehouse", "Credit", "Debit", "Transforms","Series"];
+            data.type = [1, 1, 13, 1, 5, 5, 5, 5,12];
 
             secondary_data = {
               selected_series :obj.transforms_to
@@ -230,26 +104,12 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             //1=normal-text,0=text-readonly
           } else if (type == "items") {
             obj = await Item.findOne({ _id: id });
-            data.data = [
-              obj.title,
-              obj.description,
-              generalFunctions.formatDate(obj.registrationDate),
-              obj.unit_of_measurement,
-              obj.price_r,
-              obj.price_w,
-              obj.discount_r,
-              obj.discount_w,
-              obj.tax_r,
-              obj.tax_w,
-              obj.status,
-              await generalFunctions.item_get_inventory({
-                company: company,
-                id: obj._id,
-              }),
-            ];
-            data.titles = ["Title", "Description", "Reg Date", "Unit of Peasurement", "Price Retail", "Price Wholesale", "Discount Retail", "Discount Wholesale", "Tax Retail", "Tax Wholesale", "Status", "Inventory"];
-            data.type = [1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 15, 0];
-            
+            data.item = obj
+            data.inventory = await generalFunctions.item_get_inventory({
+              company: company,
+              id: obj._id,
+            })
+
           } else if (type == "users") {
             obj = await User.findOne({ _id: id });
             data.data = [obj.firstName, obj.lastName, obj.email, obj.status, generalFunctions.formatDate(obj.registrationDate)];
@@ -389,10 +249,14 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       }
 
       data.secondary_data = secondary_data;
-
+      data.registrationDate = generalFunctions.formatDateTime(obj.registrationDate);
+      data.status = obj.status;
       if (type && id) {
         if (type == "docs") {
           res.render(path_constants.pages.view.view('doc'), data);
+        }
+        else if (type == "items") {
+          res.render(path_constants.pages.view.view('items'), data);
         }
         else{
           res.render(path_constants.pages.view.view(), data);
@@ -413,45 +277,34 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 router.post("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     var data = {};
-    const isParamsEmpty = Object.keys(req.query).length === 0;
     console.log("ViewRoutes");
-    console.log(req.body.action);
-    if (isParamsEmpty) {
+    var obj_type = req.body.obj_type;
+    var obj_id = req.body.obj_id;
+    var type2 = req.body.obj_type2;
+    var obj_data = req.body;
+
+    console.log(obj_type)
+    console.log(obj_id)
+    console.log(type2)
+
+    console.log(obj_data)
+
+
+ 
+    if (req.body.action == "save") {
+      await generalFunctions.update({ _id: req.body.obj_id }, obj_type, obj_data);
+    }
+    
+    /*if (isParamsEmpty) {
       console.log("ERROR ViewRoutes 2");
       return res.redirect("/error?origin_page=/&error=" + encodeURIComponent("Query parameters are missing"));
     }
-    if (req.query.type && req.query.id) {
+    /*if (req.query.type && req.query.id) {
       var obj_data = req.body;
-      var obj_type = req.query.type;
+      var obj_type = req.body.obj_type2;
 
       if (req.body.action == "save") {
-        if (req.query.type == "docs") {
-          obj_type = "documents";
-          const lines_of_doc = {};
-
-          for (let i = 0; i < req.body.num_of_rows; i++) {
-            const quantity = parseInt(req.body[`quantity_${i}`], 10);
-            const tax = parseFloat(req.body[`tax_${i}`]).toFixed(2);
-            const lineItem = req.body[`doc_line_item_${i}`]; // Assuming lineItem should remain a string or ID
-            const discount = parseFloat(req.body[`discount_${i}`]).toFixed(2);
-            const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
-            lines_of_doc[i] = {
-              quantity,
-              tax,
-              lineItem,
-              discount,
-              price_of_unit,
-            };
-          }
-
-          obj_data = {
-            generalDiscount: 50,
-            warehouse: req.body.select_warehose,
-            invoiceData: lines_of_doc,
-          };
-        }
-
-        await generalFunctions.update({ _id: req.query.id }, obj_type, obj_data);
+        await generalFunctions.update({ _id: req.body.obj_id }, obj_type, obj_data);
       } else if (req.body.action == "time_table" || req.body.action == "time_table_delete") {
         var company = await Company.findOne({ _id: req.query.id });
         let date_start_dateObject = new Date(req.body.day_data_input_date);
@@ -595,10 +448,18 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       }
 
       return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
-    } else {
+    }*//* else {
       console.log("ERROR ViewRoutes 1");
       return res.redirect("/error?origin_page=/&error=" + encodeURIComponent("Type or ID is missing"));
+    }*/
+
+    if(type2){
+      return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);
     }
+    else{
+      return res.redirect(`/view?type=${obj_type}&id=${obj_id}`);
+    }
+
   } catch (e) {
     console.error(e);
     return res.redirect("/error?origin_page=/&error=" + encodeURIComponent(e.message));

@@ -1,9 +1,7 @@
 #nodes_conainer{
     margin-top: 20px;
 }
-.my_label_1{
-    font-size: 1.3em;
-}
+
 #nodes_conainer >div> .message_header{
     display: flex;
     justify-content: flex-start; /* Align children to the right */

@@ -176,6 +176,9 @@ const pages = {
         if (input === 'doc') {
           return views_folders.general + "view_doc.ejs";
         }
+        else if (input === 'items') {
+          return views_folders.general + "view_item.ejs";
+        }
       }
       // Fallback to default view
       return views_folders.general + "view.ejs";

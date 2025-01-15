@@ -686,14 +686,15 @@ async function update(id, schema , data){
       obj.location = data.input1
     }
     else if (schema == 'items') {
-      obj.title = data.input0
-      obj.description= data.input1
-      obj.price_r = data.input4
-      obj.price_w = data.input5
-      obj.discount_r = data.input6
-      obj.discount_w = data.input7
-      obj.tax_r = data.input8
-      obj.tax_w  = data.input9
+      obj.title = data.items_title
+      obj.description= data.items_description,
+      obj.status= data.status,
+      obj.price_r = data.items_price_r
+      obj.price_w = data.items_price_w
+      obj.discount_r = data.items_price_r_disc
+      obj.discount_w = data.items_price_w_disc
+      obj.tax_r = data.items_tax_r
+      obj.tax_w  = data.items_tax_w
     }
     else if (schema == 'persons') {
       obj.firstName = data.input0
