@@ -131,6 +131,9 @@ app.use(path_constants.pages.database.url, require(path_constants.pages.database
 //transfrom doc
 app.use(path_constants.pages.transfrom_doc.url, require(path_constants.pages.transfrom_doc.file));
 
+//edit doc
+app.use(path_constants.pages.edit_doc.url, require(path_constants.pages.edit_doc.file));
+
 const http = require('http').createServer(app);
 http.listen(process.env.PORT, () => {
   console.log('Server started on port '+ process.env.PORT);

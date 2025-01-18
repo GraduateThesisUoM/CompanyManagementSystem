@@ -176,6 +176,9 @@ const pages = {
         if (input === 'doc') {
           return views_folders.general + "view_doc.ejs";
         }
+        if (input === 'doc-locked') {
+          return views_folders.general + "view_doc_locked.ejs";
+        }
         else if (input === 'items') {
           return views_folders.general + "view_item.ejs";
         }
@@ -207,6 +210,11 @@ const pages = {
   transfrom_doc :{
     url : "/transfrom-doc",
     file: routes.user+"TransformDocRoutes",
+    view : ""
+  },
+  edit_doc :{
+    url : "/edit-doc",
+    file: routes.user+"EditDocRoutes",
     view : ""
   },
   my_accountant_requests :{

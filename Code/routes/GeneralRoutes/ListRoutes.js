@@ -64,6 +64,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         list_items = await Document.find({
           company: company,
           type: req.query.type,
+          edited : 0
         });
         var list_series = await Series.find({
           company: company,
@@ -233,24 +234,24 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         "Title",
         "Status"
       ]
-    }else if(req.query.searchfor == "requests"){
-      var list_items = await Node.find({type:3,sender_id : req.user._id});
-      
-      list_items = list_items.map((report) => ({
-        data: [
-          report._id,
-          generalFunctions.formatDate(report.registrationDate),
-          generalFunctions.get_type2(report.type2),
-          generalFunctions.get_status(report.status)
-        ],
-      }));
-      column_titles = [
-        "ID",
-        "Date",
-        "Type",
-        "Status"
-      ]
-    }
+      }else if(req.query.searchfor == "requests"){
+        var list_items = await Node.find({type:3,sender_id : req.user._id});
+        
+        list_items = list_items.map((report) => ({
+          data: [
+            report._id,
+            generalFunctions.formatDate(report.registrationDate),
+            generalFunctions.get_type2(report.type2),
+            generalFunctions.get_status(report.status)
+          ],
+        }));
+        column_titles = [
+          "ID",
+          "Date",
+          "Type",
+          "Status"
+        ]
+      }
 
       var data = {
         user: req.user,

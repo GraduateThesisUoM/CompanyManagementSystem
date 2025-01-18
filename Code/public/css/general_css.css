@@ -282,7 +282,7 @@ button{
     text-shadow: 0 0 0.5px rgba(0, 0, 0, 0.4);
 }
 
-.glass_efect_1{
+.glass_effect_1{
 /* From https://css.glass */
 background: rgba(121, 121, 121, 0.43);
 border-radius: 16px;
@@ -292,7 +292,7 @@ backdrop-filter: blur(3.9px);
 border: 1px solid rgba(121, 121, 121, 0.3);
 }
 
-.glass_efect_2{
+.glass_effect_2{
     /* From https://css.glass */
     background: rgba(255, 255, 255, 0.50);
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);

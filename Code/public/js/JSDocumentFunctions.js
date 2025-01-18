@@ -6,6 +6,7 @@ function populateSelect(selectElement,items) {
 }
 
 function get_price(index,items){
+    console.log("ffff");
     console.log(index);
     console.log(items);
     console.log(items[index]);
@@ -67,18 +68,20 @@ function calculate_total_cost() {
 
 function calculate_row_prices(index){
     var quantity = $('#quantity_'+index).val();
-    var price_of_unit = $('#price_of_unit_'+index).val()
-    var tax = $('#tax_'+index).val()
+    var price_of_unit = parseFloat($('#price_of_unit_'+index).val()).toFixed(2)
+    var tax =  parseFloat($('#tax_'+index).val()).toFixed(2)
     var discount = parseFloat($('#discount_'+index).val()).toFixed(2);
 
-    var total = (quantity*price_of_unit).toFixed(2);
-    $('#total_price_of_line_'+index).html(total);
+    var total = (quantity*parseFloat(price_of_unit).toFixed(2));
+    $('#total_price_of_line_'+index).html(parseFloat(total).toFixed(2));
 
-    var total = total - discount;
-    $('#total_price_of_line_after_disc_'+index).html(total);
+    var total = parseFloat(total) -  parseFloat(discount);
+    $('#total_price_of_line_after_disc_'+index).html(parseFloat(total).toFixed(2));
 
-    var total = total + ( total*(tax/100) );
-    $('#final_price_of_line_'+index).html(total);
+    //var total = total + ( total*(tax/100) );
+    var total = parseFloat(total) +  parseFloat(total*(tax/100));
+    $('#final_price_of_line_'+index).html(parseFloat(total).toFixed(2));
+    //$('#final_price_of_line_'+index).html('ff');
 
     calculate_total_cost();
 }
@@ -143,7 +146,7 @@ function retail_wholesale(items) {
 
 function addNewRow(index,items) {
     $('#num_of_rows').val(index);
-    var newRow = `<tr id='row${index}'class='glass_efect_2'>
+    var newRow = `<tr id='row${index}'class='glass_effect_2'>
                         <td>${index + 1}</td>
                         <td class='item_column'>
                             <select id="doc_line_item_${index}" name="doc_line_item_${index}" class="doc_line_select"></select>

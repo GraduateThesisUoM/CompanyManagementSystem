@@ -27,7 +27,7 @@
         
         <%if(pending_reports.length>0){%>
             <table>
-                <thead class="glass_efect_1">
+                <thead class="glass_effect_1">
                     <tr>
                         <th>A/A</th>
                         <th>Reason</th>
@@ -38,7 +38,7 @@
                 </thead>
                 <tbody>
                     <% pending_reports.forEach(function(row, index) { %>
-                        <tr class="glass_efect_2" style="background-color: lime" id="<%=row.id%>">
+                        <tr class="glass_effect_2" style="background-color: lime" id="<%=row.id%>">
                            <td><%=index+1%></td>
                           <td><%=row.reason%></td>
                           <td><%=row.registrationDate%></td>
@@ -47,7 +47,7 @@
                         </tr>
                       <% }); %>
                       <% viewed_reports.forEach(function(row, index) { %>
-                        <tr class="glass_efect_2"id="<%=row.id%>">
+                        <tr class="glass_effect_2"id="<%=row.id%>">
                            <td><%=index+1 + pending_reports.length%></td>
                           <td><%=row.reason%></td>
                           <td><%=row.registrationDate%></td>
@@ -90,7 +90,7 @@
 </div>
     <script>
         $(function() {
-            $(".glass_efect_2").click(function(){
+            $(".glass_effect_2").click(function(){
                 var id = $(this).attr('id');
                 window.location = "/view?type=nodes&id="+id;
             });

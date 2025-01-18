@@ -121,8 +121,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               }              
             }
 
-            console.log(history)
-
             series_to = series_to.map(s => ({
               name: s.name,
               acronym: s.acronym,
@@ -166,31 +164,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               transforms_to : transforms_to,
               history : history
             }
-            console.log(data)
-
-            /*data.data = [
-              series.acronym + "-" + obj.doc_num,
-              generalFunctions.formatDate(obj.registrationDate),
-              person.firstName + " " + person.lastName,
-              obj.generalDiscount,
-              obj.status,
-              obj.retail_wholesale,
-              obj.sealed,
-              warehouse._id,
-              obj.invoiceData,
-              //---
-              await Item.find({ company: company, status: 1, type: obj.type }),
-            ];
-            data.titles = ["Doc", "Reg Date", person_type, "General Discount %", "Status", "Type", "Sealed", "Warehouse", "Data"];
-
-            data.type = [13, 13, 13, 6, 3, 7, 4, 14, 2]; 
-            //data.items = await Item.find({companyID : company,_id: { $in: items_id_list }});
-
-            secondary_data = {
-              series_to :series_to,
-              warehouses : await Warehouse.find({ company: company, status: 1 }),
-              warehouse : warehouse
-            }*/
 
           } else if (type == "Warehouse") {
             obj = await Warehouse.findOne({ _id: id });
@@ -380,8 +353,13 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       if (type && id) {
         if (type == "docs") {
           data.registrationDate = generalFunctions.formatDate(obj.registrationDate);
-
-          res.render(path_constants.pages.view.view('doc'), data);
+          if(obj.edited == 1 || obj.next !== '-'){
+            res.render(path_constants.pages.view.view('doc-locked'), data);
+          }
+          else{
+            res.render(path_constants.pages.view.view('doc'), data);
+          }
+          
         }
         else if (type == "items") {
           res.render(path_constants.pages.view.view('items'), data);
@@ -411,11 +389,11 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     var type2 = req.body.obj_type2;
     var obj_data = req.body;
 
-    console.log(obj_type)
+    /*console.log(obj_type)
     console.log(obj_id)
     console.log(type2)
 
-    console.log(obj_data)
+    console.log(obj_data)*/
 
 
  
@@ -423,163 +401,6 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       await generalFunctions.update({ _id: req.body.obj_id }, obj_type, obj_data);
     }
     
-    /*if (isParamsEmpty) {
-      console.log("ERROR ViewRoutes 2");
-      return res.redirect("/error?origin_page=/&error=" + encodeURIComponent("Query parameters are missing"));
-    }
-    /*if (req.query.type && req.query.id) {
-      var obj_data = req.body;
-      var obj_type = req.body.obj_type2;
-
-      if (req.body.action == "save") {
-        await generalFunctions.update({ _id: req.body.obj_id }, obj_type, obj_data);
-      } else if (req.body.action == "time_table" || req.body.action == "time_table_delete") {
-        var company = await Company.findOne({ _id: req.query.id });
-        let date_start_dateObject = new Date(req.body.day_data_input_date);
-        let endDate = new Date(req.body.day_data_input_date_to);
-
-        var node = false;
-        if (req.body.day_data_input_node_id) {
-          node = await Node.findOne({ _id: req.body.day_data_input_node_id });
-          if (req.body.action == "time_table_delete") {
-            node.status = 5; //canceled
-            await node.save();
-          }
-          else {
-            time_table_new_node = await generalFunctions.node_reply({
-              user: req.user,
-              target_node: node,
-              reply: 6, //response
-              text: req.body.time_table_notes,
-              data: {
-                date: date_start_dateObject,
-
-                hour_start: req.body.time_table_hours_start,
-                minutes_start: req.body.time_table_minutes_start,
-
-                hour_end: parseInt(req.body.time_table_hours_end),
-                minutes_end: req.body.time_table_minutes_end,
-              },
-            });
-          }
-        }
-        else{
-          var users = req.body.day_data_input_user_id;
-          users = users.split(';');
-          console.log("users "+users)
-          for( u of users){
-            let currentDate = new Date(date_start_dateObject);
-            while (currentDate <= endDate) {
-              let d = new Date(currentDate);
-              const dd = d.toISOString().replace('Z', '+00:00')
-
-              var data = {
-                company : company._id,
-                receiver_id : u,
-                type : 6,
-                type2: 6,
-                next : '-',
-                status : 2,
-                data : {
-                  date : dd,
-                  hour_start: req.body.time_table_hours_start,
-                  minutes_start: req.body.time_table_minutes_start,
-  
-                  hour_end: parseInt(req.body.time_table_hours_end),
-                  minutes_end: req.body.time_table_minutes_end  
-                }
-              };
-              var node = await Node.findOne(data);
-              console.log(node)
-              if(node){
-                data = {
-                  user: req.user,
-                  target_node: node,
-                  reply: 6, //response
-                  text: req.body.time_table_notes,
-                  data: {
-                    date: date_start_dateObject,
-    
-                    hour_start: req.body.time_table_hours_start,
-                    minutes_start: req.body.time_table_minutes_start,
-    
-                    hour_end: parseInt(req.body.time_table_hours_end),
-                    minutes_end: req.body.time_table_minutes_end,
-                  }
-                }
-                await generalFunctions.node_reply(data);
-              }
-              else{
-                console.log("Node Foud");
-                console.log(node)
-                data.sender_id = req.user._id,
-                await generalFunctions.create_node(data);
-              }
-
-              // Increment the current date by one day
-              currentDate.setDate(currentDate.getDate() + 1);
-            }
-          }
-
-        }
-
-        if (req.body.calendar_view_selection) {
-          return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}&timetable=${req.body.calendar_view_selection}`);
-        }
-        return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
-      } else if (req.query.type == "nodes" || req.query.type == "requests") {
-        const node = await Node.findOne({ _id: req.query.id });
-        let action = 7; //rejected
-        if (req.body.action == "executed") {
-          action = 2;
-        }
-        else if (req.body.action == "rejected") {
-          action = 4;
-        }
-
-        const new_node = await generalFunctions.node_reply({
-          user: req.user,
-          target_node: node,
-          text: req.body.input4,
-          reply: action
-        });
-
-        if(new_node.type == 1 && new_node.type2 == 3 ){
-          return res.redirect(`/list?searchfor=clients`);
-        }
-        return res.redirect(`/view?type=${req.query.type}&id=${new_node._id}`);
-      
-      }
-      else if(req.body.action == "turn_to"){
-        console.log("turn_to "+req.query.id);
-        const origin_doc = await Document.findOne({ _id: req.query.id });
-        const new_doc = await generalFunctions.create_doc({
-          company: origin_doc.company,
-          sender: origin_doc.sender,
-          receiver: origin_doc.receiver,
-          type: origin_doc.type,
-          generalDiscount: origin_doc.generalDiscount,
-          series: origin_doc.series,
-          doc_num: origin_doc.doc_num,
-          retail_wholesale: origin_doc.retail_wholesale,
-          warehouse: origin_doc.warehouse,
-          sealed: origin_doc.sealed,
-          invoiceData: origin_doc.invoiceData,
-        });
-
-        origin_doc.next = new_doc._id;
-        await origin_doc.save();
-        
-      }
-      else {
-        await generalFunctions.delete_deactivate({ _id: req.query.id }, req.query.type, req.body.action);
-      }
-
-      return res.redirect(`/view?type=${req.query.type}&id=${req.query.id}`);
-    }*//* else {
-      console.log("ERROR ViewRoutes 1");
-      return res.redirect("/error?origin_page=/&error=" + encodeURIComponent("Type or ID is missing"));
-    }*/
 
     if(type2){
       return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);

@@ -80,6 +80,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
+    console.log('CreateDocRoutes')
     const lines_of_doc = {};
     for (let i = 0; i < req.body.num_of_rows; i++) {
       const quantity = parseInt(req.body[`quantity_${i}`], 10);
@@ -103,7 +104,7 @@ router.post("/", async (req, res) => {
 
     var doc = await generalFunctions.create_doc(data);
 
-    res.redirect("/view?type=docs&id="+doc._id);
+    res.redirect("/view?type=docs&id="+doc._id+'&type2='+req.body.doc_type);
   } catch (e) {
     console.error(e);
     res.redirect(

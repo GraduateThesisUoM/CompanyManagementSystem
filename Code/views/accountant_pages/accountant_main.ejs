@@ -35,7 +35,7 @@
           <% if(pending_nodes_list.length > 0 || viewed_nodes_list.length > 0){%>
             <div class="table_container">
               <table>
-                <thead class="glass_efect_1">
+                <thead class="glass_effect_1">
                   <tr>
                     <th class="">Type</th>
                     <th class="">Title</th>
@@ -46,7 +46,7 @@
                 </thead>
                 <tbody>
                   <% pending_nodes_list.forEach(function(row, index) { %>
-                      <tr  class="glass_efect_2" style="background-color: lime" id="<%=row.id%>">
+                      <tr  class="glass_effect_2" style="background-color: lime" id="<%=row.id%>">
                       <th><%=row.type%></th>
                       <th><%=row.title%></th>
                       <th><%=row.reg_date%></th>
@@ -55,7 +55,7 @@
                     </tr>
                   <% }); %>
                   <% viewed_nodes_list.forEach(function(row, index) { %>
-                    <tr class="glass_efect_2" id="<%=row.id%>">
+                    <tr class="glass_effect_2" id="<%=row.id%>">
                     <th><%=row.type%></th>
                     <th><%=row.title%></th>
                     <th><%=row.reg_date%></th>
@@ -76,7 +76,7 @@
           <% if(executed_nodes_list.length > 0){%>
             <div class="table_container">
               <table>
-                <thead class="glass_efect_1">
+                <thead class="glass_effect_1">
                   <tr>
                     <th class="">Type</th>
                     <th class="">Title</th>
@@ -87,7 +87,7 @@
                 </thead>
                 <tbody>
                   <% executed_nodes_list.forEach(function(row, index) {%>
-                    <tr class="glass_efect_2" id="<%= row.id %>">
+                    <tr class="glass_effect_2" id="<%= row.id %>">
                       <th><%=row.type%></th>
                       <th><%=row.title%></th>
                       <th><%=row.reg_date%></th>
@@ -108,7 +108,7 @@
           <% if(rejected_nodes_list.length > 0){%>
             <div class="table_container">
               <table>
-                <thead class="glass_efect_1">
+                <thead class="glass_effect_1">
                   <tr>
                     <th class="">Type</th>
                     <th class="">Title</th>
@@ -119,7 +119,7 @@
                 </thead>
                 <tbody>
                   <% rejected_nodes_list.forEach(function(row, index) {%>
-                    <tr class="glass_efect_2">
+                    <tr class="glass_effect_2">
                       <th><%=row.type%></th>
                       <th><%=row.title%></th>
                       <th><%=row.reg_date%></th>
@@ -140,7 +140,7 @@
   </body>
   <script>
     $(function() {
-        $(".glass_efect_2").click(function(){
+        $(".glass_effect_2").click(function(){
             window.location = "view?type=nodes&id="+$(this).attr('id');
         });
     });

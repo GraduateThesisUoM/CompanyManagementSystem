@@ -27,9 +27,10 @@
       <%- include('../partials/sidebar'); %>
       <div>
         <h1 id="list_header"><%=doc_name%></h1>
-        <form action="/create-doc" method="POST" id="create_doc_form">
-          
-          <div id="doc_data" class="glass_efect_2">
+        <form action="/edit-doc" method="POST" id="create_doc_form">
+          <input name="doc_id" value="<%=doc._id%>" style="display: none;">
+          <input name="type2" value="<%=doc.type%>" style="display: none;">
+          <div id="doc_data" class="glass_effect_2">
             <div>
               <div>
                 <label for="doc_date">Date : </label>
@@ -140,11 +141,9 @@
           </div>
         </form>
         <div style="display: grid;grid-template-columns: 30% 30% 30%;gap:5%;margin-top: 20px;width:80%;margin-left:10%">
-          <button class="button_2">Dellete</button>
+          <button class="button_2">Delete</button>
           <button id="transforms_btn" class="button_1">Transform</button>
-          <button class="button_3">Save</button>
-          <!--button id="clear">Clear</button>
-          <button id="submit_btn">Register</button-->
+          <button id="save_btn" class="button_3">Save</button>
         </div>
         <div id="transforms_to_div" class="asap-condensed-regular" style="display: none;">
           <div id="transforms_to_div_header">
@@ -163,10 +162,12 @@
         </div>
         <div id = history_container class="my_scrollbar">
           <% for (h of history){%>
-            <div id="<%=h._id%>" class="doc_history_point">
-              <div><%=h.name%></div>
-              <div><%=h.registrationDate%></div>
-              <div><%=h.user%></div>
+            <div class="doc_history_point">
+              <div class="history_container_reg_date"><%=h.registrationDate%></div>
+              <div id="<%=h._id%>" class="doc_history_point_doc_data">
+                <div><%=h.name%></div>
+                <div><%=h.user%></div>
+              </div>
             </div>
           <%}%>
         </div>
@@ -183,30 +184,34 @@
       
 
       var selected_items = JSON.parse(`<%- JSON.stringify(doc.invoiceData) %>`);
-      console.log(selected_items)
       var items = JSON.parse(`<%- JSON.stringify(items) %>`);
       var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
 
-      $("#"+doc._id).addClass('curent_doc');
 
-      for (let d of $(".doc_history_point")) {
-        if ($(d).attr("id") === doc._id) {
-          // Add the desired class for the current document
-          $(d).addClass("glass_efect_2");
+      // Loop through each ".doc_history_point_doc_data" element
+      $(".doc_history_point_doc_data").each(function () {
+        const parentElement = $(this).parent();
+        
+        // Check if the current element's ID matches the target doc._id
+        if ($(this).attr("id") === doc._id) {
+          // Add the desired class to the parent
+          $(this).addClass("glass_effect_2");
+          parentElement.addClass("current_doc");
 
           // Scroll to center the current document
           $("#history_container")[0].scrollTo({
             left:
-              d.offsetLeft -
+              this.offsetLeft -
               $("#history_container").width() / 2 +
-              $(d).outerWidth() / 2,
+              $(this).outerWidth() / 2,
             behavior: "smooth",
           });
         } else {
-          // Add the default class for other documents
-          $(d).addClass("glass_efect_1");
+          // Add the default class to other parents
+          $(this).addClass("glass_effect_1");
         }
-      }
+      });
+
 
 
       $("#doc_series").val(doc.series);
@@ -216,9 +221,10 @@
       addNewRow(0, items);
 
       for (i in selected_items) {
+        console.log(items)
         $(".doc_line_select:eq(" + i + ') option[value="' + selected_items[i].lineItem + '"]').prop("selected", true);
-
-        put_data_on_row(0, items);
+        
+        put_data_on_row(i, items);
         let quantity = selected_items[i].quantity;
         let price_of_unit = selected_items[i].price_of_unit;
         let total = quantity * price_of_unit;
@@ -227,14 +233,14 @@
         let discount = selected_items[i].discount;
         let discount_p = ((discount / total) * 100).toFixed(2);
 
-        $("#quantity_" + i).val(quantity);
-        $("#tax_" + i).val(tax);
-        $("#discount_" + i).val(discount);
-        $("#discount_p_" + i).val(discount_p);
-        $("#price_of_unit_" + i).val(price_of_unit);
-        $("#total_price_of_line_" + i).text(total);
-        $("#total_price_of_line_after_disc_" + i).text(total - discount);
-        $("#final_price_of_line_" + i).text(total - discount + (total - discount) * (tax / 100));
+        //$("#quantity_" + i).val(quantity);
+        //$("#tax_" + i).val(tax);
+        //$("#discount_" + i).val(discount);
+        //$("#discount_p_" + i).val(discount_p);
+        //$("#price_of_unit_" + i).val(price_of_unit);
+        //$("#total_price_of_line_" + i).text(total);
+        //$("#total_price_of_line_after_disc_" + i).text(total - discount);
+        //$("#final_price_of_line_" + i).text(total - discount + (total - discount) * (tax / 100));
 
         $(".remove_row").eq(i).prop("disabled", false);
 
@@ -244,16 +250,9 @@
         $("#discount_p_" + i).css("visibility", "visible");
         $("#price_of_unit_" + i).css("visibility", "visible");
 
-        if ($("#Sealed").is(":checked")) {
-          $(".input").val(quantity).prop("readonly", true);
-          keepOnlySelectedOption("doc_line_item_" + i);
 
-          if (i < Object.keys(selected_items).length - 1) {
-            addNewRow(parseInt(i) + 1, items);
-          }
-        } else {
-          addNewRow(parseInt(i) + 1, items);
-        }
+        addNewRow(parseInt(i) + 1, items);
+        put_data_on_row(i, items);
 
         $(".doc_line_select:eq(" + i + ") option:first-child").remove();
       }
@@ -265,15 +264,7 @@
       );
 
       var totalAfterTax = parseFloat($("#doc_total_after_tax").html()) || 0;
-    
-      /*calculate_total_cost()
-      
-      alert(doc.generalDiscount)
-      alert(totalAfterTax)
-      $("#general_discount_amount").val(doc.generalDiscount)
-      
-      $("#general_discount").val(((doc.generalDiscount / totalAfterTax) * 100).toFixed(2)); */
-      
+          
 
       $(".doc_line_select").change(function () {
         if ($(this).val() != "-") {
@@ -293,21 +284,6 @@
 
       $(document).on("input", ".general_discount", function () {
         discounts(this.id);
-        /*if ($(this).attr("id") === "general_discount_amount") {
-          let discountAmount = parseFloat($(this).val()) || 0;
-          let totalCost = totalAfterTax - discountAmount;
-          $("#doc_total_cost").html(totalCost.toFixed(2));
-
-          let discountPercentage = (discountAmount / totalAfterTax) * 100;
-          $("#general_discount").val(discountPercentage.toFixed(2));
-        } else {
-          let discountPercentage = parseFloat($(this).val()) || 0;
-          let discountAmount = totalAfterTax * (discountPercentage / 100);
-          $("#general_discount_amount").val(discountAmount.toFixed(2));
-
-          let totalCost = totalAfterTax - discountAmount;
-          $("#doc_total_cost").html(totalCost.toFixed(2));
-        }*/
       });
 
       function discounts(id) {
@@ -457,17 +433,14 @@
         $("#transform_doc").submit()
       });
 
-      $('.doc_history_point').click(function(event){
+      $('.doc_history_point_doc_data').click(function(event){
         window.location = '/view?type=docs&id='+$(this).attr('id')+'&type2='+params.get('type2')
       })
 
-      
-
-      /*$("#btn3").click(function () {
-        event.preventDefault();
-        $("#action").val("save");
-        $("#view_form").submit();
-      });*/
+      $('#save_btn').click(function(){
+        $('#create_doc_form').submit();
+      })
+    
     });
   </script>
 </html>

@@ -35,7 +35,7 @@
                         </thead>
                         <tbody>
                             <%for(a of accountants){%>
-                            <tr class="glass_efect_2" id="<%= a.accountant._id %>">
+                            <tr class="glass_effect_2" id="<%= a.accountant._id %>">
                                 <th><%= a.accountant.lastName + ' ' + a.accountant.firstName %></th>
                                 <th><%= a.average_rating %></th>
                             </tr>
@@ -85,7 +85,7 @@
                 }
             });
 
-            $(".glass_efect_2").click(function(){
+            $(".glass_effect_2").click(function(){
                 window.location ="preview-accountant?id="+$(this).attr('id');
             })
         });

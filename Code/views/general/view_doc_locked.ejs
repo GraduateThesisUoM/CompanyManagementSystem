@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doc L</title>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css" />
+    <link rel="stylesheet" href="create_doc_css.css" />
+    <link rel="stylesheet" href="table_css.css" />
+    <link rel="stylesheet" href="buttons_css.css" />
+    <link rel="stylesheet" href="my_scrollbar_css.css" />
+
+    <!--Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+
+    <!--Header-->
+    <%- include('../partials/header'); %>
+  </head>
+
+  <style>
+    .table_cell_div{
+      padding: 10px;
+    }
+  </style>
+
+  <body>
+    <div class="has_sidebar asap-condensed-extralight">
+      <%- include('../partials/sidebar'); %>
+      <div>
+        <h1 id="list_header"><%=doc_name%></h1>
+        <div id="create_doc_form">
+          <input name="doc_id" value="<%=doc._id%>" style="display: none;">
+          <input name="type2" value="<%=doc.type%>" style="display: none;">
+          <div id="doc_data" class="glass_effect_2">
+            <div>
+              <div>
+                <label>Date : </label>
+                <label><%=registrationDate%></label>
+              </div>
+              <div class="customer_div">
+                <label><%=person_type%></label>
+                <label id="person_name"><%=person_type%></label>
+              </div>
+              <div class="warehouse_div">
+                <label>Warehouse</label>
+                <label id="warehouse">Warehouse</label>
+              </div>
+              <div>
+                <label class="wholesale_retail">Type : </label>
+                <label id="wholesale_retail">Type : </label>
+              </div>
+              <div>
+                <label >Series : </label>
+                <label id="doc_series"></label>
+              </div>
+              <div>
+                <label for="general_discount_amount">Discount : </label>
+                <span>
+                  <span style="display: grid; grid-template-columns: 65% 25%">
+                    <label><%=doc.generalDiscount%></label>
+                    <span>€</span>
+                  </span>
+                  <span style="display: grid; grid-template-columns: 65% 25%">
+                    <label id="general_discount_amount_p"></label>                    
+                    <span style="text-indent: 5px"><strong>%</strong></span>
+
+                  </span>
+                </span>
+              </div>
+            </div>
+
+            <div>
+              <div>
+                <label for="doc_total_value">Total Value : </label>
+                <span>
+                  <span id="doc_total_value"></span>
+                  <span >€</span>
+                </span>
+              </div>
+              
+              <div>
+                <span>Total Cost : </span>
+                <span><span id="doc_total_cost"></span><span>€</span></span>
+              </div>
+
+              <div>
+                <span>Total Discounts : </span>
+                <span><span id="doc_total_disc">0.00</span><span>€</span></span>
+              </div>
+              <div>
+                <span>Total after Discounts : </span>
+                <span><span id="doc_total_after_disc">0.00</span><span>€</span></span>
+              </div>
+              <div>
+                <span>Total after Tax : </span>
+                <span><span id="doc_total_after_tax">0.00</span><span>€</span></span>
+              </div>
+            </div>
+
+            <input type="text" id="doc_type" name="doc_type" style="display: none" />
+            <input id="num_of_rows" name="num_of_rows" style="display: none" />
+          </div>
+          <div class="table_container no_scale">
+            <table id="doc_table" class="my_table">
+              <thead>
+                <tr>
+                  <th>A/A</th>
+                  <th>Title</th>
+                  <th>Qty</th>
+                  <th>Tax</th>
+                  <th>Discount</th>
+                  <th>Discount %</th>
+                  <th>U/P</th>
+                  <th>Value</th>
+                  <th>Price After Discount</th>
+                  <th>Final Price</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div style="display: grid;grid-template-columns: 30% 30% 30%;gap:5%;margin-top: 20px;width:80%;margin-left:10%">
+          <button id="delete_btn" class="button_2">Delete</button>
+          <button id="transforms_btn" class="button_1">Transform</button>
+          <button id="save_btn" class="button_3">Save</button>
+          <!--button id="clear">Clear</button>
+          <button id="submit_btn">Register</button-->
+        </div>
+        <div id = history_container class="my_scrollbar">
+          <% for (h of history){%>
+            <div class="doc_history_point">
+              <div class="history_container_reg_date"><%=h.registrationDate%></div>
+              <div id="<%=h._id%>" class="doc_history_point_doc_data">
+                <div><%=h.name%></div>
+                <div><%=h.user%></div>
+              </div>
+            </div>
+          <%}%>
+        </div>
+      </div>
+    </div>
+  </body>
+
+  <script type="text/javascript" src="JSDocumentFunctions.js"></script>
+  <script>
+    $(document).ready(function () {
+      //$("#transforms_to_div").hide();
+      const params = new URLSearchParams(window.location.search);
+      $("#url").val(window.location.pathname + window.location.search)
+      
+      var selected_items = JSON.parse(`<%- JSON.stringify(doc.invoiceData) %>`);
+      var items = JSON.parse(`<%- JSON.stringify(items) %>`);
+      var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
+      var persons = JSON.parse(`<%- JSON.stringify(persons) %>`);
+      var warehouses = JSON.parse(`<%- JSON.stringify(warehouses) %>`);
+      var series_list = JSON.parse(`<%- JSON.stringify(series_list) %>`);
+
+      for(p of persons){
+        if(p._id == doc.receiver){
+          $("#person_name").html(p.name)
+        }
+      }
+
+      for(w of warehouses){
+        if(w._id == doc.warehouse){
+          $("#warehouse").html(w.title)
+        }
+      }
+
+      if(doc.retail_wholesale == 0){
+        $("#wholesale_retail").html("Wholesale")
+      }
+      else{
+        $("#wholesale_retail").html("Retail")
+      }
+
+      for(s of series_list){
+        if(s._id == doc.series){
+          $("#doc_series").html(s.title)
+        }
+      }
+
+      $('.general_discount_amount_p').html('ff')
+
+      // Loop through each ".doc_history_point_doc_data" element
+      $(".doc_history_point_doc_data").each(function () {
+        const parentElement = $(this).parent();
+        
+        // Check if the current element's ID matches the target doc._id
+        if ($(this).attr("id") === doc._id) {
+          // Add the desired class to the parent
+          $(this).addClass("glass_effect_2");
+          parentElement.addClass("curent_doc");
+
+          // Scroll to center the current document
+          $("#history_container")[0].scrollTo({
+            left:
+              this.offsetLeft -
+              $("#history_container").width() / 2 +
+              $(this).outerWidth() / 2,
+            behavior: "smooth",
+          });
+        } else {
+          // Add the default class to other parents
+          $(this).addClass("glass_effect_1");
+        }
+      });
+
+      /*addNewRow(0, items);*/
+
+      var row_data;
+      var item;
+      var total_val = 0.00;
+      var total_cost = 0.00;
+      let v;
+      for (i in selected_items) {
+        row_data = []
+        row_data.push(parseInt(i)+1)
+
+        for( itm of items){
+          if(selected_items[i].lineItem == itm._id){
+            item = itm
+          }
+        }
+
+        row_data.push(item.title)
+
+        row_data.push(selected_items[i].quantity + " "+item.unit_of_measurement);
+
+        row_data.push(selected_items[i].tax + " %");
+
+        row_data.push(selected_items[i].discount + " €");
+        let discountPercentage = (
+          (selected_items[i].discount / (selected_items[i].price_of_unit*selected_items[i].quantity) ) * 
+          100
+        ).toFixed(2); // Keep 2 decimal places
+
+        row_data.push(discountPercentage + " €");
+
+        row_data.push(parseFloat(selected_items[i].price_of_unit).toFixed(2) + " €");
+        total_val = parseFloat(total_val) + parseFloat(selected_items[i].price_of_unit*selected_items[i].quantity)
+        row_data.push(parseFloat(selected_items[i].price_of_unit*selected_items[i].quantity).toFixed(2) + " €");
+
+        let v = parseFloat(
+          ((selected_items[i].price_of_unit)*selected_items[i].quantity)-selected_items[i].discount
+        ).toFixed(2);
+        //row_data.push(((selected_items[i].price_of_unit)*selected_items[i].quantity)-selected_items[i].discount + " €");
+        row_data.push(parseFloat(v).toFixed(2)+" €")
+        v = parseFloat(parseFloat((parseFloat(selected_items[i].tax)/100)*parseFloat(v))+parseFloat(v)).toFixed(2)
+        row_data.push(v +" €")
+
+        total_cost = parseFloat(total_cost) + parseFloat(v)
+
+        
+        addRowToTable(row_data)
+        
+      }
+
+      $("#doc_total_value").text(total_val.toFixed(2));
+      $("#doc_total_cost").text(total_cost.toFixed(2));
+
+      //calculate_total_cost()
+      /*$("#general_discount").val(
+        ((doc.generalDiscount*100)/parseInt($("#doc_total_value").text())).toFixed(2)
+      );*/
+
+      var totalAfterTax = parseFloat($("#doc_total_after_tax").html()) || 0;
+          
+
+      $(".doc_line_select").change(function () {
+        if ($(this).val() != "-") {
+          $(this).find("option:first-child").remove();
+        }
+      });
+
+
+      $("#transforms_btn").css('visibility','hidden')
+
+      $("#save_btn").css('visibility','hidden');
+
+      $("#delete_btn").css('visibility','hidden');
+
+
+      $('.doc_history_point_doc_data').click(function(event){
+        window.location = '/view?type=docs&id='+$(this).attr('id')+'&type2='+params.get('type2')
+      })
+
+      function addRowToTable(data) {
+        // Get a reference to the table's <tbody> element
+        const tableBody = document.querySelector("#doc_table tbody");
+
+        // Create a new row
+        const newRow = document.createElement("tr");
+        newRow.classList.add("glass_effect_2");
+
+        // Create and append cells to the row
+        data.forEach(data => {
+          const cell = document.createElement("td");
+          const cellDiv = document.createElement("div");
+          cellDiv.classList.add('table_cell_div')
+          cellDiv.textContent = data; // Set the cell's data inside the div
+          cell.appendChild(cellDiv); // Append the div to the cell
+          newRow.appendChild(cell);  // Append the cell to the row
+        });
+
+        // Append the row to the table body
+        tableBody.appendChild(newRow);
+      }
+    
+    });
+  </script>
+</html>
