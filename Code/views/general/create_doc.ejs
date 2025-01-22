@@ -90,26 +90,26 @@
                 </span>
               </div>
               <div>
-                <span>Total Cost : </span>
-                <span><span id="doc_total_cost">0.00</span><span>€</span></span>
-              </div>
-
-              <div>
                 <span>Total Discounts : </span>
                 <span><span id="doc_total_disc">0.00</span><span>€</span></span>
               </div>
               <div>
-                <span>Total Price after Discounts : </span>
-                <span><span id="doc_total_after_disc">0.00</span><span>€</span></span>
+                <span>Total Cost : </span>
+                <span><span id="doc_total_cost">0.00</span><span>€</span></span>
               </div>
               <div>
                 <span>Total Price after Tax : </span>
                 <span><span id="doc_total_after_tax">0.00</span><span>€</span></span>
               </div>
+              <!--div>
+                <span>Final Price : </span>
+                <span><span id="doc_total_final">0.00</span><span>€</span></span>
+              </div-->
             </div>
+            
 
             <input type="text" id="doc_type" name="doc_type" style="display: none" />
-            <input id="num_of_rows" name="num_of_rows" style="display: none" />
+            <input id="num_of_rows" name="num_of_rows" value=0 type="number" style="display: none"/>
           </div>
           <div class="table_container no_scale">
             <table id="doc_table" class="my_table">
@@ -143,6 +143,75 @@
   <script type="text/javascript" src="JSDocumentFunctions.js"></script>
   <script>
     const items = JSON.parse(`<%- JSON.stringify(items) %>`);
+    var doc_line_num = 0;
+    var general_dis_deviation = 0.0;
+
+    function allow_submit() {
+        var inputs = $(".input");
+
+        // Loop through each input to check if it's empty
+        inputs.each(function () {
+          if ($(this).val() === "") {
+            $(this).val("0"); // Set empty inputs to 0
+          }
+        });
+
+        if ($("#num_of_rows").val() == 0 || $('select[name="customer_id"]').val() == 0 || $('select[name="doc_series"]').val() == 0) {
+          $("#submit_btn").prop("disabled", true);
+          $(".general_discount").attr("readonly", true);
+          $(".general_discount").val(0);
+          calculate_total_cost();
+        } else {
+          $("#submit_btn").prop("disabled", false);
+          $(".general_discount").attr("readonly", false);
+        }
+      }
+
+    function doc_line_select(index){
+      if($("#doc_line_item_"+index).hasClass('selected')){
+        if ($("#doc_line_item_"+index).val() == "-"){
+          removeRow(index);
+        }
+        else{
+          //alert("You have already selected this item")*/
+          put_data_on_row(index, items);
+        }
+        
+      }
+      else if ($("#doc_line_item_"+index).val() != "-") {
+          $("#doc_line_item_"+index).addClass("selected");
+          //$(".remove_row").eq(index).prop("disabled", false);
+          $("#remove_row_btn_"+index).prop("disabled", false);
+
+          $("#quantity_" + index).css("visibility", "visible");
+          $("#tax_" + index).css("visibility", "visible");
+          $("#discount_" + index).css("visibility", "visible");
+          $("#discount_p_" + index).css("visibility", "visible");
+          $("#price_of_unit_" + index).css("visibility", "visible");
+
+          //put_data_on_row(index, items);
+          //put_data_on_row(get_num_of_rows()-1, items);
+          put_data_on_row(index, items);
+          addNewRow( items);
+
+        allow_submit();
+        $(".doc_line_select").each(function() {
+            if ($(this).val() != "-") {
+                calculate_row_prices($(this).attr('id').replace('doc_line_item_',''));
+            }
+        });
+        var sum = 0
+        $(".doc_line_select").each(function() {
+          
+            if ($(this).val() != "-") {
+                let i = $(this).attr('id').replace('doc_line_item_','')
+                sum = sum + (parseFloat($("#total_price_of_line_"+i).html()) - parseFloat($("#total_price_of_line_after_disc_"+i).html()))
+            }
+        });
+        console.log("SUM "+sum)
+      }
+    }
+
 
     $(document).ready(function () {
       var type = "";
@@ -168,33 +237,14 @@
         window.location = "/";
       });
 
-      addNewRow(0, items);
+      $(".general_discount").attr("readonly", true);
 
-      $(document).on("change", ".doc_line_select", function () {
-        var index = $(this).closest("tr").index();
-        if ($(".doc_line_select").eq(index).val() != "-") {
-          $(".remove_row").eq(index).prop("disabled", false);
-
-          $("#quantity_" + index).css("visibility", "visible");
-          $("#tax_" + index).css("visibility", "visible");
-          $("#discount_" + index).css("visibility", "visible");
-          $("#discount_p_" + index).css("visibility", "visible");
-          $("#price_of_unit_" + index).css("visibility", "visible");
-
-          put_data_on_row(index, items);
-
-          if ($(this).closest("tr").is(":last-child")) {
-            addNewRow(index + 1, items);
-          }
-        } else {
-          removeRow(index, false);
-        }
-      });
+      addNewRow(items);
+      calculate_row_prices(0)
 
       allow_submit();
 
       $(document).on("change", "#wholesale_retail", function () {
-        console.log("#wholesale_retail");
         retail_wholesale(items);
       });
 
@@ -203,9 +253,6 @@
         $("#create_doc_form").submit();
       });
 
-      $(document).on("click", ".remove_row", function () {
-        removeRow($(this).closest("tr").index(), false);
-      });
 
       $(document).on("input", ".input", function () {
         var index = $(this).closest("tr").index();
@@ -214,11 +261,20 @@
 
         if ($(this).attr("id") == "discount_" + index) {
           $("#discount_p_" + index).val((100 * $("#discount_" + index).val()) / (quantity * price_of_unit));
-        } else {
+        }
+        else if ($(this).attr("id") == "discount_p_" + index) {
+          $("#discount_" + index).val(quantity * price_of_unit * ($("#discount_p_" + index).val() / 100));
+        }
+        else if ($(this).attr("id") == "price_of_unit_" + index) {
           $("#discount_" + index).val(quantity * price_of_unit * ($("#discount_p_" + index).val() / 100));
         }
 
-        calculate_row_prices(index);
+        //calculate_row_prices(index);
+        $(".doc_line_select").each(function() {
+            if ($(this).val() != "-") {
+                calculate_row_prices($(this).attr('id').replace('doc_line_item_',''));
+            }
+        });
       });
 
       $(document).on("click", "#clear", function () {
@@ -229,74 +285,254 @@
 
       $(document).on("change", "#doc_series", allow_submit);
 
-      $(document).on("change", ".doc_line_select", allow_submit);
+      $(".general_discount").on("blur", function () {
+
+        $(".doc_line_select").each(function() {
+            if ($(this).val() != "-") {
+                calculate_row_prices($(this).attr('id').replace('doc_line_item_',''));
+            }
+        });
+        general_dis_deviation = 0
+        $(".doc_line_select").each(function() {
+          
+            if ($(this).val() != "-") {
+                let i = $(this).attr('id').replace('doc_line_item_','')
+                general_dis_deviation = general_dis_deviation + (parseFloat($("#total_price_of_line_"+i).html()) - parseFloat($("#total_price_of_line_after_disc_"+i).html()))
+            }
+        });
+        general_dis_deviation = (general_dis_deviation - parseFloat($("#general_discount_amount").val())).toFixed(2)
+        calculate_row_prices(get_num_of_rows()-1);
+        general_dis_deviation = 0.0
+      });
+
 
       $(document).on("input", ".general_discount", function () {
-        let totalAfterTax = parseFloat($("#doc_total_after_tax").html()) || 0;
+        let totalAfterTax = parseFloat($("#doc_total_value").html()) || 0;
+        var num_of_rows = parseInt($("#num_of_rows").val());
+        if(num_of_rows > 1){
+          if ($(this).attr("id") === "general_discount_amount") {
+            let discountAmount = parseFloat($(this).val()) || 0;
+            let totalCost = totalAfterTax - discountAmount;
+            //$("#doc_total_cost").html(totalCost.toFixed(2));
 
-        if ($(this).attr("id") === "general_discount_amount") {
-          let discountAmount = parseFloat($(this).val()) || 0;
-          let totalCost = totalAfterTax - discountAmount;
-          $("#doc_total_cost").html(totalCost.toFixed(2));
+            let discountPercentage = (discountAmount / totalAfterTax) * 100;
+            $("#general_discount").val(discountPercentage.toFixed(2));
+          } else if ($(this).attr("id") === "general_discount") {
+            let discountPercentage = parseFloat($(this).val()) || 0;
+            let discountAmount = totalAfterTax * (discountPercentage / 100);
+            $("#general_discount_amount").val(discountAmount.toFixed(2));
 
-          let discountPercentage = (discountAmount / totalAfterTax) * 100;
-          $("#general_discount").val(discountPercentage.toFixed(2));
-        } else {
-          let discountPercentage = parseFloat($(this).val()) || 0;
-          let discountAmount = totalAfterTax * (discountPercentage / 100);
-          $("#general_discount_amount").val(discountAmount.toFixed(2));
+            let totalCost = totalAfterTax - discountAmount;
+          }
+          calculate_total_cost()
+        }
+        
+      });
 
-          let totalCost = totalAfterTax - discountAmount;
-          $("#doc_total_cost").html(totalCost.toFixed(2));
+      $('.input').on('blur', function() {
+          if ($(this).val() == '') {
+              $(this).val(0);
+          }
+      });
+
+    });
+
+    function put_data_on_row(index,items){
+      var quantity = $('#quantity_'+index).val();
+
+      const item_index = get_item_index_from_id(index,items);
+      
+      //var price_of_unit = get_price(get_item_index_from_id(index,items),items);
+      var price_of_unit = get_price(item_index,items);
+      //var price_of_unit = get_price(index,items);
+
+      var tax = get_tax(item_index,items);
+      //var tax = get_tax(get_item_index_from_id(index,items),items);
+      //var tax = get_tax(index,items);
+      var total = quantity*price_of_unit;
+      
+      var discount = get_discount(item_index,items);
+      //var discount = get_discount(get_item_index_from_id(index,items),items);
+      //var discount = get_discount(index,items);
+      discount = parseFloat(discount).toFixed(2); 
+      var discount_p = (100*discount)/total;
+      discount_p = discount_p.toFixed(2); 
+
+      //$('#qty_'+index).html(items[index].unit_of_measurement);
+      $('#qty_'+index).html(items[item_index].unit_of_measurement);
+      $('#tax_'+index).val(tax);
+      $('#price_of_unit_'+index).val(price_of_unit);
+      $('#discount_'+index).val(discount);
+
+      $('#discount_p_'+index).val(discount_p);
+
+      calculate_row_prices(index);
+    }
+
+    function calculate_row_prices(index){
+      var quantity = $('#quantity_'+index).val();
+      var price_of_unit = parseFloat($('#price_of_unit_'+index).val()).toFixed(2)
+      var tax =  parseFloat($('#tax_'+index).val()).toFixed(2)
+      
+      var num_of_rows = $(".doc_line_select");
+      num_of_rows = $(".doc_line_select").filter(function() {
+        return $(this).val() !== "-";
+      }).length;
+      //alert(num_of_rows)
+      var g_disc = 0.0;
+      if($('#general_discount_amount').val() != null && num_of_rows >0){
+        g_disc = parseFloat($('#general_discount_amount').val())/num_of_rows;
+      }
+
+      var discount = parseFloat($('#discount_'+index).val()).toFixed(2)*quantity;
+      discount =discount + g_disc - parseFloat(general_dis_deviation);
+
+      var total = (quantity*parseFloat(price_of_unit).toFixed(2));
+      if(total){
+        $('#total_price_of_line_'+index).html(parseFloat(total).toFixed(2));
+      }
+      
+
+      total = (parseFloat(total) -  parseFloat(discount));
+      if(total){
+        $('#total_price_of_line_after_disc_'+index).html(parseFloat(total).toFixed(2));
+      }
+
+      total = parseFloat(total) +  parseFloat(total*(tax/100));
+      if(total){
+        $('#final_price_of_line_'+index).html(parseFloat(total).toFixed(2));
+      }
+
+      calculate_total_cost();
+    }
+
+    function get_num_of_rows(){
+      /*var num_of_rows = $(".doc_line_select");
+      num_of_rows = $(".doc_line_select").filter(function() {
+        return $(this).val() !== "-";
+      }).length;
+      return num_of_rows*/
+      return parseInt($(".doc_line_select.selected").length);
+    }
+
+    function addNewRow(items) {
+      var index = doc_line_num;
+      $("#num_of_rows").val(parseInt($("#num_of_rows").val()) + 1);
+    var newRow = `<tr id='row${index}'class='glass_effect_2 doc_row'>
+                        <td class = 'row_aa row${index}'></td>
+                        <td class='item_column'>
+                            <select id="doc_line_item_${index}" name="doc_line_item_${index}" onchange="doc_line_select(${index})" class="doc_line_select"></select>
+                        </td>
+                        <td class = 'column'>
+                            <div>
+                                <input id='quantity_${index}' name='quantity_${index}' class='input' type='number' value=1 min="1" max="100" required><span id='qty_${index}'></span></div></td>
+                        <td class = 'column'>
+                            <div><input id='tax_${index}' name='tax_${index}' type='number' class='input' min="0" max="100" required><span>&nbsp%</span></div></td>
+                        <td class = 'column'>
+                            <div><input id='discount_${index}' name='discount_${index}' class='discount input disc_amnt' type='number' min="0" required><span>€</span></div></td>
+                        <td class = 'column'>
+                            <div><input id='discount_p_${index}' name='discount_p_${index}' class='discount input' type='number' min="0" max="100" required><span>&nbsp%</span></div></td>
+                        <td class = 'column'>
+                            <div><input id='price_of_unit_${index}' name='price_of_unit_${index}' class='input' type='number' min="0" required><span>€</span></div></td>
+                        <td class = 'column'>
+                            <div>
+                                <div id='total_price_of_line_${index}' name='total_price_of_line_${index}' class='total_price_of_line'></div>
+                                <span>&nbsp€</span>
+                            </div>
+                        </td>
+                        <td class = 'column'>
+                            <div>
+                                <div id='total_price_of_line_after_disc_${index}' name='total_price_of_line_after_disc_${index}' class='total_price_of_line_after_disc'></div>
+                                <span>&nbsp€</span>
+                            </div>
+                        </td>
+                        <td class = 'column'>
+                            <div>
+                                <div id='final_price_of_line_${index}' name='final_price_of_line_${index}' class='final_price_of_line'></div>
+                                <span>&nbsp€</span>
+                            </div>
+                        </td>
+                        <td id = 'btn_column'>
+                            <button type="button" id="remove_row_btn_${index}" class="remove_row" disabled onclick="removeRow(${index})">Remove</button>
+                        </td>
+                    </tr>`;
+
+     var newRo2w = `<tr id='row${index}'class='glass_effect_2 doc_row'>
+      <td>${index + 1}</td>
+       <td class='item_column'>
+                            <select id="doc_line_item_${index}" name="doc_line_item_${index}" class="doc_line_select"></select>
+                        </td>
+      <td>${index + 1}</td>
+      <td>${index + 1}</td>
+      <td>${index + 1}</td>
+      <td>${index + 1}</td>
+      <td>${index + 1}</td>
+      <td>${index + 1}</td>
+      <td>${index + 1}</td>
+      <td>${index + 1}</td>
+      <td id = 'btn_column'>
+          <button type="button" class="remove_row" disabled>Remove</button>
+      </td>
+      </tr>`
+
+    $('#doc_table tbody').append(newRow);
+    let i = 1; // Initialize i
+    for (const r of $('.row_aa')) {
+        $(r).html(i); // Set the HTML content
+        i++; // Increment i
+    }
+    populateSelect($(`#doc_table tbody tr:last .doc_line_select`),items);
+    
+    $('#quantity_'+index).css('visibility', 'hidden');
+    $('#tax_'+index).css('visibility', 'hidden');
+    $('#discount_'+index).css('visibility', 'hidden');
+    $('#discount_p_'+index).css('visibility', 'hidden');
+    $('#price_of_unit_'+index).css('visibility', 'hidden');
+
+    doc_line_num = doc_line_num + 1;
+}
+
+    function calculate_total_cost() {
+      var total_value = 0.0;
+      $(".doc_line_select").each(function() {
+        if ($(this).val() != "-") {
+          let i = $(this).attr('id').replace('doc_line_item_','');
+          total_value += parseFloat($("#total_price_of_line_" + i).text() || 0);
         }
       });
 
-      function removeRow(index, submit) {
-        $("#row" + index).remove();
-
-        // Update row indices
-        $("#doc_table tbody tr").each(function (i) {
-          $(this).attr("id", "row" + i);
-          $(this)
-            .find("td:first")
-            .text(i + 1);
-          $(this)
-            .find(".remove_row")
-            .attr("onclick", "removeRow(" + i + ")");
-          $(this)
-            .find("#discount_" + i)
-            .attr("id", "discount_" + i);
-          $(this)
-            .find("#price_of_unit_" + i)
-            .attr("id", "price_of_unit_" + i);
-          $(this)
-            .find("#total_price_of_line_" + i)
-            .attr("id", "total_price_of_line_" + i);
-        });
-
-        calculate_total_cost();
-        if (!submit) {
-          $("#num_of_rows").val($("#num_of_rows").val() - 1);
+      var total_price_of_line_after_disc = 0.0;
+      $(".doc_line_select").each(function() {
+        if ($(this).val() != "-") {
+          let i = $(this).attr('id').replace('doc_line_item_','');
+          total_price_of_line_after_disc += parseFloat($("#total_price_of_line_after_disc_" + i).text() || 0);
         }
-        allow_submit();
-      }
+      });
 
-      function allow_submit() {
-        var inputs = $(".input");
-
-        // Loop through each input to check if it's empty
-        inputs.each(function () {
-          if ($(this).val() === "") {
-            $(this).val("0"); // Set empty inputs to 0
-          }
-        });
-
-        if ($("#num_of_rows").val() == 0 || $('select[name="customer_id"]').val() == 0 || $('select[name="doc_series"]').val() == 0) {
-          $("#submit_btn").prop("disabled", true);
-        } else {
-          $("#submit_btn").prop("disabled", false);
+      var total_disc = 0.0;
+      $(".doc_line_select").each(function() {
+        if ($(this).val() != "-") {
+          let i = $(this).attr('id').replace('doc_line_item_','');
+          total_disc += parseFloat($("#discount_" + i).val() || 0);
         }
-      }
-    });
+      });
+      total_disc = total_disc + parseFloat($("#general_discount_amount").val() || 0);
+      
+      var total_price_after_tax = 0.0;
+      $(".doc_line_select").each(function() {
+        if ($(this).val() != "-") {
+          let i = $(this).attr('id').replace('doc_line_item_','');
+          total_price_after_tax += parseFloat($("#final_price_of_line_" + i).text() || 0);
+        }
+      });
+
+      $('#doc_total_value').text(total_value.toFixed(2));
+      $('#doc_total_cost').text(total_price_of_line_after_disc.toFixed(2));
+      
+      $('#doc_total_disc').text(total_disc.toFixed(2));
+      //$('#doc_total_final').text((total_price_after_tax-g_disc).toFixed(2));
+      $('#doc_total_after_tax').text(total_price_after_tax.toFixed(2));
+
+    }
   </script>
 </html>

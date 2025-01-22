@@ -1,3 +1,4 @@
+
 function populateSelect(selectElement,items) {
     selectElement.append('<option class="item_line_option_empty" value="-"></option>');
     items.forEach(function(item) {
@@ -6,15 +7,14 @@ function populateSelect(selectElement,items) {
 }
 
 function get_price(index,items){
-    console.log("ffff");
-    console.log(index);
-    console.log(items);
-    console.log(items[index]);
+
     if($('#wholesale_retail').val() === "0"){
         return parseFloat(items[index].price_w).toFixed(2);
     }
     return parseFloat(items[index].price_r).toFixed(2);
 }
+
+
 
 function get_discount(index,items){
     if($('#wholesale_retail').val()==="0"){
@@ -25,6 +25,9 @@ function get_discount(index,items){
     }
 }
 
+
+
+
 function get_tax(index,items){
     if($('#wholesale_retail').val()==="0"){
         return items[index].tax_w.toFixed(1);
@@ -34,6 +37,8 @@ function get_tax(index,items){
     }
 }
 
+
+/*
 function calculate_total_cost() {
     var total = 0;
     $('.total_price_of_line').each(function() {
@@ -54,8 +59,9 @@ function calculate_total_cost() {
 
     $('#doc_total_value').html(parseFloat(total).toFixed(2));
 
-    $('#doc_total_disc').html(parseFloat(disc_amnt).toFixed(2));
-
+    $('#doc_total_disc').html(
+        (parseFloat(disc_amnt) + parseFloat($("#general_discount_amount").val())).toFixed(2)
+    );
     $('#doc_total_after_disc').html(parseFloat(total - disc_amnt).toFixed(2));
 
     $('#doc_total_after_tax').html(parseFloat(after_tax).toFixed(2));
@@ -65,7 +71,8 @@ function calculate_total_cost() {
 
     $('#doc_total_cost').html(parseFloat(totalCost).toFixed(2));
 }
-
+*/
+/*
 function calculate_row_prices(index){
     var quantity = $('#quantity_'+index).val();
     var price_of_unit = parseFloat($('#price_of_unit_'+index).val()).toFixed(2)
@@ -85,50 +92,22 @@ function calculate_row_prices(index){
 
     calculate_total_cost();
 }
+*/
 
-function put_data_on_row(index,items){
-    var quantity = $('#quantity_'+index).val();
 
-    const item_index = get_item_index_from_id(index,items);
-    
-    //var price_of_unit = get_price(get_item_index_from_id(index,items),items);
-    var price_of_unit = get_price(item_index,items);
-    //var price_of_unit = get_price(index,items);
 
-    var tax = get_tax(item_index,items);
-    //var tax = get_tax(get_item_index_from_id(index,items),items);
-    //var tax = get_tax(index,items);
-    var total = quantity*price_of_unit;
-    
-    var discount = get_discount(item_index,items);
-    //var discount = get_discount(get_item_index_from_id(index,items),items);
-    //var discount = get_discount(index,items);
-    discount = parseFloat(discount).toFixed(2); 
-    var discount_p = (100*discount)/total;
-    discount_p = discount_p.toFixed(2); 
-
-    //$('#qty_'+index).html(items[index].unit_of_measurement);
-    $('#qty_'+index).html(items[item_index].unit_of_measurement);
-    $('#tax_'+index).val(tax);
-    $('#price_of_unit_'+index).val(price_of_unit);
-    $('#discount_'+index).val(discount);
-
-    $('#discount_p_'+index).val(discount_p);
-
-    calculate_row_prices(index);
-}
 
 function get_item_index_from_id(index,items){
-//---------------------for delete
-    console.log(items);
+    //console.log(items);
     for(let i=0;i<items.length;i++){
-        console.log(items[i]._id + " "+$('#doc_line_item_0').val());
+        //console.log(items[i]._id + " "+$('#doc_line_item_0').val());
         
-        if(items[i]._id == $('.doc_line_select').eq(index).val()){
+        if(items[i]._id == $('#doc_line_item_'+index).val()){
             return i;
         }
     };
 }
+
 
 function retail_wholesale(items) {
     // Iterate over each row in the table
@@ -139,11 +118,12 @@ function retail_wholesale(items) {
             var itemIndex = get_item_index_from_id(index,items);
             // Update price and discount based on wholesale or retail selection
             put_data_on_row(itemIndex,items);
-
         }
     });
 }
 
+
+/*
 function addNewRow(index,items) {
     $('#num_of_rows').val(index);
     var newRow = `<tr id='row${index}'class='glass_effect_2'>
@@ -186,10 +166,25 @@ function addNewRow(index,items) {
                     </tr>`;
     $('#doc_table tbody').append(newRow);
     populateSelect($(`#doc_table tbody tr:last .doc_line_select`),items);
+    index = index +1
     $('#quantity_'+index).css('visibility', 'hidden');
     $('#tax_'+index).css('visibility', 'hidden');
     $('#discount_'+index).css('visibility', 'hidden');
     $('#discount_p_'+index).css('visibility', 'hidden');
     $('#price_of_unit_'+index).css('visibility', 'hidden');
 
-}
+}*/
+
+function removeRow(index, submit) {
+    $("#row"+index).remove()
+    calculate_total_cost();
+    if (!submit) {
+      $("#num_of_rows").val(parseInt($("#num_of_rows").val()) - 1);
+    }
+    allow_submit();
+    let i = 1; // Initialize i
+    for (const r of $('.row_aa')) {
+        $(r).html(i); // Set the HTML content
+        i++; // Increment i
+    }
+  }

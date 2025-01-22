@@ -79,18 +79,18 @@
                             <input type="number" id="items_price_w_disc" name="items_price_w_disc" min="0" value="0" class="required items disc wholesale input_type_1">
 
                             <label class="my_label_1 center_1">Disc % : </label>
-                            <input type="number" id="items_price_r_disc_p" name="items_price_w_disc_p" min="0" value="0" max = "100" class="required items percent wholesale input_type_1">
+                            <input type="number" id="items_price_r_disc_p" name="items_price_r_disc_p" min="0" value="0" max = "100" class="required items percent retale input_type_1">
                             <input type="number" id="items_price_w_disc_p" name="items_price_w_disc_p" min="0" value="0" max = "100" class="required items percent wholesale input_type_1">
                         
-                            <label class="my_label_1 center_1">Tax € : </label>
+                            <label class="my_label_1 center_1">Tax % : </label>
                             <input type="number" id="items_tax_r" name="items_tax_r" min="0" value="0" max = "100" class="required items input_type_1">
                             <input type="number" id="items_tax_w" name="items_tax_w" min="0" value="0" max = "100" class="required items input_type_1">
                         </div>
-
-
-
-
-                                         
+                        <div style="display: grid;grid-template-columns: 50% 50%;margin-top: 20px; margin-bottom:30px">
+                            <label id="item_retail_full" class="my_label_1" style="width: 100%;text-align: center;">0.00 €</label>
+                            <label id="item_wholesale_full" class="my_label_1" style="width: 100%;text-align: center;">0.00 €</label>
+                        </div>
+              
                      
                     </div>
                     <div id ='series_div' class="create_div font_size_1">
@@ -296,6 +296,7 @@
         
         $(".percent").attr('readonly', true);
 
+
         function my_submit(){
             console.log("submit")
             var type = $('#create_type').val();
@@ -320,22 +321,22 @@
             }
         }
 
-        function price_dicount_input(event){
+        function price_discount_input(event){
             var selected_elements =[];
-            var item_type = 'wholesale';
+            //var item_type = 'wholesale';
             var item_type_mark = 'w';
+            
 
-            selected_elements = $("."+item_type);
+            //selected_elements = $("."+item_type);
 
             if ($(event.target).hasClass('retale')) {
-                item_type = "retale";
+                //item_type = "retale";
                 item_type_mark = 'r';
             }
 
             var price = $("#items_price_"+item_type_mark);
             var dic = $("#items_price_"+item_type_mark+"_disc");
             var percentage = $("#items_price_"+item_type_mark+"_disc_p");
-
 
             if($(event.target).hasClass('price')) {
                 if(percentage.val()> 0){
@@ -354,21 +355,22 @@
                     percentage.attr('readonly', true);
                }
             }
-            if($(event.target).hasClass('disc')) {
+            else if($(event.target).hasClass('disc')) {
                 percentage.val((100*dic.val())/price.val())
             }
-            if($(event.target).hasClass('percent')) {
+            else if($(event.target).hasClass('percent')) {
                 dic.val(price.val()*(percentage.val()/100))
+                //dic.val(price.val()*(percentage.val()/100))
             }
         }
 
-        $('.disc').on('input', price_dicount_input);
-        $('.percent').on('input', price_dicount_input);
-        $('.price').on('input', price_dicount_input);
+        $('.disc').on('input', price_discount_input);
+        $('.percent').on('input', price_discount_input);
+        $('.price').on('input', price_discount_input);
 
-      $("#effects_warehouse_switch").hide();
-      $("#effects_accounts_switch").hide();
-      $("#transforms_to_div").hide();    
+        $("#effects_warehouse_switch").hide();
+        $("#effects_accounts_switch").hide();
+        $("#transforms_to_div").hide();    
 
 
         $("#effects_accounts_switch_btn").click(function(event){
@@ -402,7 +404,6 @@
         })
 
        
-
         $("#effects_warehouse_switch_btn").click(function(event){
             event.preventDefault(); // Prevent the default action
             this.classList.toggle('active'); // Toggle the `active` class
@@ -489,6 +490,28 @@
                 }
             }
         })
+        
+        $(".items").on('input', function(){
+            var price_r = parseFloat($("#items_price_r").val());
+            var price_w = parseFloat($("#items_price_w").val());
+            var price_r_disc = parseFloat($("#items_price_r_disc").val());
+            var price_w_disc = parseFloat($("#items_price_w_disc").val());
+            var price_r_disc_p = parseFloat($("#items_price_r_disc_p").val());
+            var price_w_disc_p = parseFloat($("#items_price_w_disc_p").val());
+            var price_r_tax = parseFloat($("#items_tax_r").val());
+            var price_w_tax = parseFloat($("#items_tax_w").val());
+
+            price_w = price_w - price_w_disc;
+            price_r = price_r - price_r_disc;
+
+            var price_w_after_tax = price_w + (price_w*price_w_tax/100);
+            var price_r_after_tax = price_r + (price_r*price_r_tax/100);
+
+
+            $("#item_retail_full").html(price_r_after_tax.toFixed(2) + " €");
+            $("#item_wholesale_full").html(price_w_after_tax.toFixed(2)+ " €");
+        })
+
     });
     
     </script>

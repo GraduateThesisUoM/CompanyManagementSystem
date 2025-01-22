@@ -224,7 +224,7 @@
         console.log(items)
         $(".doc_line_select:eq(" + i + ') option[value="' + selected_items[i].lineItem + '"]').prop("selected", true);
         
-        put_data_on_row(i, items);
+        //put_data_on_row(i, items);
         let quantity = selected_items[i].quantity;
         let price_of_unit = selected_items[i].price_of_unit;
         let total = quantity * price_of_unit;
@@ -233,14 +233,14 @@
         let discount = selected_items[i].discount;
         let discount_p = ((discount / total) * 100).toFixed(2);
 
-        //$("#quantity_" + i).val(quantity);
-        //$("#tax_" + i).val(tax);
-        //$("#discount_" + i).val(discount);
-        //$("#discount_p_" + i).val(discount_p);
-        //$("#price_of_unit_" + i).val(price_of_unit);
-        //$("#total_price_of_line_" + i).text(total);
-        //$("#total_price_of_line_after_disc_" + i).text(total - discount);
-        //$("#final_price_of_line_" + i).text(total - discount + (total - discount) * (tax / 100));
+        $("#quantity_" + i).val(quantity);
+        $("#tax_" + i).val(tax);
+        $("#discount_" + i).val(discount);
+        $("#discount_p_" + i).val(discount_p);
+        $("#price_of_unit_" + i).val(price_of_unit);
+        $("#total_price_of_line_" + i).text(total);
+        $("#total_price_of_line_after_disc_" + i).text(total - discount);
+        $("#final_price_of_line_" + i).text(total - discount + (total - discount) * (tax / 100));
 
         $(".remove_row").eq(i).prop("disabled", false);
 
@@ -252,7 +252,7 @@
 
 
         addNewRow(parseInt(i) + 1, items);
-        put_data_on_row(i, items);
+        //put_data_on_row(i, items);
 
         $(".doc_line_select:eq(" + i + ") option:first-child").remove();
       }

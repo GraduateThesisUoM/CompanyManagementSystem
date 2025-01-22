@@ -149,7 +149,6 @@
     </div>
   </body>
 
-  <script type="text/javascript" src="JSDocumentFunctions.js"></script>
   <script>
     $(document).ready(function () {
       //$("#transforms_to_div").hide();
@@ -220,6 +219,7 @@
       var item;
       var total_val = 0.00;
       var total_cost = 0.00;
+      var total_cost_after_disc = 0.00;
       let v;
       for (i in selected_items) {
         row_data = []
@@ -258,6 +258,7 @@
         row_data.push(v +" €")
 
         total_cost = parseFloat(total_cost) + parseFloat(v)
+        total_cost_after_disc = 
 
         
         addRowToTable(row_data)
@@ -266,6 +267,8 @@
 
       $("#doc_total_value").text(total_val.toFixed(2));
       $("#doc_total_cost").text(total_cost.toFixed(2));
+      $("#doc_total_disc").text(total_cost.toFixed(2));
+      
 
       //calculate_total_cost()
       /*$("#general_discount").val(
