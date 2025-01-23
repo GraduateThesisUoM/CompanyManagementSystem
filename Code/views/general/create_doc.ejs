@@ -75,7 +75,7 @@
                 <label for="doc_total_value">Total Value : </label>
                 <span>
                   <span id="doc_total_value">0.00</span>
-                  <span style="text-indent: 5px;">€</span>
+                  <span style="text-indent: 5px;">&nbsp;€</span>
                 </span>
               </div>
               <div>
@@ -109,7 +109,7 @@
             
 
             <input type="text" id="doc_type" name="doc_type" style="display: none" />
-            <input id="num_of_rows" name="num_of_rows" value=0 type="number" style="display: none"/>
+            <input id="num_of_rows" name="num_of_rows" value=0 type="number" style=""/>
           </div>
           <div class="table_container no_scale">
             <table id="doc_table" class="my_table">
@@ -169,18 +169,12 @@
 
     function doc_line_select(index){
       if($("#doc_line_item_"+index).hasClass('selected')){
-        if ($("#doc_line_item_"+index).val() == "-"){
-          removeRow(index);
-        }
-        else{
-          //alert("You have already selected this item")*/
-          put_data_on_row(index, items);
-        }
-        
+        put_data_on_row(index, items);
       }
-      else if ($("#doc_line_item_"+index).val() != "-") {
+      //else if ($("#doc_line_item_"+index).val() != "-") {
+      else {
+          $("#doc_line_item_"+index+" option:first-child").remove();
           $("#doc_line_item_"+index).addClass("selected");
-          //$(".remove_row").eq(index).prop("disabled", false);
           $("#remove_row_btn_"+index).prop("disabled", false);
 
           $("#quantity_" + index).css("visibility", "visible");
@@ -189,8 +183,6 @@
           $("#discount_p_" + index).css("visibility", "visible");
           $("#price_of_unit_" + index).css("visibility", "visible");
 
-          //put_data_on_row(index, items);
-          //put_data_on_row(get_num_of_rows()-1, items);
           put_data_on_row(index, items);
           addNewRow( items);
 
@@ -249,7 +241,10 @@
       });
 
       $(document).on("click", "#submit_btn", function () {
-        removeRow($("#num_of_rows").val(), true);
+        //removeRow($("#num_of_rows").val(), true);
+        //removeRow(get_num_of_rows(), true);
+        $("#num_of_rows").val(get_num_of_rows());
+        $("#row"+get_num_of_rows()).remove();
         $("#create_doc_form").submit();
       });
 
@@ -308,12 +303,12 @@
 
       $(document).on("input", ".general_discount", function () {
         let totalAfterTax = parseFloat($("#doc_total_value").html()) || 0;
-        var num_of_rows = parseInt($("#num_of_rows").val());
+        //var num_of_rows = parseInt($("#num_of_rows").val());
+        var num_of_rows = get_num_of_rows();
         if(num_of_rows > 1){
           if ($(this).attr("id") === "general_discount_amount") {
             let discountAmount = parseFloat($(this).val()) || 0;
             let totalCost = totalAfterTax - discountAmount;
-            //$("#doc_total_cost").html(totalCost.toFixed(2));
 
             let discountPercentage = (discountAmount / totalAfterTax) * 100;
             $("#general_discount").val(discountPercentage.toFixed(2));
@@ -374,10 +369,7 @@
       var price_of_unit = parseFloat($('#price_of_unit_'+index).val()).toFixed(2)
       var tax =  parseFloat($('#tax_'+index).val()).toFixed(2)
       
-      var num_of_rows = $(".doc_line_select");
-      num_of_rows = $(".doc_line_select").filter(function() {
-        return $(this).val() !== "-";
-      }).length;
+      var num_of_rows = get_num_of_rows()
       //alert(num_of_rows)
       var g_disc = 0.0;
       if($('#general_discount_amount').val() != null && num_of_rows >0){
