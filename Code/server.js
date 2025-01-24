@@ -128,11 +128,14 @@ app.use(path_constants.pages.view.url, require(path_constants.pages.view.file));
 //database
 app.use(path_constants.pages.database.url, require(path_constants.pages.database.file));
 
-//transfrom doc
+//transform doc
 app.use(path_constants.pages.transfrom_doc.url, require(path_constants.pages.transfrom_doc.file));
 
 //edit doc
 app.use(path_constants.pages.edit_doc.url, require(path_constants.pages.edit_doc.file));
+
+//transform doc
+app.use(path_constants.pages.calendar.url, require(path_constants.pages.calendar.file));
 
 const http = require('http').createServer(app);
 http.listen(process.env.PORT, () => {

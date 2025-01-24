@@ -207,8 +207,15 @@ const pages = {
     file: routes.user+"MyAccountantRate.js",
     view : ""
   },
+  calendar :{
+    url : "/calendar",
+    file: routes.general+"CalendarRoutes.js",
+    view : function() { {
+      return views_folders.general+"calendar.ejs"
+    }}
+  },
   transfrom_doc :{
-    url : "/transfrom-doc",
+    url : "/transform-doc",
     file: routes.user+"TransformDocRoutes",
     view : ""
   },

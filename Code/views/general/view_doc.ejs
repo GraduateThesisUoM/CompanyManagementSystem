@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Doc</title>
+    <title>View Doc</title>
     <!--ajax-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!--CSS-->
@@ -26,7 +26,10 @@
       <%- include('../partials/sidebar'); %>
       <div>
         <h1 id="list_header"><%=doc_name%></h1>
-        <form action="/create-doc" method="POST" id="create_doc_form">
+        <form action="/edit-doc" method="POST" id="create_doc_form">
+          <input name="doc_id" value="<%=doc._id%>" style="display: none;">
+          <input name="type2" value="<%=doc.type%>" style="display: none;">
+
           <div id="doc_data" class="glass_effect_2">
             <div>
               <div>
@@ -55,8 +58,8 @@
               <div>
                 <label class="wholesale_retail" for="wholesale_retail">Type : </label>
                 <select class="wholesale_retail my_input" id="wholesale_retail" name="wholesale_retail">
-                  <option value="0">wholesale</option>
                   <option value="1">Retale</option>
+                  <option value="2">wholesale</option>
                 </select>
               </div>
               <div>
@@ -107,7 +110,7 @@
             
 
             <input type="text" id="doc_type" name="doc_type" style="display: none" />
-            <input id="num_of_rows" name="num_of_rows" value=0 type="number" style="display: none"/>
+            <input id="num_of_rows" name="num_of_rows" value=0 type="number"  style="display: none;"/>
           </div>
           <div class="table_container no_scale">
             <table id="doc_table" class="my_table">
@@ -172,7 +175,7 @@
     var selected_items = JSON.parse(`<%- JSON.stringify(doc.invoiceData) %>`);
     var items = JSON.parse(`<%- JSON.stringify(items) %>`);
     var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
-
+    const params = new URLSearchParams(window.location.search);
     console.log("selected_items", selected_items);
 
     function doc_line_select(index){
@@ -202,7 +205,6 @@
           put_data_on_row(index, items);
           addNewRow( items);
 
-        //allow_submit();
         $(".doc_line_select").each(function() {
             if ($(this).val() != "-") {
                 calculate_row_prices($(this).attr('id').replace('doc_line_item_',''));
@@ -222,7 +224,7 @@
 
 
     $(document).ready(function () {
-      const params = new URLSearchParams(window.location.search);
+      
       $("#url").val(window.location.pathname + window.location.search)
 
       // Loop through each ".doc_history_point_doc_data" element
@@ -298,17 +300,10 @@
       }
 
 
-      //allow_submit();
 
       $(document).on("change", "#wholesale_retail", function () {
         retail_wholesale(items);
       });
-
-      $(document).on("click", "#submit_btn", function () {
-        removeRow($("#num_of_rows").val(), true);
-        $("#create_doc_form").submit();
-      });
-
 
       $(document).on("input", ".input", function () {
         var index = $(this).closest("tr").index();
@@ -336,10 +331,6 @@
       $(document).on("click", "#clear", function () {
         location.reload();
       });
-
-      /*$(document).on("change", "#customer_id", allow_submit);
-
-      $(document).on("change", "#doc_series", allow_submit);*/
 
       $(".general_discount").on("blur", function () {
 
@@ -509,24 +500,6 @@
                         </td>
                     </tr>`;
 
-     var newRo2w = `<tr id='row${index}'class='glass_effect_2 doc_row'>
-      <td>${index + 1}</td>
-       <td class='item_column'>
-                            <select id="doc_line_item_${index}" name="doc_line_item_${index}" class="doc_line_select"></select>
-                        </td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td id = 'btn_column'>
-          <button type="button" class="remove_row" disabled>Remove</button>
-      </td>
-      </tr>`
-
     $('#doc_table tbody').append(newRow);
     let i = 1; // Initialize i
     for (const r of $('.row_aa')) {
@@ -543,6 +516,10 @@
 
     doc_line_num = doc_line_num + 1;
 }
+
+    function allow_submit() {
+        console.log("allow_submit");
+      }
 
     function calculate_total_cost() {
       var total_value = 0.0;
@@ -583,6 +560,32 @@
       
       $('#doc_total_disc').text(total_disc.toFixed(2));
       $('#doc_total_after_tax').text(total_price_after_tax.toFixed(2));
+
+      $("#transforms_btn").click(function(event){
+        $("body").css("overflow", "hidden");
+        $(window).scrollTop(0);
+        $("#transforms_to_div").show();
+      });
+
+      $("#close_transforms_to_div").click(function(event){
+        $("body").css("overflow", "auto");
+        $("#transforms_to_div").hide();
+      });
+
+      $(".transforms_to_btn").click(function(event){
+        $("#transforms_to_div_main_input").val($(this).attr('id'));
+        $("#transform_doc").submit()
+      });
+
+      $('.doc_history_point_doc_data').click(function(event){
+        window.location = '/view?type=docs&id='+$(this).attr('id')+'&type2='+params.get('type2')
+      })
+
+      $('#save_btn').click(function(){
+        removeRow($("#num_of_rows").val()-1);
+        $('#create_doc_form').submit();
+      })
+
 
     }
   </script>

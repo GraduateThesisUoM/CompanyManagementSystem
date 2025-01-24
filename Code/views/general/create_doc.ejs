@@ -53,8 +53,8 @@
               <div>
                 <label class="wholesale_retail" for="wholesale_retail">Type : </label>
                 <select class="wholesale_retail my_input" id="wholesale_retail" name="wholesale_retail">
-                  <option value="0">wholesale</option>
                   <option value="1">Retale</option>
+                  <option value="2">wholesale</option>
                 </select>
               </div>
               <div>
@@ -101,15 +101,11 @@
                 <span>Total Price after Tax : </span>
                 <span><span id="doc_total_after_tax">0.00</span><span>€</span></span>
               </div>
-              <!--div>
-                <span>Final Price : </span>
-                <span><span id="doc_total_final">0.00</span><span>€</span></span>
-              </div-->
             </div>
             
 
             <input type="text" id="doc_type" name="doc_type" style="display: none" />
-            <input id="num_of_rows" name="num_of_rows" value=0 type="number" style=""/>
+            <input id="num_of_rows" name="num_of_rows" value=0 type="number"  style="display: none;"/>
           </div>
           <div class="table_container no_scale">
             <table id="doc_table" class="my_table">
@@ -241,10 +237,9 @@
       });
 
       $(document).on("click", "#submit_btn", function () {
-        //removeRow($("#num_of_rows").val(), true);
-        //removeRow(get_num_of_rows(), true);
-        $("#num_of_rows").val(get_num_of_rows());
-        $("#row"+get_num_of_rows()).remove();
+        removeRow($("#num_of_rows").val()-1);
+        //$("#row"+get_num_of_rows()).remove();
+        //$("#num_of_rows").val(get_num_of_rows());
         $("#create_doc_form").submit();
       });
 
@@ -399,11 +394,6 @@
     }
 
     function get_num_of_rows(){
-      /*var num_of_rows = $(".doc_line_select");
-      num_of_rows = $(".doc_line_select").filter(function() {
-        return $(this).val() !== "-";
-      }).length;
-      return num_of_rows*/
       return parseInt($(".doc_line_select.selected").length);
     }
 
@@ -448,24 +438,6 @@
                             <button type="button" id="remove_row_btn_${index}" class="remove_row" disabled onclick="removeRow(${index})">Remove</button>
                         </td>
                     </tr>`;
-
-     var newRo2w = `<tr id='row${index}'class='glass_effect_2 doc_row'>
-      <td>${index + 1}</td>
-       <td class='item_column'>
-                            <select id="doc_line_item_${index}" name="doc_line_item_${index}" class="doc_line_select"></select>
-                        </td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td>${index + 1}</td>
-      <td id = 'btn_column'>
-          <button type="button" class="remove_row" disabled>Remove</button>
-      </td>
-      </tr>`
 
     $('#doc_table tbody').append(newRow);
     let i = 1; // Initialize i

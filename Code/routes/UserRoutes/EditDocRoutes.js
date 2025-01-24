@@ -23,14 +23,19 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
       var original = await Document.findOne({_id:req.body.doc_id});
 
       const lines_of_doc = {};
-    for (let i = 0; i < req.body.num_of_rows; i++) {
-      const quantity = parseInt(req.body[`quantity_${i}`], 10);
-      const tax = parseFloat(req.body[`tax_${i}`]).toFixed(2);
-      const lineItem = req.body[`doc_line_item_${i}`]; // Assuming lineItem should remain a string or ID
-      const discount = parseFloat(req.body[`discount_${i}`]).toFixed(2);
-      const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
-      lines_of_doc[i] = { quantity, tax, lineItem, discount, price_of_unit };
-    }
+      console.log('CreateDocRoutes')
+      var j=0
+      for (let i = 0; i < req.body.num_of_rows; i++) {
+        if (req.body[`doc_line_item_${i}`] !== undefined) {
+          const quantity = parseInt(req.body[`quantity_${i}`], 10);
+          const tax = parseFloat(req.body[`tax_${i}`]).toFixed(2);
+          const lineItem = req.body[`doc_line_item_${i}`];
+          const discount = parseFloat(req.body[`discount_${i}`]).toFixed(2);
+          const price_of_unit = parseFloat(req.body[`price_of_unit_${i}`]).toFixed(2);
+          lines_of_doc[j] = { quantity, tax, lineItem, discount, price_of_unit };
+          j++;
+        }
+      }
 
       var new_doc = await generalFunctions.create_doc({
         series: req.body.doc_series,

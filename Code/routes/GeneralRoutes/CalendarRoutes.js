@@ -24,18 +24,7 @@ const Warehouse = require(path_constants.schemas.two.warehouse);
 const Client = require(path_constants.schemas.two.client);
 const Accountant = require(path_constants.schemas.two.accountant);
 
-/*
-0 text-readonly
-1 normal-text,
-3=display:none
-4 checkbox not editable
-5 checkbox
-6 input type number
-7 for docs wholesale_retail 
-10 nodes
-13 simple text display
-14 select warehose
-*/
+
 
 
 router.get("/", Authentication.checkAuthenticated, async (req, res) => {

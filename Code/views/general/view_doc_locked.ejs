@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Doc L</title>
+    <title>View Doc Locked</title>
     <!--ajax-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!--CSS-->
@@ -21,89 +21,83 @@
     <!--Header-->
     <%- include('../partials/header'); %>
   </head>
-
-  <style>
-    .table_cell_div{
-      padding: 10px;
-    }
-  </style>
-
   <body>
     <div class="has_sidebar asap-condensed-extralight">
       <%- include('../partials/sidebar'); %>
       <div>
         <h1 id="list_header"><%=doc_name%></h1>
-        <div id="create_doc_form">
+        <form action="/edit-doc" method="POST" id="create_doc_form">
           <input name="doc_id" value="<%=doc._id%>" style="display: none;">
           <input name="type2" value="<%=doc.type%>" style="display: none;">
+
           <div id="doc_data" class="glass_effect_2">
             <div>
               <div>
-                <label>Date : </label>
-                <label><%=registrationDate%></label>
+                <label for="doc_date">Date : </label>
+                <input type="date" id="doc_date" name="doc_date" class="my_input" readonly value="<%=registrationDate%>"/>
               </div>
               <div class="customer_div">
-                <label><%=person_type%></label>
-                <label id="person_name"><%=person_type%></label>
+                <label for="customer_id"><%=person_type%></label>
+                <input class="my_input" readonly value="<%= person.firstName %> <%= person.lastName %>"/>
               </div>
               <div class="warehouse_div">
-                <label>Warehouse</label>
-                <label id="warehouse">Warehouse</label>
+                <label for="warehouse_id">Warehouse</label>
+                <input readonly class="my_input" value="<%= warehouse.title %>"/>
               </div>
               <div>
-                <label class="wholesale_retail">Type : </label>
-                <label id="wholesale_retail">Type : </label>
+                <label class="wholesale_retail" for="wholesale_retail">Type : </label>
+                <%if(doc.retail_wholesale == 1){%>
+                  <input readonly class="my_input" value="Retail"/>
+                <%}else if(doc.retail_wholesale == 2){%>
+                  <input readonly class="my_input" value="Wholesale"/>
+                <%}else{%>
+                  <input readonly class="my_input" value="-"/>
+                  <%}%>
               </div>
               <div>
-                <label >Series : </label>
-                <label id="doc_series"></label>
-              </div>
-              <div>
-                <label for="general_discount_amount">Discount : </label>
-                <span>
-                  <span style="display: grid; grid-template-columns: 65% 25%">
-                    <label><%=doc.generalDiscount%></label>
-                    <span>€</span>
-                  </span>
-                  <span style="display: grid; grid-template-columns: 65% 25%">
-                    <label id="general_discount_amount_p"></label>                    
-                    <span style="text-indent: 5px"><strong>%</strong></span>
+                <label for="doc_series">Series : </label>
+                <input readonly class="my_input" value="<%= series.title %>"/>
 
-                  </span>
-                </span>
               </div>
+              <div class="hide">-</div>
             </div>
 
             <div>
               <div>
-                <label for="doc_total_value">Total Value : </label>
+                <label>Total Value : </label>
                 <span>
-                  <span id="doc_total_value"></span>
-                  <span >€</span>
+                  <span id="doc_total_value">0.00</span>
+                  <span style="text-indent: 5px;">€</span>
                 </span>
               </div>
-              
               <div>
-                <span>Total Cost : </span>
-                <span><span id="doc_total_cost"></span><span>€</span></span>
+                <label>Discount Value : </label>
+                <span>
+                  <span style="display: grid;grid-template-columns: 35% 30% 35%;">
+                    <input id="general_discount_amount" class="general_discount my_input" name="general_discount_amount" type="number" value="0" min="0" readonly />
+                    <span>&nbsp;€</span>
+                    <input id="general_discount" class="general_discount my_input" name="general_discount" type="number" value="0" min="0" max="100" readonly />
+                  </span>
+                  <span style="text-indent: 5px;"><strong>%</strong></span>
+                </span>
               </div>
-
               <div>
                 <span>Total Discounts : </span>
                 <span><span id="doc_total_disc">0.00</span><span>€</span></span>
               </div>
               <div>
-                <span>Total after Discounts : </span>
-                <span><span id="doc_total_after_disc">0.00</span><span>€</span></span>
+                <span>Total Cost : </span>
+                <span><span id="doc_total_cost">0.00</span><span>€</span></span>
               </div>
               <div>
-                <span>Total after Tax : </span>
+                <span>Total Price after Tax : </span>
                 <span><span id="doc_total_after_tax">0.00</span><span>€</span></span>
               </div>
             </div>
+            
 
             <input type="text" id="doc_type" name="doc_type" style="display: none" />
-            <input id="num_of_rows" name="num_of_rows" style="display: none" />
+            <input id="num_of_rows" name="num_of_rows" value=0 type="number"  style="display: none;"/>
           </div>
           <div class="table_container no_scale">
             <table id="doc_table" class="my_table">
@@ -119,20 +113,28 @@
                   <th>Value</th>
                   <th>Price After Discount</th>
                   <th>Final Price</th>
+                  <th></th>
                 </tr>
               </thead>
-              <tbody>
-
-              </tbody>
+              <tbody></tbody>
             </table>
           </div>
-        </div>
-        <div style="display: grid;grid-template-columns: 30% 30% 30%;gap:5%;margin-top: 20px;width:80%;margin-left:10%">
-          <button id="delete_btn" class="button_2">Delete</button>
-          <button id="transforms_btn" class="button_1">Transform</button>
-          <button id="save_btn" class="button_3">Save</button>
-          <!--button id="clear">Clear</button>
-          <button id="submit_btn">Register</button-->
+        </form>
+
+        <div id="transforms_to_div" class="asap-condensed-regular" style="display: none;">
+          <div id="transforms_to_div_header">
+            <img id="close_transforms_to_div" src="x.svg"/>
+          </div>
+          <div id="transforms_to_div_main" class="my_scrollbar">
+            <form id="transform_doc" action="/transform-doc" method="POST" >
+              <input id="transforms_to_div_main_input" name="series_to" type="text" style="display: none;">
+              <input type="text" name="doc_id" value="<%= doc._id%>" style="display: none;">
+              <input type="text" name="url" id="url" style="display: none;">
+            </form>
+          <% for(s of transforms_to){%>
+            <button class="transforms_to_btn" id="<%= s._id%>"><%= s.name%></button>
+          <%}%>
+          </div>
         </div>
         <div id = history_container class="my_scrollbar">
           <% for (h of history){%>
@@ -149,55 +151,30 @@
     </div>
   </body>
 
+  <script type="text/javascript" src="JSDocumentFunctions.js"></script>
   <script>
+    var doc_line_num = 0;
+    var general_dis_deviation = 0.0;
+    var selected_items = JSON.parse(`<%- JSON.stringify(doc.invoiceData) %>`);
+    var items = JSON.parse(`<%- JSON.stringify(items) %>`);
+    var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
+    const params = new URLSearchParams(window.location.search);
+    console.log("selected_items", selected_items);
+
+
     $(document).ready(function () {
-      //$("#transforms_to_div").hide();
-      const params = new URLSearchParams(window.location.search);
-      $("#url").val(window.location.pathname + window.location.search)
       
-      var selected_items = JSON.parse(`<%- JSON.stringify(doc.invoiceData) %>`);
-      var items = JSON.parse(`<%- JSON.stringify(items) %>`);
-      var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
-      var persons = JSON.parse(`<%- JSON.stringify(persons) %>`);
-      var warehouses = JSON.parse(`<%- JSON.stringify(warehouses) %>`);
-      var series_list = JSON.parse(`<%- JSON.stringify(series_list) %>`);
-
-      for(p of persons){
-        if(p._id == doc.receiver){
-          $("#person_name").html(p.name)
-        }
-      }
-
-      for(w of warehouses){
-        if(w._id == doc.warehouse){
-          $("#warehouse").html(w.title)
-        }
-      }
-
-      if(doc.retail_wholesale == 0){
-        $("#wholesale_retail").html("Wholesale")
-      }
-      else{
-        $("#wholesale_retail").html("Retail")
-      }
-
-      for(s of series_list){
-        if(s._id == doc.series){
-          $("#doc_series").html(s.title)
-        }
-      }
-
-      $('.general_discount_amount_p').html('ff')
+      $("#url").val(window.location.pathname + window.location.search)
 
       // Loop through each ".doc_history_point_doc_data" element
-      $(".doc_history_point_doc_data").each(function () {
+       $(".doc_history_point_doc_data").each(function () {
         const parentElement = $(this).parent();
         
         // Check if the current element's ID matches the target doc._id
         if ($(this).attr("id") === doc._id) {
           // Add the desired class to the parent
           $(this).addClass("glass_effect_2");
-          parentElement.addClass("curent_doc");
+          parentElement.addClass("current_doc");
 
           // Scroll to center the current document
           $("#history_container")[0].scrollTo({
@@ -213,111 +190,256 @@
         }
       });
 
-      /*addNewRow(0, items);*/
+      $("#doc_series").val(doc.series);
+      $("#customer_id").val(doc.receiver);
+      $("#warehouse_id").val(doc.warehouse);
+      $("#general_discount_amount").val(doc.generalDiscount);
 
-      var row_data;
-      var item;
-      var total_val = 0.00;
-      var total_cost = 0.00;
-      var total_cost_after_disc = 0.00;
-      let v;
+      //----------------------------------------
+
+      $("#back_btn").click(function () {
+        window.location = "/";
+      });
+
+      addNewRow(items);
       for (i in selected_items) {
-        row_data = []
-        row_data.push(parseInt(i)+1)
-
-        for( itm of items){
-          if(selected_items[i].lineItem == itm._id){
-            item = itm
-          }
-        }
-
-        row_data.push(item.title)
-
-        row_data.push(selected_items[i].quantity + " "+item.unit_of_measurement);
-
-        row_data.push(selected_items[i].tax + " %");
-
-        row_data.push(selected_items[i].discount + " €");
-        let discountPercentage = (
-          (selected_items[i].discount / (selected_items[i].price_of_unit*selected_items[i].quantity) ) * 
-          100
-        ).toFixed(2); // Keep 2 decimal places
-
-        row_data.push(discountPercentage + " €");
-
-        row_data.push(parseFloat(selected_items[i].price_of_unit).toFixed(2) + " €");
-        total_val = parseFloat(total_val) + parseFloat(selected_items[i].price_of_unit*selected_items[i].quantity)
-        row_data.push(parseFloat(selected_items[i].price_of_unit*selected_items[i].quantity).toFixed(2) + " €");
-
-        let v = parseFloat(
-          ((selected_items[i].price_of_unit)*selected_items[i].quantity)-selected_items[i].discount
-        ).toFixed(2);
-        //row_data.push(((selected_items[i].price_of_unit)*selected_items[i].quantity)-selected_items[i].discount + " €");
-        row_data.push(parseFloat(v).toFixed(2)+" €")
-        v = parseFloat(parseFloat((parseFloat(selected_items[i].tax)/100)*parseFloat(v))+parseFloat(v)).toFixed(2)
-        row_data.push(v +" €")
-
-        total_cost = parseFloat(total_cost) + parseFloat(v)
-        total_cost_after_disc = 
-
+        $("#doc_line_item_"+i).val(selected_items[i].lineItem);
         
-        addRowToTable(row_data)
+        //put_data_on_row(i, items);
+        let quantity = selected_items[i].quantity;
+        let price_of_unit = selected_items[i].price_of_unit;
+        let total = quantity * price_of_unit;
+        let tax = selected_items[i].tax;
+        let totalAfterTax = total + total * (tax / 100);
+        let discount = selected_items[i].discount;
+        let discount_p = ((discount / total) * 100).toFixed(2);
+
+        $("#quantity_" + i).val(quantity);
+        $("#tax_" + i).val(tax);
+        $("#discount_" + i).val(discount);
+        $("#discount_p_" + i).val(discount_p);
+        $("#price_of_unit_" + i).val(price_of_unit);
+
+
+        $("#quantity_" + i).css("visibility", "visible");
+        $("#tax_" + i).css("visibility", "visible");
+        $("#discount_" + i).css("visibility", "visible");
+        $("#discount_p_" + i).css("visibility", "visible");
+        $("#price_of_unit_" + i).css("visibility", "visible");
+
+        calculate_row_prices(i)
+
+        addNewRow(items);
+        //put_data_on_row(i, items);
+
+        $("#doc_line_item_"+i+" option:first-child").remove();
+
         
       }
 
-      $("#doc_total_value").text(total_val.toFixed(2));
-      $("#doc_total_cost").text(total_cost.toFixed(2));
-      $("#doc_total_disc").text(total_cost.toFixed(2));
+    function put_data_on_row(index,items){
+      var quantity = $('#quantity_'+index).val();
+
+      const item_index = get_item_index_from_id(index,items);
+      
+      //var price_of_unit = get_price(get_item_index_from_id(index,items),items);
+      var price_of_unit = get_price(item_index,items);
+      //var price_of_unit = get_price(index,items);
+
+      var tax = get_tax(item_index,items);
+      //var tax = get_tax(get_item_index_from_id(index,items),items);
+      //var tax = get_tax(index,items);
+      var total = quantity*price_of_unit;
+      
+      var discount = get_discount(item_index,items);
+      //var discount = get_discount(get_item_index_from_id(index,items),items);
+      //var discount = get_discount(index,items);
+      discount = parseFloat(discount).toFixed(2); 
+      var discount_p = (100*discount)/total;
+      discount_p = discount_p.toFixed(2); 
+
+      //$('#qty_'+index).html(items[index].unit_of_measurement);
+      $('#qty_'+index).html(items[item_index].unit_of_measurement);
+      $('#tax_'+index).val(tax);
+      $('#price_of_unit_'+index).val(price_of_unit);
+      $('#discount_'+index).val(discount);
+
+      $('#discount_p_'+index).val(discount_p);
+
+      calculate_row_prices(index);
+    }
+
+    function calculate_row_prices(index){
+      var quantity = $('#quantity_'+index).val();
+      var price_of_unit = parseFloat($('#price_of_unit_'+index).val()).toFixed(2)
+      var tax =  parseFloat($('#tax_'+index).val()).toFixed(2)
+      
+      var num_of_rows = $(".doc_line_select");
+      num_of_rows = $(".doc_line_select").filter(function() {
+        return $(this).val() !== "-";
+      }).length;
+      //alert(num_of_rows)
+      var g_disc = 0.0;
+      if($('#general_discount_amount').val() != null && num_of_rows >0){
+        g_disc = parseFloat($('#general_discount_amount').val())/num_of_rows;
+      }
+
+      var discount = parseFloat($('#discount_'+index).val()).toFixed(2)*quantity;
+      discount =discount + g_disc - parseFloat(general_dis_deviation);
+
+      var total = (quantity*parseFloat(price_of_unit).toFixed(2));
+      if(total){
+        $('#total_price_of_line_'+index).html(parseFloat(total).toFixed(2));
+      }
       
 
-      //calculate_total_cost()
-      /*$("#general_discount").val(
-        ((doc.generalDiscount*100)/parseInt($("#doc_total_value").text())).toFixed(2)
-      );*/
+      total = (parseFloat(total) -  parseFloat(discount));
+      if(total){
+        $('#total_price_of_line_after_disc_'+index).html(parseFloat(total).toFixed(2));
+      }
 
-      var totalAfterTax = parseFloat($("#doc_total_after_tax").html()) || 0;
-          
+      total = parseFloat(total) +  parseFloat(total*(tax/100));
+      if(total){
+        $('#final_price_of_line_'+index).html(parseFloat(total).toFixed(2));
+      }
 
-      $(".doc_line_select").change(function () {
+      calculate_total_cost();
+    }
+
+    function get_num_of_rows(){
+      return parseInt($(".doc_line_select.selected").length);
+    }
+
+    function addNewRow(items) {
+      console.log("items", items);
+      var index = doc_line_num;
+      $("#num_of_rows").val(parseInt($("#num_of_rows").val()) + 1);
+    var newRow = `<tr id='row${index}'class='glass_effect_2 doc_row'>
+                        <td class = 'row_aa row${index}'></td>
+                        <td class='item_column'>
+                            <select id="doc_line_item_${index}" name="doc_line_item_${index}" onchange="doc_line_select(${index})" class="doc_line_select"></select>
+                        </td>
+                        <td class = 'column'>
+                            <div>
+                                <input id='quantity_${index}' name='quantity_${index}' class='input' type='number' value=1 min="1" max="100" readonly><span id='qty_${index}'></span></div></td>
+                        <td class = 'column'>
+                            <div><input id='tax_${index}' name='tax_${index}' type='number' class='input' min="0" max="100" readonly><span>&nbsp%</span></div></td>
+                        <td class = 'column'>
+                            <div><input id='discount_${index}' name='discount_${index}' class='discount input disc_amnt' type='number' min="0" readonly><span>€</span></div></td>
+                        <td class = 'column'>
+                            <div><input id='discount_p_${index}' name='discount_p_${index}' class='discount input' type='number' min="0" max="100" readonly><span>&nbsp%</span></div></td>
+                        <td class = 'column'>
+                            <div><input id='price_of_unit_${index}' name='price_of_unit_${index}' class='input' type='number' min="0" readonly><span>€</span></div></td>
+                        <td class = 'column'>
+                            <div>
+                                <div id='total_price_of_line_${index}' name='total_price_of_line_${index}' class='total_price_of_line'></div>
+                                <span>&nbsp€</span>
+                            </div>
+                        </td>
+                        <td class = 'column'>
+                            <div>
+                                <div id='total_price_of_line_after_disc_${index}' name='total_price_of_line_after_disc_${index}' class='total_price_of_line_after_disc'></div>
+                                <span>&nbsp€</span>
+                            </div>
+                        </td>
+                        <td class = 'column'>
+                            <div>
+                                <div id='final_price_of_line_${index}' name='final_price_of_line_${index}' class='final_price_of_line'></div>
+                                <span>&nbsp€</span>
+                            </div>
+                        </td>
+                        <td id = 'btn_column'>
+                            <button type="button" id="remove_row_btn_${index}" class="remove_row" disabled onclick="removeRow(${index})">Remove</button>
+                        </td>
+                    </tr>`;
+
+    $('#doc_table tbody').append(newRow);
+    let i = 1; // Initialize i
+    for (const r of $('.row_aa')) {
+        $(r).html(i); // Set the HTML content
+        i++; // Increment i
+    }
+    populateSelect($(`#doc_table tbody tr:last .doc_line_select`),items);
+    
+    $('#quantity_'+index).css('visibility', 'hidden');
+    $('#tax_'+index).css('visibility', 'hidden');
+    $('#discount_'+index).css('visibility', 'hidden');
+    $('#discount_p_'+index).css('visibility', 'hidden');
+    $('#price_of_unit_'+index).css('visibility', 'hidden');
+
+    doc_line_num = doc_line_num + 1;
+}
+
+    function allow_submit() {
+        console.log("allow_submit");
+      }
+
+    function calculate_total_cost() {
+      var total_value = 0.0;
+      $(".doc_line_select").each(function() {
         if ($(this).val() != "-") {
-          $(this).find("option:first-child").remove();
+          let i = $(this).attr('id').replace('doc_line_item_','');
+          total_value += parseFloat($("#total_price_of_line_" + i).text() || 0);
         }
       });
 
+      var total_price_of_line_after_disc = 0.0;
+      $(".doc_line_select").each(function() {
+        if ($(this).val() != "-") {
+          let i = $(this).attr('id').replace('doc_line_item_','');
+          total_price_of_line_after_disc += parseFloat($("#total_price_of_line_after_disc_" + i).text() || 0);
+        }
+      });
 
-      $("#transforms_btn").css('visibility','hidden')
+      var total_disc = 0.0;
+      $(".doc_line_select").each(function() {
+        if ($(this).val() != "-") {
+          let i = $(this).attr('id').replace('doc_line_item_','');
+          total_disc += parseFloat($("#discount_" + i).val() || 0);
+        }
+      });
+      total_disc = total_disc + parseFloat($("#general_discount_amount").val() || 0);
+      
+      var total_price_after_tax = 0.0;
+      $(".doc_line_select").each(function() {
+        if ($(this).val() != "-") {
+          let i = $(this).attr('id').replace('doc_line_item_','');
+          total_price_after_tax += parseFloat($("#final_price_of_line_" + i).text() || 0);
+        }
+      });
 
-      $("#save_btn").css('visibility','hidden');
+      $('#doc_total_value').text(total_value.toFixed(2));
+      $('#doc_total_cost').text(total_price_of_line_after_disc.toFixed(2));
+      
+      $('#doc_total_disc').text(total_disc.toFixed(2));
+      $('#doc_total_after_tax').text(total_price_after_tax.toFixed(2));
 
-      $("#delete_btn").css('visibility','hidden');
+      $("#transforms_btn").click(function(event){
+        $("body").css("overflow", "hidden");
+        $(window).scrollTop(0);
+        $("#transforms_to_div").show();
+      });
 
+      $("#close_transforms_to_div").click(function(event){
+        $("body").css("overflow", "auto");
+        $("#transforms_to_div").hide();
+      });
+
+      $(".transforms_to_btn").click(function(event){
+        $("#transforms_to_div_main_input").val($(this).attr('id'));
+        $("#transform_doc").submit()
+      });
 
       $('.doc_history_point_doc_data').click(function(event){
         window.location = '/view?type=docs&id='+$(this).attr('id')+'&type2='+params.get('type2')
       })
 
-      function addRowToTable(data) {
-        // Get a reference to the table's <tbody> element
-        const tableBody = document.querySelector("#doc_table tbody");
+      $('#save_btn').click(function(){
+        removeRow($("#num_of_rows").val()-1);
+        $('#create_doc_form').submit();
+      })
+    }
 
-        // Create a new row
-        const newRow = document.createElement("tr");
-        newRow.classList.add("glass_effect_2");
-
-        // Create and append cells to the row
-        data.forEach(data => {
-          const cell = document.createElement("td");
-          const cellDiv = document.createElement("div");
-          cellDiv.classList.add('table_cell_div')
-          cellDiv.textContent = data; // Set the cell's data inside the div
-          cell.appendChild(cellDiv); // Append the div to the cell
-          newRow.appendChild(cell);  // Append the cell to the row
-        });
-
-        // Append the row to the table body
-        tableBody.appendChild(newRow);
-      }
-    
     });
   </script>
 </html>

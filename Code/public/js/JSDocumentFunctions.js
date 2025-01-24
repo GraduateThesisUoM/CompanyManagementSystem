@@ -175,12 +175,10 @@ function addNewRow(index,items) {
 
 }*/
 
-function removeRow(index, submit) {
+function removeRow(index) {
     $("#row"+index).remove()
     calculate_total_cost();
-    if (!submit) {
-      $("#num_of_rows").val(parseInt($("#num_of_rows").val()) - 1);
-    }
+   
     allow_submit();
     let i = 1; // Initialize i
     for (const r of $('.row_aa')) {
