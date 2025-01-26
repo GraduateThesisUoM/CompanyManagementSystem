@@ -148,8 +148,8 @@ async function create_node(data) {
       title: data.title,
       due_date: data.due_date,
     };
-  }
-  else if (data.type == 6){
+  }  else if (data.type == 6){
+    new_data.data = data.data;
     new_data.status = 2;
   }
 
@@ -186,10 +186,7 @@ async function node_reply(data) {
         type2: 3,
       })
       target_node.status = 2;
-      target_node.next = new_node._id;
     }
-    await target_node.save()
-    return new_node
   }
   else if( target_node.type == 3){
     var receiver = target_node.sender_id
@@ -209,12 +206,23 @@ async function node_reply(data) {
       text : data.text
     })
 
-    target_node.next = new_node._id
     target_node.status = data.reply
+  }
+  else if ( target_node.type == 6){
+    new_node = await create_node({
+      company: target_node.company,
+      sender_id: data.user,
+      receiver_id: target_node.receiver_id,
+      type: 6,
+      type2: data.type2,
+      data: data.data,
+      text : data.text
+    })
+  }
 
-    await target_node.save()
-    return new_node
-  } 
+  target_node.next = new_node._id;
+  await target_node.save()
+  return new_node
   
   
   /*if( target_node.type == 1){//1=relationship
@@ -641,11 +649,9 @@ async function get_obj_by_id(data, schema) {
 
 async function update(id, schema , data){
   try {
-    console.log('update');
-    console.log(data);
-
     var obj = await get_obj_by_id(id, schema);
-    var fieldsToUpdate;
+    console.log('update '+schema);
+    console.log(data);
 
     if (schema == 'documents') {
       obj.generalDiscount = data.generalDiscount; 
@@ -653,7 +659,16 @@ async function update(id, schema , data){
       obj.invoiceData = data.invoiceData;
     }
     else if(schema == 'nodes') {
-      obj.text = data.text; 
+      if(obj.type == 1 && obj.type2 == 1){
+        var relationshipNode = node_reply({
+          target_node : node,
+          type2: 3,
+          status: data.action});
+      }
+      else{
+        obj.text = data.text;
+      }
+       
     }
     else if (schema == 'series') {
         obj.title = data["input0"];

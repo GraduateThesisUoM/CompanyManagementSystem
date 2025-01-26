@@ -280,8 +280,15 @@
     margin: 0px 0px  10px 0px;
     padding: 5px;
     border-radius: 5px;
-    background-color: rgb(199, 199, 199) !important;
     box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.5) ;
+}
+
+.day_line.leave{
+    background-color: rgba(163, 34, 34, 0.714) !important;
+}
+.day_line.work{
+    /*background-color: rgb(199, 199, 199) !important;*/
+    background-color: rgba(62, 163, 34, 0.714) !important;
 }
 
 #filter_div{

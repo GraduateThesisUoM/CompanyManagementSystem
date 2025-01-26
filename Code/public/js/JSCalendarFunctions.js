@@ -1,23 +1,28 @@
-function new_event(id,nodes,selected_date,user_id){   
-    $("#day_data_users div").each((_, element) => {
-        const checkbox = $(element).find("input[type='checkbox']");
-        $(element).show();
-        checkbox.show();
-    });
+function new_event(selected_date,user_id){ 
+    $('#action').val('new')
+  
+    const dummys = $('.dummy');
+
+    dummys.eq(0).val(selected_date);
+    $("#day_data_input_date").val(selected_date);
+    dummys.eq(1).val(selected_date);
+    $("#day_data_input_date_to").val(selected_date);
 
     $("#day_data").show();
     $("#day_data_input_user_id").val(user_id);
 
-    $("#day_data_input_date").val(selected_date);
-    $("#day_data_input_date_to").val(selected_date);
 
-    $("#time_table_hours_start").val("");
-    $("#time_table_minutes_start").val("");
+    $("#time_table_hours_start").val(0);
+    dummys.eq(2).val(0);
+    $("#time_table_minutes_start").val(0);
+    dummys.eq(3).val(0);
 
-    $("#time_table_hours_end").val("");
-    $("#time_table_minutes_end").val("");
+    $("#time_table_hours_end").val(1);
+    dummys.eq(4).val(1);
+    $("#time_table_minutes_end").val(0);
+    dummys.eq(5).val(0);
 
-    return 1;
+  return 1;
 }
 
 function view_edit_event(id, nodes,users) {
@@ -28,12 +33,16 @@ function view_edit_event(id, nodes,users) {
 
     // Find the node with the matching ID
     let node = nodes.find(node => node._id === id);
-    let user = users.find(user => user._id === node.receiver_id);
+    //let user = users.find(user => user._id === node.receiver_id);
 
     if (node) {       
         // Populate the inputs with the node's data
         $("#day_data_input_user_id").val(node.user._id);
         $("#day_data_input_node_id").val(id);
+
+        $("#time_table_type_select").val(node.type2);
+        $("#time_table_type").val(node.type2);
+        
 
         let selectedDate = formatDate(new Date(node.data.date));
         $("#day_data_input_date").val(selectedDate);

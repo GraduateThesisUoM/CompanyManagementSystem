@@ -68,8 +68,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr class="glass_effect_2">
+                            <!--tr class="glass_effect_2"-->
                                 <%if(list_items.length==0){%>
+                                <tr class="glass_effect_2">
                                     <% for (let i=0; i <=column_titles.length; i++) { %>
                                         <% if (column_titles[i] != 'ID') { %>
                                             <th>-</th>
@@ -95,7 +96,7 @@
                                         </div>
                                     </td>
 
-                                </tr>
+                                <!--/tr-->
                                 <% }); }%>
 
                             </tr>
@@ -184,7 +185,12 @@
                         $("#list_header").text("Client")
                     }
                 }
-                
+                else if (searchfor == 'reviews'){
+                    $(".btn_column").hide();
+                    filter_containers.eq(0).hide();
+                    filter_containers.eq(1).hide();
+                    $(".glass_effect_2").css('height', '40px');
+                }
                 $("#searchfor").val(searchfor);
 
 

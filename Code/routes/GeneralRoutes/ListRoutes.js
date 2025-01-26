@@ -20,7 +20,7 @@ const Document = require(path_constants.schemas.two.document);
 const Series = require(path_constants.schemas.two.series);
 const Warehouse = require(path_constants.schemas.two.warehouse);
 const Node = require(path_constants.schemas.two.node);
-
+const Review = require(path_constants.schemas.two.review);
 
 
 /*--------   ADMIN - USER PROFILE*/
@@ -251,7 +251,37 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Type",
           "Status"
         ]
+      }else if(req.query.searchfor == "reviews"){
+        var list_items = await Review.find({reviewed_id: req.user._id});
+        
+        list_items = await Promise.all(
+          list_items.map(async (review) => {
+            const client = await User.findOne({ _id: review.reviewer_id });
+            const company = await Company.findOne({ _id: review.company });
+        
+            return {
+              data: [
+              review._id,
+              company.name,
+              generalFunctions.formatDate(review.registrationDate),
+              `${client.firstName} ${client.lastName}`,
+              review.rating,
+              review.text.length > 10 ? review.text.substring(0,10) + "..." : review.text,
+              ],
+            };
+          })
+        );
+             
+        column_titles = [
+          "ID",
+          "Client",
+          "Date",
+          "Reviewer",
+          "Rating",
+          "Comments"
+        ]
       }
+    
 
       var data = {
         user: req.user,

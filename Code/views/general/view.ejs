@@ -31,11 +31,13 @@
       <div>
         <h1 class="asap-condensed-extralight">View</h1>
         <form action="/view" method="POST" id="view_form" class="glass_effect_2">
-          <input type="text" id="status" name="status" value="<%=status%>" style="display: block;"/>
+          <%if(status){%>
+          <input type="text" id="status" name="status" value="<%=status%>" style="display: none;"/>
           <div id="status_div" style="display: flex; flex-direction: row;">
             <div id="status_mark"></div>
             <div id="status_label">Active</div>
           </div>
+          <%}%>
           <input type="text" id="obj_id" name="obj_id" style="display: none" />
           <input type="text" id="obj_type2" name="obj_type2" style="display: none" />
           <input type="text" id="obj_type" name="obj_type" style="display: none" />
@@ -205,6 +207,18 @@
               </div>
               <br>
             </div>
+            <% }else if(type[index] == 16){ %>
+              <div id="<%= title %>" class="my_label_1"><%= title %> : <%= data[index] %></div>
+              <div>
+                <% for (let i = 0; i < 5; i++) { %>
+                  <% if (i < data[index]) { %>
+                    <img width="50" height="50" src="https://img.icons8.com/ios-filled/50/FAB005/star--v1.png" alt="star--v1"/>
+                  <% } else { %>
+                    <img width="50" height="50" src="https://img.icons8.com/ios-filled/50/4D4D4D/star--v1.png" alt="star--v1"/>
+                  <% } %>
+                <% } %>
+                
+              </div>
             <% }else{ %> <lable class="my_label_1" for="<%= title %>"><%= title %></lable>
             <input name="input<%= index %>" id="<%= title %>" class="input_type_1" value="<%= data[index] %>" />
             <% }%>
@@ -240,154 +254,6 @@
         </form>
         <!--div id="message_div">Record has been deleted</div-->
         <button class="asap-condensed-regular delete_btn" id="btn1" style="margin-bottom: 50px;">Delete</button>
-
-        <div id="clients">
-          <button>ΦΠΑ</button>
-          <button id="time_table_btn">Time Table</button>
-          <button id="time_table_btn">PayRoll</button>
-          <div id="time_table_div">
-            <div id="calendar_div" class="asap-condensed-regular glass_effect_1">
-              <div id="filter_div">
-                <button class="calendar_date_reage_btn" id="tt_day">Day</button>
-                <button class="calendar_date_reage_btn" id="tt_week">Week</button>
-                <button class="calendar_date_reage_btn" id="tt_month">Month</button>
-                <input id="day_picker" type="date" />
-                <select id="user_select">
-                  <option value="all">All</option>
-                </select>
-              </div>
-              <div id="calendar_header">
-                <div id="selected_year"></div>
-                <div id="selected_month"></div>
-              </div>
-
-              <div id="day" class="day now day_date"></div>
-              <div id="week" class="week">
-                <div class="days">
-                  <div class="day week_date"></div>
-                  <div class="day week_date"></div>
-                  <div class="day week_date"></div>
-                  <div class="day week_date"></div>
-                  <div class="day week_date"></div>
-                  <div class="day week_date"></div>
-                  <div class="day week_date"></div>
-                </div>
-              </div>
-              <div id="month" class="month">
-                <div class="days">
-                  <div class="week">
-                    <div class="days">
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                    </div>
-                  </div>
-                  <div class="week">
-                    <div class="days">
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                    </div>
-                  </div>
-                  <div class="week">
-                    <div class="days">
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                    </div>
-                  </div>
-                  <div class="week">
-                    <div class="days">
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                    </div>
-                  </div>
-                  <div class="week">
-                    <div class="days">
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                    </div>
-                  </div>
-                  <div class="week">
-                    <div class="days">
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                      <div class="day month_date"></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div id="secondary_data" style="display: none">f</div>
-        <div id="day_data">
-          <div id="day_data_header">
-            <div>
-              <img id="close_btn" src="x.svg" />
-            </div>
-            <div id="day_data_date_time">
-              <div><input type="date" class="dummy asap-condensed-regular" /> <input type="date" class="dummy asap-condensed-regular" /></div>
-              <div>
-                <input class="dummy asap-condensed-regular" type="number" max="23" min="0" placeholder="0" />
-                :
-                <input class="dummy" type="number" max="59" min="0" placeholder="0" />
-
-                -
-                <input class="dummy" type="number" max="23" min="0" placeholder="0" />
-                :
-                <input class="dummy" type="number" max="59" min="0" placeholder="0" />
-              </div>
-            </div>
-          </div>
-
-          <div id="day_data_body">
-            <div id="day_data_users">
-              <div>All <input class="all_selected_users" type="checkbox" value="all" /></div>
-            </div>
-            <div>
-              <input id="new_edit_time_teble" name="new_edit_time_teble" style="display: none" />
-              <label for="time_table_notes">Notes</label><br />
-              <div id="textarea_conatainer">
-                <textarea class="dummy" placeholder="Notes..."></textarea>
-              </div>
-            </div>
-          </div>
-          <div id="day_data_footer">
-            <div>
-              <button id="delete_event" type="button">Delete</button>
-            </div>
-            <div>
-              <button id="time_table_submit_btn">Submit</button>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </body>
@@ -517,16 +383,6 @@
         }
         $("#clients").show();
 
-        if (queryParams.timetable) {
-          show_hide_time_table();
-          show_calendar(queryParams.timetable);
-        }
-
-        if (queryParams.timetable_user) {
-          $("#user_select").val(queryParams.timetable_user);
-        } else {
-          $("#user_select").val("all");
-        }
 
         $("#btn2").text("Remove");
         $("#btn2").click(function (event) {
@@ -534,6 +390,10 @@
           alert("Remove Client");
         });
       } else if (queryParams.type == "reports") {
+        $("#btn1").hide();
+        $("#btn2").hide();
+        $("#btn3").hide();
+      } else if (queryParams.type == "reviews") {
         $("#btn1").hide();
         $("#btn2").hide();
         $("#btn3").hide();
@@ -738,7 +598,8 @@
       }
 
       $("#time_table_btn").click(function () {
-        show_hide_time_table();
+        window.location = "/calendar?id="+queryParams.id+"&timetable=month&timetable_user=all";
+        //show_hide_time_table();
       });
 
       function show_hide_time_table() {

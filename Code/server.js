@@ -134,7 +134,7 @@ app.use(path_constants.pages.transfrom_doc.url, require(path_constants.pages.tra
 //edit doc
 app.use(path_constants.pages.edit_doc.url, require(path_constants.pages.edit_doc.file));
 
-//transform doc
+//calendar
 app.use(path_constants.pages.calendar.url, require(path_constants.pages.calendar.file));
 
 const http = require('http').createServer(app);

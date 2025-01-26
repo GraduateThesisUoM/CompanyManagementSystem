@@ -149,22 +149,10 @@ async function fetchOneClient(accountantId,clientId){
 
 }
 
-async function relationship_accept_reject(companyId,action){
-    try{
-        const relationshipNode = await Node.findOne({company:companyId,next:'-',status:2,type:1,type2:3})
-        relationshipNode.status = action;
-        await relationshipNode.save();
-        console.log(action+" done"); 
-    }
-    catch(e){
-        console.log(e)
-    }
-}
-
 module.exports = {
     send_hiring_req_to_accountant,
     fire_accountant, fetchOneClient,
-    fetchClients, 
-    relationship_accept_reject,cancel_hiring_req_to_accountant
+    fetchClients,
+    cancel_hiring_req_to_accountant
 };
 

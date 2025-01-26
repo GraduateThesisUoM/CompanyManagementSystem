@@ -23,6 +23,8 @@ const Series = require(path_constants.schemas.two.series);
 const Warehouse = require(path_constants.schemas.two.warehouse);
 const Client = require(path_constants.schemas.two.client);
 const Accountant = require(path_constants.schemas.two.accountant);
+const Review= require(path_constants.schemas.two.review);
+
 
 /*
 0 text-readonly
@@ -35,6 +37,8 @@ const Accountant = require(path_constants.schemas.two.accountant);
 10 nodes
 13 simple text display
 14 select warehose
+15
+16 star review
 */
 
 
@@ -238,9 +242,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             
           } else if (type == "nodes") {
             obj = await Node.findOne({ _id: id });
-            console.log(obj)
-            console.log(req.user._id)
-            console.log(obj.receiver_id.equals( req.user._id))
             if (obj.status == 3 && obj.receiver_id.equals( req.user._id)) {//pending and user is the receiver
               obj.status = 1;//viewed
               await obj.save();
@@ -305,7 +306,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               nodes: nodes,
               users: await Client.find({ company: id, status: 1 }),
             };
-          } else if (type == "companys") {
+          } else if (type == "companies") {
             obj = await Company.findOne({ _id: id });
             const users = await User.find({company: obj._id})
             const ac_node = await Node.findOne({company:obj._id, status:2,next:'-'})
@@ -362,6 +363,16 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               users: await Client.find({ company: id, status: 1 }),
             };
           }
+          else if (type == "reviews"){
+            obj = await Review.findOne({ _id: id });
+            let comp = await Company.findOne({ _id: obj.company });
+            let prsn = await User.findOne({ _id: obj.reviewer_id });
+
+            data.data = [comp.name, prsn.lastName+" 0"+prsn.lastName, obj.rating, obj.text];
+            data.titles = ["Company","Reviewer", "Rating", "Text"];
+            data.type = [13,13,16,13];
+
+          }
           
         } else {
           console.log("ERROR");
@@ -405,22 +416,34 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     var data = {};
     console.log("ViewRoutes");
+    
     var obj_type = req.body.obj_type;
     var obj_id = req.body.obj_id;
     var type2 = req.body.obj_type2;
-    var obj_data = req.body;
 
-    /*console.log(obj_type)
-    console.log(obj_id)
-    console.log(type2)
-
-    console.log(obj_data)*/
-
-
+    await generalFunctions.update({ _id: req.body.obj_id }, obj_type, req.body);
  
-    if (req.body.action == "save") {
+    /*if (req.body.action == "save") {
       await generalFunctions.update({ _id: req.body.obj_id }, obj_type, obj_data);
     }
+    else if (req.body.type == "nodes"){
+      const node = await Node.findOne({ _id: obj_id });
+      console.log("node"+node)
+      if(node.type == 1 && node.type2 == 1){
+        if(req.body.action == "executed"){
+          await clientAccountantFunctions.relationship_accept_reject(obj_id,2)
+        }
+        else if(req.body.action == "rejected"){
+          await clientAccountantFunctions.relationship_accept_reject(obj_id,4)
+        }
+      }
+    }
+    /*else if (obj_type =='nodes' || req.body.action == "executed"){
+      await clientAccountantFunctions.relationship_accept_reject(req.body.obj_id,action)
+    }
+    else if (req.body.action == "rejected" || req.body.action == "executed"){
+      await clientAccountantFunctions.relationship_accept_reject(req.body.obj_id,action)
+    }*/
     
 
     if(type2){
