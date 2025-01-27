@@ -256,6 +256,11 @@
       $("#obj_type2").val(queryParams.type2);
       $("#obj_type").val(queryParams.type);
 
+      if (queryParams.refresh) {
+        let newUrl = window.location.href.replace(/[?&]refresh=1/, '');
+        window.location = newUrl;
+      }
+
       if (queryParams.timetable) {
         $("#calendar_view_selection").val(queryParams.timetable);
         $("#tt_" + queryParams.timetable).addClass("selected");

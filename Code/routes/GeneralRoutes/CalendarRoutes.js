@@ -125,7 +125,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     }
     
 
-    return res.redirect('/calendar?id='+obj_id+'&timetable=month&timetable_user=all');
+    return res.redirect('/calendar?id='+obj_id+'&timetable='+req.body.calendar_view_selection+'&timetable_user='+req.body.day_data_input_user_id+'&refresh=1');
 
   } catch (e) {
     console.error(e);
