@@ -14,13 +14,8 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 //Models
 const Company = require(path_constants.schemas.two.company);
 const Node = require(path_constants.schemas.two.node);
-const Notification = require(path_constants.schemas.two.notification);
 const User = require(path_constants.schemas.two.user);
-const Item = require(path_constants.schemas.two.item);
 const Person = require(path_constants.schemas.two.person);
-const Document = require(path_constants.schemas.two.document);
-const Series = require(path_constants.schemas.two.series);
-const Warehouse = require(path_constants.schemas.two.warehouse);
 const Client = require(path_constants.schemas.two.client);
 const Accountant = require(path_constants.schemas.two.accountant);
 
@@ -49,6 +44,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
                 };
               })
             );
+            console.log(nodes)
 
             res.render(path_constants.pages.calendar.view(), {
               user: req.user,
@@ -83,7 +79,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     if(req.body.day_data_input_node_id != ""){
       node = generalFunctions.node_reply ({
         target_node : await Node.findOne({ _id: req.body.day_data_input_node_id }),
-        type2: req.body.time_table_type,
+        type2: parseInt(req.body.time_table_type),
         text:  req.body.time_table_notes,
         user : req.user._id,
         data: {
@@ -125,7 +121,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     }
     
 
-    return res.redirect('/calendar?id='+obj_id+'&timetable='+req.body.calendar_view_selection+'&timetable_user='+req.body.day_data_input_user_id+'&refresh=1');
+    return res.redirect('/calendar?id='+obj_id+'&timetable='+req.body.calendar_view_selection+'&timetable_user='+req.body.day_data_input_user_filter+'&refresh=1');
 
   } catch (e) {
     console.error(e);

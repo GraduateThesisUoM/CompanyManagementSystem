@@ -350,5 +350,14 @@ function get_item_from_list(list,id){
     return 'not found'
 }
 
-
+function go_back(url) {
+    alert(url)
+    const path = new URL(url).pathname; // Extract the path (e.g., "/view")
+  
+  if (path.includes('view')) {
+      return '/list';
+    } else {
+        return  '/';
+    }
+  }
 

@@ -2,7 +2,7 @@
   {
     "_id": "6744cea94215507895961cc0",
     "registrationDate": "2024-11-25T19:23:21.465Z",
-    "last_log_out": "2025-01-04T22:39:23.950Z",
+    "last_log_out": "2025-01-27T18:32:53.685Z",
     "firstName": "ac1",
     "lastName": "ac1",
     "email": "ac1@ac1",

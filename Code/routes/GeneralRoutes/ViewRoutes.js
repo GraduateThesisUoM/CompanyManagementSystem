@@ -421,30 +421,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     var obj_id = req.body.obj_id;
     var type2 = req.body.obj_type2;
 
-    await generalFunctions.update({ _id: req.body.obj_id }, obj_type, req.body);
- 
-    /*if (req.body.action == "save") {
-      await generalFunctions.update({ _id: req.body.obj_id }, obj_type, obj_data);
-    }
-    else if (req.body.type == "nodes"){
-      const node = await Node.findOne({ _id: obj_id });
-      console.log("node"+node)
-      if(node.type == 1 && node.type2 == 1){
-        if(req.body.action == "executed"){
-          await clientAccountantFunctions.relationship_accept_reject(obj_id,2)
-        }
-        else if(req.body.action == "rejected"){
-          await clientAccountantFunctions.relationship_accept_reject(obj_id,4)
-        }
-      }
-    }
-    /*else if (obj_type =='nodes' || req.body.action == "executed"){
-      await clientAccountantFunctions.relationship_accept_reject(req.body.obj_id,action)
-    }
-    else if (req.body.action == "rejected" || req.body.action == "executed"){
-      await clientAccountantFunctions.relationship_accept_reject(req.body.obj_id,action)
-    }*/
-    
+    await generalFunctions.update({ _id: req.body.obj_id }, obj_type, req.body);   
 
     if(type2){
       return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);

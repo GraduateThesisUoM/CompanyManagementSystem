@@ -8,11 +8,9 @@
     "count": 0,
     "sealed": 0,
     "effects_warehouse": 0,
-    "credit": 0,
-    "debit": 0,
+    "effects_account": 0,
     "type": 2,
     "status": 1,
-    "transforms": 1,
     "transforms_to": [],
     "__v": 0
   },
@@ -25,11 +23,9 @@
     "count": 0,
     "sealed": 0,
     "effects_warehouse": 1,
-    "credit": 0,
-    "debit": 0,
+    "effects_account": 0,
     "type": 1,
     "status": 1,
-    "transforms": 0,
     "transforms_to": [],
     "__v": 0
   }

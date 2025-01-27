@@ -61,16 +61,13 @@ async function cancel_hiring_req_to_accountant(companyId, accountantId){
         company_node.locked = 1;
         await company_node.save();
 
-        const notification = await Notification.findOne({company:companyId,relevant_user_id:accountantId,type:'hiring-notification'})
-        console.log(notification);
-        notification.type = 'cancel-hiring-req-notification'
-        await notification.save();
         console.log("Request to Accountant Canceled");
     }
     catch(e){
         console.log(e)
     }
 }
+
 
 async function fire_accountant(companyId,senderId,accountantId){
     try{
@@ -113,7 +110,7 @@ async function fetchClients(accountantId,select){
         var nodes
 
         if(select == 'all'){
-            nodes = await Node.find({receiver_id:accountantId, type:1,type2:3, status:2  });
+            nodes = await Node.find({receiver_id:accountantId, type:1,type2:3, status:2 ,next:'-' });
             for(node of nodes){
                 clients.push(await Company.findOne({_id:node.company}))
             }
@@ -153,6 +150,6 @@ module.exports = {
     send_hiring_req_to_accountant,
     fire_accountant, fetchOneClient,
     fetchClients,
-    cancel_hiring_req_to_accountant
+    cancel_hiring_req_to_accountant,
 };
 

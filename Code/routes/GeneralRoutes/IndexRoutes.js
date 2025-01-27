@@ -42,10 +42,11 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           status: 3,//pending
           next:'-',
           type: { $in: [1, 3] },//relationship,request
-          /*type2 : { $ne: 3 }*/
+          type2 : { $nin: [3,9] }
         });
+        console.log("nodes_pending")
         console.log(nodes_pending)
-        console.log("----")
+
 
         var pending_nodes_list = []
         for( node of nodes_pending){
@@ -115,10 +116,10 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
         const rejected_nodes = await Node.find({
           receiver_id: req.user._id,
-          status: 4,//rejected
+          status: { $in: [4, 5] },//rejected
           next:'-',
           type: { $in: [1, 3] },//relationship,request
-          type2 : { $ne: 3 }
+          //type2 : { $ne: 3 }
         });
 
         for( node of rejected_nodes){
@@ -133,6 +134,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             status: node.status
           })
         }
+
+        console.log("Recected")
+        console.log(rejected_nodes)
 
 
         data = {

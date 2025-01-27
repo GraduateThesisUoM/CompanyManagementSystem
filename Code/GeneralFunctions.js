@@ -173,20 +173,14 @@ async function node_reply(data) {
   var new_node;
 
   if( target_node.type == 1){//1=relationship
-    if( data.reply == 4){
-      target_node.status = 4;
-      new_node =  target_node;
-    }
-    else{
-      new_node = await create_node({
-        company: target_node.company,
-        sender_id: target_node.sender_id,
-        receiver_id: target_node.receiver_id,
-        type: 1,
-        type2: 3,
-      })
-      target_node.status = 2;
-    }
+    new_node = await create_node({
+      company: target_node.company,
+      sender_id: target_node.sender_id,
+      receiver_id: target_node.receiver_id,
+      type: 1,
+      type2: data.type2,
+    })
+    target_node.status = 2;
   }
   else if( target_node.type == 3){
     var receiver = target_node.sender_id
@@ -219,87 +213,13 @@ async function node_reply(data) {
       text : data.text
     })
   }
-
+  await new_node.save()
   target_node.next = new_node._id;
   await target_node.save()
   return new_node
   
   
-  /*if( target_node.type == 1){//1=relationship
-    reply_node.type2 = data.reply;
-    if(data.reply == 1){//1=hiring
-      reply_node.status = 2// executed
-    }
-    else{
-      reply_node.status = 4 // rejected
-    }
-  }
-  else if(target_node.type == 4){//request
-    var new_data = {
-      company: data.company,
-      type: target_node.type,
-      type2: target_node.type2,
-      status: 3,//pending
-      text: data.text
-    };
-    if(target_node.sender_id == data.sender_id){
-      new_data.sender_id = target_node.sender_id
-      new_data.receiver_id = target_node.receiver_id
-    }
-    else{
-      new_data.sender_id = target_node.receiver_id
-      new_data.receiver_id = target_node.sender_id
-    }
-    const new_node = new Node(new_data);
-  }
-
-  // -------------receiver_id
-  var receiver = target_node.sender_id;
-  if(receiver == data.user._id || data.reply == 6){
-    receiver = target_node.receiver_id
-  }
-
-
-  const reply_node = await create_node({
-    company: target_node.company,
-    sender_id: data.user._id,
-    receiver_id: receiver,
-    type: target_node.type,
-  });
-  if(data.user._id != target_node.sender_id){
-    reply_node.status = 2;//executed
-  }
-  reply_node.title = target_node.title;//executed
-
-  if( target_node.type == 1){
-    reply_node.type2 = data.reply;
-  }
-  if( target_node.type == 3){//request
-    reply_node.type2 = 3;//response
-  }
-
-  // -------------type
-  /*if (data.reply) reply_node.type = data.reply;
-
-  // -------------type2
-  if (data.reply == 6) reply_node.type2 = 6;
-  else if (target_node.type2 == 1) reply_node.type2 = 1;
-
-  // -------------status
-  if (data.status)reply_node.status = data.status
-  else if ([2, 3, 6].includes(data.reply))reply_node.status = 2;*/
-
-  /*if (data.text) reply_node.text = data.text;
-  if (data.data) reply_node.data = data.data;
-
-
-  await reply_node.save();
-
-  target_node.next = new mongoose.Types.ObjectId(reply_node._id);
-  target_node.status = 2;//executed
-  await target_node.save();
-
-  return reply_node;*/
+ 
 }
 
 async function create_company(data) {
@@ -650,6 +570,7 @@ async function get_obj_by_id(data, schema) {
 async function update(id, schema , data){
   try {
     var obj = await get_obj_by_id(id, schema);
+    console.log(obj);
     console.log('update '+schema);
     console.log(data);
 
@@ -659,9 +580,10 @@ async function update(id, schema , data){
       obj.invoiceData = data.invoiceData;
     }
     else if(schema == 'nodes') {
+      console.log(obj)
       if(obj.type == 1 && obj.type2 == 1){
         var relationshipNode = node_reply({
-          target_node : node,
+          target_node : obj,
           type2: 3,
           status: data.action});
       }
@@ -722,14 +644,42 @@ async function update(id, schema , data){
       obj.country = data.input10
       obj.zip = data.input11
     }
+    else if (schema == 'clients'){
+      var targ = await Node.findOne({company:id,type:1,type2:3,status:2,next:'-'});
+      console.log(targ)
+      var relationshipNode = node_reply({
+        target_node : targ,
+        type2: 9,
+        status: 2});
+        var req = await Node.find({
+          company: id,
+          //receiver_id: targ.receiver_id, 
+          type: 3, 
+          type2: { $in: [31,32,33,34] },
+          status: { $in: [1,3] }
+        });
+
+        for(r of req) {
+          r.status = 5; // Set status to 5 (Canceled)
+          await r.save();
+        }
+    }
 
     console.log(obj);
       
-    await obj.save();
   } catch (e) {
     console.log(e);
   }
 }
+
+function go_after(url) {
+  if (url.includes('view')) {
+    window.location = '/list';
+  } else {
+    window.location = '/';
+  }
+}
+
 
 async function create_notification(
   userID,

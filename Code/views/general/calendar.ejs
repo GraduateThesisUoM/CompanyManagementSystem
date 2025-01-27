@@ -34,7 +34,8 @@
           <input type="text" id="obj_id" name="obj_id" style="display: none" />
           <input type="text" name="action" id="action" />
           <div >
-            <input name="day_data_input_user_id" id="day_data_input_user_id" />
+            <input name="day_data_input_user_id" id="day_data_input_user_id" value="all"/>
+            <input name="day_data_input_user_filter" id="day_data_input_user_filter" value="all"/>
             <input name="day_data_input_node_id" id="day_data_input_node_id" />
             <input name="calendar_view_selection" id="calendar_view_selection" />
 
@@ -52,7 +53,7 @@
             :
             <input name="time_table_minutes_end" id="time_table_minutes_end" type="number" max="59" min="0" />
             
-            <input name="time_table_type" id="time_table_type"/>
+            <input name="time_table_type" id="time_table_type" value="61"/>
 
             <input name="time_table_notes" type="text" id="time_table_notes" />
           </div>
@@ -190,8 +191,8 @@
             </div>
             <div>
               <select id="time_table_type_select" style="width: calc(100% - 10px);padding: 5px; border-radius: 5px;" class="my_select">
-                <option value="61">Work</option>
-                <option value="62">Leave</option>
+                <option value=61>Work</option>
+                <option value=62>Leave</option>
               </select>
               <label for="time_table_notes">Notes</label><br />
               <div id="textarea_conatainer">
@@ -237,7 +238,6 @@
       $("#month_picker_month").hide();
       $("#month_picker").hide();
 
-      $("#time_table_div").hide();
 
       $("#day_data").hide();
 
@@ -255,29 +255,31 @@
       $("#obj_id").val(queryParams.id);
       $("#obj_type2").val(queryParams.type2);
       $("#obj_type").val(queryParams.type);
+      
 
-      if (queryParams.refresh) {
-        let newUrl = window.location.href.replace(/[?&]refresh=1/, '');
-        window.location = newUrl;
-      }
-
-      if (queryParams.timetable) {
-        $("#calendar_view_selection").val(queryParams.timetable);
-        $("#tt_" + queryParams.timetable).addClass("selected");
-        show_hide_time_table();
-        show_calendar(queryParams.timetable);
+      for (client of users) {
+        $("#user_select").append(`<option value="${client._id}">${client.firstName} ${client.lastName}</option>`);
+        $("#day_data_users").append(`<div>${client.firstName} ${client.lastName} <input class="all_selected_users" type="checkbox" value="${client._id}"></div>`);
       }
       if (queryParams.timetable_user) {
         $("#user_select").val(queryParams.timetable_user);
+        $("#day_data_input_user_id").val(queryParams.timetable_user);
+        $("#day_data_input_user_filter").val(queryParams.timetable_user);
       } else {
         $("#user_select").val("all");
       }
 
-      for (client of users) {
-          $("#user_select").append(`<option value="${client._id}">${client.firstName} ${client.lastName}</option>`);
-          $("#day_data_users").append(`<div>${client.firstName} ${client.lastName} <input class="all_selected_users" type="checkbox" value="${client._id}"></div>`);
-        }
-        //$("#clients").show();
+      if (queryParams.refresh) {
+        window.location = "/calendar?id=" + queryParams.id + "&timetable=" + queryParams.timetable + "&timetable_user=" + $("#user_select").val();
+      }
+
+      
+
+        $("#calendar_view_selection").val(queryParams.timetable);
+        $("#tt_" + queryParams.timetable).addClass("selected");
+        //day_week_month("month");
+        $("#day_picker").val(selected_date);
+        show_calendar(queryParams.timetable);
 
       $(".go_to_btn").click(function () {
         event.preventDefault();
@@ -289,15 +291,13 @@
         window.location = "/view?type=" + url_page + "&id=" + url_id;
       });
 
-
-
       $(".calendar_date_reage_btn").click(function () {
         let type = $(this).attr("id").replace("tt_", "");
         day_week_month(type);
       });
 
       $("#user_select").change(function () {
-        window.location = "/view?type=clients&id=" + queryParams.id + "&timetable=" + queryParams.timetable + "&timetable_user=" + $("#user_select").val();
+        window.location = "/calendar?id=" + queryParams.id + "&timetable=" + queryParams.timetable + "&timetable_user=" + $("#user_select").val();
       });
 
       function day_week_month(input) {
@@ -327,17 +327,6 @@
         pick_date();
 
         put_data_on_calendar("all");
-      }
-
-      function show_hide_time_table() {
-        if (queryParams.timetable) {
-          $("#time_table_div").toggle();
-        } else {
-          day_week_month("month");
-        }
-
-        //$("#date_from").val(selected_date);
-        $("#day_picker").val(selected_date);
       }
 
       function pick_date() {
@@ -387,6 +376,7 @@
         if (queryParams.timetable_user) {
           selected_user = queryParams.timetable_user;
         }
+        
 
         days.each(function (index, element) {
           cal_days.push(parseInt($(element).text()));
@@ -416,10 +406,9 @@
             }
           }
         }
-        // Add class 'today' if date matches today
         var today = new Date();
         days.each(function (index, element) {
-          var day = parseInt($(element).text());
+          var day = parseInt($(element).attr('id').replace('add_event_for_',''));
           var month = parseInt(selected_month);
           var year = parseInt(selected_year);
           if (day === today.getDate() && month === today.getMonth() + 1 && year === today.getFullYear()) {

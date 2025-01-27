@@ -4,7 +4,7 @@
     "company": "6744cd138aa03131f1a8251c",
     "companyOwner": 1,
     "registrationDate": "2024-11-25T19:16:35.808Z",
-    "last_log_out": "2025-01-04T22:40:29.189Z",
+    "last_log_out": "2025-01-27T18:32:33.127Z",
     "firstName": "Makis",
     "lastName": "Papas",
     "email": "c1@c1",

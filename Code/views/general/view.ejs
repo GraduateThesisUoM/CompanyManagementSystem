@@ -31,7 +31,7 @@
       <div>
         <h1 class="asap-condensed-extralight">View</h1>
         <div id="clients">
-          <button></button>
+          <button id="go_to_calendar">Calendar</button>
         </div>
         <form action="/view" method="POST" id="view_form" class="glass_effect_2">
           <%if(status){%>
@@ -358,12 +358,16 @@
 
  
         $("#clients").show();
-
-
-        $("#btn2").text("Remove");
-        $("#btn2").click(function (event) {
+        $("#btn1").text("Remove");
+        $("#btn2").hide();
+        $("#btn3").hide();
+        $("#btn1").click(function (event) {
           event.preventDefault();
-          alert("Remove Client");
+          if(confirm('Are You Sure ?')){
+            $("#action").val("remove_client");
+            $("#view_form").submit();
+          }
+          
         });
       } else if (queryParams.type == "reports") {
         $("#btn1").hide();
@@ -535,7 +539,9 @@
         }
       });
 
-
+      $("#go_to_calendar").click(function(){
+        window.location = '/calendar?id='+$("#obj_id").val()+'&timetable=month&timetable_user=all';
+      });
     });
   </script>
 </html>
