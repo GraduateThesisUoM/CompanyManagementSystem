@@ -8,7 +8,6 @@ const folders ={
 const schemas = {
   one :{
     user : "././Schemas/User",
-    notification : "././Schemas/Notification",
     company : "././Schemas/Company",
     client : "././Schemas/Client",
     series : "././Schemas/Series",
@@ -17,12 +16,9 @@ const schemas = {
     warehouse : "././Schemas/Warehouse",
     node : "././Schemas/Node",
     person : "././Schemas/Person",
-    review : "././Schemas/Review",
     document : "././Schemas/Document",
     salary : "././Schemas/Salary",
     attendance : "././Schemas/Attendance",
-
-
   },
   two:{
     user : "../../Schemas/User",

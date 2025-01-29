@@ -46,15 +46,20 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       await generalFunctions.clear_db();
       return res.redirect(`/database?message=Db is Cleaned`);
     }
-    else if(action == 'export_full_db'){
-      await generalFunctions.importExport('export');
-      return res.redirect(`/database?message=Export Completed`);
+    else if(req.body.selected_companies == 'all'){
+      await generalFunctions.importExport(action,req.body.back_up_path);
+    
+      return res.redirect(`/database?message=${action} Completed`);
     }
-    else if(action == 'import_full_db'){
-      await generalFunctions.importExport('import');
-      return res.redirect(`/database?message=Import Completed`);
+    else{
+      const selectedCompanies = req.body.selected_companies.split(';');
+      for (const company of selectedCompanies) {
+        if (company) { // Skip empty strings
+          await generalFunctions.importExport(action, company,req.body.back_up_path);
+        }
+      }
+      return res.redirect(`/database?message=${action} Completed`);
     }
-    return res.redirect(`/database`);
   } catch (e) {
       console.error(e);
       return res.redirect('/error?origin_page=/&error=' + encodeURIComponent(e.message));

@@ -16,15 +16,12 @@ const User = require(path_constants.schemas.one.user);
 const Series = require(path_constants.schemas.one.series);
 const Person = require(path_constants.schemas.one.person);
 const Document = require(path_constants.schemas.one.document);
-const Notification = require(path_constants.schemas.one.notification);
 const Node = require(path_constants.schemas.one.node);
-const Review = require(path_constants.schemas.one.review);
 const Attendance = require(path_constants.schemas.one.attendance);
 
 
 const schemaMap = {
   users: User,
-  notifications: Notification,
   companys: Company,
   clients: Client,
   series: Series,
@@ -33,7 +30,6 @@ const schemaMap = {
   persons: Person,
   accountants: Accountant,
   nodes: Node,
-  reviews: Review,
   documents: Document,
 };
 
@@ -135,7 +131,7 @@ async function create_node(data) {
   
   
   if (data.type == 1) {//relationship
-    if ((data.company.equals(data.receiver_id) && data.type2 == 1)|| (data.type2 == 2)) {
+    if ((data.company.equals(data.receiver_id) && data.type2 == 3)|| (data.type2 == 2)) {
       new_data.status = 2 //executed;
     }
     else if (data.type2 == 3){
@@ -681,42 +677,6 @@ function go_after(url) {
 }
 
 
-async function create_notification(
-  userID,
-  relevantUserID,
-  company,
-  relevantCompanyID,
-  notificationType
-) {
-  // check if a notification of the same type exists for user
-  var exist_check = await Notification.findOne({
-    $and: [
-      { user_id: userID },
-      { type: notificationType },
-      { company: relevantCompanyID },
-      { status: "unread" },
-    ],
-  });
-  var stus = "unread";
-  if (company == relevantCompanyID) {
-    stus = "read";
-  }
-
-  // if not
-  if (exist_check == null) {
-    const newNotification = new Notification({
-      //Notification constructor
-      user_id: userID,
-      relevant_user_id: relevantUserID,
-      company: company,
-      relevant_company_id: relevantCompanyID,
-      type: notificationType,
-      status: stus,
-    });
-    await newNotification.save();
-  }
-}
-
 function get_status(id) {
   switch (id) {
     case 1:
@@ -844,30 +804,34 @@ const formatDate = (dateString) => {
   return `${year}-${month}-${day}`;
 };
 
-async function importExport(action, company, schemas) {
+async function importExport(action, company,path) {
   try {
     if (!['export', 'import'].includes(action)) {
       throw new Error("Invalid action. Please specify 'export' or 'import'.");
     }
 
     if (action === 'export') {
-      await exportData(company, schemas);
-      exportAdmins();
-      exportAccountant();
+      await exportData(company,path);
+      //exportAdmins();
+      //exportAccountant();
     } else if (action === 'import') {
-      await clear_db();
-      await importData(company, schemas);
-      importAdmins();
-      importAccountants();
+      //await clear_db();
+      await importData(company,path);
+      //importAdmins();
+      //importAccountants();
     }
   } catch (error) {
     console.error("Error in master function:", error);
   }
 }
 
-async function exportData(company = null, schemas) {
+async function exportData(company = null,path_user= null) {
   try {
-    const baseDir = "./exports";
+    //const baseDir = "./exports";
+    if (path_user == null){
+      path_user = "C:\\exports";
+    }
+    const baseDir = path_user;
 
     // Create the base exports directory if it doesn't exist
     if (!fs.existsSync(baseDir)) {
@@ -876,16 +840,17 @@ async function exportData(company = null, schemas) {
     }
 
     // If schemas is null, get all schemas from schemaMap
-    if (!schemas) {
+    /*if (!schemas) {
       schemas = Object.keys(schemaMap);
       console.log("Schemas not provided. Exporting all schemas:", schemas);
-    }
+    }*/
+   var schemas = Object.keys(schemaMap);
 
     let companies;
 
     if (company != null) {
       // Find a specific company by its ID
-      companies = await Company.find({ _id:new mongoose.Types.ObjectId(company) });
+      companies = await Company.find({ _id: new mongoose.Types.ObjectId(company) });
       if (companies.length === 0) {
         console.warn(`No company found with ID: ${company}`);
         return;
@@ -900,7 +865,7 @@ async function exportData(company = null, schemas) {
     }
 
     for (const company of companies) {
-      // Create a folder for each company using `_id-name` format
+      // Create a folder for each company using _id-name format
       const companyDir = path.join(baseDir, `${company._id}-${company.name}`);
       if (!fs.existsSync(companyDir)) {
         fs.mkdirSync(companyDir);
@@ -915,23 +880,19 @@ async function exportData(company = null, schemas) {
           continue;
         }
 
-        const filePath = path.join(companyDir, `${schema}.txt`);
-        var data
-        if (model.modelName === "Company") { 
-           data = await model.find({ _id: company._id }).exec(); // Filter by company ID
-        }
-        else if (model.modelName === "Client") { 
-          data = await model.find({ __t:'client',company: company._id ,type:'user'}).exec(); // Filter by company ID
-        }
-        else if (schema == "accountants") { 
+        const filePath = path.join(companyDir, `${schema}.json`);
+        let data;
+        
+        if (model.modelName === "Company") {
+          data = await model.find({ _id: company._id }).exec();
+        } else if (model.modelName === "Client") {
+          data = await model.find({ __t: "client", company: company._id, type: "user" }).exec();
+        } else if (schema === "accountants" || schema === "users") {
           continue;
+        } else {
+          data = await model.find({ company: company._id }).exec();
         }
-        else if (schema == "users") { 
-          continue;
-        }
-        else{
-          data = await model.find({ company: company._id }).exec(); // Filter by company ID
-        }
+        
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
         console.log(`Exported data for company '${company.name}' in collection '${schema}' to ${filePath}`);
       }
@@ -941,18 +902,22 @@ async function exportData(company = null, schemas) {
   }
 }
 
-async function importData() {
-  try {
-    const baseDir = "./exports";
 
-    // Check if the base exports directory exists
+
+
+async function importData(company = null,path_user) {
+  try {
+    if (path_user == null){
+      path_user = "C:\\exports"
+    }
+    const baseDir = path_user;
+
     if (!fs.existsSync(baseDir)) {
       console.error(`Exports directory not found: ${baseDir}`);
       return;
     }
 
-    // Get all company subdirectories
-    const companyDirs = fs
+    let companyDirs = fs
       .readdirSync(baseDir)
       .filter((dir) => fs.statSync(path.join(baseDir, dir)).isDirectory());
 
@@ -960,28 +925,32 @@ async function importData() {
       console.warn("No company directories found in exports.");
       return;
     }
-    companyDirs.pop(1);
-    companyDirs.pop(2);
+
+    if (company) {
+      // Filter for the specified company ID
+      companyDirs = companyDirs.filter((dir) => dir.startsWith(`${company}-`));
+      if (companyDirs.length === 0) {
+        console.warn(`No export data found for company ID: ${company}`);
+        return;
+      }
+    }
 
     for (const companyDirName of companyDirs) {
-      // Extract company ID and name from directory name
       const [companyId, ...companyNameParts] = companyDirName.split("-");
       const companyName = companyNameParts.join("-");
       const companyDir = path.join(baseDir, companyDirName);
 
       console.log(`Processing company: ID=${companyId}, Name=${companyName}`);
 
-      // Create or verify the company in the database
-      const company = await Company.findOneAndUpdate(
+      const companyObj = await Company.findOneAndUpdate(
         { _id: companyId },
         { _id: companyId, name: companyName },
         { upsert: true, new: true }
       );
 
-      // Get all schema files in the company's directory
       const schemaFiles = fs
         .readdirSync(companyDir)
-        .filter((file) => file.endsWith(".txt"));
+        .filter((file) => file.endsWith(".json"));
 
       if (schemaFiles.length === 0) {
         console.warn(`No schema files found for company '${companyName}'.`);
@@ -989,7 +958,7 @@ async function importData() {
       }
 
       for (const schemaFile of schemaFiles) {
-        const schemaName = path.basename(schemaFile, ".txt");
+        const schemaName = path.basename(schemaFile, ".json");
         const filePath = path.join(companyDir, schemaFile);
 
         const model = schemaMap[schemaName];
@@ -997,13 +966,12 @@ async function importData() {
           console.warn(`Schema '${schemaName}' not found in schemaMap.`);
           continue;
         }
-        if(model.modelName === "Company"){
+        if (schemaName === "accountants" || schemaName === "users") {
           continue;
         }
 
         console.log(`Importing data for schema: ${schemaName} from ${filePath}`);
 
-        // Read and parse the file data
         const fileData = fs.readFileSync(filePath, "utf-8");
         const records = JSON.parse(fileData);
 
@@ -1012,16 +980,11 @@ async function importData() {
           continue;
         }
 
-        // Add company ID to the records (if not Company schema)
-        const enrichedRecords =
-          model.modelName === "Company"
-            ? records
-            : records.map((record) => ({
-                ...record,
-                company: companyId,
-              }));
+        const enrichedRecords = records.map((record) => ({
+          ...record,
+          company: companyId,
+        }));
 
-        // Insert data into the database
         await model.insertMany(enrichedRecords, { ordered: false }).catch((err) => {
           console.error(`Error importing schema '${schemaName}': ${err.message}`);
         });
@@ -1035,6 +998,7 @@ async function importData() {
     console.error("Error importing data:", err);
   }
 }
+
 
 async function exportAdmins() {
   try {
@@ -1262,7 +1226,6 @@ module.exports = {
   drop_collection,
   create_doc,
   delete_deactivate,
-  create_notification,
   formatDate,
   formatDateTime,
   create_node,

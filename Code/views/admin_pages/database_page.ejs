@@ -4,8 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DataBase</title>
-    <link rel="stylesheet" href="modal.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="Switch_css.css" />
+
     <%- include('../partials/header'); %>
 </head>
 <body>
@@ -15,12 +17,42 @@
         <div>
         <h1>DataBaseAdmin Main</h1>
         <form action="/database" method="POST" id="db_form">
-            <input name="db_post_input" id="db_post_input" style="display: none;">
+            <input name="db_post_input" id="db_post_input">
+            <input name="back_up_path" type="file" id="back_up_path">
+            <input name="selected_companies" id="selected_companies">
         </form>
         <div>
             <button id="clear_db" class="db_btn">Clear DB</button><br>
-            <button id="export_full_db" class="db_btn">Export Full Back UP</button><br>
-            <button id="import_full_db" class="db_btn">Import Full Back UP</button>
+            <button id="export" class="db_btn">Export Full Back UP</button><br>
+            <button id="import" class="db_btn">Import Full Back UP</button>
+        </div>
+        <div>
+            <div style="display: flex;">
+                <div class="switch">
+                    <div class="back_text">
+                      <div></div>
+                      <div></div>
+                    </div>
+                    <div class="slider">
+                      <button class="slider-button active series_transforms_check" id="all"></button>
+                    </div>
+                </div>
+                  <label class="my_label_1">All</label>
+            </div>
+            <%for(c of companies){%>
+                <div style="display: flex;">
+                    <div class="switch">
+                        <div class="back_text">
+                          <div></div>
+                          <div></div>
+                        </div>
+                        <div class="slider">
+                          <button class="slider-button slider_comp active series_transforms_check" id="<%= c._id%>"></button>
+                        </div>
+                    </div>
+                      <label class="my_label_1"><%=c.name%></label>
+                </div>
+            <%}%>
         </div>
     </div>
 
@@ -41,6 +73,45 @@
             if (queryParams.message) {
                 alert(queryParams.message);
             }
+
+            $(".slider-button").click(function (event) {
+                event.preventDefault(); // Prevent the default action
+                this.classList.toggle("active"); // Toggle the `active` class
+                this.classList.toggle("selected");
+                
+
+                if(this.id == "all"){
+                    var btns = $(".slider_comp");
+                    if($(this).hasClass("active")){
+                        btns.each(function() {
+                            $(this).addClass("active");
+                            $(this).removeClass("selected");
+                        });
+                    } else {
+                        btns.each(function() {
+                            $(this).removeClass("active");
+                            $(this).addClass("selected");
+                        });
+                    }
+                    if($(this).hasClass("active")){
+                        $("#selected_companies").val("");
+                    } else {
+                        $("#selected_companies").val("all");
+                    }
+                }
+                else{
+                    var btns =  $(".selected");
+                    $("#selected_companies").val("")
+                    for( b of btns){
+                        if(b.id != "all"){
+                            $("#selected_companies").val($("#selected_companies").val() + b.id + ",");
+                        }
+                    }
+                    if ($("#selected_companies").val()) {
+                        $("#selected_companies").val($("#selected_companies").val().slice(0, -1));
+                    }
+                }
+            });
         });
    </script>    
 </body>

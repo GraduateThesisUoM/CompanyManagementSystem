@@ -5,7 +5,6 @@ const path_constants = require('././constantsPaths');
 const Accountant  = require(path_constants.schemas.one.accountant);
 const Company  = require(path_constants.schemas.one.company);
 const Node  = require(path_constants.schemas.one.node);
-const Notification  = require(path_constants.schemas.one.notification);
 
 
 const generalFunctions = require(path_constants.generalFunctions_folder.one);
@@ -25,7 +24,7 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
             sender_id : senderId,
             receiver_id : accountantId,
             type : 1,
-            type2 : 1});
+            type2 : 3});
 
 
         if(last_accountant_node == null){
