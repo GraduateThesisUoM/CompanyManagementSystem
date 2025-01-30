@@ -126,4 +126,20 @@ router.post(
   }
 );
 
+router.post(
+  "/export",
+  Authentication.checkAuthenticated,
+  async (req, res) => {
+    try {
+      console.log("export");
+      res.redirect(
+        "/my-company?f=export&message=exported"
+      );
+    } catch (e) {
+      console.error(e);
+      res.redirect("/error?origin_page=my-company&error=" + e);
+    }
+  }
+);
+
 module.exports = router;

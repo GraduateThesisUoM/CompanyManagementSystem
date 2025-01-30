@@ -804,19 +804,20 @@ const formatDate = (dateString) => {
   return `${year}-${month}-${day}`;
 };
 
-async function importExport(action, company,path) {
+async function importExport(action, company) {
   try {
     if (!['export', 'import'].includes(action)) {
       throw new Error("Invalid action. Please specify 'export' or 'import'.");
     }
 
     if (action === 'export') {
-      await exportData(company,path);
+      await exportData(company);
       //exportAdmins();
       //exportAccountant();
     } else if (action === 'import') {
       //await clear_db();
-      await importData(company,path);
+      //await importData(company,path);
+      await resetAndImportData(company);
       //importAdmins();
       //importAccountants();
     }
@@ -825,38 +826,27 @@ async function importExport(action, company,path) {
   }
 }
 
-async function exportData(company = null,path_user= null) {
+async function exportData(company = null) {
   try {
-    //const baseDir = "./exports";
-    if (path_user == null){
-      path_user = "C:\\exports";
-    }
-    const baseDir = path_user;
 
-    // Create the base exports directory if it doesn't exist
+    const baseDir = "C:\\exports";
+    
+
     if (!fs.existsSync(baseDir)) {
       fs.mkdirSync(baseDir);
       console.log(`Created exports directory: ${baseDir}`);
     }
 
-    // If schemas is null, get all schemas from schemaMap
-    /*if (!schemas) {
-      schemas = Object.keys(schemaMap);
-      console.log("Schemas not provided. Exporting all schemas:", schemas);
-    }*/
-   var schemas = Object.keys(schemaMap);
-
+    let schemas = Object.keys(schemaMap);
     let companies;
 
     if (company != null) {
-      // Find a specific company by its ID
       companies = await Company.find({ _id: new mongoose.Types.ObjectId(company) });
       if (companies.length === 0) {
         console.warn(`No company found with ID: ${company}`);
         return;
       }
     } else {
-      // Find all companies
       companies = await Company.find({});
       if (companies.length === 0) {
         console.warn("No companies found.");
@@ -865,14 +855,14 @@ async function exportData(company = null,path_user= null) {
     }
 
     for (const company of companies) {
-      // Create a folder for each company using _id-name format
-      const companyDir = path.join(baseDir, `${company._id}-${company.name}`);
+      const companyDir = path.join(baseDir, `${company._id}`);
       if (!fs.existsSync(companyDir)) {
         fs.mkdirSync(companyDir);
         console.log(`Created directory for company '${company.name}': ${companyDir}`);
       }
 
-      // Export data for each specified schema
+      let allData = {};
+
       for (const schema of schemas) {
         const model = schemaMap[schema];
         if (!model) {
@@ -880,9 +870,7 @@ async function exportData(company = null,path_user= null) {
           continue;
         }
 
-        const filePath = path.join(companyDir, `${schema}.json`);
         let data;
-        
         if (model.modelName === "Company") {
           data = await model.find({ _id: company._id }).exec();
         } else if (model.modelName === "Client") {
@@ -892,13 +880,61 @@ async function exportData(company = null,path_user= null) {
         } else {
           data = await model.find({ company: company._id }).exec();
         }
-        
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 2), "utf-8");
-        console.log(`Exported data for company '${company.name}' in collection '${schema}' to ${filePath}`);
+
+        allData[schema] = data;
       }
+
+      const filePath = path.join(companyDir, `exported_data.json`);
+      fs.writeFileSync(filePath, JSON.stringify(allData, null, 2), "utf-8");
+      console.log(`Exported all data for company '${company.name}' to ${filePath}`);
     }
   } catch (err) {
     console.error("Error exporting data:", err);
+  }
+}
+
+async function resetAndImportData(companyId) {
+  try {
+
+    const filePath = "C:\\exports\\"+companyId+"\\exported_data.json";
+
+    if (!fs.existsSync(filePath)) {
+      console.warn(`No export file found for company '${companyId}' at ${filePath}`);
+      return;
+    }
+
+    const rawData = fs.readFileSync(filePath, "utf-8");
+    const allData = JSON.parse(rawData);
+
+    // Step 1: Delete existing data for the company
+    for (const schema of Object.keys(allData)) {
+      const model = schemaMap[schema];
+      if (!model) {
+        console.warn(`Schema '${schema}' not found.`);
+        continue;
+      }
+
+      await model.deleteMany({ _id: { $in: allData[schema].map(doc => doc._id) } });
+      console.log(`Deleted existing records in '${schema}' for company '${companyId}'`);
+    }
+
+    // Step 2: Insert all data exactly as it is
+    for (const schema of Object.keys(allData)) {
+      const model = schemaMap[schema];
+      if (!model) {
+        console.warn(`Schema '${schema}' not found.`);
+        continue;
+      }
+
+      if (allData[schema].length > 0) {
+        await model.insertMany(allData[schema], { ordered: false });
+        console.log(`Inserted records into '${schema}' as they were in the JSON`);
+      }
+    }
+
+    console.log(`✅ Database restored exactly as in the JSON file`);
+  } catch (err) {
+    console.error("Error restoring data:", err);
   }
 }
 

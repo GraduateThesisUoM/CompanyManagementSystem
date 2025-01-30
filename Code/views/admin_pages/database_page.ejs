@@ -18,13 +18,13 @@
         <h1>DataBaseAdmin Main</h1>
         <form action="/database" method="POST" id="db_form">
             <input name="db_post_input" id="db_post_input">
-            <input name="back_up_path" type="file" id="back_up_path">
             <input name="selected_companies" id="selected_companies">
         </form>
         <div>
-            <button id="clear_db" class="db_btn">Clear DB</button><br>
+            <!--button id="clear_db" class="db_btn">Clear DB</button><br-->
             <button id="export" class="db_btn">Export Full Back UP</button><br>
             <button id="import" class="db_btn">Import Full Back UP</button>
+           
         </div>
         <div>
             <div style="display: flex;">
@@ -58,12 +58,26 @@
 
     </div>
     <script>
+
         $(document).ready(function () {
             $(".db_btn").click(function () {
                 $('#db_post_input').val($(this).attr("id"));
                 $('#db_form').submit();
             });
 
+            $('#back_up_path').on('change', function(event) {
+                const fileList = event.target.files;
+
+                if (fileList.length > 0) {
+                    // Extract the folder path by removing the file name from the first file's path
+                    const fullPath = fileList[0].webkitRelativePath;
+                    const folderPath = fullPath.substring(0, fullPath.lastIndexOf("/"));
+
+                    alert("Selected folder: " + folderPath);
+                } else {
+                    alert("No folder selected.");
+                }
+            });
             const params = new URLSearchParams(window.location.search);
             var queryParams = {};
             for (const [key, value] of params.entries()) {

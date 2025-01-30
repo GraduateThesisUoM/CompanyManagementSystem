@@ -42,12 +42,12 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 router.post("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     var action = req.body.db_post_input;
-    if(action == 'clear_db'){
+    /*if(action == 'clear_db'){
       await generalFunctions.clear_db();
       return res.redirect(`/database?message=Db is Cleaned`);
     }
-    else if(req.body.selected_companies == 'all'){
-      await generalFunctions.importExport(action,req.body.back_up_path);
+    else*/ if(req.body.selected_companies == 'all'){
+      await generalFunctions.importExport(action);
     
       return res.redirect(`/database?message=${action} Completed`);
     }
@@ -55,7 +55,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       const selectedCompanies = req.body.selected_companies.split(';');
       for (const company of selectedCompanies) {
         if (company) { // Skip empty strings
-          await generalFunctions.importExport(action, company,req.body.back_up_path);
+          await generalFunctions.importExport(action, company);
         }
       }
       return res.redirect(`/database?message=${action} Completed`);
