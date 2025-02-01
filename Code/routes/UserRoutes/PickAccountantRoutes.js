@@ -6,7 +6,6 @@ const path_constants = require('../../constantsPaths');
 //Models
 const Accountant = require(path_constants.schemas.two.accountant);
 const Review = require(path_constants.schemas.two.review);
-const Notification = require(path_constants.schemas.two.notification);
 const Company = require(path_constants.schemas.two.company);
 const Node = require(path_constants.schemas.two.node);
 

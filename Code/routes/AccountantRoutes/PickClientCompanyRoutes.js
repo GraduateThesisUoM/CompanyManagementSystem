@@ -5,7 +5,6 @@ const router = express.Router();
 const path_constants = require("../../constantsPaths");
 
 //Models
-const Notification = require(path_constants.schemas.two.notification);
 const Client = require(path_constants.schemas.two.client);
 
 //Authentication Function
@@ -22,9 +21,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       res.render("accountant_pages/create_page.ejs", {
         user: req.user,
         clients: clients,
-        notification_list: await Notification.find({
-          $and: [{ user_id: req.user.id }, { status: "unread" }],
-        }),
       });
     } else {
       res.redirect("/error?error=" + access.error);

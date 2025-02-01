@@ -13,7 +13,6 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 //Models
 const Company = require(path_constants.schemas.two.company);
 const Node = require(path_constants.schemas.two.node);
-const Notification = require(path_constants.schemas.two.notification);
 const User = require(path_constants.schemas.two.user);
 
 /*--------   REPORT USER */
@@ -23,9 +22,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
     if (access.response) {
       res.render("general/report_user.ejs", {
         user: req.user,
-        notification_list: await Notification.find({
-          $and: [{ user_id: req.user.id }, { status: "unread" }],
-        }),
       });
     }
   } catch (err) {

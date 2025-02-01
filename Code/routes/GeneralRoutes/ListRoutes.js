@@ -12,7 +12,6 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 
 //Models
 const Company = require(path_constants.schemas.two.company);
-const Notification = require(path_constants.schemas.two.notification);
 const User = require(path_constants.schemas.two.user);
 const Item = require(path_constants.schemas.two.item);
 const Person = require(path_constants.schemas.two.person);
@@ -42,7 +41,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       }
       var list_items = [];
       var column_titles = [];
-      if (req.query.searchfor == "companys") {
+      if (req.query.searchfor == "companies") {
         list_items = await Company.find();
         list_items = list_items.map((item) => ({
           data: [item.id,item.name, generalFunctions.formatDate(item.registrationDate), generalFunctions.get_status_user(item.status)],
@@ -286,9 +285,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       var data = {
         user: req.user,
         list_items: list_items,
-        notification_list: await Notification.find({
-          $and: [{ user_id: req.user._id }, { status: "unread" }],
-        }),
         column_titles: column_titles,
         searchfor: req.query.searchfor,
         doc_data: doc_data,

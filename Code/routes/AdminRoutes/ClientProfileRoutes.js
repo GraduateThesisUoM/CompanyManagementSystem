@@ -6,10 +6,7 @@ const Client = require("../../Schemas/Client");
 const Review = require("../../Schemas/Review");
 const Request = require("../../Schemas/Node");
 const Company = require("../../Schemas/Company");
-const Notification = require("../../Schemas/Notification");
 
-//Create Notification Function
-const create_notification = require("../../CreateNotification");
 
 //Authentication Function
 const Authentication = require("../../AuthenticationFunctions");
@@ -46,9 +43,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         user: req.user,
         review: accountant_review,
         clients_requests: clients_requests,
-        notification_list: await Notification.find({
-          $and: [{ user_id: req.user.id }, { status: "unread" }],
-        }),
       });
     } else {
       res.redirect("/error?error=" + access.error);
@@ -81,11 +75,6 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         rating: req.body.rating_input,
       });
 
-      create_notification(
-        accountants_client._id,
-        req.user._id,
-        "review-notification"
-      );
     } else {
       // Update the existing review's text and rating
       review.text = req.body.rating_textarea;

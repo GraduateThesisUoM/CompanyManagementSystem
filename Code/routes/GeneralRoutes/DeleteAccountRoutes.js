@@ -4,7 +4,6 @@ const router = express.Router();
 
 //Models
 const User = require("../../Schemas/User");
-const Notification = require("../../Schemas/Notification");
 
 //Authentication Function
 const Authentication = require("../../AuthenticationFunctions");
@@ -16,9 +15,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
     if (access.response) {
       res.render("general/delete_account.ejs", {
         user: req.user,
-        notification_list: await Notification.find({
-          $and: [{ user_id: req.user.id }, { status: "unread" }],
-        }),
       });
     } else {
       res.redirect("/error?error=" + access.error);

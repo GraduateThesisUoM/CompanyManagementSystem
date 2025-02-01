@@ -24,7 +24,28 @@
     <!--Header-->
     <%- include('../partials/header'); %>
   </head>
+  <style>
+    .table-container {
+        max-height: 200px; /* Adjust height as needed */
+        overflow-y: auto;
+    }
 
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    thead {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+
+    th, td {
+        padding: 8px;
+        text-align: left;
+    }
+</style>
   <body>
     <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
@@ -235,6 +256,44 @@
         </form>
         <!--div id="message_div">Record has been deleted</div-->
         <button class="asap-condensed-regular delete_btn" id="btn1" style="margin-bottom: 50px;">Delete</button>
+        <div>
+          <div class="table-container">
+            <table>
+                <thead>
+                    <tr><th>A/A</th><th>1</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Alfreds Futterkiste</td>
+                    <td>Maria Anders</td>
+                </tr>
+                <tr>
+                    <td>Alfreds Futterkiste</td>
+                    <td>Maria Anders</td>
+                </tr><tr>
+                  <td>Alfreds Futterkiste</td>
+                  <td>Maria Anders</td>
+              </tr>
+              <tr>
+                  <td>Alfreds Futterkiste</td>
+                  <td>Maria Anders</td>
+              </tr>
+                    <tr>
+                        <td>Alfreds Futterkiste</td>
+                        <td>Maria Anders</td>
+                    </tr>
+                    <tr>
+                        <td>Alfreds Futterkiste</td>
+                        <td>Maria Anders</td>
+                    </tr>
+                    <tr>
+                        <td>Alfreds Futterkiste</td>
+                        <td>Maria Anders</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        </div>
       </div>
     </div>
   </body>

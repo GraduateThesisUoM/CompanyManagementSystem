@@ -10,7 +10,6 @@ const Authentication = require(path_constants.authenticationFunctions_folder.two
 const generalFunctions = require(path_constants.generalFunctions_folder.two);
 //Models
 const Series = require(path_constants.schemas.two.series);
-const Notification = require(path_constants.schemas.two.notification);
 
 
 /*--------   Create */
@@ -32,9 +31,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         const data = {
           user: req.user,
           companyId: req.user.company,
-          notification_list: await Notification.find({
-            $and: [{ user_id: req.user.id }, { status: "unread" }],
-          }),
           secondary_data : secondary_data
         };
         if (req.user.type == "admin") {

@@ -8,7 +8,6 @@ const path_constants = require("../../constantsPaths");
 const User = require(path_constants.schemas.two.user);
 const Client = require(path_constants.schemas.two.client);
 const Node = require(path_constants.schemas.two.node);
-const Notification = require(path_constants.schemas.two.notification);
 const Company = require(path_constants.schemas.two.company);
 const Accountant = require(path_constants.schemas.two.accountant);
 
@@ -146,9 +145,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           executed_nodes_list:executed_nodes_list,
           rejected_nodes_list:rejected_nodes_list,
 
-          notification_list: await Notification.find({
-            $and: [{ user_id: req.user.id }, { status: "unread" }],
-          }),
           clients: clients,
         };
       } else if (req.user.type == "user") {
@@ -157,9 +153,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         data = {
           user: req.user,
           company: company,
-          notification_list: await Notification.find({
-            $and: [{ user_id: req.user.id }, { status: "unread" }],
-          }),
         };
       } else if (req.user.type == "admin") {
         var pending_reports = await Node.find({type: 7, status: 3 });

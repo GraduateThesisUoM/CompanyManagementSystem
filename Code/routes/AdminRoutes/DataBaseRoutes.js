@@ -9,7 +9,6 @@ const Review = require(path_constants.schemas.two.review);
 const User = require(path_constants.schemas.two.user);
 const Company = require(path_constants.schemas.two.company);
 const Node = require(path_constants.schemas.two.node);
-const Notification = require(path_constants.schemas.two.notification);
 
 
 //Authentication Functions
@@ -25,7 +24,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       const data = {
         user: req.user,
         companies : await Company.find(),
-        notification_list: await Notification.find({$and:[{user_id: req.user.id} , {status: "unread"}]})
       } 
       res.render(path_constants.pages.database.view(), data);
 

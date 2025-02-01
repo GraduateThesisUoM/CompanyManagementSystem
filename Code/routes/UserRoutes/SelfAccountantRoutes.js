@@ -7,7 +7,6 @@ const path_constants = require('../../constantsPaths');
 //Models
 const Accountant = require("../../Schemas/Accountant");
 const Review = require("../../Schemas/Review");
-const Notification = require("../../Schemas/Notification");
 
 //Authentication Functions
 const Authentication = require(path_constants.authenticationFunctions_folder.two);
@@ -22,9 +21,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
     if (access.response) {
       res.render("user_pages/self_accountant.ejs", {
         user: req.user,
-        notification_list: await Notification.find({
-          $and: [{ user_id: req.user.id }, { status: "unread" }],
-        }),
       });
     } else {
       res.redirect("/error?error=" + access.error);

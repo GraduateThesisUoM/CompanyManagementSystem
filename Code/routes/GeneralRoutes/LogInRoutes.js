@@ -18,7 +18,6 @@ const Client = require(path_constants.schemas.two.client);
 const Company = require(path_constants.schemas.two.company);
 const User = require(path_constants.schemas.two.user);
 const Item = require(path_constants.schemas.two.item);
-const Notification = require(path_constants.schemas.two.notification);
 //Get General Functions
 
 const generalFunctions = require(path_constants.generalFunctions_folder.two);

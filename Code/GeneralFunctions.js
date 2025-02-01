@@ -1207,7 +1207,6 @@ async function clear_db(){
   await drop_collection("Series");
   await drop_collection("Person");
   await drop_collection("Document");
-  await drop_collection("Notification");
   await drop_collection("Person");
   await drop_collection("Review");
 }

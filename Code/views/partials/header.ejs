@@ -73,9 +73,10 @@
         <div></div>
         <div></div><a href="/profile-page">Profile</a>
         <div></div><a href="/my-company">Company</a>
-        <div></div><a href="/my-invoices">Invoices</a>
         <div></div><a href="/my-qr-code">QR Code</a>
-        <div></div><a href="/my-reviews">Reviews</a>
+        <% if(user.type != 'admin') { %>
+        <div></div><a href="/list?searchfor=reviews">Reviews</a>
+        <% } %>
         <div></div><a href="/logout">Log Out</a>
     </div>
     <!--form action="/logout?_method=DELETE" method="POST" id="log_out_form">

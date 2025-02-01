@@ -9,7 +9,6 @@ const Authentication = require(path_constants.authenticationFunctions_folder
 //Models
 const Client = require(path_constants.schemas.two.client);
 const Node = require(path_constants.schemas.two.node);
-const Notification = require(path_constants.schemas.two.notification);
 const Company = require(path_constants.schemas.two.company);
 
 //GET REQUEST
@@ -32,9 +31,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         request: node,
         company: accountants_client_company,
         accountants_client: accountants_client,
-        notification_list: await Notification.find({
-          $and: [{ user_id: req.user.id }, { status: "unread" }],
-        }),
       };
       res.render("accountant_pages/view_request.ejs", data);
     } else {
@@ -57,13 +53,6 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     }
 
     await node.save();
-    await generalFunctions.create_notification(
-      node.sender_id,
-      req.user.id,
-      node.company,
-      req.user.id,
-      "assignments-status-notification"
-    );
 
     res.redirect("/");
   } catch (err) {

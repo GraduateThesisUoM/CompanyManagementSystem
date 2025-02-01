@@ -9,7 +9,6 @@ const path_constants = require("../../constantsPaths");
 const Company = require(path_constants.schemas.two.company);
 const Accountant = require(path_constants.schemas.two.accountant);
 const Node = require(path_constants.schemas.two.node);
-const Notification = require(path_constants.schemas.two.notification);
 
 //Authentication Functions
 const Authentication = require("../../AuthenticationFunctions");
@@ -24,9 +23,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         const data = {
           user: req.user,
           company: await Company.findOne({ _id: req.user.company }),
-          notification_list: await Notification.find({
-            $and: [{ user_id: req.user.id }, { status: "unread" }],
-          }),
         };
         res.render("user_pages/my_company.ejs", data);
       
@@ -132,6 +128,7 @@ router.post(
   async (req, res) => {
     try {
       console.log("export");
+      generalFunctions.importExport('export',req.user.company);
       res.redirect(
         "/my-company?f=export&message=exported"
       );

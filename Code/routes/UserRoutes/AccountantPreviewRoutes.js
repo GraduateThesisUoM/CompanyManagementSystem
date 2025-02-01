@@ -6,14 +6,12 @@ const path_constants = require('../../constantsPaths');
 //Models
 const Accountant = require(path_constants.schemas.two.accountant);
 const Review = require(path_constants.schemas.two.review);
-const Notification = require(path_constants.schemas.two.notification);
 const Company = require(path_constants.schemas.two.company);
 const Node = require(path_constants.schemas.two.node);
 
 //Authentication Functions
 const Authentication = require(path_constants.authenticationFunctions_folder.two);
 
-//Create Notification Function
 const clientAccountantFunctions = require(path_constants.clientAccountantFunctions_folder.two);
 //Get General Functions
 const generalFunctions = require(path_constants.generalFunctions_folder.two);

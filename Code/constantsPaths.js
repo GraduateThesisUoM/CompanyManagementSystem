@@ -22,7 +22,6 @@ const schemas = {
   },
   two:{
     user : "../../Schemas/User",
-    notification : "../../Schemas/Notification",
     company : "../../Schemas/Company",
     client : "../../Schemas/Client",
     series : "../../Schemas/Series",
@@ -88,11 +87,6 @@ const pages = {
         return views_folders.admin+"admin_main.ejs"
       }
     }}
-  },
-  notification_read :{
-    url : "/notification-read",
-    file: routes.general+"ReadNotificationRoutes.js",
-    view : ""
   },
   log_in :{
     url : "/log-in",

@@ -14,7 +14,6 @@ const generalFunctions = require(path_constants.generalFunctions_folder.two);
 //Models
 const Company = require(path_constants.schemas.two.company);
 const Node = require(path_constants.schemas.two.node);
-const Notification = require(path_constants.schemas.two.notification);
 const User = require(path_constants.schemas.two.user);
 const Item = require(path_constants.schemas.two.item);
 const Person = require(path_constants.schemas.two.person);
@@ -50,7 +49,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       var company;
       var obj;
       var secondary_data = {};
-      var status = '';
 
       if (req.user.type != "admin") {
         company = req.user.company;
@@ -65,10 +63,12 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         titles: [],
         isParamsEmpty: isParamsEmpty
       };
+      const type = req.query.type;
+      const id = req.query.id;
 
       if (!isParamsEmpty) {
-        type = req.query.type;
-        id = req.query.id;
+        
+        console.log(type);
         if (type && id) {
           
           if (type == "docs") {
@@ -219,11 +219,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               generalFunctions.formatDate(obj.registrationDate),
               obj.address,obj.district,obj.city,obj.country,obj.zip
             ];
-            data.titles = ["FirstName", "LastName", "email", "phone", "afm", "Status", "Reg Date",
-              "Address","District", "City","Country", "ZIP"
+            data.titles = ["FirstName", "LastName", "email", "phone", "afm", "Status",  "Address","District", "City","Country", "ZIP"
             ];
-            data.type = [1, 1, 1, 1, 1, 15, 13,
-              1,1,1,1,1
+            data.type = [1, 1, 1, 1, 1, 1,1,1,1,1
             ];
             //1=normal-text,0=text-readonly
           } else if (type == "items") {
@@ -378,6 +376,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           console.log("ERROR");
         }
       }
+
+      console.log(obj)
 
       data.secondary_data = secondary_data;
       data.registrationDate = generalFunctions.formatDateTime(obj.registrationDate);

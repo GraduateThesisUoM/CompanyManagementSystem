@@ -7,7 +7,6 @@ const path_constants = require("../../constantsPaths");
 const Company = require(path_constants.schemas.two.company);
 const Accountant = require(path_constants.schemas.two.accountant);
 const Node = require(path_constants.schemas.two.node);
-const Notification = require(path_constants.schemas.two.notification);
 const Warehouse = require(path_constants.schemas.two.warehouse);
 const User = require(path_constants.schemas.two.user);
 const Person = require(path_constants.schemas.two.person);
@@ -64,9 +63,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         warehouses : list_warehouses,
         items: list_items,
         series: list_series,
-        notification_list: await Notification.find({
-          $and: [{ user_id: req.user.id }, { status: "unread" }],
-        }),
       };
       res.render(path_constants.pages.create_doc.view(), data);
     } else {

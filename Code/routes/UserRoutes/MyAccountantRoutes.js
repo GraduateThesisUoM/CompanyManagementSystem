@@ -11,7 +11,6 @@ const Accountant = require(path_constants.schemas.two.accountant);
 const Review = require(path_constants.schemas.two.review);
 const Node = require(path_constants.schemas.two.node);
 const Company = require(path_constants.schemas.two.company);
-const Notification = require(path_constants.schemas.two.notification);
 
 //Authentication Functions
 const Authentication = require(path_constants.authenticationFunctions_folder.two);

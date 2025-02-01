@@ -7,6 +7,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 
     <link rel="stylesheet" href="Switch_css.css" />
+    <link rel="stylesheet" href="buttons_css.css">
 
     <%- include('../partials/header'); %>
 </head>
@@ -16,17 +17,22 @@
 
         <div>
         <h1>DataBaseAdmin Main</h1>
-        <form action="/database" method="POST" id="db_form">
+        <form style="display: none;" action="/database" method="POST" id="db_form">
             <input name="db_post_input" id="db_post_input">
             <input name="selected_companies" id="selected_companies">
         </form>
-        <div>
+        <div style="width: 100%;display:flex;flex-direction:row;justify-content:space-evenly;">
             <!--button id="clear_db" class="db_btn">Clear DB</button><br-->
-            <button id="export" class="db_btn">Export Full Back UP</button><br>
-            <button id="import" class="db_btn">Import Full Back UP</button>
-           
+            <button id="import" class="db_btn button_1" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                <img width="100" height="100" src="https://img.icons8.com/carbon-copy/100/FFFFFF/export.png" alt="export"/>
+                Export Data
+            </button>
+            <button id="import" class="db_btn button_3" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                <img width="100" height="100" src="https://img.icons8.com/carbon-copy/100/FFFFFF/import.png" alt="import"/>
+                Import Data
+            </button>
         </div>
-        <div>
+        <div class="glass_effect_2 box_shadow_1" style="margin-right: 20px;margin-top: 20px;display: grid;grid-template-columns: 50% 50%;padding: 10px;border-radius: 15px;">
             <div style="display: flex;">
                 <div class="switch">
                     <div class="back_text">

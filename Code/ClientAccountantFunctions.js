@@ -12,7 +12,6 @@ const generalFunctions = require(path_constants.generalFunctions_folder.one);
 
 
 async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
-    // check if a notification of the same type exists for user
     try{
         const company = await Company.findOne({_id:companyId});
 
@@ -92,7 +91,6 @@ async function fire_accountant(companyId,senderId,accountantId){
             node.status = 5;//canceled
             await node.save();
         });
-        await generalFunctions.create_notification(senderId, accountantId, companyId, accountantId, 'firing-notification');
 
         console.log("Accountant Fired Succesfully");
     }
