@@ -10,11 +10,15 @@
 body{
     margin: 0px;
     padding: 0px;
-    background-image: url('background2.svg');
+    background-image: url('background.svg');
     background-size: cover;
     background-repeat: no-repeat;
     background-position: top center;
 
+}
+
+.my_main_body{
+    margin-bottom: 40px;
 }
 
 h1 {
@@ -43,11 +47,6 @@ button{
     padding: 0px;
     margin: 0px;
     height: 100vh;
-}
-
-
-#footer_text{
-    padding: 15px;
 }
 
 .star_btn{

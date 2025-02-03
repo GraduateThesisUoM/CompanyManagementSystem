@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="textarea_css.css" />
     <link rel="stylesheet" href="Switch_css.css" />
     <link rel="stylesheet" href="Lock_css.css" />
+    <link rel="stylesheet" href="table_css.css" />
+
 
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,14 +27,9 @@
     <%- include('../partials/header'); %>
   </head>
   <style>
-    .table-container {
-        max-height: 200px; /* Adjust height as needed */
+   /* .table-container {
+        max-height: 200px;
         overflow-y: auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
     }
 
     thead {
@@ -44,12 +41,12 @@
     th, td {
         padding: 8px;
         text-align: left;
-    }
+    }*/
 </style>
   <body>
     <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
-      <div>
+      <div class="my_main_body">
         <h1 class="asap-condensed-extralight">View</h1>
         <div id="clients">
           <button id="go_to_calendar">Calendar</button>
@@ -255,48 +252,28 @@
           </div>
         </form>
         <!--div id="message_div">Record has been deleted</div-->
+        <input type="date" id="from_date" class="date_filters"/>
+        <input type="date" id="to_date" class="date_filters"/>
         <button class="asap-condensed-regular delete_btn" id="btn1" style="margin-bottom: 50px;">Delete</button>
-        <div>
-          <div class="table-container">
+          <div class="table_container" id="move_table" style="display: none;">
             <table>
                 <thead>
-                    <tr><th>A/A</th><th>1</th></tr>
+                    <tr>
+                      <th>A/A</th>
+                      <th>Date</th>
+                      <th>Doc</th>
+                      <th>Credit</th>
+                      <th>Debit</th>
+                    </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Alfreds Futterkiste</td>
-                    <td>Maria Anders</td>
-                </tr>
-                <tr>
-                    <td>Alfreds Futterkiste</td>
-                    <td>Maria Anders</td>
-                </tr><tr>
-                  <td>Alfreds Futterkiste</td>
-                  <td>Maria Anders</td>
-              </tr>
-              <tr>
-                  <td>Alfreds Futterkiste</td>
-                  <td>Maria Anders</td>
-              </tr>
-                    <tr>
-                        <td>Alfreds Futterkiste</td>
-                        <td>Maria Anders</td>
-                    </tr>
-                    <tr>
-                        <td>Alfreds Futterkiste</td>
-                        <td>Maria Anders</td>
-                    </tr>
-                    <tr>
-                        <td>Alfreds Futterkiste</td>
-                        <td>Maria Anders</td>
-                    </tr>
                 </tbody>
             </table>
-        </div>
         </div>
       </div>
     </div>
   </body>
+ 
   <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
 
   <script>
@@ -318,6 +295,7 @@
 
       $("#clients").hide();
       $("#message_div").hide();
+
       //$("#day_data_users").hide();
 
       $("#day").hide();
@@ -341,6 +319,10 @@
       $("#obj_id").val(queryParams.id);
       $("#obj_type2").val(queryParams.type2);
       $("#obj_type").val(queryParams.type);
+
+      $("#c_obj_id").val(queryParams.id);
+      $("#c_obj_type2").val(queryParams.type2);
+      $("#c_obj_type").val(queryParams.type);
 
       let formAction = "/view";
       if (queryParams.type) {
@@ -412,7 +394,8 @@
           $("#action").val("rejected");
           $("#view_form").submit();
         });
-      } else if (queryParams.type == "clients") {
+      }
+      else if (queryParams.type == "clients") {
         clients_users = secondary_data.users;
 
  
@@ -428,15 +411,30 @@
           }
           
         });
-      } else if (queryParams.type == "reports") {
+      }
+      else if (queryParams.type == "reports") {
         $("#btn1").hide();
         $("#btn2").hide();
         $("#btn3").hide();
-      } else if (queryParams.type == "reviews") {
+      }
+      else if (queryParams.type == "reviews") {
         $("#btn1").hide();
         $("#btn2").hide();
         $("#btn3").hide();
-      } else {
+      }
+      else if (queryParams.type == 'persons'){
+        $("#move_table").show();
+        var table = $("#move_table tbody");
+        for (let i = 0; i < secondary_data.length; i++) {
+          table.append(`<tr class="glass_effect_2">
+            <td>${i + 1}</td>
+            <td>${secondary_data[i].registrationDate}</td>
+            <td>${secondary_data[i].doc}</td>
+            <td>${secondary_data[i].credit}</td>
+            <td>${secondary_data[i].debit}</td>`);
+        }
+      }
+      else {
         $("#btn1").click(function () {
           event.preventDefault();
           if (confirm("Are you soure ?")) {
@@ -542,6 +540,13 @@
           label.text("Unsealed"); // Update label text
           input.val(0); // Update input value
         }
+      });
+
+      $(".date_filters").change(function(event){
+        event.preventDefault();
+        var from_date = $("#from_date").val();
+        var to_date = $("#to_date").val();
+        window.location = "/view?type=persons&id="+$("#obj_id").val()+"&from_date="+from_date+"&to_date="+to_date;
       });
 
       $("#effects_accounts_switch_btn").click(function (event) {

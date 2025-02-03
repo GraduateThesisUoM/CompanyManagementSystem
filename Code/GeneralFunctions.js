@@ -662,6 +662,7 @@ async function update(id, schema , data){
     }
 
     console.log(obj);
+    await obj.save();
       
   } catch (e) {
     console.log(e);
@@ -1248,8 +1249,62 @@ function calculateDateDifference(inputDate) {
   return { years, months, days };
 }
 
+async function gets_movements(data) {
+  console.log('gets_movements');
+  console.log(data);
+
+  let query = { receiver: data.user._id };
+
+  // Apply date filtering only if valid 'from' or 'to' is provided
+  if (data.from || data.to) {
+      query.registrationDate = {};
+      if (data.from) query.registrationDate.$gte = new Date(data.from);
+      if (data.to) query.registrationDate.$lte = new Date(data.to);
+  }
+
+  var docs = await Document.find(query);
+  console.log("docs:", docs);
+
+  var movements = [];
+  for (let d of docs) {
+      const series = await Series.findOne({ _id: d.series, company: d.company });
+      movements.push({
+          registrationDate: formatDateTime(d.registrationDate),
+          doc: series.acronym + "-" + d.doc_num,
+          credit: series.effects_account == 1 ? get_docs_value(d) : 0,
+          debit: series.effects_account == -1 ? get_docs_value(d) : 0,
+      });
+  }
+  return movements;
+}
+
+
+function get_docs_value(data) {
+  var total = 0;
+  console.log('dds')
+
+  console.log(data)
+  console.log(Object.values(data.invoiceData).length)
+  const g_discount = parseFloat(data.generalDiscount)/Object.values(data.invoiceData).length;
+  for(let key in data.invoiceData) {
+    const row = data.invoiceData[key];
+    const price = parseFloat(row.price_of_unit);
+    const quantity = parseFloat(row.quantity); 
+    const discount = parseFloat(row.discount);
+    const tax = parseFloat(row.tax);
+
+    const subtotal = (price * quantity);
+    const  discounted = subtotal  - (discount+g_discount);
+    const withTax = discounted * (1 + tax/100);
+    
+    total += withTax;
+  }
+  return total;
+}
+
 module.exports = {
   checkAccessRigts,
+  gets_movements,
   createWarehouse,
   createItem,
   create_user,

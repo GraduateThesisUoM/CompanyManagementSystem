@@ -1,9 +1,36 @@
 .table_container {
     width: 100%;
-    display: flex;
+    /*display: flex;
     justify-content: center;
-    align-items: center;
-    margin-bottom: 50px;
+    align-items: center;*/
+
+
+    max-height: 400px; 
+    overflow-y: auto;
+    overflow-x:hidden
+}
+
+
+.table_container::-webkit-scrollbar-track
+{
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 8px;
+	background-color: transparent;
+    margin-top: 10px; /* Adjust the track margin at the top */
+    margin-bottom: 10px; /* Adjust the track margin at the bottom */
+}
+
+.table_container::-webkit-scrollbar
+{
+	width: 12px;
+	background-color: transparent;
+}
+
+.table_container::-webkit-scrollbar-thumb
+{
+	border-radius: 10px;
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: #555;
 }
 
 
@@ -14,7 +41,7 @@
 }
 
 .table_container table tr {
-    transition: transform 0.3s ease-in-out; /* Ensures smooth transition when mouse leaves */
+    transition: transform 0.3s ease-in-out;
 }
 
 
@@ -27,11 +54,15 @@
 .table_container table thead{
     height: 50px;
     background: rgba(121, 121, 121, 0.43);
-border-radius: 16px;
-box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-backdrop-filter: blur(3.9px);
--webkit-backdrop-filter: blur(3.9px);
-border: 1px solid rgba(121, 121, 121, 0.3);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.9px);
+    -webkit-backdrop-filter: blur(3.9px);
+    border: 1px solid rgba(121, 121, 121, 0.3);
+
+    position: sticky;
+    top: 0;
+    z-index: 1;
 }
 
 .table_container table thead th{
@@ -39,15 +70,13 @@ border: 1px solid rgba(121, 121, 121, 0.3);
     text-shadow: 0 0 5px black; 
 }
 
-.table_container table th, #table_container table td {
+.table_container table th, .table_container table td {
     border-collapse: collapse;
     text-align: center;
-    padding: 8px; /* Adds padding to table headers and table cells */
+    padding: 8px;
 }
 
-td{
-    text-align: center;
-}
+
 
 
 .table_container table th {
@@ -55,7 +84,7 @@ td{
 }
 
 .table_container table tr {
-    transition: transform 0.3s ease-in-out; /* Ensures smooth transition when mouse leaves */
+    transition: transform 0.3s ease-in-out; 
     
 }
 .table_container table tbody{
@@ -97,3 +126,19 @@ td{
 }
 
 
+/*''''''''''''''
+.table-container {
+    max-height: 200px; 
+    overflow-y: auto;
+}
+
+/*thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}*/
+/*
+th, td {
+    padding: 8px;
+    text-align: left;
+}*/

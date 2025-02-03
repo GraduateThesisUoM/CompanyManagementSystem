@@ -223,6 +223,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             ];
             data.type = [1, 1, 1, 1, 1, 1,1,1,1,1
             ];
+
+            secondary_data = await generalFunctions.gets_movements({user:obj,from : req.query.from_date,to : req.query.to_date});
+            
             //1=normal-text,0=text-readonly
           } else if (type == "items") {
             obj = await Item.findOne({ _id: id });
@@ -415,7 +418,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 router.post("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     var data = {};
-    console.log("ViewRoutes");
+    console.log("ViewRoutes1");
     
     var obj_type = req.body.obj_type;
     var obj_id = req.body.obj_id;
