@@ -26,23 +26,7 @@
     <!--Header-->
     <%- include('../partials/header'); %>
   </head>
-  <style>
-   /* .table-container {
-        max-height: 200px;
-        overflow-y: auto;
-    }
 
-    thead {
-        position: sticky;
-        top: 0;
-        z-index: 1;
-    }
-
-    th, td {
-        padding: 8px;
-        text-align: left;
-    }*/
-</style>
   <body>
     <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
@@ -252,9 +236,13 @@
           </div>
         </form>
         <!--div id="message_div">Record has been deleted</div-->
-        <input type="date" id="from_date" class="date_filters"/>
-        <input type="date" id="to_date" class="date_filters"/>
         <button class="asap-condensed-regular delete_btn" id="btn1" style="margin-bottom: 50px;">Delete</button>
+
+        <div style="width: 100%;display:flex;gap:25%">
+          <input type="date" id="from_date" class="date_filters input_type_1"/>
+          <input type="date" id="to_date" class="date_filters input_type_1"/>
+  
+        </div>
           <div class="table_container" id="move_table" style="display: none;">
             <table>
                 <thead>
@@ -340,6 +328,12 @@
           $("#type2").html("Sales");
         }
         $("#type2").html("Purchases");
+      }
+      if (queryParams.from_date) {
+        $('#from_date').val(queryParams.from_date);
+      }
+      if (queryParams.to_date) {
+        $('#to_date').val(queryParams.to_date);
       }
 
       $("#view_form").attr("action", formAction);

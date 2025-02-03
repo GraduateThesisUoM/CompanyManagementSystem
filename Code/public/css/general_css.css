@@ -323,6 +323,8 @@ border: 1px solid rgba(121, 121, 121, 0.3);
     border: none;
     color: rgb(200, 198, 198);
     background-color: rgba(0, 0, 0, 0.5);
+
+    cursor:pointer;
 }
 
 .input_type_2{
