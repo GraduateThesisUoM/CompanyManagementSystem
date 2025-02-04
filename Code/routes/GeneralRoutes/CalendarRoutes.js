@@ -49,7 +49,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             res.render(path_constants.pages.calendar.view(), {
               user: req.user,
               nodes: nodes,
-              users: await Client.find({ company: id, status: 1 })
+              users: await Client.find({ company: req.query.id, status: 1 })
             });
         }
         else{

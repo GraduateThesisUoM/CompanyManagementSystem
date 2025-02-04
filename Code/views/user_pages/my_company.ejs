@@ -41,11 +41,16 @@
 
                     <form action="/my-company/change-company-status" method="POST">
                         <%if(company.status == '1' ){ %>
-                            <div>Status : Active </div>
+                            <div id="status_div" style="display: flex; flex-direction: row;gap:10px;">
+                                <div id="status_mark" class="active"></div>
+                                <div >Status : Active</div>
+                            </div>
                             <button id="deactivate_company" type="submit">Deactivate Company</button>
                         <%}else{ %>
-                            
-                            <div>Status : Disabled</div>
+                            <div id="status_div" style="display: flex; flex-direction: row;gap:10px;">
+                                <div id="status_mark" class="delleted"></div>
+                                <div>Status : Disabled</div>
+                            </div>
                             <button id="activate_company" type="submit">Activate Company</button>
 
                         <%} %>
@@ -89,6 +94,17 @@
                      <form action="/my-company/export" method="POST" class="glass_effect_2 company_data_item">
                         <button style="width: 100%;" class="button_3">Export Data</button>
                     </form>
+                    <div class="glass_effect_2 container">
+                        <div style="width: 100%; text-align: center;">My Accounts</div>
+                        <div style="display: flex;">
+                            <div style="width: 50%; text-align: center;">Credit</div>
+                            <div style="width: 50%; text-align: center;">Debit</div>
+                        </div>
+                        <div style="display: flex;">
+                            <div style="width: 50%; text-align: center;"><%=credit%> €</div>
+                            <div style="width: 50%; text-align: center;"><%=debit%> €</div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -107,6 +123,11 @@
             if(urlParams.get('message')=="company-status-0"){
                 alert("Company Status Deactivated");
             }
+        }
+
+        if($("#status").val()==1){
+            $("#status_label").html("Active")
+            $("#status_mark").addClass('active')
         }
        
             var requested_license = parseInt('<%= company.license.requested %>');

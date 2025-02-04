@@ -7,8 +7,9 @@ const path_constants = require("../../constantsPaths");
 
 //Models
 const Company = require(path_constants.schemas.two.company);
-const Accountant = require(path_constants.schemas.two.accountant);
+const Document = require(path_constants.schemas.two.document);
 const Node = require(path_constants.schemas.two.node);
+const Series = require(path_constants.schemas.two.series);
 
 //Authentication Functions
 const Authentication = require("../../AuthenticationFunctions");
@@ -20,9 +21,23 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
+      var docs = await Document.find({company: req.user.company});
+      var credit = 0;
+      var debit = 0;
+        for (let d of docs) {
+            const series = await Series.findOne({ _id: d.series, company: d.company });
+            if( series.effects_account == 1){
+              credit += generalFunctions.get_docs_value(d);
+            }
+            else if( series.effects_account == -1){
+              debit += generalFunctions.get_docs_value(d);
+            }
+        }
         const data = {
           user: req.user,
           company: await Company.findOne({ _id: req.user.company }),
+          credit : parseFloat(credit),
+          debit : debit
         };
         res.render("user_pages/my_company.ejs", data);
       

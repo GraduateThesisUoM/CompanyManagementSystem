@@ -133,10 +133,11 @@ async function create_node(data) {
   if (data.type == 1) {//relationship
     if ((data.company.equals(data.receiver_id) && data.type2 == 3)|| (data.type2 == 2)) {
       new_data.status = 2 //executed;
+      new_data.type2 = 1;
     }
-    else if (data.type2 == 3){
+    /*else if (data.type2 == 3){
       new_data.status = 2
-    }
+    }*/
 
   } else if (data.type == 3) {//request
     new_data = {
@@ -1332,5 +1333,6 @@ module.exports = {
   get_persons_moves,
   record_scan,
   get_accountant_node,
-  calculateDateDifference
+  calculateDateDifference,
+  get_docs_value
 };
