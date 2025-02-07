@@ -22,8 +22,10 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
             company : company._id,
             sender_id : senderId,
             receiver_id : accountantId,
-            type : 1/*,
-            type2 : 3*/});
+            type : 1,
+            type2:1
+            //type2 : 3
+        });
 
 
         if(last_accountant_node == null){
@@ -69,8 +71,7 @@ async function cancel_hiring_req_to_accountant(companyId, accountantId){
 
 async function fire_accountant(companyId,senderId,accountantId){
     try{
-        const company = await Company.findOne({_id:companyId});
-        const company_node = await Node.findOne({_id:company.accountant});
+        const company_node = await generalFunctions.get_accountant_node(companyId);
         //const new_company_node = await generalFunctions.create_node(company._id,senderId,accountantId,'relationship','firing');
             
         const new_company_node = await  generalFunctions.node_reply({
@@ -84,7 +85,7 @@ async function fire_accountant(companyId,senderId,accountantId){
 
         await company_node.save();
 
-        const company_nodes = await Node.find({company:company._id,type:3,status: { $in: [1,3] }});
+        const company_nodes = await Node.find({company:companyId,type:3,status: { $in: [1,3] }});
 
         company_nodes.forEach(async node => {
             node.next = company_node._id;

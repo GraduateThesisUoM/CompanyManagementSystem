@@ -130,12 +130,12 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
   try {
     const company = await Company.findOne({_id:req.user.company});
-    const company_node = await Node.findOne({_id:company.accountant});
+    const company_node = await generalFunctions.get_accountant_node(company._id)//const company_node = await Node.findOne({_id:company.accountant});
     
     
     //const accountant = await Accountant.findOne({_id:req.session.accountant._id});
 
-    clientAccountantFunctions.fire_accountant(company._id,req.user._id,company_node.receiver_id);
+    await clientAccountantFunctions.fire_accountant(company._id,req.user._id,company_node.receiver_id);
 
     res.redirect('/my-accountant?refresh=true');
   }

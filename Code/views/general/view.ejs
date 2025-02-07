@@ -238,25 +238,27 @@
         <!--div id="message_div">Record has been deleted</div-->
         <button class="asap-condensed-regular delete_btn" id="btn1" style="margin-bottom: 50px;">Delete</button>
 
-        <div style="width: 100%;display:flex;gap:25%">
-          <input type="date" id="from_date" class="date_filters input_type_1"/>
-          <input type="date" id="to_date" class="date_filters input_type_1"/>
-  
-        </div>
-          <div class="table_container" id="move_table" style="display: none;">
-            <table>
-                <thead>
-                    <tr>
-                      <th>A/A</th>
-                      <th>Date</th>
-                      <th>Doc</th>
-                      <th>Credit</th>
-                      <th>Debit</th>
-                    </tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+        <div id="client_div" style="display: none;">
+          <div style="width: 100%;display:flex;gap:25%">
+            <input type="date" id="from_date" class="date_filters input_type_1"/>
+            <input type="date" id="to_date" class="date_filters input_type_1"/>
+    
+          </div>
+            <div class="table_container" id="move_table" >
+              <table>
+                  <thead>
+                      <tr>
+                        <th>A/A</th>
+                        <th>Date</th>
+                        <th>Doc</th>
+                        <th>Credit</th>
+                        <th>Debit</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                  </tbody>
+              </table>
+          </div>
         </div>
       </div>
     </div>
@@ -378,14 +380,14 @@
         $("#btn1").hide();
 
         $("#btn3").click(function () {
-          $("#action").val("executed");
+          $("#action").val(2);//executed
           $("#view_form").submit();
         });
         $("#btn2").text("Reject");
         $("#btn2").css("background-color", "red");
         $("#btn2").click(function () {
           event.preventDefault();
-          $("#action").val("rejected");
+          $("#action").val(4);//rejected
           $("#view_form").submit();
         });
       }
@@ -417,7 +419,7 @@
         $("#btn3").hide();
       }
       else if (queryParams.type == 'persons'){
-        $("#move_table").show();
+        $("#client_div").show();
         var table = $("#move_table tbody");
         for (let i = 0; i < secondary_data.length; i++) {
           table.append(`<tr class="glass_effect_2">

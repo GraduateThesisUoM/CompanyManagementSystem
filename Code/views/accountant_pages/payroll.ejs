@@ -147,18 +147,18 @@
                                     <input name="salary" id="salary" type="number" step="0.01" value="<%=salary%>">
                                     <lable for="salary">€</lable>
                                 </div>
-                                <div>
-                                    <input name="kids" id="kids" type="number" step="1">
-                                    <lable for="kids">Kids</lable>
-                                </div>
                                 <button class="button_3">Set</button>
                             </div>
                        </form>
                     </div>
-                    <div id="chart_container" class="glass_effect_2">
-                        <!--canvas id="myChart" style="width:100%;max-width:600px"></canvas-->
+                    <div id="chart_container" class="glass_effect_2" style="width: 95%;">
                         <div id="line_chart_div" style="width: 100%; height: 500px;"></div>
 
+                    </div>
+                    <br>
+                    <div style="width: 95%; display: flex;justify-content: space-between;gap:50%">
+                        <input type="date" id="from_date" class="date_filters input_type_1"/>
+                        <input type="date" id="to_date" class="date_filters input_type_1"/>
                     </div>
                     <div class="table_container" id="table_container">
                         <table>
@@ -303,6 +303,14 @@
             }
 
             calculateSalary()
+
+            $(".date_filters").change(function(event){
+                event.preventDefault();
+                var from_date = $("#from_date").val();
+                var to_date = $("#to_date").val();
+                window.location = "/payroll?from_date="+from_date+"&to_date="+to_date;
+            });
+
 
 
             function calculateSalary(salary) {

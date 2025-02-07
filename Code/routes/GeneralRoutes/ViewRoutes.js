@@ -284,6 +284,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
             
           } else if (type == "clients") {
+            console.log('clients')
             obj = await Company.findOne({ _id: id });
             data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate)];
             data.titles = ["Name", "Logo", "Reg Date"];
@@ -426,11 +427,17 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 
     await generalFunctions.update({ _id: req.body.obj_id }, obj_type, req.body);   
 
+    if(obj_type == 'nodes'){
+      return res.redirect(`/list?searchfor=clients`);
+    }
     if(type2){
-      return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);
+      //return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);
+      return res.redirect(`/list?searchfor=${obj_type}&type2=${type2}`);
+
     }
     else{
-      return res.redirect(`/view?type=${obj_type}&id=${obj_id}`);
+      return res.redirect(`/list?searchfor=${obj_type}`);
+      //return res.redirect(`/view?type=${obj_type}&id=${obj_id}`);
     }
 
   } catch (e) {

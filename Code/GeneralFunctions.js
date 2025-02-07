@@ -124,6 +124,7 @@ async function create_node(data) {
     sender_id: data.sender_id,
     receiver_id: data.receiver_id,
     type: data.type,
+    type2 : data.type2,
     status: 3,//pending
     text: data.text
   };
@@ -131,13 +132,13 @@ async function create_node(data) {
   
   
   if (data.type == 1) {//relationship
-    if ((data.company.equals(data.receiver_id) && data.type2 == 3)|| (data.type2 == 2)) {
+    if ((data.company.equals(data.receiver_id) && data.type2 == 3)) {
       new_data.status = 2 //executed;
       new_data.type2 = 1;
     }
-    /*else if (data.type2 == 3){
+    else if ((data.type2 == 2) || (data.type2 == 3)){//kataxorisi node gia relationship
       new_data.status = 2
-    }*/
+    }
 
   } else if (data.type == 3) {//request
     new_data = {
@@ -150,7 +151,6 @@ async function create_node(data) {
     new_data.status = 2;
   }
 
-  if(data.type2) new_data.type2 = data.type2;
   if(data.receiver_id) new_data.receiver_id = data.receiver_id;
   
 
@@ -566,6 +566,7 @@ async function get_obj_by_id(data, schema) {
 
 async function update(id, schema , data){
   try {
+    console.log("update");
     var obj = await get_obj_by_id(id, schema);
     console.log(obj);
     console.log('update '+schema);
