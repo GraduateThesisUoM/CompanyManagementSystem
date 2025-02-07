@@ -29,7 +29,7 @@
         <%- include('../partials/header'); %>
     </head>
     <style>
-        #client_select,#person_select{
+        .top_select{
             width: calc(100% - 30px);
             padding: 5px 15px;
             border-radius: 10px;
@@ -72,94 +72,164 @@
             <div>
                 <div class="asap-condensed-regular">
                     <h1>PayRoll</h1>
-                    <div class="glass_effect_2 container" id="filter_container">
-                        <form action="/payroll" method="POST">
-                            <div id="time_gap">
-                                <label for="year">Year</label>
-                                <select class="my_select" id="year" id="year">
-                                    <% for(let i=2020; i<2100; i++){ %>
-                                        <option value="<%= i %>"><%= i %></option>
-                                    <% } %>                                
-                                </select>
-                                <label for="from_month">From</label>
-                                <select class="my_select" id="from_month" id="from_month">
-                                    <% for(let i=1; i<13; i++){ %>
-                                        <option value="<%= i %>"><%= i %></option>
-                                    <% } %>                                 
-                                </select>
-                                <label for="to_month">To</label>
-                                <select class="my_select" name="to_month" id="to_month">
-                                    <% for(let i=1; i<13; i++){ %>
-                                        <option value="<%= i %>"><%= i %></option>
-                                    <% } %>                                 
-                                </select>
+                    <div class=" container" id="filter_container">
+                        <div>
+                            <div style="display: flex; justify-content:space-between;gap:5%;margin-bottom: 50px;" class="container glass_effect_2">
+                                <div style="width: 100%;" >
+                                    <label for="client_select">Client</label>
+                                    <select class="my_select top_select" id="client_select" name="client_select">
+                                        <% for(c of clients){%>
+                                            <option value="<%= c._id%>"><%= c.name%></option>
+                                        <% }%>
+        
+                                    </select>
+                                </div>
+                                <div style="width: 100%;">
+                                    <label for="person_select">Person</label>
+                                    <select class="my_select top_select" id="person_select" name="person_select">
+                                        <% for(c of clients_users){%>
+                                            <option class="<%=c.c.company%> user" value="<%= c.u._id%>"><%= c.u.firstName %> <%= c.u.lastName %></option>
+                                        <% }%>
+                                    </select>
+                                </div>
+                                <div style="width: 100%;">
+                                    <label for="person_select " >Year</label>
+                                    <select class="my_select top_select">
+                                        <option>f</option>
+                                    </select>
+                                </div>
                             </div>
                             
-                            <label for="client_select">Client</label>
-                            <select class="my_select" id="client_select" name="client_select">
-                                <% for(c of clients){%>
-                                    <option value="<%= c._id%>"><%= c.name%></option>
-                                <% }%>
 
-                            </select>
-                            <label for="person_select">Person</label>
-                            <select class="my_select" id="person_select" name="person_select">
-                                <% for(c of clients_users){%>
-                                    <option class="<%=c.c.company%> user" value="<%= c.u._id%>"><%= c.u.firstName %> <%= c.u.lastName %></option>
-                                <% }%>
-                            </select>
-                            <div id="persons_data">
-                                <p> First Name : <%=selected_user.firstName%></p>
-                                <p> Last Name : <%=selected_user.lastName%></p>
-                                <p> Time In the Company : <br>
-                                    Years  : <%=time_in_comp.years%><br>
-                                    Months : <%=time_in_comp.months%><br>
-                                    Days   : <%=time_in_comp.days%></p>
+                            
+                            <div style="display: grid;grid-template-columns: 45% 45%;gap:5%;">
+                                <div class="glass_effect_2 container">
+                                    <div id="persons_data">
+                                        <p style="width: 100%;text-align: center;font-weight: bold;font-size: 1.4em;"><%=selected_user.lastName%> <%=selected_user.firstName%></p>
+                                        <p> Time In the Company : <br>
+                                            Years  : <%=time_in_comp.years%><br>
+                                            Months : <%=time_in_comp.months%><br>
+                                            Days   : <%=time_in_comp.days%></p>
+                                    </div>
+                                    <div id="salary_data_cont">
+                                        <div>
+                                            Full Salary : <span id="fullsalry">0</span>
+                                        </div>
+                                        <div>
+                                            Christmas Gift : <span id="christmasgift">0</span>
+                                        </div>
+                                        <div>
+                                            Leave Pay: <span id="leavepay">0</span>
+                                        </div>
+                                        <div>
+                                            Leave Allowance: <span id="leaveallowance">0</span>
+                                        </div>
+                                        <div>
+                                            Overtime: <span id="overtime">0</span>
+                                        </div>
+                                        <div>
+                                            €/hour: <span id="hourpay">0</span>
+                                        </div>
+                                        <div>
+                                            Employer Contributions: <span id="employercontributions">0</span>
+                                        </div>
+                                        <div>
+                                            Employee Contributions: <span id="employeecontributions">0</span>
+                                        </div>
+                                    </div>
+                                    <div id="set_salary_cont">
+                                        <form action="/payroll" method="POST">
+                                            <input name="salary" id="salary" type="number" step="0.01" value="<%=salary%>">
+                                            <lable for="salary">€</lable>
+                                            <input name="action" id="action">
+                                        </form>
+                                        <button id="btn1" class="button_3" onclick="$('#action').val(1)" style="width: 96%;margin: 2%;">Pay</button>
+                                        <button id="btn2" class="button_1" onclick="$('#action').val(2)" style="width: 96%;margin: 2%;">Set</button>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="table_container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Month</th>
+                                                    <th>Amount</th>
+                                                    <th>Payed</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>1</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>2</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>3</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>4</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>5</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>6</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>7</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>8</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>9</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>10</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>11</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                                <tr class="glass_effect_2 month">
+                                                    <th>12</th>
+                                                    <th>1000</th>
+                                                    <th>Yes</th>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
-                            <div id="salary_data_cont">
-                                <div>
-                                    Full Salary : <span id="fullsalry">0</span>
-                                </div>
-                                <div>
-                                    Christmas Gift : <span id="christmasgift">0</span>
-                                </div>
-                                <div>
-                                    Leave Pay: <span id="leavepay">0</span>
-                                </div>
-                                <div>
-                                    Leave Allowance: <span id="leaveallowance">0</span>
-                                </div>
-                                <div>
-                                    Overtime: <span id="overtime">0</span>
-                                </div>
-                                <div>
-                                    €/hour: <span id="hourpay">0</span>
-                                </div>
-                                <div>
-                                    Employer Contributions: <span id="employercontributions">0</span>
-                                </div>
-                                <div>
-                                    Employee Contributions: <span id="employeecontributions">0</span>
-                                </div>
-                            </div>
-                            <div id="set_salary_cont">
-                                <div>
-                                    <input name="salary" id="salary" type="number" step="0.01" value="<%=salary%>">
-                                    <lable for="salary">€</lable>
-                                </div>
-                                <button class="button_3">Set</button>
-                            </div>
-                       </form>
+                        </div>
                     </div>
                     <div id="chart_container" class="glass_effect_2" style="width: 95%;">
                         <div id="line_chart_div" style="width: 100%; height: 500px;"></div>
 
                     </div>
                     <br>
-                    <div style="width: 95%; display: flex;justify-content: space-between;gap:50%">
-                        <input type="date" id="from_date" class="date_filters input_type_1"/>
-                        <input type="date" id="to_date" class="date_filters input_type_1"/>
-                    </div>
                     <div class="table_container" id="table_container">
                         <table>
                             <thead>
@@ -227,19 +297,6 @@
 
             $("#person_select").change(function(){
                 window.location = '/payroll?id='+$("#person_select").val()+'&comp='+$("#client_select").val()
-            })
-
-            $(".my_select").change(function(){
-                var from_month = $("#from_month").val();
-                var to_month = $("#to_month").val()
-                if(to_month < from_month){
-                    to_month = from_month;
-                }
-                window.location = '/payroll?id='+$("#person_select").val()+
-                '&comp='+$("#client_select").val()+
-                "&year="+$("#year").val()+
-                "&from_month="+from_month+
-                "&to_month="+to_month
             })
             
 
@@ -311,7 +368,10 @@
                 window.location = "/payroll?from_date="+from_date+"&to_date="+to_date;
             });
 
-
+            $('.month').click(function(){
+                var index = $('.month').index(this); // Get the index of the clicked button
+                alert("Button Index: " + index);
+            })
 
             function calculateSalary(salary) {
                 var fullSalary = $("#salary").val();
