@@ -8,8 +8,7 @@ const Company = require(path_constants.schemas.two.company);
 const Attendance = require(path_constants.schemas.two.attendance);
 const Client = require(path_constants.schemas.two.client);
 const Salary = require(path_constants.schemas.two.salary);
-
-
+const PayRoll = require(path_constants.schemas.two.payroll);
 
 //Authentication Functions
 const Authentication = require(path_constants.authenticationFunctions_folder.two);
@@ -31,6 +30,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             if( req.query.comp){
                 comp = req.query.comp
             }
+            console.log("company : "+comp);
             const clients_users = [];
             var users = await Client.find({company: comp, status:1})
 
@@ -46,6 +46,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                 comp = req.query.comp
                 selected_user = await Client.findOne({company:comp,type:'user', status:1})
             }
+
+            console.log("company : "+comp);
+            console.log("selected_user : "+selected_user);
 
             if( req.query.year){
                 year = req.query.year
@@ -64,14 +67,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             const to_date = new Date(Date.UTC(year, to_month+1, 1, 0, 0, 1));  // UTC
             to_date.setHours(to_date.getHours() + 2);  // Add 2 hours for Greece time zone
 
-
-            var payrolls = await Salary.find({company: comp,
-                user:selected_user,
-                registrationDate: { $gte: from_date, $lt: to_date }
-            }).sort({ registrationDate: 1 });
-
-
-
+            //Attendance
             var attendance = await Attendance.find({
                 user:selected_user,
                 company: comp,
@@ -84,17 +80,35 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                 clock_out: attendance.clock_out 
                 ? new Date(attendance.clock_out).getUTCHours().toString().padStart(2, '0') + " : " + new Date(attendance.clock_out).getUTCMinutes().toString().padStart(2, '0') 
                 : '-',             }));
-            console.log(attendance)
+            console.log('attendance :'+attendance)
+            
+            //PayRoll
+            var payroll_list = await PayRoll.find({company: comp, user: selected_user});
+            payroll_list = await Promise.all(payroll_list.map(async (payroll) => ({
+                month: payroll.month,
+                salary: await Salary.findOne({_id: payroll.salary})
+            })));
+            
 
-            var payroll_months = []
-            var payroll_amounts = [];
+            console.log('payroll :'+payroll_list);
+            console.dir(payroll_list)
+
+
+            //Salary
+            var salary_months = []
+            var salary_amounts = [];
+            
+            var payrolls = await Salary.find({company: comp,
+                user:selected_user,
+                registrationDate: { $gte: from_date, $lt: to_date }
+            }).sort({ registrationDate: 1 });
+
             for( payroll of payrolls){
-                payroll_months.push(generalFunctions.formatDate(payroll.registrationDate));
-                payroll_amounts.push(payroll.amount);
+                salary_months.push(generalFunctions.formatDate(payroll.registrationDate));
+                salary_amounts.push(payroll.amount);
             }
-
             if(payrolls.length > 0){
-                salary = payroll_amounts[0]; 
+                salary = salary_amounts[0]; 
             }
     
 
@@ -103,10 +117,11 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                 clients : clients,
                 clients_users: clients_users,
                 selected_user : selected_user,
-                payroll_months: payroll_months,
-                payroll_amounts: payroll_amounts,
-                salary : salary,
+                salary_months: salary_months,
+                salary_amounts: salary_amounts,
+                salary : await Salary.findOne({user : selected_user._id, company : comp,next:'-'}),
                 attendance: attendance,
+                payroll: payroll_list,
                 time_in_comp : generalFunctions.calculateDateDifference(selected_user.registrationDate)
             }
             res.render( path_constants.pages.payroll.view(),data );  
@@ -124,15 +139,57 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
 
 router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     try {
-      console.log("Post Payroll")
-      const u = await Client.findOne({_id:req.body.person_select})
+      console.log("Post Payroll");
+      console.log(req.body)
+
+      const u = await Client.findOne({_id:req.body.person})
       console.log(u)
-      const s = await new Salary({
+      var current_salary = await Salary.findOne({company:u.company,user : u._id,next:"-"})
+      var new_salary;
+      if(req.body.action == 1){//pay
+        console.log("Pay");
+        if(!current_salary){
+            console.log("Register Salary");
+            current_salary = await new Salary({
+                company : u.company,
+                user : u._id,
+                amount : req.body.salary
+            })
+            await current_salary.save();
+        }
+        var payroll = {};
+        payroll = await new PayRoll({
+            company : u.company,
+            user : u._id,
+            month : req.body.salary_month,
+            year : req.body.salary_year,
+            salary: current_salary._id
+        });
+        await payroll.save();
+      }
+      else if (req.body.action == 2){//set
+        console.log("Set");
+        new_salary = await new Salary({
+            company : u.company,
+            user : u._id,
+            amount : req.body.salary
+        })
+        await new_salary.save();
+
+        if(current_salary){
+            console.log("Replace Salary");
+            current_salary.next = new_salary._id;
+            await current_salary.save();
+        }
+      }
+      /*const s = await new Salary({
         company : u.company,
         user : u._id,
+        month : req.body.month,
+        year : req.body.year,
         amount : req.body.salary
       })
-      await s.save();
+      await s.save();*/
       res.redirect('/payroll?id='+u._id+"&comp="+u.company);
     }
     catch (err) {

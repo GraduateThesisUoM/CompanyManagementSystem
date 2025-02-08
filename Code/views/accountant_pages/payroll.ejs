@@ -94,8 +94,8 @@
                                 </div>
                                 <div style="width: 100%;">
                                     <label for="person_select " >Year</label>
-                                    <select class="my_select top_select">
-                                        <option>f</option>
+                                    <select id="year_select" class="my_select top_select">
+                                        <option value="2025">2025</option>
                                     </select>
                                 </div>
                             </div>
@@ -138,13 +138,18 @@
                                         </div>
                                     </div>
                                     <div id="set_salary_cont">
-                                        <form action="/payroll" method="POST">
-                                            <input name="salary" id="salary" type="number" step="0.01" value="<%=salary%>">
+                                        <form action="/payroll" method="POST" id="payroll_form">
+                                            <input name="salary_year" id="salary_year" val="2025">
+                                            <input name="salary_month" id="salary_month">
+                                            <input name="salary" id="salary" type="number" step="0.01" value="<%=salary.amount%>">
                                             <lable for="salary">€</lable>
                                             <input name="action" id="action">
+                                            <input name="person" id="person">
+                                            <input name="company" id="company">
+
                                         </form>
-                                        <button id="btn1" class="button_3" onclick="$('#action').val(1)" style="width: 96%;margin: 2%;">Pay</button>
-                                        <button id="btn2" class="button_1" onclick="$('#action').val(2)" style="width: 96%;margin: 2%;">Set</button>
+                                        <button id="btn1" class="button_3" style="width: 96%;margin: 2%;">Pay</button>
+                                        <button id="btn2" class="button_1" style="width: 96%;margin: 2%;">Set</button>
                                     </div>
                                 </div>
                                 <div>
@@ -154,69 +159,19 @@
                                                 <tr>
                                                     <th>Month</th>
                                                     <th>Amount</th>
-                                                    <th>Payed</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+
+                                                <% for(p of payroll){%>
+                                                    <tr class="glass_effect_2 month">
+                                                        <th><%=p.month%></th>
+                                                        <th><%=p.salary.amount%></th>
+                                                    </tr>
+                                                <%}%>
                                                 <tr class="glass_effect_2 month">
-                                                    <th>1</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>2</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>3</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>4</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>5</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>6</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>7</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>8</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>9</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>10</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>11</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
-                                                </tr>
-                                                <tr class="glass_effect_2 month">
-                                                    <th>12</th>
-                                                    <th>1000</th>
-                                                    <th>Yes</th>
+                                                    <th>-</th>
+                                                    <th><%=salary.amount%></th>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -300,14 +255,14 @@
             })
             
 
-            const payroll_months = JSON.parse(`<%- JSON.stringify(payroll_months) %>`);
-            const payroll_amounts = JSON.parse(`<%- JSON.stringify(payroll_amounts) %>`);
+            const salary_months = JSON.parse(`<%- JSON.stringify(salary_months) %>`);
+            const salary_amounts = JSON.parse(`<%- JSON.stringify(salary_amounts) %>`);
 
             
             const today = new Date();
             const formattedToday = `${today.getDate().toString().padStart(2, '0')}-${(today.getMonth() + 1).toString().padStart(2, '0')}-${today.getFullYear()}`;
 
-            drawLineChart(payroll_months, payroll_amounts);
+            drawLineChart(salary_months, salary_amounts);
 
             function drawLineChart(xData, lineData,name) {
                 google.charts.load('current', {'packages':['corechart']});
@@ -369,8 +324,29 @@
             });
 
             $('.month').click(function(){
-                var index = $('.month').index(this); // Get the index of the clicked button
-                alert("Button Index: " + index);
+                for(m of $('.month')){
+                    $(m).removeClass('glass_effect_1');
+                    $(m).removeClass('color_white');
+                    $(m).addClass('glass_effect_2');
+                }
+                $(this).removeClass('glass_effect_2');
+                $(this).addClass('glass_effect_1 color_white');
+
+                $("#salary_month").val($('.month').index(this)+1)
+                $("#person").val($("#person_select").val())
+                $("#company").val($("#client_select").val())
+
+                $("#salary_year").val($('#year_select').val());
+            })
+
+            $("#btn1").click(function(){
+                $('#action').val(1);
+                $('#payroll_form').submit();
+            });
+
+            $("#btn2").click(function(){
+                $('#action').val(2);
+                $('#payroll_form').submit();
             })
 
             function calculateSalary(salary) {

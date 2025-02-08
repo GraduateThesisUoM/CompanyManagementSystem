@@ -19,6 +19,8 @@ const schemas = {
     document : "././Schemas/Document",
     salary : "././Schemas/Salary",
     attendance : "././Schemas/Attendance",
+    payroll : "././Schemas/PayRoll",
+
   },
   two:{
     user : "../../Schemas/User",
@@ -34,6 +36,8 @@ const schemas = {
     document : "../../Schemas/Document",
     salary : "../../Schemas/Salary",
     attendance : "../../Schemas/Attendance",
+    payroll : "../../Schemas/PayRoll",
+
   }
 };
 
