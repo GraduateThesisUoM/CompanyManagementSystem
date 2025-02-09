@@ -260,6 +260,20 @@
               </table>
           </div>
         </div>
+        <div id="admin_view_company"style="display: none;">
+          <div class="table_container" id="req_table" style="margin-left: 2%;width: 90%;">
+            <table>
+                <thead>
+                    <tr>
+                      <th>A/A</th>
+                      <th>Reg Date</th>
+                      <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
       </div>
     </div>
   </body>
@@ -393,7 +407,6 @@
       }
       else if (queryParams.type == "clients") {
         clients_users = secondary_data.users;
-
  
         $("#clients").show();
         $("#btn1").text("Remove");
@@ -428,6 +441,16 @@
             <td>${secondary_data[i].doc}</td>
             <td>${secondary_data[i].credit}</td>
             <td>${secondary_data[i].debit}</td>`);
+        }
+      }
+      else if (queryParams.type == 'companies'){
+        $("#admin_view_company").show();
+        var table = $("#req_table tbody");
+        for (let i = 0; i < secondary_data.nodes.nodes_pending.length; i++) {
+          table.append(`<tr class="glass_effect_2" onclick="window.location='/view?type=nodes&id=${secondary_data.nodes.nodes_pending[i]._id}'">
+            <td>${i + 1}</td>
+            <td>${secondary_data.nodes.nodes_pending[i].registrationDate}</td>
+            <td>Pending</td>`);
         }
       }
       else {

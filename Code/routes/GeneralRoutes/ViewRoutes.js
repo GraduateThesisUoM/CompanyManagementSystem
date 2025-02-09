@@ -243,10 +243,16 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             
           } else if (type == "nodes") {
             obj = await Node.findOne({ _id: id });
-            if (obj.status == 3 && obj.receiver_id.equals( req.user._id)) {//pending and user is the receiver
-              obj.status = 1;//viewed
-              await obj.save();
+            if(obj.receiver_id){
+              if (obj.status == 3 && obj.receiver_id.equals( req.user._id)) {//pending and user is the receiver
+                obj.status = 1;//viewed
+                await obj.save();
+              }
             }
+            else{
+              console.log("Admin View")
+            }
+            
             var nodes = [];
             nodes.push(obj);
             var node = obj;
@@ -323,6 +329,25 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data.titles = ["Name", "Logo", "Reg Date","Number of Users","Accountant","Status"];
             data.type = [0, 11, 0,0,0,0];
 
+            let nodes_pending = await Node.find({
+              company: id,
+              type: { $in: [3,10] },
+              type2: { $in:[4,6]},
+              status : 3 //pending
+            })
+            let nodes_viewed = await Node.find({
+              company: id,
+              type: { $in: [3,10] },
+              type2: { $in:[4,6]},
+              status : 1 //viewed
+            })
+            let nodes_executed_rejected = await Node.find({
+              company: id,
+              type: { $in: [3,10] },
+              type2: { $in:[4,6]},
+              status : { $in:[2,4]} //viewed
+            })
+
             /*let nodes = await Node.find({ company: id, type: 6, type2: 6, next: "-", status: 2 });
 
             nodes = await Promise.all(
@@ -341,6 +366,13 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               nodes: nodes,
               users: await Client.find({ company: id, status: 1 }),
             };*/
+            secondary_data = {
+              nodes: {
+                nodes_pending : nodes_pending,
+                nodes_viewed : nodes_viewed,
+                nodes_executed_rejected : nodes_executed_rejected
+              }
+            }
           } else if (type == "reports") {
             obj = await Node.findOne({ _id: id });
             const c = await Company.findOne({_id:obj.company});

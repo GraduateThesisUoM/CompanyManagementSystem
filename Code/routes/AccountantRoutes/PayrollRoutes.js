@@ -86,7 +86,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             var payroll_list = await PayRoll.find({company: comp, user: selected_user});
             payroll_list = await Promise.all(payroll_list.map(async (payroll) => ({
                 month: payroll.month,
-                salary: await Salary.findOne({_id: payroll.salary})
+                salary: await Salary.findOne({_id: payroll.salary}),
+                extra : payroll.extra
             })));
             
 
@@ -110,7 +111,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             if(payrolls.length > 0){
                 salary = salary_amounts[0]; 
             }
-    
+            
+            const salaryRecord = await Salary.findOne({ user: selected_user._id, company: comp, next: '-' });
+
 
             var data ={
                 user : req.user,
@@ -119,7 +122,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                 selected_user : selected_user,
                 salary_months: salary_months,
                 salary_amounts: salary_amounts,
-                salary : await Salary.findOne({user : selected_user._id, company : comp,next:'-'}),
+                salary : salaryRecord ? salaryRecord : {amount : 0},
                 attendance: attendance,
                 payroll: payroll_list,
                 time_in_comp : generalFunctions.calculateDateDifference(selected_user.registrationDate)
@@ -153,7 +156,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
             current_salary = await new Salary({
                 company : u.company,
                 user : u._id,
-                amount : req.body.salary
+                amount : req.body.salary,
             })
             await current_salary.save();
         }
@@ -163,7 +166,8 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
             user : u._id,
             month : req.body.salary_month,
             year : req.body.salary_year,
-            salary: current_salary._id
+            salary: current_salary._id,
+            extra : req.body.extra
         });
         await payroll.save();
       }

@@ -6,7 +6,13 @@
     padding: 10px;
     transition: all 0.3s ease;
 }
-.button_1:hover{
+
+.button_1:disabled{
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.button_1:not(:disabled):hover{
     background-color: rgb(15, 96, 189);
 }
 
@@ -18,7 +24,7 @@
     padding: 10px;
     transition: all 0.3s ease;
 }
-.button_2:hover{
+.button_2:not(:disabled):hover{
     background-color: rgba(189, 15, 15, 1);
 }
 
@@ -30,7 +36,7 @@
     padding: 10px;
     transition: all 0.3s ease;
 }
-.button_3:hover{
+.button_3:not(:disabled):hover{
     background-color: rgb(13, 143, 6);
 }
 
@@ -44,8 +50,13 @@
     width: 80%;
     margin-left: 10%;
 }
-.button_4:hover{
+.button_4:not(:disabled):hover{
     background-color: rgb(15, 96, 189);
     scale: 1.05;
     box-shadow: -5px 5px 5px  rgba(0, 0, 0, 0.564);
+}
+
+.button_1:disabled, .button_2:disabled, .button_3:disabled, .button_4:disabled{
+    cursor: not-allowed;
+    opacity: 0.6;
 }

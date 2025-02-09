@@ -18,7 +18,7 @@ const PayRollShema = new mongoose.Schema({
   salary : { type: mongoose.Schema.Types.ObjectId, required: true  },
   extra : {
     type : Number,
-    required : true,
+    required : false,
     default : 0
   },
   registrationDate: { type: Date, default: Date.now , required: true}
