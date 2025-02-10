@@ -287,6 +287,19 @@ function create_doc_person(client, header, person_title, data) {
         <div>${data.phone || 'no phone'}</div>
     </div>`;
 }
+
+function print_form(data) {
+    var iframe = document.getElementById('print-frame');
+    var doc = iframe.contentWindow.document;
+
+    var form = create_form(data);
+    doc.open();
+    doc.write(form);
+    doc.close();
+
+    iframe.contentWindow.focus();
+    iframe.contentWindow.print();
+}
 function formatDate(date) {
     // Ensure the input is a valid Date object
     if (!(date instanceof Date)) {

@@ -361,19 +361,6 @@
                     window.location = "/view?type="+searchfor+"&id="+$(this).data('id')+"&type2="+type;
                 });
             });
-
-            function print_form(data) {
-                var iframe = document.getElementById('print-frame');
-                var doc = iframe.contentWindow.document;
-
-                var form = create_form(data);
-                doc.open();
-                doc.write(form);
-                doc.close();
-
-                iframe.contentWindow.focus();
-                iframe.contentWindow.print();
-            }
         
         });
 

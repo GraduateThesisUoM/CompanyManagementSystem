@@ -19,7 +19,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     try{
         const access = generalFunctions.checkAccessRigts(req,res);
         if(access.response){
-            console.log("PayRoll")
+            console.log("PayRoll");
+            console.log(req.query)
             var salary = 0;
             var year = new Date().getFullYear();
             var from_month = new Date().getMonth();
@@ -83,11 +84,16 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             console.log('attendance :'+attendance)
             
             //PayRoll
-            var payroll_list = await PayRoll.find({company: comp, user: selected_user});
+            var payroll_list = await PayRoll.find({
+                company: comp,
+                user: selected_user,
+                year: year
+            });
             payroll_list = await Promise.all(payroll_list.map(async (payroll) => ({
                 month: payroll.month,
                 salary: await Salary.findOne({_id: payroll.salary}),
-                extra : payroll.extra
+                extra : payroll.extra,
+                registrationDate : payroll.registrationDate
             })));
             
 

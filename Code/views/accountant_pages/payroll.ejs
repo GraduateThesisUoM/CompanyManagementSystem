@@ -231,8 +231,44 @@
                         </table>
                     </div>
                 </div>
+                <button id="btn3">print</button>
+                <div style="width:100%;background-color: white;">
+                    <div style="display:grid;grid-template-columns: 30% 70%;">
+                        <img height="100px" width="100px" src="https://static.vecteezy.com/system/resources/thumbnails/036/324/708/small/ai-generated-picture-of-a-tiger-walking-in-the-forest-photo.jpg">
+                        <div>
+                            <p>Company Name</p>
+                            <p>Address</p>
+                        </div>
+    
+                    </div>
+                    
+                    <p><strong>Payslip</strong></p>
+                    <p>Date : <span>DD/MM/YYYY</span></p>
+                    <p>Payroll Period <span>Month Year</span></p>
+                    <div>
+                        <p>First Name : <span>Name</span></p>
+                        <p>Last Name : <span>Name</span></p>
+                        <p>Address : <span>Name</span></p>
+                        <p>AFM : <span>Name</span></p>
+                    </div>
+                    
+                    <div style="display:grid;grid-template-columns: 50% 50%;">
+                        <div style="border: solid 1px black;">Earnings</div>
+                        <div style="border: solid 1px black;">Deductions</div>
+                        <div style="border: solid 1px black;">Basic wage : 500</div>
+                        <div style="border: solid 1px black;">d</div>
+                    </div>
+                    <p><strong>Net Salary:</strong> (Calculate net amount here)</p>
+
+                    <p>Authorized Signature: ___________________</p>
+
+                </div>
+                <iframe id="print-frame"  srcdoc="<p>test</p>">
+                </iframe>
             </div>
+            
         </div>
+        
     </body>
     <script>
 
@@ -241,23 +277,34 @@
         const payroll = JSON.parse(`<%- JSON.stringify(payroll) %>`);
         const clients = JSON.parse(`<%- JSON.stringify(clients) %>`);
 
-       $(document).ready(function(){
-            const queryString = new URL(window.location.href).search;
-            var params = new URLSearchParams(queryString);
-            $("#salary_year").val(new Date().getFullYear());
+        const queryString = new URL(window.location.href).search;
+        var params = new URLSearchParams(queryString);
 
+        if(params.get('comp')){
+            const selectedClient = clients.find(client => client._id === params.get('comp'));
+            console.log(selectedClient);
+            const startYear = new Date(selectedClient.registrationDate).getFullYear();
+            const currentYear = new Date().getFullYear();
+            for(let year = currentYear; year >= startYear; year--) {
+                $("#year_select").append("<option value='"+year+"'>"+year+"</option>")
+            }
+            if(params.get('year')){
+            $("#year_select").val(params.get('year'))
+        }
+        }
+        
+
+
+       $(document).ready(function(){
+            $("#salary_year").val(new Date().getFullYear());
+            
 
             select_month(new Date().getMonth());
 
 
             if(params.get('comp')){
-                const selectedClient = clients.find(client => client._id === params.get('comp'));
-                console.log(selectedClient);
-                const startYear = new Date(selectedClient.registrationDate).getFullYear();
-                const currentYear = new Date().getFullYear();
-                for(let year = currentYear; year >= startYear; year--) {
-                    $("#year_select").append("<option value='"+year+"'>"+year+"</option>")
-                }
+                $("#company").val(params.get('comp'));
+                
 
 
 
@@ -307,9 +354,7 @@
             $("#person_select").change(function(){
                 window.location = '/payroll?id='+$("#person_select").val()+'&comp='+$("#client_select").val()
             })
-            
-
-            
+                      
 
 
             const today = new Date();
@@ -390,6 +435,17 @@
                 $('#payroll_form').submit();
             })
 
+            
+            $("#btn3").click(function(){
+
+                const iframe = document.getElementById("print-frame");
+
+                if (iframe.contentWindow) {
+                    iframe.contentWindow.focus();
+                    iframe.contentWindow.print();
+                }
+            })
+
             function calculateSalary(salary) {
                 var fullSalary = $("#salary").val();
                 var christmasGift = 300;
@@ -427,7 +483,7 @@
                 $("#company").val($("#client_select").val());
                 $("#salary_year").val($('#year_select').val());
 
-                $('#payroll_for').html($("#salary_year").val()+" / "+parseInt(index+1))
+                $('#payroll_for').html($("#year_select").val()+" / "+parseInt(index+1))
 
                 try{
                     $("#salary").val(payroll[index].salary.amount);
@@ -447,7 +503,10 @@
                     $("#btn1, #btn2").prop("disabled", false);
                 }
             });
-        
+            
+            $("#year_select").change(function(){
+                window.location = '/payroll?id='+$("#person").val()+'&comp='+$("#company").val()+'&year='+$("#year_select").val();
+            })
         });
 
     </script>
