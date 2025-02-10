@@ -102,7 +102,7 @@
                                     </select>
                                 </div>
                                 <div style="width: 100%;display: none;"  id="year_select_container">
-                                    <label for="person_select " >Year</label>
+                                    <label for="person_select " ></label>
                                     <select id="year_select" class="my_select top_select">
                                     </select>
                                 </div>
@@ -145,7 +145,7 @@
                                                 Employee Contributions: <span id="employeecontributions">0</span>
                                             </div-->
                                         </div>
-                                        <div id="set_salary_cont">
+                                        <div id="set_salary_cont" >
                                             <form action="/payroll" method="POST" id="payroll_form">
                                                 <input style="display: none;" name="salary_year" id="salary_year" val="2025">
                                                 <input style="display: none;" name="salary_month" id="salary_month">
@@ -171,6 +171,7 @@
     
                                             </form>
                                             <button id="btn1" class="button_3" style="width: 96%;margin: 2%;">Pay</button>
+                                            <button id="btn3" class="button_3" style="width: 96%;margin: 2%;">Print</button>
                                             <button id="btn2" class="button_1" style="width: 96%;margin: 2%;">Set</button>
                                         </div>
                                     </div>
@@ -231,39 +232,41 @@
                         </table>
                     </div>
                 </div>
-                <button id="btn3">print</button>
-                <div style="width:100%;background-color: white;">
-                    <div style="display:grid;grid-template-columns: 30% 70%;">
-                        <img height="100px" width="100px" src="https://static.vecteezy.com/system/resources/thumbnails/036/324/708/small/ai-generated-picture-of-a-tiger-walking-in-the-forest-photo.jpg">
-                        <div>
-                            <p>Company Name</p>
-                            <p>Address</p>
+                <div style="display: none;">
+                    <div id="payslip" style="width:100%;background-color: white;">
+                        <div style="display:grid;grid-template-columns: 30% 70%;">
+                            <img id="print_img" height="100px" width="100px" src="">
+                            <div>
+                                <p id="print_company_name"></p>
+                            </div>
+        
                         </div>
+                        
+                        <p><strong>Payslip</strong></p>
+                        <p>Date : <span id="print_date">DD/MM/YYYY</span></p>
+                        <p>Payroll Period : <span id="print_period_month"></span> <span id="print_period_year">Year</span></p>
+                        <div>
+                            <p>First Name : <span id="print_firstName"></span></p>
+                            <p>Last Name : <span id="print_lastName"></span></p>
+                            <p>AFM : <span id="print_afm"></span></p>
+                        </div>
+                        
+                        <div style="display:grid;grid-template-columns: 50% 50%;">
+                            <div style="border: solid 1px black;">Earnings</div>
+                            <div style="border: solid 1px black;">Deductions</div>
+                            <div style="border: solid 1px black;">Basic wage : <span id="print_salary"></span></div>
+                            <div style="border: solid 1px black;">d</div>
+                            <div style="border: solid 1px black;">Extra : <span id="print_extra"></span></div>
+                            <div style="border: solid 1px black;">d</div>
+    
+                        </div>
+                        <p><strong>Net Salary:</strong> <span id="net_salary"></span> €</p>
+    
+                        <p style="text-align: right;">Authorized Signature: ___________________</p><br>
     
                     </div>
-                    
-                    <p><strong>Payslip</strong></p>
-                    <p>Date : <span>DD/MM/YYYY</span></p>
-                    <p>Payroll Period <span>Month Year</span></p>
-                    <div>
-                        <p>First Name : <span>Name</span></p>
-                        <p>Last Name : <span>Name</span></p>
-                        <p>Address : <span>Name</span></p>
-                        <p>AFM : <span>Name</span></p>
-                    </div>
-                    
-                    <div style="display:grid;grid-template-columns: 50% 50%;">
-                        <div style="border: solid 1px black;">Earnings</div>
-                        <div style="border: solid 1px black;">Deductions</div>
-                        <div style="border: solid 1px black;">Basic wage : 500</div>
-                        <div style="border: solid 1px black;">d</div>
-                    </div>
-                    <p><strong>Net Salary:</strong> (Calculate net amount here)</p>
-
-                    <p>Authorized Signature: ___________________</p>
-
                 </div>
-                <iframe id="print-frame"  srcdoc="<p>test</p>">
+                <iframe id="printiframe" style="display: none;">
                 </iframe>
             </div>
             
@@ -276,6 +279,8 @@
         const salary_amounts = JSON.parse(`<%- JSON.stringify(salary_amounts) %>`);
         const payroll = JSON.parse(`<%- JSON.stringify(payroll) %>`);
         const clients = JSON.parse(`<%- JSON.stringify(clients) %>`);
+        const selected_user = JSON.parse(`<%- JSON.stringify(selected_user) %>`);
+
 
         const queryString = new URL(window.location.href).search;
         var params = new URLSearchParams(queryString);
@@ -289,8 +294,12 @@
                 $("#year_select").append("<option value='"+year+"'>"+year+"</option>")
             }
             if(params.get('year')){
-            $("#year_select").val(params.get('year'))
-        }
+                $("#year_select").val(params.get('year'))
+            }
+            //Print
+            $("#print_company_name").text(selectedClient.name);
+            $("#print_img").attr('src',selectedClient.logo)
+
         }
         
 
@@ -306,8 +315,6 @@
                 $("#company").val(params.get('comp'));
                 
 
-
-
                 $("#client_select").val(params.get('comp'))
                 $("#table_container").show();
                 $("#client_select option:first").remove();
@@ -316,6 +323,8 @@
 
                 $("#person_select_container").show();
                 $("#year_select_container").show();
+
+
             }
             if(params.get('id')){
                 $("#person_select").val(params.get('id'))
@@ -438,12 +447,17 @@
             
             $("#btn3").click(function(){
 
-                const iframe = document.getElementById("print-frame");
-
-                if (iframe.contentWindow) {
+                var iframe = $("#printiframe");
+                iframe.attr("srcdoc",$("#payslip").html() ); // Set srcdoc using jQuery
+                /*if (iframe.contentWindow) {
                     iframe.contentWindow.focus();
                     iframe.contentWindow.print();
                 }
+                printPayslip()*/
+                iframe.on("load", function () {
+                    this.contentWindow.focus();
+                    this.contentWindow.print();
+                });
             })
 
             function calculateSalary(salary) {
@@ -488,6 +502,19 @@
                 try{
                     $("#salary").val(payroll[index].salary.amount);
                     $("#extra").val(payroll[index].extra);
+
+                    //Print
+                    $("#print_date").html(formatDate(new Date(payroll[index].registrationDate)));
+                    $("#print_period_year").html($('#year_select').val());
+                    $("#print_period_month").html(new Date(0, payroll[index].month - 1).toLocaleString('en', { month: 'long' }));
+                    $("#print_firstName").text(selected_user.firstName);
+                    $("#print_lastName").text(selected_user.lastName);
+                    $("#print_afm").text(selected_user.afm);    
+                    $("#print_extra").text(payroll[index].extra);                 
+                    $("#print_salary").text(payroll[index].salary.amount);
+                    $("#net_salary").text(payroll[index].salary.amount + payroll[index].extra);
+
+                    
                 }
                 catch{
                     console.log("no salary data")
