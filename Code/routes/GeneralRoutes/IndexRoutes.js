@@ -155,6 +155,19 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           company: company,
         };
       } else if (req.user.type == "admin") {
+        var license_nodes = await Node.find({type: 10,type2: 6, status: {$in: [1,3]} });
+        var license_nodes_list = [];
+        for (let i = 0; i < 5 && i < license_nodes.length; i++) {
+          const node = license_nodes[i];
+          license_nodes_list.push({
+            _id : node._id,
+            company : await Company.findOne({_id:node.company})
+          })
+        }
+
+        console.log("license_nodes_list");
+        console.log(license_nodes_list);
+
         var pending_reports = await Node.find({type: 7, status: 3 });
         var pending_reports_list = [];
 
@@ -199,7 +212,32 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           user_list: await User.find(),
           company_list: await Company.find(),
           pending_reports: pending_reports_list,
-          viewed_reports:pending_viewed_reports_list
+          viewed_reports:pending_viewed_reports_list,
+          license_nodes_list:license_nodes_list,
+          users : {
+            admins : {
+              active : await User.find({type:'admin', status: 1}),
+              disabled : await User.find({type:'admin', status: 0}),
+              deleted : await User.find({type:'admin', status: 2}),
+              banned : await User.find({type:'admin', status: 3}),
+            },
+            users : {
+              active : await User.find({type:'user', status: 1}),
+              disabled : await User.find({type:'user', status: 0}),
+              deleted : await User.find({type:'user', status: 2}),
+              banned : await User.find({type:'user', status: 3}),
+            },
+            accountants : {
+              active : await User.find({type:'accountant', status: 1}),
+              disabled : await User.find({type:'accountant', status: 0}),
+              deleted : await User.find({type:'accountant', status: 2}),
+              banned : await User.find({type:'accountant', status: 3}),
+            }
+          },
+          companies : {
+            active : await Company.find({status: 1}),
+            disabled : await Company.find({status: 0}),
+          }
         };
       }
       //console.log(await generalFunctions.warehose_get_inventory({company : company._id}));

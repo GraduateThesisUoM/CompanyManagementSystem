@@ -58,13 +58,8 @@
             padding-top: 10px;
 
         }
-        #table_container{
-            margin: 30px 0px;
-        }
-        .my_select{
-            padding: 5px 10px;
-            border-radius: 10px;
-        }
+        
+
 
 
         #line_chart_div {
@@ -115,6 +110,20 @@
                                     <div class="glass_effect_2 container">
                                         <div id="persons_data">
                                             <p style="width: 100%;text-align: center;font-weight: bold;font-size: 1.4em;"><%=selected_user.lastName%> <%=selected_user.firstName%></p>
+                                            <select class="my_select type1" id="month_payroll_select" style="width: 100%;">
+                                                <!--option class="month_option" value="1">January</option>
+                                                <option class="month_option" value="2">February</option>
+                                                <option class="month_option" value="3">March</option>
+                                                <option class="month_option" value="4">April</option>
+                                                <option class="month_option" value="5">May</option>
+                                                <option class="month_option" value="6">June</option>
+                                                <option class="month_option" value="7">July</option>
+                                                <option class="month_option" value="8">August</option>
+                                                <option class="month_option" value="9">September</option>
+                                                <option class="month_option" value="10">October</option>
+                                                <option class="month_option" value="11">November</option>
+                                                <option class="month_option" value="12">December</option-->
+                                            </select>
                                             <p style="text-align: center;" id="payroll_for"></p>
                                             <label class="my_label_1"> Time In the Company : Years  : <%=time_in_comp.years%>  Months : <%=time_in_comp.months%> Days   : <%=time_in_comp.days%></label>
     
@@ -177,25 +186,14 @@
                                     </div>
                                     <div>
                                         <div class="table_container">
-                                            <table>
+                                            <table id="payroll_list">
                                                 <thead>
                                                     <tr>
                                                         <th>Month</th>
                                                         <th>Amount</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
-    
-                                                    <% for(p of payroll){%>
-                                                        <tr class="glass_effect_2 month">
-                                                            <th><%=p.month%></th>
-                                                            <th><%=p.salary.amount + p.extra%></th>
-                                                        </tr>
-                                                    <%}%>
-                                                    <tr class="glass_effect_2 month">
-                                                        <th>-</th>
-                                                        <th><%=salary.amount%></th>
-                                                    </tr>
+                                                <tbody >
                                                 </tbody>
                                             </table>
                                         </div>
@@ -280,6 +278,8 @@
         const payroll = JSON.parse(`<%- JSON.stringify(payroll) %>`);
         const clients = JSON.parse(`<%- JSON.stringify(clients) %>`);
         const selected_user = JSON.parse(`<%- JSON.stringify(selected_user) %>`);
+        const salary = JSON.parse(`<%- JSON.stringify(salary) %>`);
+
 
 
         const queryString = new URL(window.location.href).search;
@@ -300,15 +300,130 @@
             $("#print_company_name").text(selectedClient.name);
             $("#print_img").attr('src',selectedClient.logo)
 
+            var month_left = [1,2,3,4,5,6,7,8,9,10,11,12];
+            var first_month = -1;
+            for( p of payroll){
+                if( first_month == -1){
+                    first_month = p.month
+                }
+                let index = month_left.indexOf(p.month);
+                if (index !== -1) {
+                    month_left.splice(index, 1); // Correct way to remove a specific element
+                }
+
+                $("#payroll_list tbody").append(
+                    "<tr class='glass_effect_2 month' id='month_row_" + p.month + "' onclick='select_month("+ p.month +")'>" +
+                        "<th>" + getMonthName(p.month) + "</th>" +
+                        "<th>" + (p.salary.amount + p.extra) + "</th>" +
+                    "</tr>"
+                )
+            }
+            $("#payroll_list tbody").append(
+                "<tr class='glass_effect_2 month' id='month_row_13' onclick='select_month(13)'>" +
+                    "<th>+</th>" +
+                    "<th></th>" +
+                "</tr>"
+            )
+
+            for( m of month_left){
+                $("#month_payroll_select").append(
+                    "<option class='month_option' value='"+m+"'>"+getMonthName(m)+"</option>"
+                );
+            }
+        }
+
+        function getMonthName(num) {
+            return new Date(2000, num - 1, 1).toLocaleString('en-US', { month: 'long' });
+        }
+
+        function get_payroll(month){
+            for( p of payroll){
+                if( p.month == month){
+                    return p;
+                }
+            }
         }
         
 
+        function select_month(index) {
+            try{
+                var month = $("#month_row_"+index);
+
+                if(index == 13){
+                    $("#month_payroll_select").show();
+                    $("#btn1").show();
+                    $("#btn2").show();
+                    $("#btn3").hide();
+
+                    $("#salary").val(salary.amount);
+                    $("#extra").val(0);
+                }
+                else{
+                    $("#month_payroll_select").hide();
+                    $("#btn1").hide();
+                    $("#btn2").show();
+                    $("#btn3").show();
+                    console.log("-------------------------"+index);
+                    var cur_payroll = get_payroll(index);
+
+                    console.log("-------------------------");
+
+                    $("#salary").val(cur_payroll.salary.amount);
+                    $("#extra").val(cur_payroll.extra);
+                }
+
+            
+                // Reset all elements
+                $('.month').removeClass('glass_effect_1 color_white').addClass('glass_effect_2');
+
+                // Correctly select and modify the clicked element
+                month.removeClass('glass_effect_2').addClass('glass_effect_1 color_white');
+
+                // Update form values
+                $("#salary_month").val(index);
+                $("#person").val($("#person_select").val());
+                $("#company").val($("#client_select").val());
+                $("#salary_year").val($('#year_select').val());
+
+                if( index < 13){
+                    $('#payroll_for').html(getMonthName(index)+ " "+ $("#year_select").val())
+                }
+                else{
+                    $('#payroll_for').html(getMonthName($("#month_payroll_select").val()) +" " +$("#year_select").val())
+                    $("#salary_month").val($("#month_payroll_select").val());
+                }
+            
+
+                //Print
+                $("#print_date").html(formatDate(new Date(payroll[index].registrationDate)));
+                $("#print_period_year").html($('#year_select').val());
+                $("#print_period_month").html(new Date(0, payroll[index].month - 1).toLocaleString('en', { month: 'long' }));
+                $("#print_firstName").text(selected_user.firstName);
+                $("#print_lastName").text(selected_user.lastName);
+                $("#print_afm").text(selected_user.afm);    
+                $("#print_extra").text(payroll[index].extra);                 
+                $("#print_salary").text(payroll[index].salary.amount);
+                $("#net_salary").text(payroll[index].salary.amount + payroll[index].extra);
+
+                
+            }
+            catch(e){
+                console.log(e)
+            }
+            
+
+        }
 
        $(document).ready(function(){
             $("#salary_year").val(new Date().getFullYear());
             
-
-            select_month(new Date().getMonth());
+            if( month_left.includes(new Date().getMonth()+1)){
+                select_month(first_month);
+            }
+            else{
+                select_month(new Date().getMonth()+1);
+            }
+            
 
 
             if(params.get('comp')){
@@ -430,10 +545,6 @@
                 window.location = "/payroll?from_date="+from_date+"&to_date="+to_date;
             });
 
-            $('.month').click(function(){
-                select_month($('.month').index(this));
-            })
-
             $("#btn1").click(function(){
                 $('#action').val(1);
                 $('#payroll_form').submit();
@@ -449,11 +560,6 @@
 
                 var iframe = $("#printiframe");
                 iframe.attr("srcdoc",$("#payslip").html() ); // Set srcdoc using jQuery
-                /*if (iframe.contentWindow) {
-                    iframe.contentWindow.focus();
-                    iframe.contentWindow.print();
-                }
-                printPayslip()*/
                 iframe.on("load", function () {
                     this.contentWindow.focus();
                     this.contentWindow.print();
@@ -483,45 +589,6 @@
                 //$("#employercontributions").html(employerContributions);
                 //$("#employeecontributions").html(employeeContributions);
             }
-
-            function select_month(index) {
-                // Reset all elements
-                $('.month').removeClass('glass_effect_1 color_white').addClass('glass_effect_2');
-
-                // Correctly select and modify the clicked element
-                $('.month').eq(index).removeClass('glass_effect_2').addClass('glass_effect_1 color_white');
-
-                // Update form values
-                $("#salary_month").val(index + 1);
-                $("#person").val($("#person_select").val());
-                $("#company").val($("#client_select").val());
-                $("#salary_year").val($('#year_select').val());
-
-                $('#payroll_for').html($("#year_select").val()+" / "+parseInt(index+1))
-
-                try{
-                    $("#salary").val(payroll[index].salary.amount);
-                    $("#extra").val(payroll[index].extra);
-
-                    //Print
-                    $("#print_date").html(formatDate(new Date(payroll[index].registrationDate)));
-                    $("#print_period_year").html($('#year_select').val());
-                    $("#print_period_month").html(new Date(0, payroll[index].month - 1).toLocaleString('en', { month: 'long' }));
-                    $("#print_firstName").text(selected_user.firstName);
-                    $("#print_lastName").text(selected_user.lastName);
-                    $("#print_afm").text(selected_user.afm);    
-                    $("#print_extra").text(payroll[index].extra);                 
-                    $("#print_salary").text(payroll[index].salary.amount);
-                    $("#net_salary").text(payroll[index].salary.amount + payroll[index].extra);
-
-                    
-                }
-                catch{
-                    console.log("no salary data")
-                }
-                
-
-            }
             
             $("#salary").on("input", function() {
                 if ($("#salary").val() === "" || $("#salary").val() == 0) {
@@ -533,6 +600,11 @@
             
             $("#year_select").change(function(){
                 window.location = '/payroll?id='+$("#person").val()+'&comp='+$("#company").val()+'&year='+$("#year_select").val();
+            })
+
+            $("#month_payroll_select").change(function(){
+                $("#salary_month").val($("#month_payroll_select").val());
+                /*$("#btn2").hide();*/
             })
         });
 

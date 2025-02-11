@@ -88,7 +88,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                 company: comp,
                 user: selected_user,
                 year: year
-            });
+            }).sort({ month: 1 }); // Added sort by month
             payroll_list = await Promise.all(payroll_list.map(async (payroll) => ({
                 month: payroll.month,
                 salary: await Salary.findOne({_id: payroll.salary}),
@@ -97,7 +97,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             })));
             
 
-            console.log('payroll :'+payroll_list);
+            console.log('payroll :');
             console.dir(payroll_list)
 
 

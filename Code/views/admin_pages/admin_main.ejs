@@ -13,89 +13,81 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!--CSS-->
     <link rel="stylesheet" href="general_css.css" />
-    <link rel="stylesheet" href="accountant_main_css.css" />
-    <link rel="stylesheet" href="list_css.css" />
+    <link rel="stylesheet" href="table_css.css" />
+    <link rel="stylesheet" href="fonts_css.css">
 
     <%- include('../partials/header'); %>
-  <body>
-    <div class="has_sidebar">
-        <%- include('../partials/sidebar'); %>
+    <body>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
 
-        <div>
-        <h1>Admin Main</h1>
-        <h2>Welcome <%- user.firstName %></h2>
-        
-        <%if(pending_reports.length>0){%>
-            <table>
-                <thead class="glass_effect_1">
-                    <tr>
-                        <th>A/A</th>
-                        <th>Reason</th>
-                        <th>Date</th>
-                        <th>Reporter</th>
-                        <th>Reported</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% pending_reports.forEach(function(row, index) { %>
-                        <tr class="glass_effect_2" style="background-color: lime" id="<%=row.id%>">
-                           <td><%=index+1%></td>
-                          <td><%=row.reason%></td>
-                          <td><%=row.registrationDate%></td>
-                          <td><%=row.reporter.firstName%> <%=row.reporter.lastName%></td>
-                          <td><%=row.reported.firstName%> <%=row.reported.lastName%></td>
-                        </tr>
-                      <% }); %>
-                      <% viewed_reports.forEach(function(row, index) { %>
-                        <tr class="glass_effect_2"id="<%=row.id%>">
-                           <td><%=index+1 + pending_reports.length%></td>
-                          <td><%=row.reason%></td>
-                          <td><%=row.registrationDate%></td>
-                          <td><%=row.reporter.firstName%> <%=row.reporter.lastName%></td>
-                          <td><%=row.reported.firstName%> <%=row.reported.lastName%></td>
-                        </tr>
-                      <% }); %>
-                </tbody>
-            </table>
-        <%}%>
-        <div id="stats-div" name="stats-div">
-            <h2>Site Stats</h2>
-            <%  var admins = 0;
-                var users = 0;
-                var accountants = 0;
-                for (var i =0;i < user_list.length; i++){
-                    if(user_list[i].type == 'admin'){
-                        admins++;
-                    }
-                    if(user_list[i].type == 'user'){
-                        users++;
-                    }
-                    if(user_list[i].type == 'accountant'){
-                        accountants++;
-                    }
-                    
-                } 
-            %>
-            Number of Accountants : <%= accountants %>
-            <br>
-            Number of Users : <%= users %>
-            <br>
-            Number of Admins : <%= admins %>
-            <br>
-            Total : <%= accountants + users + admins %>
+            <div class="asap-condensed-regular">
+            <h1>Admin Main</h1>
+            <h2>Welcome <%- user.firstName %></h2>
+            
+            <div style="display: grid;grid-template-columns: 49% 49%; gap: 2%;" class="asap-condensed-regular">
+                <div id="stats">
+                    <h2>Site Stats</h2>
+                    <div>
+                        Number of Accountants :
+                        <span id="admin_total_num"></span>
+                    </div>
+                    <div>
+                        Number of companies :
+                        <span id="companies_total_num"></span>
+                    </div>
+                    <div>
+                        Number of Users :
+                        <span id="users_total_num"></span>
+                    </div>
+                </div>
+                <div>
+                    <h2 class="color_white asap-condensed-extralight">Licenses</h2>
+                    <div class="table_container">
+                        <table id="payroll_list">
+                            <thead>
+                                <tr>
+                                    <th>Company</th>
+                                    <th>Current Licenses</th>
+                                    <th>Requested</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for( l of license_nodes_list){%>
+                                <tr class="glass_effect_2">
+                                    <th><%=l.company.name%></th>
+                                    <th><%=l.company.license.bought%></th>
+                                    <th><%=l.company.license.requested%></th>
+                                    <th><button>1</button><button>2</button></th>
+                                </tr>
+                                <%}%>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
 
         </div>
-    </div>
 
-</div>
+        </div>
+    </body>
     <script>
-        $(function() {
-            $(".glass_effect_2").click(function(){
-                var id = $(this).attr('id');
-                window.location = "/view?type=nodes&id="+id;
-            });
-        });
-   </script>    
-</body>
+         $(document).ready(function () {
+            const users = JSON.parse(`<%- JSON.stringify(users) %>`);
+            const companies = JSON.parse(`<%- JSON.stringify(companies) %>`);
+            $("#admin_total_num").html(
+                users.admins.active.length +
+                users.admins.disabled.length +
+                users.admins.deleted.length +
+                users.admins.banned.length 
+            )
 
+            $("#companies_total_num").html(
+                companies.active.length +
+                companies.disabled.length 
+            )
+
+         });
+   </script>    
 </html>
