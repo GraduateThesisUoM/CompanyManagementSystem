@@ -16,6 +16,68 @@
     <link rel="stylesheet" href="table_css.css" />
     <link rel="stylesheet" href="fonts_css.css">
 
+    <style>
+        .my_icon{
+            transition: ease-in-out 0.3s;
+            filter: drop-shadow(0px 0px 10px black);
+        }
+        .my_icon:hover{
+            filter: drop-shadow(2px 2px 4px black);
+            transform: scale(1.07);
+        }
+
+        .charts{
+            display: grid;
+            grid-template-columns: 49% 49%;
+            gap: 2%
+        }
+
+        .charts>div>p{
+            text-align: center;
+        }
+
+        .charts>div{
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .chart-container {
+            width: 200px; /* Adjust width */
+            height: 200px; /* Adjust height */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .myChart {
+            width: 100% !important;
+            height: 100% !important;
+            filter: drop-shadow(-5px 5px 5px black);
+        }
+
+        .chart_title{
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .chart_legend{
+            margin-top: 15px;
+            padding: 10px;
+            width: 90%;
+            margin-left: 5%;
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: 49% 49%;
+            gap: 2%;
+        }
+        .chart_legend div{
+            text-align: center;
+        }
+
+    </style>
+
     <%- include('../partials/header'); %>
     <body>
         <div class="has_sidebar">
@@ -23,23 +85,53 @@
 
             <div class="asap-condensed-regular">
             <h1>Admin Main</h1>
-            <h2>Welcome <%- user.firstName %></h2>
+            <form style="display: none;" id="my_form" action="/" method="POST">
+                <input type="text" id="data_id" name="data_id">
+                <input type="text" id="action" name="action">
+            </form>
             
             <div style="display: grid;grid-template-columns: 49% 49%; gap: 2%;" class="asap-condensed-regular">
                 <div id="stats">
-                    <h2>Site Stats</h2>
-                    <div>
-                        Number of Accountants :
-                        <span id="admin_total_num"></span>
+                    <h2 class="color_white">Site Stats</h2>
+                    <div class="charts">
+                        <div>
+                            <label class="my_label_1 chart_title">Accounts</label>
+
+                            <div class="chart-container">
+                                <canvas class="myChart" id="myChart1"></canvas>
+                            </div>
+                            <div class="chart_legend glass_effect_2 box_shadow_1">
+                                <div>Admins :<span id="admin_total_num"></span></div>
+                                <div>Accountants :<span id="accountants_total_num"></span></div>
+                                <div>Users :<span id="users_total_num"></span></div>
+                            </div>
+                            
+                        </div>
+                        <div>
+                            <label class="my_label_1 chart_title">Users</label>
+                            <div class="chart-container">
+                                <canvas class="myChart" id="myChart2"></canvas>
+                            </div>
+                            <div class="chart_legend glass_effect_2 box_shadow_1">
+                                <div>Active :<span id="active_u_total_num"></span></div>
+                                <div>Disabled :<span id="disabled_u_total_num"></span></div>
+                                <div>Deleted :<span id="deleted_u_total_num"></span></div>
+                                <div>Banned :<span id="banned_u_total_num"></span></div>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="my_label_1 chart_title">Companies</label>
+                            <div class="chart-container">
+                                <canvas class="myChart" id="myChart3"></canvas>
+                            </div>
+                            <div class="chart_legend glass_effect_2 box_shadow_1">
+                                <div>Active :<span id="active_c_total_num"></span></div>
+                                <div>Disabled :<span id="disabled_c_total_num"></span></div>
+                            </div>
+
+                        </div>
                     </div>
-                    <div>
-                        Number of companies :
-                        <span id="companies_total_num"></span>
-                    </div>
-                    <div>
-                        Number of Users :
-                        <span id="users_total_num"></span>
-                    </div>
+
                 </div>
                 <div>
                     <h2 class="color_white asap-condensed-extralight">Licenses</h2>
@@ -54,12 +146,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <% for( l of license_nodes_list){%>
+                                <% for( l of companies_req_l){%>
                                 <tr class="glass_effect_2">
-                                    <th><%=l.company.name%></th>
-                                    <th><%=l.company.license.bought%></th>
-                                    <th><%=l.company.license.requested%></th>
-                                    <th><button>1</button><button>2</button></th>
+                                    <th><%=l.name%></th>
+                                    <th><%=l.license.bought%></th>
+                                    <th><%=l.license.requested%></th>
+                                    <th>
+                                        <button style="background-color: transparent;" onclick="approve_reject_licence('<%=l._id%>','approve')">
+                                            <img class="my_icon" width="30" height="30" src="https://img.icons8.com/ios/30/026b1b/checked--v1.png" alt="checked--v1"/>
+                                        </button>
+                                        <button style="background-color: transparent;" onclick="approve_reject_licence('<%=l._id%>','reject')">
+                                            <img class="my_icon" width="30" height="30" src="https://img.icons8.com/ios/30/c40202/cancel.png" alt="cancel"/>
+                                        </button>
+                                    </th>
                                 </tr>
                                 <%}%>
                             </tbody>
@@ -72,10 +171,24 @@
 
         </div>
     </body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
+
+        function approve_reject_licence(id,action){
+            $("#data_id").val(id);
+            $("#action").val(action);
+            $("#my_form").submit();
+        }
+
+
          $(document).ready(function () {
             const users = JSON.parse(`<%- JSON.stringify(users) %>`);
             const companies = JSON.parse(`<%- JSON.stringify(companies) %>`);
+
+            const adminCount = users.admins.active.length + users.admins.disabled.length + users.admins.deleted.length + users.admins.banned.length;
+            const accountantCount = users.accountants.active.length + users.accountants.disabled.length + users.accountants.deleted.length + users.accountants.banned.length;
+            const userCount = users.users.active.length + users.users.disabled.length + users.users.deleted.length + users.users.banned.length;
+
             $("#admin_total_num").html(
                 users.admins.active.length +
                 users.admins.disabled.length +
@@ -88,6 +201,98 @@
                 companies.disabled.length 
             )
 
+            $("#users_total_num").html(
+                users.users.active.length +
+                users.users.disabled.length +
+                users.users.deleted.length +
+                users.users.banned.length 
+            );
+
+            $("#accountants_total_num").html(
+                users.accountants.active.length +
+                users.accountants.disabled.length +
+                users.accountants.deleted.length +
+                users.accountants.banned.length 
+            )
+
+            //Users
+            $("#active_u_total_num").html(users.users.active.length);
+            $("#disabled_u_total_num").html(users.users.disabled.length);
+            $("#deleted_u_total_num").html(users.users.deleted.length);
+            $("#banned_u_total_num").html(users.users.banned.length);
+
+            //Companies
+            $("#active_c_total_num").html(companies.active.length);
+            $("#disabled_c_total_num").html(companies.disabled.length);
+
+
+
+            const roleLabels = ['admins', 'accountants', 'users'];
+            const roleNumbers = [
+                users.admins.active.length + users.admins.disabled.length + users.admins.deleted.length + users.admins.banned.length,
+                users.accountants.active.length + users.accountants.disabled.length + users.accountants.deleted.length + users.accountants.banned.length,
+                users.users.active.length + users.users.disabled.length + users.users.deleted.length + users.users.banned.length
+            ];
+
+            var ctx = document.getElementById('myChart1').getContext('2d');
+            renderDonutChart(ctx, roleLabels, roleNumbers, generateColors(roleLabels.length));
+
+            // Get user status counts dynamically
+            var statusLabels = ['active', 'disabled', 'deleted', 'banned'];
+            var statusNumbers = [
+                users.users.active.length,
+                users.users.disabled.length,
+                users.users.deleted.length,
+                users.users.banned.length
+            ];
+
+            ctx = document.getElementById('myChart2').getContext('2d');
+            renderDonutChart(ctx, statusLabels, statusNumbers, generateColors(statusLabels.length));
+
+            // Get user status counts dynamically
+            statusLabels = ['active', 'disabled'];
+            statusNumbers = [
+                companies.active.length,
+                companies.disabled.length
+            ];
+
+            ctx = document.getElementById('myChart3').getContext('2d');
+            renderDonutChart(ctx, statusLabels, statusNumbers, generateColors(statusLabels.length));
+
+
+            // Example of rendering a pie chart with Chart.js
+            function renderDonutChart(ctx, labels, numbers,colors) {
+                //const colors = generateColors(labels.length);
+                new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: numbers,
+                            backgroundColor: colors,
+                            borderWidth: 0 // Removes the outline
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false,
+                            }
+                        },
+                        cutout: '50%', // Creates the donut effect
+                    }
+                });
+            }
+
+            function generateColors(count) {
+                const colors = [];
+                for (let i = 0; i < count; i++) {
+                    const color = `hsl(${(i * 360 / count)}, 70%, 50%)`; // HSL for unique colors
+                    colors.push(color);
+                }
+                return colors;
+            }
          });
    </script>    
 </html>

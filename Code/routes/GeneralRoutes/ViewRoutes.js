@@ -325,9 +325,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               console.log(accountant_obj)
               accountant = accountant_obj ? accountant_obj.firstName + " " + accountant_obj.lastName : "Not assigned"
             }
-            data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate),users.length, accountant,obj.status];
-            data.titles = ["Name", "Logo", "Reg Date","Number of Users","Accountant","Status"];
-            data.type = [0, 11, 0,0,0,0];
+            data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate),users.length, accountant,obj.status,obj.license.used,obj.license.bought,obj.license.requested];
+            data.titles = ["Name", "Logo", "Reg Date","Number of Users","Accountant","Status","Used licenses","Bought licenses","Requested licenses"];
+            data.type = [0, 11, 0,0,0,0,0,0,0];
 
             let nodes_pending = await Node.find({
               company: id,

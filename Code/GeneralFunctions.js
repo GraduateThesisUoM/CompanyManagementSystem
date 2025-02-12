@@ -210,12 +210,26 @@ async function node_reply(data) {
       text : data.text
     })
   }
+  else if ( target_node.type == 10){
+    var st = 2
+    if(data.text == 'rejected'){
+      st=4
+    }
+    new_node = await create_node({
+      company: target_node.company,
+      sender_id: data.user,
+      receiver_id: target_node.receiver_id,
+      type: 10,
+      type2: 6,
+      text : data.text
+    })
+
+    new_node.status = st;
+  }
   await new_node.save()
   target_node.next = new_node._id;
   await target_node.save()
   return new_node
-  
-  
  
 }
 
@@ -940,9 +954,6 @@ async function resetAndImportData(companyId) {
     console.error("Error restoring data:", err);
   }
 }
-
-
-
 
 async function importData(company = null,path_user) {
   try {

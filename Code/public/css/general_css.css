@@ -66,8 +66,8 @@ button{
 
 #sidebar_div{
     /*height: 100vh;*/
-    /*height: 100%;*/
-    min-height: 80vh;
+    height: 105%;
+    /*min-height: 80vh;*/
     background-color: rgb(170, 170, 170);
     position: relative;
     display: flex;

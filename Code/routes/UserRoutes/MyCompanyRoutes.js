@@ -83,14 +83,14 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         company.license.requested = req.body.remove_license * -1;
         await company.save();
       }
-      const newReport = await generalFunctions.create_node(
+      /*const newReport = await generalFunctions.create_node(
         {
           company: company,
           sender_id: req.user.id,
           type: 10,
       }
       );
-      console.log(newReport);
+      console.log(newReport);*/
     }
 
     res.redirect("/my-company");

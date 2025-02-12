@@ -155,8 +155,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           company: company,
         };
       } else if (req.user.type == "admin") {
-        var license_nodes = await Node.find({type: 10,type2: 6, status: {$in: [1,3]} });
-        var license_nodes_list = [];
+        //var license_nodes = await Node.find({type: 10,type2: 6, status: {$in: [1,3]} ,next:"-"});
+        const companies_req_l = await Company.find({ "license.requested": { $ne: 0 } });
+        /*var license_nodes_list = [];
         for (let i = 0; i < 5 && i < license_nodes.length; i++) {
           const node = license_nodes[i];
           license_nodes_list.push({
@@ -166,7 +167,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         }
 
         console.log("license_nodes_list");
-        console.log(license_nodes_list);
+        console.log(license_nodes_list);*/
 
         var pending_reports = await Node.find({type: 7, status: 3 });
         var pending_reports_list = [];
@@ -213,7 +214,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           company_list: await Company.find(),
           pending_reports: pending_reports_list,
           viewed_reports:pending_viewed_reports_list,
-          license_nodes_list:license_nodes_list,
+          //license_nodes_list:license_nodes_list,
+          companies_req_l : companies_req_l,
           users : {
             admins : {
               active : await User.find({type:'admin', status: 1}),
@@ -251,6 +253,27 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
     res.redirect("/error?error=" + err);
   }
 
+});
+
+router.post("/", Authentication.checkAuthenticated, async (req, res) => {
+  try{
+    console.log("Index Post")
+    
+    var company = await Company.findOne({_id:req.body.data_id});
+    
+    if(req.body.action == 'approve'){
+      company.license.bought = company.license.bought + company.license.requested;
+    }
+    company.license.requested = 0;
+    await company.save();
+
+    return res.redirect(`/`);
+
+
+  } catch (e) {
+    console.error(e);
+    return res.redirect('/error?origin_page=/&error=' + encodeURIComponent(e.message));
+  }
 });
 
 module.exports = router;
