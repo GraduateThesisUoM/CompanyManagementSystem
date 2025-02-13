@@ -111,18 +111,6 @@
                                         <div id="persons_data">
                                             <p style="width: 100%;text-align: center;font-weight: bold;font-size: 1.4em;"><%=selected_user.lastName%> <%=selected_user.firstName%></p>
                                             <select class="my_select type1" id="month_payroll_select" style="width: 100%;">
-                                                <!--option class="month_option" value="1">January</option>
-                                                <option class="month_option" value="2">February</option>
-                                                <option class="month_option" value="3">March</option>
-                                                <option class="month_option" value="4">April</option>
-                                                <option class="month_option" value="5">May</option>
-                                                <option class="month_option" value="6">June</option>
-                                                <option class="month_option" value="7">July</option>
-                                                <option class="month_option" value="8">August</option>
-                                                <option class="month_option" value="9">September</option>
-                                                <option class="month_option" value="10">October</option>
-                                                <option class="month_option" value="11">November</option>
-                                                <option class="month_option" value="12">December</option-->
                                             </select>
                                             <p style="text-align: center;" id="payroll_for"></p>
                                             <label class="my_label_1"> Time In the Company : Years  : <%=time_in_comp.years%>  Months : <%=time_in_comp.months%> Days   : <%=time_in_comp.days%></label>
@@ -132,47 +120,33 @@
                                             <div>
                                                 <label class="my_label_1">Full Salary : <span id="fullsalry">0</span></label>
                                             </div>
-                                            <!--div>
-                                                Christmas Gift : <span id="christmasgift">0</span>
-                                            </div>
-                                            <div>
-                                                Leave Pay: <span id="leavepay">0</span>
-                                            </div>
-                                            <div>
-                                                Leave Allowance: <span id="leaveallowance">0</span>
-                                            </div>
-                                            <div>
-                                                Overtime: <span id="overtime">0</span>
-                                            </div>
-                                            <div>
-                                                €/hour: <span id="hourpay">0</span>
-                                            </div>
-                                            <div>
-                                                Employer Contributions: <span id="employercontributions">0</span>
-                                            </div>
-                                            <div>
-                                                Employee Contributions: <span id="employeecontributions">0</span>
-                                            </div-->
                                         </div>
                                         <div id="set_salary_cont" >
                                             <form action="/payroll" method="POST" id="payroll_form">
                                                 <input style="display: none;" name="salary_year" id="salary_year" val="2025">
                                                 <input style="display: none;" name="salary_month" id="salary_month">
-                                                <div style="display: flex; justify-content: space-between; align-items: center;text-align: left;">
-                                                    <label for="salary" class="my_label_1">Salary</label>
-                                                    <div style="width: 70%;"> 
+
+                                                <div style="display: grid;grid-template-columns: 25% 60% 15%;">
+                                                    <label style="display: flex;align-items: center;" for="salary" class="my_label_1">Salary</label>
+                                                    <div style="width: 90%;"> 
                                                         <input name="salary" class="input_type_1" id="salary" type="number" step="0.01" value="<%=salary.amount%>">
                                                     </div>
-                                                    <lable class="my_label_1" for="salary">€</lable>
-                                                </div>
-                                                <div style="display: flex; justify-content: space-between; align-items: center;text-align: left;">
-                                                    <label for="extra" class="my_label_1">Extra</label>
-                                                    <div style="width: 70%;"> 
+                                                    <label style="display: flex;align-items: center;" class="my_label_1" for="salary">€</label>
+
+                                                    <label style="display: flex;align-items: center;" for="extra" class="my_label_1">Extra</label>
+                                                    <div style="width: 90%;"> 
                                                         <input name="extra" class="input_type_1" id="extra" type="number" step="0.01" value="0">
                                                     </div>
-                                                    <lable class="my_label_1" for="extra">€</lable>
+                                                    <label style="display: flex;align-items: center;" class="my_label_1" for="extra">€</label>
+
+                                                    <label style="display: flex;align-items: center;" for="deductions" class="my_label_1">Deductions</label>
+                                                    <div style="width: 90%;"> 
+                                                        <input name="deductions" class="input_type_1" id="deductions" type="number" step="0.01" value="0">
+                                                    </div>
+                                                    <label style="display: flex;align-items: center;" class="my_label_1" for="extra">€</label>
 
                                                 </div>
+                                                
 
                                                 <input style="display: none;" name="action" id="action">
                                                 <input style="display: none;" name="person" id="person">
@@ -253,7 +227,7 @@
                             <div style="border: solid 1px black;">Earnings</div>
                             <div style="border: solid 1px black;">Deductions</div>
                             <div style="border: solid 1px black;">Basic wage : <span id="print_salary"></span></div>
-                            <div style="border: solid 1px black;">d</div>
+                            <div style="border: solid 1px black;"><span id="print_deductions"></span></div>
                             <div style="border: solid 1px black;">Extra : <span id="print_extra"></span></div>
                             <div style="border: solid 1px black;">d</div>
     
@@ -287,7 +261,6 @@
 
         if(params.get('comp')){
             const selectedClient = clients.find(client => client._id === params.get('comp'));
-            console.log(selectedClient);
             const startYear = new Date(selectedClient.registrationDate).getFullYear();
             const currentYear = new Date().getFullYear();
             for(let year = currentYear; year >= startYear; year--) {
@@ -314,7 +287,7 @@
                 $("#payroll_list tbody").append(
                     "<tr class='glass_effect_2 month' id='month_row_" + p.month + "' onclick='select_month("+ p.month +")'>" +
                         "<th>" + getMonthName(p.month) + "</th>" +
-                        "<th>" + (p.salary.amount + p.extra) + "</th>" +
+                        "<th>" + (p.salary.amount + p.extra - p.salary.deductions) + "</th>" +
                     "</tr>"
                 )
             }
@@ -357,19 +330,18 @@
 
                     $("#salary").val(salary.amount);
                     $("#extra").val(0);
+                    $("#deductions").val(salary.deductions);
                 }
                 else{
                     $("#month_payroll_select").hide();
                     $("#btn1").hide();
                     $("#btn2").show();
                     $("#btn3").show();
-                    console.log("-------------------------"+index);
                     var cur_payroll = get_payroll(index);
-
-                    console.log("-------------------------");
 
                     $("#salary").val(cur_payroll.salary.amount);
                     $("#extra").val(cur_payroll.extra);
+                    $("#deductions").val(cur_payroll.salary.deductions);
                 }
 
             
@@ -403,7 +375,8 @@
                 $("#print_afm").text(selected_user.afm);    
                 $("#print_extra").text(payroll[index].extra);                 
                 $("#print_salary").text(payroll[index].salary.amount);
-                $("#net_salary").text(payroll[index].salary.amount + payroll[index].extra);
+                $("#print_deductions").text(payroll[index].salary.deductions);
+                $("#net_salary").text(payroll[index].salary.amount + payroll[index].extra - payroll[index].deductions);
 
                 
             }
@@ -416,13 +389,7 @@
 
        $(document).ready(function(){
             $("#salary_year").val(new Date().getFullYear());
-            
-            if( month_left.includes(new Date().getMonth()+1)){
-                select_month(first_month);
-            }
-            else{
-                select_month(new Date().getMonth()+1);
-            }
+
             
 
 
@@ -438,6 +405,13 @@
 
                 $("#person_select_container").show();
                 $("#year_select_container").show();
+
+                if( month_left.includes(new Date().getMonth()+1)){
+                    select_month(first_month);
+                }
+                else{
+                    select_month(new Date().getMonth()+1);
+                }
 
 
             }
@@ -591,13 +565,26 @@
             }
             
             $("#salary").on("input", function() {
-                if ($("#salary").val() === "" || $("#salary").val() == 0) {
+                if ($("#salary").val() === "" || $("#salary").val() <= 0) {
                     $("#btn1, #btn2").prop("disabled", true);
                 } else {
                     $("#btn1, #btn2").prop("disabled", false);
                 }
             });
             
+            $("#deductions").on("input", function() {
+                if ($("#deductions").val() === "" || $("#deductions").val() < 0) {
+                    $("#deductions").val(0)
+                }
+            });
+
+            $("#extra").on("input", function() {
+                if ($("#extra").val() === "" || $("#extra").val() < 0) {
+                    $("#extra").val(0)
+                }
+            });
+
+
             $("#year_select").change(function(){
                 window.location = '/payroll?id='+$("#person").val()+'&comp='+$("#company").val()+'&year='+$("#year_select").val();
             })

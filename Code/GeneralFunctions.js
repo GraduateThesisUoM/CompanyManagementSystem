@@ -132,7 +132,7 @@ async function create_node(data) {
   
   
   if (data.type == 1) {//relationship
-    if ((data.company.equals(data.receiver_id) && data.type2 == 3)) {
+    if ((data.company.equals(data.receiver_id) && data.type2 == 1/*data.type2 == 3*/)) {
       new_data.status = 2 //executed;
       new_data.type2 = 1;
     }

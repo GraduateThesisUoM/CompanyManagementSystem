@@ -238,8 +238,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           } else if (type == "users") {
             obj = await User.findOne({ _id: id });
             data.data = [obj.firstName, obj.lastName, obj.email, obj.status, generalFunctions.formatDate(obj.registrationDate)];
-            data.titles = ["FirstName", "LastName", "email", "Status", "Reg Date"];
-            data.type = [1, 1, 1, 15, 0];
+            data.titles = ["FirstName", "LastName", "email"];
+            data.type = [1, 1, 1, ];
             
           } else if (type == "nodes") {
             obj = await Node.findOne({ _id: id });

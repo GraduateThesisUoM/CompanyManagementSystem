@@ -9,6 +9,11 @@ const NodeShema = new mongoose.Schema({
     required: true,
     default : 0
   },
+  deductions : {
+    type : Number,
+    required : false,
+    default : 0
+  },
   next:{ type: String,required: true, default:"-"},
   registrationDate: { type: Date, default: Date.now , required: true}
 });

@@ -23,8 +23,8 @@ async function send_hiring_req_to_accountant(companyId,senderId, accountantId){
             sender_id : senderId,
             receiver_id : accountantId,
             type : 1,
-            type2:1
-            //type2 : 3
+            //type2:1
+            type2 : 3
         });
 
 

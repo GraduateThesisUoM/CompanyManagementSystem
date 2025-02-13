@@ -5,270 +5,263 @@
     <!--ajax-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <!--CSS-->
-    <link rel="stylesheet" href="general_css.css">
-    <link rel="stylesheet" href="sing_up_css.css">
-    <link rel="stylesheet" href="fonts_css.css">
+    <link rel="stylesheet" href="general_css.css" />
+    <link rel="stylesheet" href="sing_up_css.css" />
+    <link rel="stylesheet" href="fonts_css.css" />
     <!--Fonts-->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poiret+One&family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poiret+One&family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
   </head>
-<body>
-  <div class="glass_container asap-condensed-regular">
-    <h1>Sign Up</h1>
-    <div class="button_group_1 columns_two">
-      <button class="selected" id ="user_btn">User</button>
-      <button id ="accountant_btn">Accountant</button>
-    </div>
-    
-    <form class="display_block" action="/sign-up" method="POST" >
-      <!--User-->
-      <h2 id="h2"></h2>
-      <input class="input_type_1" type="text" id="account_type" name="account_type" value="user" required style="display: none;">
-      <div class="input_container">
-        <input class="input_type_1" type="text" name="firstName" id="firstName" placeholder=" " required>
-        <label for="firstName">First Name</label>
+  <body>
+    <div class="glass_container asap-condensed-regular">
+      <h1>Sign Up</h1>
+      <div class="button_group_1 columns_two">
+        <button class="selected" id="user_btn">User</button>
+        <button id="accountant_btn">Accountant</button>
       </div>
-      <div class="input_container">
-        <input class="input_type_1" type="text" name="lastName" id="lastName" placeholder=" " required>
-        <label for="lastName">Last Name</label>
-      </div>
-      <div class="input_container">
-        <input class="input_type_1" type="email" name="email" id="email" placeholder=" " required>
-        <label for="email">Email</label>
-      </div>
-      <div class="input_container">
-        <input class="input_type_1" type="password" name="password" id="password" placeholder=" " required>
-        <label for="password">Password</label>
-    </div>
-    <div class="input_container">
-      <input class="input_type_1" type="password" id="password_confirm" name="password_confirm" placeholder=" " required>
-        <label for="confirmPassword">Confirm Password</label>
-    </div>
 
-      <div class="checkbox_conatainer">
-        <input type="checkbox" id="showpasswordcheckbox">
-        <label for="showpasswordcheckbox">Show Password</label>
-      </div>
-      <br>
-      <span id="admin_hide">
-        
+      <form class="display_block" action="/sign-up" method="POST">
+        <!--User-->
+        <h2 id="h2"></h2>
+        <input class="input_type_1" type="text" id="account_type" name="account_type" value="user" required style="display: none" />
         <div class="input_container">
-          <input class="input_type_1" type="text"id="afm" name="afm" placeholder=" ">
-          <label for="afm">Α.Φ.Μ.</label>
+          <input class="input_type_1" type="text" name="firstName" id="firstName" placeholder=" " required />
+          <label for="firstName">First Name</label>
         </div>
-        
         <div class="input_container">
-        <input class="input_type_1" type="text" name="mydatakey" id="mydatakey" placeholder=" ">
-        <label for="mydatakey"> MyData Key (optional)</label>
+          <input class="input_type_1" type="text" name="lastName" id="lastName" placeholder=" " required />
+          <label for="lastName">Last Name</label>
         </div>
-        <span id="accountant_hide">
+        <div class="input_container">
+          <input class="input_type_1" type="email" name="email" id="email" placeholder=" " required />
+          <label for="email">Email</label>
+        </div>
+        <div class="input_container">
+          <input class="input_type_1" type="password" name="password" id="password" placeholder=" " required />
+          <label for="password">Password</label>
+        </div>
+        <div class="input_container">
+          <input class="input_type_1" type="password" id="password_confirm" name="password_confirm" placeholder=" " required />
+          <label for="confirmPassword">Confirm Password</label>
+        </div>
 
-          <br>
-          <div class="button_group_1 columns_two">
-            <button class="selected" type="button" id="newCompanybtn">New Company</button>
-            <button type="button" id="existingCompanybtn">Existing Company</button>
-            <input id="companyNewExisting" name="companyNewExisting" value="0" style="display: none;">
+        <div class="checkbox_conatainer">
+          <input type="checkbox" id="showpasswordcheckbox" />
+          <label for="showpasswordcheckbox">Show Password</label>
+        </div>
+        <br />
+        <span id="admin_hide">
+          <div class="input_container">
+            <input class="input_type_1" type="text" id="afm" name="afm" placeholder=" " />
+            <label for="afm">Α.Φ.Μ.</label>
           </div>
-          <div class="tab_1">
-            <div class="input_container">
-              <input class="input_type_1" type="text" name="companyName" id="companyName" placeholder=" ">
-              <label for="companyName" id="companyName_label">Company Name:</label>
+
+          <div class="input_container">
+            <input class="input_type_1" type="text" name="mydatakey" id="mydatakey" placeholder=" " />
+            <label for="mydatakey"> MyData Key (optional)</label>
+          </div>
+          <span id="accountant_hide">
+            <br />
+            <div class="button_group_1 columns_two">
+              <button class="selected" type="button" id="newCompanybtn">New Company</button>
+              <button type="button" id="existingCompanybtn">Existing Company</button>
+              <input id="companyNewExisting" name="companyNewExisting" value="0" style="display: none" />
             </div>
+            <div class="tab_1">
+              <div class="input_container">
+                <input class="input_type_1" type="text" name="companyName" id="companyName" placeholder=" " />
+                <label for="companyName" id="companyName_label">Company Name:</label>
+              </div>
               <div id="newCompany" class="input_container">
-                <input class="input_type_1" type="text" name="companyLogo" id="companyLogo" placeholder=" ">
+                <input class="input_type_1" type="text" name="companyLogo" id="companyLogo" placeholder=" " />
                 <label for="companyLogo">Logo :</label>
               </div>
-              <div id="existingCompany" class="input_container" style="display: none;">
-                <input class="input_type_1" type="text" name="companyRegisterCode" id="companyRegisterCode" placeholder=" ">
+              <div id="existingCompany" class="input_container" style="display: none">
+                <input class="input_type_1" type="text" name="companyRegisterCode" id="companyRegisterCode" placeholder=" " />
                 <label for="companyRegisterCode">Company Code:</label>
               </div>
-          </div>
-  
-          <div class="checkbox_conatainer" id="self_accountant_check_box_container">
-            <input type="checkbox" id="self_accountant_check_box">
-            <label for="self_accountant_check_box">Selfmanagign Accounting :</label>
-            <input style="display: none;" type="text" name="self_accountant" id="self_accountant" value="false">
-          </div>
+            </div>
+
+            <div class="checkbox_conatainer" id="self_accountant_check_box_container">
+              <input type="checkbox" id="self_accountant_check_box" />
+              <label for="self_accountant_check_box">Selfmanagign Accounting :</label>
+              <input style="display: none" type="text" name="self_accountant" id="self_accountant" value="false" />
+            </div>
+          </span>
         </span>
-      </span>
-      <button style="display: none;" id="submit_btn" type="submit">Sign up</button>
-    </form>
+        <button style="display: none" id="submit_btn" type="submit">Sign up</button>
+      </form>
 
-    <button class="btn_type_1" id="sign_up_btn">Sign up</button>
-  <button class="btn_type_2" id="log_in_btn">Log in</button>
-  </div>
-  
-  
-  
-</body>
-<script>
-  $(document).ready(function(){
-    const urlParams = new URLSearchParams(window.location.search);
-    const isAdmin = urlParams.get("admin") === "true";
+      <button class="btn_type_1" id="sign_up_btn">Sign up</button>
+      <button class="btn_type_2" id="log_in_btn">Log in</button>
+    </div>
+  </body>
+  <script>
+    $(document).ready(function () {
+      const urlParams = new URLSearchParams(window.location.search);
+      const isAdmin = urlParams.get("admin") === "true";
 
-    const users_list = JSON.parse(`<%- JSON.stringify(users_list) %>`);
-    const companies_list = JSON.parse(`<%- JSON.stringify(companies) %>`);
+      const users_list = JSON.parse(`<%- JSON.stringify(users_list) %>`);
+      const companies_list = JSON.parse(`<%- JSON.stringify(companies) %>`);
 
-    if(isAdmin){
-      $("#companyName").prop("required", false);
-      $("#user_btn").hide();
-      $("#accountant_btn").hide();
-      $("#h2").text("Admin");
+      if (isAdmin) {
+        $("#companyName").prop("required", false);
+        $("#user_btn").hide();
+        $("#accountant_btn").hide();
+        $("#h2").text("Admin");
 
-      $("#account_type").val("admin");
-      
-      $("#admin_hide").hide();
-    } else {
-      $("#user_btn").show();
-      $("#accountant_btn").show();
-    }
+        $("#account_type").val("admin");
 
-    $("#log_in_btn").click(function(){
-      window.location ="log-in"
-    });
+        $("#admin_hide").hide();
+      } else {
+        $("#user_btn").show();
+        $("#accountant_btn").show();
+      }
 
-    if(companies_list.length == 0){
-      $('#existingCompanybtn').prop('disabled', true);
-    }
+      $("#log_in_btn").click(function () {
+        window.location = "log-in";
+      });
 
-    $("#user_btn").click(function(){
-      $("#account_type").val("user");
-      $("#accountant_hide").show();
-      $("#user_btn").addClass("selected");
-      $("#accountant_btn").removeClass("selected");
-    });
-    $("#accountant_btn").click(function(){
-      $("#account_type").val("accountant");
-      $("#accountant_hide").hide();
-      $("#user_btn").removeClass("selected");
-      $("#accountant_btn").addClass("selected");
-    });
-    $("#showpasswordcheckbox").click(function(){
-      const passwordInput = $("#password");
-      const passwordConfirmInput = $("#password_confirm");
-      const isChecked = $(this).prop("checked");
-      passwordInput.prop("type", isChecked ? "text" : "password");
-      passwordConfirmInput.prop("type", isChecked ? "text" : "password");
-    });
-    $("#self_accountant_check_box").change(function() {
+      if (companies_list.length == 0) {
+        $("#existingCompanybtn").prop("disabled", true);
+      }
+
+      $("#user_btn").click(function () {
+        $("#account_type").val("user");
+        $("#accountant_hide").show();
+        $("#user_btn").addClass("selected");
+        $("#accountant_btn").removeClass("selected");
+      });
+      $("#accountant_btn").click(function () {
+        $("#account_type").val("accountant");
+        $("#accountant_hide").hide();
+        $("#user_btn").removeClass("selected");
+        $("#accountant_btn").addClass("selected");
+      });
+      $("#showpasswordcheckbox").click(function () {
+        const passwordInput = $("#password");
+        const passwordConfirmInput = $("#password_confirm");
+        const isChecked = $(this).prop("checked");
+        passwordInput.prop("type", isChecked ? "text" : "password");
+        passwordConfirmInput.prop("type", isChecked ? "text" : "password");
+      });
+      $("#self_accountant_check_box").change(function () {
         const isChecked = $(this).prop("checked");
         $("#self_accountant").val(isChecked ? "true" : "false");
         $("#newCompanybtn").click();
-    });
-    $("#newCompanybtn").click(function() {
-      $('#companyName').css('display', 'block');
-      $('#companyName_label').css('display', 'block');
-      $('#newCompany').css('display', 'block');
-      $('#existingCompany').css('display', 'none');
-      $('#newCompanybtn').addClass('selected');
-      $('#existingCompanybtn').removeClass('selected');
-      $('#companyNewExisting').val("0");
-      $('#self_accountant_check_box_container').css('display', 'flex');
+      });
+      $("#newCompanybtn").click(function () {
+        $("#companyName").css("display", "block");
+        $("#companyName_label").css("display", "block");
+        $("#newCompany").css("display", "block");
+        $("#existingCompany").css("display", "none");
+        $("#newCompanybtn").addClass("selected");
+        $("#existingCompanybtn").removeClass("selected");
+        $("#companyNewExisting").val("0");
+        $("#self_accountant_check_box_container").css("display", "flex");
+      });
+      $("#existingCompanybtn").click(function () {
+        $("#companyName").css("display", "block");
+        $("#companyName_label").css("display", "block");
+        $("#newCompany").css("display", "none");
+        $("#existingCompany").css("display", "block");
+        $("#newCompanybtn").removeClass("selected");
+        $("#existingCompanybtn").addClass("selected");
+        $("#companyNewExisting").val("1");
 
-      
-    });
-    $("#existingCompanybtn").click(function() {
-      $('#companyName').css('display', 'block');
-      $('#companyName_label').css('display', 'block');
-      $('#newCompany').css('display', 'none');
-      $('#existingCompany').css('display', 'block');
-      $('#newCompanybtn').removeClass('selected');
-      $('#existingCompanybtn').addClass('selected');
-      $('#companyNewExisting').val("1");
-      
-      $('#self_accountant_check_box_container').css('display', 'none');
-      if($("#self_accountant_check_box").prop("checked")){
-        $("#self_accountant_check_box").click();
-      }
-      
-      
-    });
-    $("#sign_up_btn").click(function(){
-      var all_checks_ok = true;
-      const passwordInput = $("#password").val();
-      const passwordConfirmInput = $("#password_confirm").val();
-
-      if (passwordInput !== passwordConfirmInput) {
-        // Passwords do not match, show an error message or take appropriate action
-        alert("Οι κωδικοί δεν ταιριάζουν. Παρακαλούμε ελέγξτε ξανά.");
-        $("#password").val("").focus()
-        all_checks_ok = false;
-      }
-
-      for(user of users_list){
-        if (user.email === $("#email").val()) {
-          alert("Email already exists")
-          all_checks_ok = false;
-          if(all_checks_ok){
-            $("#email").val("").focus();
-          }else{
-            $("#email").val("");
-          }
-          return;
+        $("#self_accountant_check_box_container").css("display", "none");
+        if ($("#self_accountant_check_box").prop("checked")) {
+          $("#self_accountant_check_box").click();
         }
-        else if(user.afm === $("#afm").val()){
-          alert("Το Α.Φ.Μ. χρησιμοποιείται ήδη");
-          all_checks_ok = false;
-          if(all_checks_ok){
-            $("#afm").val("").focus();
-          }else{
-            $("#afm").val("");
-          }
-          return;
-        }
-      };
+      });
+      $("#sign_up_btn").click(function () {
+        var all_checks_ok = true;
+        const passwordInput = $("#password").val();
+        const passwordConfirmInput = $("#password_confirm").val();
 
-
-      if($("#account_type").val() == "user"){
-        if($('#companyNewExisting').val()=="0"){
-          companies_list.forEach(company => {
-            if (company.name === $("#companyName").val() || company.signupcode === $("#companyRegisterCode").val()) {
-              alert("Company already exists");
-              $("#companyName").val("").focus();
-              all_checks_ok = false;
-              //return false; // exit loop
-            }
-          });
-        }
-        else if($('#companyNewExisting').val()=="1"){
-          var company_credentials = true;
-          var user_num = 1;
-          var lisense_num = 1;
-          var company_index = -1;
-
-
-          for (let i = 0; i < companies_list.length; i++) {
-            if ((companies_list[i].name == $("#companyName").val()) && (companies_list[i].signupcode == $("#companyRegisterCode").val())){
-              company_index = i;
-              break;
-            }
-          }
-          if(company_index > -1){
-            if ((companies_list[company_index].name != $("#companyName").val()) || (companies_list[company_index].signupcode != $("#companyRegisterCode").val())){
-              alert("Company Name and Registration Code does not match");
-              $("#companyName").val("").focus();
-              all_checks_ok = false;
-            }
-            else if(companies_list[company_index].license.used == companies_list[company_index].license.bought){
-              alert("Ther are no empy sport for new user, by more");
-              all_checks_ok = false;
-            }
-          }
-        }
-        else if($('#companyNewExisting').val()=="-1" && isAdmin == false){
-          alert("Must Choose a Company");
+        if (passwordInput !== passwordConfirmInput) {
+          // Passwords do not match, show an error message or take appropriate action
+          alert("Οι κωδικοί δεν ταιριάζουν. Παρακαλούμε ελέγξτε ξανά.");
+          $("#password").val("").focus();
           all_checks_ok = false;
         }
-      }
-      if(all_checks_ok){
-        // If all checks are ok, submit the form
-        $("#submit_btn").click();
-      }
-      
-    });
 
-  });
-</script>
+        for (user of users_list) {
+          if (user.email === $("#email").val()) {
+            alert("Email already exists");
+            all_checks_ok = false;
+            if (all_checks_ok) {
+              $("#email").val("").focus();
+            } else {
+              $("#email").val("");
+            }
+            return;
+          } else if (user.afm === $("#afm").val()) {
+            alert("Το Α.Φ.Μ. χρησιμοποιείται ήδη");
+            all_checks_ok = false;
+            if (all_checks_ok) {
+              $("#afm").val("").focus();
+            } else {
+              $("#afm").val("");
+            }
+            return;
+          }
+        }
+
+        if ($("#account_type").val() == "user") {
+          if ($("#companyNewExisting").val() == "0") {
+            companies_list.forEach((company) => {
+              if (company.name === $("#companyName").val() || company.signupcode === $("#companyRegisterCode").val()) {
+                alert("Company already exists");
+                $("#companyName").val("").focus();
+                all_checks_ok = false;
+                //return false; // exit loop
+              }
+            });
+          } else if ($("#companyNewExisting").val() == "1") {
+            var company_credentials = true;
+            var user_num = 1;
+            var lisense_num = 1;
+            var company_index = -1;
+
+            for (let i = 0; i < companies_list.length; i++) {
+              if (companies_list[i].name == $("#companyName").val()) {
+                company_index = i;
+                break;
+              }
+            }
+
+            if (company_index > -1) {
+              for (let i = 0; i < companies_list.length; i++) {
+                if (companies_list[i].name == $("#companyName").val() && companies_list[i].signupcode == $("#companyRegisterCode").val()) {
+                  company_index = i;
+                  break;
+                }
+              }
+              alert(company_index);
+              if (company_index > -1) {
+                if (companies_list[company_index].name != $("#companyName").val() || companies_list[company_index].signupcode != $("#companyRegisterCode").val()) {
+                  alert("Company Name and Registration Code does not match");
+                  $("#companyName").val("").focus();
+                  all_checks_ok = false;
+                } else if (companies_list[company_index].license.used == companies_list[company_index].license.bought) {
+                  alert("Ther are no empy sport for new user, by more");
+                  all_checks_ok = false;
+                }
+              }
+            }
+            else{
+              alert("Company Not found");
+              all_checks_ok = false;
+            }
+          }
+        }
+        if (all_checks_ok) {
+          // If all checks are ok, submit the form
+          $("#submit_btn").click();
+        }
+      });
+    });
+  </script>
 </html>

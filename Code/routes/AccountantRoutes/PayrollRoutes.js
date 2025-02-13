@@ -163,6 +163,7 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
                 company : u.company,
                 user : u._id,
                 amount : req.body.salary,
+                deductions : req.body.deductions
             })
             await current_salary.save();
         }
@@ -182,7 +183,8 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
         new_salary = await new Salary({
             company : u.company,
             user : u._id,
-            amount : req.body.salary
+            amount : req.body.salary,
+            deductions : req.body.deductions
         })
         await new_salary.save();
 
@@ -192,14 +194,6 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
             await current_salary.save();
         }
       }
-      /*const s = await new Salary({
-        company : u.company,
-        user : u._id,
-        month : req.body.month,
-        year : req.body.year,
-        amount : req.body.salary
-      })
-      await s.save();*/
       res.redirect('/payroll?id='+u._id+"&comp="+u.company);
     }
     catch (err) {
