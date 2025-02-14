@@ -50,7 +50,8 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             console.log('3')
             if(req.user.companyOwner == 1){
               console.log('self-accountant')
-              res.redirect('self-accountant');
+              //res.redirect('self-accountant');
+              res.redirect('/calendar?id='+req.user.company+'&timetable=month&timetable_user=all');
             }
             else{
               res.redirect('/?message="Access Denied"');

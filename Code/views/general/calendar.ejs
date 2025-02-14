@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="fonts_css.css" />
     <link rel="stylesheet" href="textarea_css.css" />
     <link rel="stylesheet" href="Switch_css.css" />
+    <link rel="stylesheet" href="buttons_css.css" />
 
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -30,7 +31,13 @@
       <%- include('../partials/sidebar'); %>
       <div>
         <h1 class="asap-condensed-extralight">Calendar</h1>
-        <form action="/calendar" method="POST" id="view_form" class="glass_effect_2">
+        <% if(user.type =='user'){%>
+          <div class="container glass_effect_2" style="display: flex;justify-content: space-around;align-items: center;width:50%;margin-left: 25%;">
+            <button id="self_admin_calendar" onclick="window.location.href='/calendar?id=<%=user.company%>&timetable=month&timetable_user=all'" style="width: 80%;" class="button_1">Calendar</button>
+            <button id="self_admin_payroll" onclick="window.location.href='/payroll?comp=<%=user.company%>'" class="button_5">Payroll</button>
+          </div>
+          <%}%>
+        <form action="/calendar" method="POST" id="view_form" class="glass_effect_2" style="display: none;">
           <input type="text" id="obj_id" name="obj_id" style="display: none" />
           <input type="text" name="action" id="action" />
           <div >
@@ -68,7 +75,7 @@
                 <button class="calendar_date_reage_btn" id="tt_week">Week</button>
                 <button class="calendar_date_reage_btn" id="tt_month">Month</button>
                 <input id="day_picker" type="date" />
-                <select id="user_select">
+                <select id="user_select" style="width: 200px;">
                   <option value="all">All</option>
                 </select>
               </div>

@@ -26,8 +26,17 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             var from_month = new Date().getMonth();
             var to_month = new Date().getMonth();
 
-            const clients = await clientAccountantFunctions.fetchClients(req.user._id,'all');
-            var comp = clients[0]._id;
+            var clients = []
+            var comp;
+            if(req.user.type =='accountant'){
+                clients = await clientAccountantFunctions.fetchClients(req.user._id,'all');
+                comp = clients[0]._id;
+            }
+            else{
+                clients = [await Company.findOne({_id:req.user.company})]
+                comp = req.user.company;
+            }
+            
             if( req.query.comp){
                 comp = req.query.comp
             }
@@ -71,8 +80,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
             //Attendance
             var attendance = await Attendance.find({
                 user:selected_user,
-                company: comp,
-                registrationDate: { $gte: from_date, $lt: to_date }
+                company: comp
             }).sort({ registrationDate: 1 });
             attendance = attendance.map((attendance) => ({
                 month : new Date(attendance.registrationDate).getUTCMonth() + 1,
@@ -128,7 +136,7 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
                 selected_user : selected_user,
                 salary_months: salary_months,
                 salary_amounts: salary_amounts,
-                salary : salaryRecord ? salaryRecord : {amount : 0},
+                salary : salaryRecord ? salaryRecord : {amount : 0,deductions:0},
                 attendance: attendance,
                 payroll: payroll_list,
                 time_in_comp : generalFunctions.calculateDateDifference(selected_user.registrationDate)

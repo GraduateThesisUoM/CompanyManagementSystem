@@ -97,7 +97,7 @@
                                     </select>
                                 </div>
                                 <div style="width: 100%;display: none;"  id="year_select_container">
-                                    <label for="person_select " ></label>
+                                    <label for="person_select " >Year</label>
                                     <select id="year_select" class="my_select top_select">
                                     </select>
                                 </div>
@@ -193,7 +193,7 @@
                             </thead>
                             <tbody>
                                 <% for(a of attendance){%>
-                                    <tr class="glass_effect_2">
+                                    <tr class="glass_effect_2 attendance_row attendance_month_<%=a.month%>">
                                         <th><%=a.month%></th>
                                         <th><%=a.day%></th>
                                         <th><%=a.clock_in%></th>
@@ -303,6 +303,8 @@
                     "<option class='month_option' value='"+m+"'>"+getMonthName(m)+"</option>"
                 );
             }
+
+            $('.attendance_row').hide();
         }
 
         function getMonthName(num) {
@@ -357,8 +359,11 @@
                 $("#company").val($("#client_select").val());
                 $("#salary_year").val($('#year_select').val());
 
+                $('.attendance_row').hide();
+
                 if( index < 13){
-                    $('#payroll_for').html(getMonthName(index)+ " "+ $("#year_select").val())
+                    $('#payroll_for').html(getMonthName(index)+ " "+ $("#year_select").val());
+                    $('.attendance_month_'+index).show();
                 }
                 else{
                     $('#payroll_for').html(getMonthName($("#month_payroll_select").val()) +" " +$("#year_select").val())
@@ -377,7 +382,6 @@
                 $("#print_salary").text(payroll[index].salary.amount);
                 $("#print_deductions").text(payroll[index].salary.deductions);
                 $("#net_salary").text(payroll[index].salary.amount + payroll[index].extra - payroll[index].deductions);
-
                 
             }
             catch(e){
@@ -390,7 +394,7 @@
        $(document).ready(function(){
             $("#salary_year").val(new Date().getFullYear());
 
-            
+            $(".month").eq(0).click();
 
 
             if(params.get('comp')){
