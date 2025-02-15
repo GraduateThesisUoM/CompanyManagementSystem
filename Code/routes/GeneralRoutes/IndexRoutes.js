@@ -41,6 +41,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           status: 3,//pending
           next:'-',
           type: { $in: [1, 3] },//relationship,request
+          //type2 : { $nin: [3,9] }
           type2 : { $nin: [3,9] }
         });
         console.log("nodes_pending")

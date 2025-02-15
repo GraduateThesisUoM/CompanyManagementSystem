@@ -37,14 +37,19 @@
                             <input class="filter" id="filter_pending" type="checkbox"> Pending <input class="filter" id="filter_viewed" type="checkbox"> Viewed
                         </div>
 
-                        <div> From date <input type="date" id="list_from_date">  To date <input type="date" id="list_to_date"></div>
+                        <div> From date <input type="date" id="list_from_date" class="input_type_1" style="font-size: 1em;padding: 0px 5px!important;">  To date <input type="date" id="list_to_date" class="input_type_1" style="font-size: 1em;padding: 0px 5px!important;"></div>
                         <button class="btn_type_4" onclick="location.reload();">Clear</button>
 
                     </div>
                     <div id="list_filters_right">
-                        <div id="tottal_num">Tottal Number of&nbsp;<span id="span_number_of">companys</span> : <span id="list_count"><%=list_items.length%></span>
+                        <div id="tottal_num">Tottal Number of&nbsp;<span id="span_number_of"></span> : <span id="list_count"><%=list_items.length%></span>
+                        </div>
+                        <%if(user.type == 'accountant'){%>
+                            <div id="av_rating">
+                                Average Rating &nbsp;<strong><span id="av_rating_number"></span></strong>
+                            </div>
+                        <%}%>
                     </div>
-                </div>
                 </div>
                 <form action="/list" method="POST" id="list_form" style="display: none;">
                     <input name="list_id" id = "list_id">
@@ -103,10 +108,11 @@
                         </tbody>
                     </table>
                 </div>
+                <% if( user.type != 'admin'){%>
                 <button id="go_to_create">
                     <img width="50" height="50" src="https://img.icons8.com/ios/50/FFFFFF/plus--v1.png" alt="plus--v1"/>
                 </button>
-
+                <% }%>
             </div>
     </div>
     <iframe id="print-frame" style="display:none;"></iframe>
@@ -191,6 +197,9 @@
                     filter_containers.eq(1).hide();
                     $(".glass_effect_2").css('height', '40px');
                 }
+                else if (searchfor == 'companies'){
+                    $(".btn2").hide();
+                }
                 $("#searchfor").val(searchfor);
 
 
@@ -206,6 +215,18 @@
                     }
                     button_action($(this),btn_act);
                 })
+            }
+
+            try{
+                var ratings = $(".rating");
+                var a = 0;
+                for( r of ratings){
+                    a = a + parseInt($(r).text())
+                }
+                $("#av_rating_number").text(a/ratings.length)
+            }
+            catch(e){
+                console.log(e)
             }
 
             $("#go_to_create").click(function () {
@@ -231,10 +252,10 @@
                 const toDate = $('#list_to_date').val();
 
                 $(".glass_effect_2").each(function(index) {
-                    if (index > 0) { // Skip the first element (index 0)
+                    //if (index > 0) { // Skip the first element (index 0)
                         const statusCell = $(this).find(".status");
                         const statusText = statusCell.text().trim();
-                        const regDateCell = $(this).find(".reg_date");
+                        const regDateCell = $(this).find(".date");
                         const regDateText = regDateCell.text().trim();
 
                         let showRow = true;
@@ -261,7 +282,7 @@
                         } else {
                             $(this).hide();
                         }
-                    }
+                    //}
                 });
             }
             function applyFilters_2() {

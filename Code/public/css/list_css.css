@@ -15,6 +15,7 @@
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
+    flex-direction: column;
 }
 
 #list_count{
@@ -29,6 +30,16 @@
 }
 
 #tottal_num{
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    color: white;
+    text-shadow: -2px 2px 2px rgb(0,0,0);
+    font-size: 1.2em;
+}
+
+
+#av_rating{
     display: flex;
     justify-content: flex-end;
     align-items: center;

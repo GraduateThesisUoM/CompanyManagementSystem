@@ -20,9 +20,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
-      res.render("general/report_user.ejs", {
-        user: req.user,
-      });
+      //res.render("general/report_user.ejs", {
+      var data = {user: req.user}
+      res.render(path_constants.pages.report.view(), data);
     }
   } catch (err) {
     console.error("Error :", err);

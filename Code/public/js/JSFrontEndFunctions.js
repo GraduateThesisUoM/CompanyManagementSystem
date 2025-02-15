@@ -364,7 +364,7 @@ function get_item_from_list(list,id){
 }
 
 function go_back(url) {
-    alert(url)
+    //alert(url)
     const path = new URL(url).pathname; // Extract the path (e.g., "/view")
   
   if (path.includes('view')) {

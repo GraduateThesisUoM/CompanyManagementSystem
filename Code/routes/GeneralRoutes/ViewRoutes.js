@@ -198,7 +198,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             });
             data.data = [obj.title, obj.location, inventory];
             data.titles = ["Title", "location", "Data"];
-            data.type = [1, 1, 0, 8];
+            data.type = [1, 1, 8];
             //1=normal-text,0=text-readonly
             //8 table
           } else if (type == "series") {
@@ -317,61 +317,52 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           } else if (type == "companies") {
             obj = await Company.findOne({ _id: id });
             const users = await User.find({company: obj._id})
-            const ac_node = await Node.findOne({company:obj._id, status:2,next:'-'})
-            console.log(ac_node)
+            //const ac_node = await Node.findOne({company:obj._id, status:2,next:'-'})
+            const ac_node = await generalFunctions.get_accountant_node(obj._id)
             var accountant = "Not assigned"
             if(ac_node){
-              const accountant_obj = await Accountant.findOne({_id:'6744cea94215507895961cc0'})
-              console.log(accountant_obj)
+              const accountant_obj = await Accountant.findOne({_id:ac_node.receiver_id})
               accountant = accountant_obj ? accountant_obj.firstName + " " + accountant_obj.lastName : "Not assigned"
             }
             data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate),users.length, accountant,obj.status,obj.license.used,obj.license.bought,obj.license.requested];
             data.titles = ["Name", "Logo", "Reg Date","Number of Users","Accountant","Status","Used licenses","Bought licenses","Requested licenses"];
             data.type = [0, 11, 0,0,0,0,0,0,0];
 
-            let nodes_pending = await Node.find({
+            let nodes = await Node.find({
               company: id,
-              type: { $in: [3,10] },
-              type2: { $in:[4,6]},
-              status : 3 //pending
+              type: { $in: [1,3,4] },
+              //type: 3,
+              //type2: { $in:[33]},
+              //status : 3, //pending
+              next:'-'
             })
-            let nodes_viewed = await Node.find({
-              company: id,
-              type: { $in: [3,10] },
-              type2: { $in:[4,6]},
-              status : 1 //viewed
-            })
-            let nodes_executed_rejected = await Node.find({
-              company: id,
-              type: { $in: [3,10] },
-              type2: { $in:[4,6]},
-              status : { $in:[2,4]} //viewed
-            })
-
-            /*let nodes = await Node.find({ company: id, type: 6, type2: 6, next: "-", status: 2 });
-
-            nodes = await Promise.all(
-              nodes.map(async (n) => {
-                const c = await Client.findOne({ _id: n.receiver_id });
-                return {
+            nodes_list = [];
+            for( n of nodes){
+                const sender = await User.findOne({_id:n.sender_id}) || { firstName: "-", lastName: "-" };
+                var receiver = await User.findOne({_id:n.receiver_id});
+                
+                if(!receiver){
+                  receiver = await Company.findOne({_id:n.receiver_id});
+                  receiver = receiver.name
+                }
+                else{
+                  receiver = receiver.firstName + " "+ receiver.lastName
+                }
+                nodes_list.push({
                   _id: n._id,
-                  user: { _id: c._id, firstName: c.firstName, lastName: c.lastName },
-                  data: n.data,
-                  text: n.text,
-                };
-              })
-            );
+                  sender: sender,
+                  receiver: receiver,
+                  type: generalFunctions.get_type(n.type) === 'Clients' ? 'Relationship' : generalFunctions.get_type(n.type),
+                  title: n.title || "",
+                  registrationDate: generalFunctions.formatDateTime(n.registrationDate),
+                  status: generalFunctions.get_status(n.status)
+                })
+            }
 
+            console.log('ffff'+nodes)
+            console.log('ffff')
             secondary_data = {
-              nodes: nodes,
-              users: await Client.find({ company: id, status: 1 }),
-            };*/
-            secondary_data = {
-              nodes: {
-                nodes_pending : nodes_pending,
-                nodes_viewed : nodes_viewed,
-                nodes_executed_rejected : nodes_executed_rejected
-              }
+              nodes: nodes_list
             }
           } else if (type == "reports") {
             obj = await Node.findOne({ _id: id });
@@ -400,11 +391,12 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           else if (type == "reviews"){
             obj = await Review.findOne({ _id: id });
             let comp = await Company.findOne({ _id: obj.company });
-            let prsn = await User.findOne({ _id: obj.reviewer_id });
+            let prsn1 = await User.findOne({ _id: obj.reviewer_id });
+            let prsn2 = await User.findOne({ _id: obj.reviewed_id });
 
-            data.data = [comp.name, prsn.lastName+" 0"+prsn.lastName, obj.rating, obj.text];
-            data.titles = ["Company","Reviewer", "Rating", "Text"];
-            data.type = [13,13,16,13];
+            data.data = [comp.name, prsn1.lastName+" "+prsn1.lastName, prsn2.lastName+" "+prsn2.lastName, obj.rating, obj.text];
+            data.titles = ["Company","Reviewer","Reviewed", "Rating", "Text"];
+            data.type = [13,13,13,16,13];
 
           }
           
@@ -457,7 +449,10 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     var obj_id = req.body.obj_id;
     var type2 = req.body.obj_type2;
 
-    await generalFunctions.update({ _id: req.body.obj_id }, obj_type, req.body);   
+    var data = req.body;
+    data.user = req.user;
+
+    await generalFunctions.update({ _id: req.body.obj_id }, obj_type, data);   
 
     if(obj_type == 'nodes'){
       return res.redirect(`/list?searchfor=clients`);

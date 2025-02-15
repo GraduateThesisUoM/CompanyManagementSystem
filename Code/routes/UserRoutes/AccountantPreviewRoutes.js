@@ -8,6 +8,7 @@ const Accountant = require(path_constants.schemas.two.accountant);
 const Review = require(path_constants.schemas.two.review);
 const Company = require(path_constants.schemas.two.company);
 const Node = require(path_constants.schemas.two.node);
+const Client = require(path_constants.schemas.two.client);
 
 //Authentication Functions
 const Authentication = require(path_constants.authenticationFunctions_folder.two);
@@ -24,6 +25,20 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
     const access = generalFunctions.checkAccessRigts(req,res);
     if(access.response){
       const reviews = await Review.find({reviewed_id:accountant._id, type: 1} )//"client"
+      var reviews_data = [];
+      for( r of reviews){
+        reviews_data.push({
+          company : r.company,
+          reviewer_id : r.reviewer_id,
+          reviewed_id : r.reviewed_id,
+          text : r.text,
+          rating : r.rating,
+          type : r.type,
+          registrationDate : r.registrationDate,
+          person : await Client.findOne({_id: r.reviewer_id}),
+          company_obj : await Company.findOne({_id: r.company})
+        })
+      }
       const clients = await Node.find({type:1,type2:3,status:2})
       const company = await Company.findOne(_id=req.user.company);
       var company_node = await Node.findOne({company:req.user.company,type:1,next:'-'}).sort({ registrationDate: -1 });
@@ -40,7 +55,9 @@ router.get('/', Authentication.checkAuthenticated, async (req, res) => {
         num_of_clients : clients.length,
         company_node:company_node,
          user: req.user,
-         reviews: reviews }
+         //reviews: reviews
+         reviews: reviews_data
+        }
     
     
         res.render('user_pages/preview_accountant.ejs', data );  

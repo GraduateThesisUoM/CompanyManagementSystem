@@ -50,34 +50,43 @@
     #header_menu a{
         font-size: 1.5em;
         text-decoration: none;
-        color: rgb(0, 0, 0);
         width: 100%;
         text-align: center;
         padding: 5px 0px;
         transition: 0.3s;
     }
     #header_menu a:hover{
-        color: white;
         font-weight: 450;
         text-shadow: -2px 2px 4px rgba(0, 0, 0, 0.8);  
         background-color: rgba(255, 255, 255, 0.396);
-
     }
 
+    .color_black:hover{
+        color:white
+    }
+    .color_red:hover{
+        color: rgb(231, 31, 31);
+    }
 
 </style>
 <header id="header" name="header" class=" asap-condensed-regular">
     <!--a href="profile-page">Profile</a-->
-    <img id="header_menu_img" src="https://img.icons8.com/parakeet-line/100/FFFFFF/test-account.png" alt="test-account"/>
+    <img style="backdrop-filter: blur(10px);background: rgba(255, 255, 255, 0.1);border-radius: 50%;" id="header_menu_img" src="https://img.icons8.com/parakeet-line/100/FFFFFF/test-account.png" alt="test-account"/>
     <div id="header_menu" class="glass_effect_1 border-radius">
         <div></div>
-        <div></div><a href="/profile-page">Profile</a>
-        <div></div><a href="/my-company">Company</a>
-        <div></div><a href="/my-qr-code">QR Code</a>
+        <div></div><a class="color_black" href="/profile-page">Profile</a>
         <% if(user.type != 'admin') { %>
-        <div></div><a href="/list?searchfor=reviews">Reviews</a>
+        
+        <% if(user.type == 'user') { %>
+        <div></div><a class="color_black" href="/my-company">Company</a>
         <% } %>
-        <div></div><a href="/logout">Log Out</a>
+        <!--div></div><a href="/my-qr-code">QR Code</a-->
+        
+        <div></div><a class="color_black" href="/list?searchfor=reviews">Reviews</a>
+        <div></div><a class="color_black" href="/report">Report</a>
+
+        <% } %>
+        <div></div><a class="color_red" href="/logout">Log Out</a>
     </div>
     <!--form action="/logout?_method=DELETE" method="POST" id="log_out_form">
         <div>

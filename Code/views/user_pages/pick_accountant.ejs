@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Επιλογή Λογιστή</title>
+        <title>Pick Accountant</title>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="pick_accountant_css.css">
         <link rel="stylesheet" href="buttons_css.css">
         <link rel="stylesheet" href="table_css.css">
-
+        <link rel="stylesheet" href="fonts_css.css">
 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,14 +19,11 @@
         <div class="has_sidebar">
             <%- include('../partials/sidebar'); %>
             <div>
-                <h1>Επιλογή Λογιστή</h1>
-                <!--form action="/self-accountant-register" method="POST">
-                    <button style="display: none;" type="submit" id="self_accountant_submit_btn">Αυτοδιαχείριση λογιστικών</button>
-                    </form-->
-                <button style="margin-bottom: 20px;" type="button" class="button_1" id="self_accountant_btn">Αυτοδιαχείριση λογιστικών</button>
+                <h1>Pick Accountant</h1>
+                <button style="margin-bottom: 20px;" type="button" class="button_1" id="self_accountant_btn">Self Managing</button>
 
                 <div class="table_container">
-                    <table>
+                    <table class="asap-condensed-extralight">
                         <thead>
                             <tr>
                                 <th>Name</th>

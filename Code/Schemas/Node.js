@@ -15,7 +15,6 @@ const NodeShema = new mongoose.Schema({
       7 = report
       8 = enter
       9 = leave
-      10 = licence
       */
     required: true,
     default:4

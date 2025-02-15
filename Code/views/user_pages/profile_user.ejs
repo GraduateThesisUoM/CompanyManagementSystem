@@ -26,27 +26,31 @@
                 <div id="accountant-info-div" name="accountant-info-div" class="glass_effect_2 container">
                     <form class="display_block" action="/profile-page" method="POST" >
                         
-                        <label for="firstName">First Name</label>
-                        <input type="text" name="firstName" id="firstName" required value="<%= user.firstName %>" class="input_type_2">
-                        <label for="lastName">Last Name</label>
-                        <input type="text" name="lastName" required value="<%= user.lastName %>" class="input_type_2">
-                        <label for="email">Email</label>
-                        <input type="email" name="email" required value="<%= user.email %>" class="input_type_2">
-                        <label for="afm" class="admin_hide">Tax Identification Number (TIN)</label>
-                        <input type="text"id="afm" name="afm" value="<%= user.afm%>" class="input_type_2 admin_hide border_type_1">
-                        <label for="mydatakey" class="admin_hide">MyData (προαιρετικό)</label>
-                        <input type="text" name="mydatakey" id="mydatakey" value="<%= user.mydatakey%>" class="input_type_2 admin_hide">
+                        <label class="my_label_1" for="firstName">First Name</label>
+                        <input class="input_type_1" type="text" name="firstName" id="firstName" required value="<%= user.firstName %>" class="input_type_2">
+                        <label class="my_label_1" for="lastName">Last Name</label>
+                        <input class="input_type_1" type="text" name="lastName" required value="<%= user.lastName %>" class="input_type_2">
+                        <label class="my_label_1" for="email">Email</label>
+                        <input class="input_type_1" type="email" name="email" required value="<%= user.email %>" class="input_type_2">
+
+                        <%if(user.type != 'admin'){%>
+                            <label class="my_label_1" for="afm" class="admin_hide">Tax Identification Number (TIN)</label>
+                            <input class="input_type_1" type="text"id="afm" name="afm" value="<%= user.afm%>" class="input_type_2 admin_hide border_type_1">
+                            <label class="my_label_1" for="mydatakey" class="admin_hide">MyData (optional)</label>
+                            <input class="input_type_1" type="text" name="mydatakey" id="mydatakey" value="<%= user.mydatakey%>" class="input_type_2 admin_hide">
+                        <%}%>
                         <button type="submit" id="edit-info-button" name="edit-info-button" class="btn_type_1">Save</button>
-                        <div>
-                            <input type="text" id="user_id" value="<%=user._id%>" style="display:none">
-                            <img id="user_qr_code" style="cursor: pointer;">
-                        </div>
+                        <%if(user.type == 'user'){%>
+                            <div>
+                                <input type="text" id="user_id" value="<%=user._id%>" style="display:none">
+                                <img id="user_qr_code" style="cursor: pointer;">
+                            </div>
+                        <%}%>
                     </form>
-                    <button onclick="window.location='/my-company'" class="btn_type_4">Company</button>
                 </div>
-                <div id="rating-div" name="rating-div">
+                <!--div id="rating-div" name="rating-div">
                     <h2>Reviews and Comments</h2>
-                </div>
+                </div-->
             </div>
         </div>
     </body>

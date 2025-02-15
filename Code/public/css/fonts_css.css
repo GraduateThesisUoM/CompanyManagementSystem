@@ -23,7 +23,21 @@
 
 .color_white{
   color: white;
-  
+}
+.color_grey{
+  color: rgb(204, 204, 204);
+}
+
+.color_grey_2{
+  color: rgb(167, 167, 167);
+}
+
+.color_red{
+  color: rgb(151, 10, 10);
+}
+
+.color_black{
+  color: rgb(0, 0, 0);
 }
 
 

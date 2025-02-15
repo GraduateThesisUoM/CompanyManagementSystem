@@ -1,15 +1,18 @@
 const express = require("express");
 const router = express.Router();
 
+const path_constants = require('../../constantsPaths');
+
 //Models
-const User = require("../../Schemas/User");
-const Accountant = require("../../Schemas/Accountant");
-const Review = require("../../Schemas/Review");
+
+const User = require(path_constants.schemas.two.user);
+const Accountant = require(path_constants.schemas.two.accountant);
+const Review = require(path_constants.schemas.two.review);
 
 //Authentication Functions
-const Authentication = require("../../AuthenticationFunctions");
+const Authentication = require(path_constants.authenticationFunctions_folder.two);
 //Get General Functions
-const generalFunctions = require("../../GeneralFunctions");
+const generalFunctions = require(path_constants.generalFunctions_folder.two)
 
 
 /*--------   PROFILE */
@@ -17,10 +20,10 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
-      if (req.user.type == "accountant") {
-        const reviews = await Review.find({
+      //if (req.user.type == "accountant") {
+        /*const reviews = await Review.find({
           reviewed_id: req.user._id,
-          type: "client",
+          type: 1,//client
         });
         const users = await User.find({ type: "user" });
 
@@ -40,11 +43,16 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         res.render("user_pages/profile_user.ejs", {
           user: req.user,
         });
-      }
+      }*/
+        res.render("user_pages/profile_user.ejs", {
+          user: req.user,
+        });
+        
     }
     else{
       res.redirect('/error?error='+access.error);
     }
+   
   } catch (err) {
     console.error("Error :", err);
     res.redirect("/error?error=" + err);

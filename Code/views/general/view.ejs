@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="Switch_css.css" />
     <link rel="stylesheet" href="Lock_css.css" />
     <link rel="stylesheet" href="table_css.css" />
+    <link rel="stylesheet" href="buttons_css.css" />
 
 
     <!--Fonts-->
@@ -32,8 +33,8 @@
       <%- include('../partials/sidebar'); %>
       <div class="my_main_body">
         <h1 class="asap-condensed-extralight">View</h1>
-        <div id="clients">
-          <button id="go_to_calendar">Calendar</button>
+        <div id="clients" style="display: flex;justify-content: center;align-items: center;">
+          <button id="go_to_calendar" class="button_1" style="width: 50%;">Calendar</button>
         </div>
         <form action="/view" method="POST" id="view_form" class="glass_effect_2">
           <%if(status){%>
@@ -68,28 +69,25 @@
             <input name="input<%= index %>" id="<%= title %>" value="<%= data[index] %>" type="number" class="input_type_2 my_width" />
             <% }else if(type[index] == 7){ %> <%= data[index] == 1 ? 'Retail' : 'Wholesale' %><input name="input<%= index %>" id="wholesale_retail" value="<%= data[index] %>" style="display: none" />
             <% }else if(type[index] == 8){ %>
-            <table>
-              <thead>
-                <tr>
-                  <th>A/A</th>
-                  <th>Title</th>
-                  <th>Count</th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <% data[index].forEach(function(row, index) { %>
-                <tr>
-                  <td><%= index +1 %></td>
-                  <td><%= row.title %></td>
-                  <td><%= row.count %></td>
-                  <th>
-                    <button id="<%= row.id %>" class="go_to_btn">go</button>
-                  </th>
-                </tr>
-                <%}) %>
-              </tbody>
-            </table>
+            <div class="table_container">
+              <table>
+                <thead>
+                  <tr>
+                    <th>A/A</th>
+                    <th>Title</th>
+                    <th>Count</th>
+                </thead>
+                <tbody>
+                  <% data[index].forEach(function(row, index) { %>
+                  <tr onclick="go_to_item('<%= row._id %>')">
+                    <td><%= index +1 %></td>
+                    <td><%= row.title %></td>
+                    <td><%= row.count %></td>
+                  </tr>
+                  <%}) %>
+                </tbody>
+              </table>
+            </div>
             <% }else if(type[index] == 9){ %>
             <br />
             <div><%= title %></div>
@@ -100,7 +98,7 @@
 
             <div id="nodes_conainer">
               <% data[index].forEach(function(node, index) {%>
-              <div>
+              <div style="margin-top: 10px;">
                 <div class="message_header">
                   <div class="person"><%=node.sender.firstName%> <%=node.sender.lastName%></div>
                   <div class="reg_d"><%=node.registrationDate%></div>
@@ -266,6 +264,10 @@
                 <thead>
                     <tr>
                       <th>A/A</th>
+                      <th>Type</th>
+                      <th>Title</th>
+                      <th>Sender</th>
+                      <th>Receiver</th>
                       <th>Reg Date</th>
                       <th>Status</th>
                     </tr>
@@ -281,6 +283,13 @@
   <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
 
   <script>
+    function go_to_item(id){
+      window.location.href = '/view?type=items&id='+id
+    }
+
+    function go_to_doc(id){
+      window.location.href = '/view?type=docs&id='+id
+    }
     $(document).ready(function () {
       var selected_date = get_today();
       var calendar_spectrum = "-";
@@ -435,22 +444,31 @@
         $("#client_div").show();
         var table = $("#move_table tbody");
         for (let i = 0; i < secondary_data.length; i++) {
-          table.append(`<tr class="glass_effect_2">
-            <td>${i + 1}</td>
-            <td>${secondary_data[i].registrationDate}</td>
-            <td>${secondary_data[i].doc}</td>
-            <td>${secondary_data[i].credit}</td>
-            <td>${secondary_data[i].debit}</td>`);
+          table.append(`
+            <tr class="glass_effect_2" onclick="go_to_doc('${secondary_data[i]._id}')">
+              <td>${i + 1}</td>
+              <td>${secondary_data[i].registrationDate}</td>
+              <td>${secondary_data[i].doc}</td>
+              <td>${secondary_data[i].credit}</td>
+              <td>${secondary_data[i].debit}</td>
+            </tr>
+          `);
         }
       }
       else if (queryParams.type == 'companies'){
         $("#admin_view_company").show();
-        var table = $("#req_table tbody");
-        for (let i = 0; i < secondary_data.nodes.nodes_pending.length; i++) {
-          table.append(`<tr class="glass_effect_2" onclick="window.location='/view?type=nodes&id=${secondary_data.nodes.nodes_pending[i]._id}'">
+        
+        var requestsTable = $("#req_table table tbody");
+        for (let i = 0; i < secondary_data.nodes.length; i++) {
+          requestsTable.append(`<tr class="glass_effect_2" onclick="window.location='/view?type=nodes&id=${secondary_data.nodes[i]._id}'">
             <td>${i + 1}</td>
-            <td>${secondary_data.nodes.nodes_pending[i].registrationDate}</td>
-            <td>Pending</td>`);
+            <td>${secondary_data.nodes[i].type}</td>
+            <td>${secondary_data.nodes[i].title}</td>
+            <td>${secondary_data.nodes[i].sender.firstName} ${secondary_data.nodes[i].sender.lastName}</td>
+             <td>${secondary_data.nodes[i].receiver}</td>
+
+            <td>${secondary_data.nodes[i].registrationDate}</td>
+            <td>${secondary_data.nodes[i].status}</td>`);
         }
       }
       else {
@@ -580,6 +598,7 @@
           $("#effects_accounts_y_n_input").val(1);
         }
       });
+      
 
       $("#effects_accounts_y_n_switch_btn").click(function (event) {
         event.preventDefault();
@@ -621,6 +640,8 @@
           $("#effects_warehouse_y_n_input").val(1);
         }
       });
+
+      
 
       $("#go_to_calendar").click(function(){
         window.location = '/calendar?id='+$("#obj_id").val()+'&timetable=month&timetable_user=all';

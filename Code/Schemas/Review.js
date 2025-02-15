@@ -10,7 +10,7 @@ const ReviewSchema = new mongoose.Schema({
   type: {
     type: Number,
     enum: [1, 2],
-    //1 = client 2 = accountant
+    //1 = client 2 = accountant(not maid)
     required: true
   },
   registrationDate: { type: Date, default: Date.now , required: true}

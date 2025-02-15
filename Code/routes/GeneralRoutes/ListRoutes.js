@@ -251,11 +251,26 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Status"
         ]
       }else if(req.query.searchfor == "reviews"){
-        var list_items = await Review.find({reviewed_id: req.user._id});
+        var person_title;
+        if(req.user.type == 'user'){
+          var list_items = await Review.find({reviewer_id: req.user._id});
+          person_title = "Reviewed";
+        }
+        else{
+          var list_items = await Review.find({reviewed_id: req.user._id});
+          person_title = "Reviewer";
+        }
         
         list_items = await Promise.all(
           list_items.map(async (review) => {
-            const client = await User.findOne({ _id: review.reviewer_id });
+            var client;
+            if(req.user.type == 'user'){
+              client = await User.findOne({ _id: review.reviewed_id });
+            }
+            else{
+              client = await User.findOne({ _id: review.reviewer_id });
+            }
+            
             const company = await Company.findOne({ _id: review.company });
         
             return {
@@ -275,7 +290,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "ID",
           "Client",
           "Date",
-          "Reviewer",
+          person_title,
           "Rating",
           "Comments"
         ]
@@ -301,7 +316,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 });
 
 router.post("/", Authentication.checkAuthenticated, async (req, res) => {
-  
+  console.log("List Post")
   try {
     var has_type = ``;
     if(req.query.type){

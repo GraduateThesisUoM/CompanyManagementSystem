@@ -22,7 +22,7 @@ const Attendance = require(path_constants.schemas.one.attendance);
 
 const schemaMap = {
   users: User,
-  companys: Company,
+  companies: Company,
   clients: Client,
   series: Series,
   items: Item,
@@ -129,10 +129,9 @@ async function create_node(data) {
     text: data.text
   };
 
-  
-  
+
   if (data.type == 1) {//relationship
-    if ((data.company.equals(data.receiver_id) && data.type2 == 3/*data.type2 == 3*/)) {
+    if ((data.company.equals(data.receiver_id) && data.type2 == 3)) {
       new_data.status = 2 //executed;
       //new_data.type2 = 1;
     }
@@ -196,6 +195,8 @@ async function node_reply(data) {
       type2: target_node.type2,
       text : data.text
     })
+
+    console.log('new node333333333333')
 
     target_node.status = data.reply
   }
@@ -555,6 +556,10 @@ async function drop_collection(collection_name) {
 async function delete_deactivate(data, schema, action) {
   try {
     console.log("delete_deactivate action : "+action)
+    /*if(schema == 'companies'){
+      schema = 'Company'
+    }*/
+    console.log(schema)
     var obj = await get_obj_by_id(data, schema);
     if (action == "delete" || action == 2) {
       obj.status = 2;
@@ -600,7 +605,14 @@ async function update(id, schema , data){
           status: data.action});
       }
       else{
-        obj.text = data.text;
+        var node_repl = node_reply({
+          user : data.user,
+          target_node : obj,
+          type2: 3,
+          status: data.action,
+          text : data.input5,
+          reply : data.action
+        });
       }
        
     }
@@ -1282,6 +1294,7 @@ async function gets_movements(data) {
   for (let d of docs) {
       const series = await Series.findOne({ _id: d.series, company: d.company });
       movements.push({
+          _id: d._id,
           registrationDate: formatDateTime(d.registrationDate),
           doc: series.acronym + "-" + d.doc_num,
           credit: series.effects_account == 1 ? get_docs_value(d) : 0,

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Προεπισκόπηση Λογιστή</title>
+        <title>Preview Accountant</title>
 
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -112,6 +112,7 @@
             </div>
         </div>
     </body>
+    <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
     <script>
         $(document).ready(function(){
             const urlParams = new URLSearchParams(window.location.search);
@@ -167,8 +168,17 @@
             reviews.forEach(review => {
                 const review_div = $("<div>").addClass("preview_review glass_effect_1 container");
                 const stars_div = $("<div>");
-                const date_review_div = $("<div>").text(review.registrationDate).addClass("review_date");
+                var date_review_div = $("<div>").css({
+                    "display": "flex",
+                    "align-items": "center",
+                    "justify-content": "space-between"
+                });
+                date_review_div.append($("<div>").text(review.person.firstName +" "+ review.person.lastName+" - "+ review.company_obj.name).addClass("color_white"));
+                date_review_div.append($("<div>").text(formatDate(new Date(review.registrationDate))).addClass("review_date color_grey_2"));
+                //.text(review(new Date(review.registrationDate))).addClass("review_date");
+
                 review_div.append(date_review_div);
+                review_div.append("<br>");
                 // Adding 5 buttons to stars_div
                 for (let i = 1; i <= 5; i++) {
                     var star_button = $("<button>").addClass("star_btn star_selected");
@@ -183,8 +193,9 @@
                     const star_i = $("<i>").addClass("fa-solid fa-star");
                     star_button.append(star_i);
                 }
-                const text_review_div = $("<div>").text(review.text);
+                const text_review_div = $("<div>").text(review.text).addClass('color_grey');
                 review_div.append(stars_div);
+                review_div.append('<br>');
                 review_div.append(text_review_div)
 
                 reviews_div.append(review_div);

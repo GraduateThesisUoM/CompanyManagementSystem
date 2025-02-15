@@ -33,8 +33,9 @@
         <h1 class="asap-condensed-extralight">Calendar</h1>
         <% if(user.type =='user'){%>
           <div class="container glass_effect_2" style="display: flex;justify-content: space-around;align-items: center;width:50%;margin-left: 25%;">
-            <button id="self_admin_calendar" onclick="window.location.href='/calendar?id=<%=user.company%>&timetable=month&timetable_user=all'" style="width: 80%;" class="button_1">Calendar</button>
-            <button id="self_admin_payroll" onclick="window.location.href='/payroll?comp=<%=user.company%>'" class="button_5">Payroll</button>
+            <button onclick="window.location.href='/calendar?id=<%=user.company%>&timetable=month&timetable_user=all'" style="width: 80%;" class="button_1">Calendar</button>
+            <button onclick="window.location.href='/payroll?comp=<%=user.company%>'" class="button_5">Payroll</button>
+            <button onclick="window.location.href='/pick-accountant'" class="button_5">Accountant</button>
           </div>
           <%}%>
         <form action="/calendar" method="POST" id="view_form" class="glass_effect_2" style="display: none;">
