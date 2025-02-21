@@ -23,6 +23,7 @@ const SeriesSchema = new mongoose.Schema({
       //2 deleted
       default: 1
     },
+    my_id: { type: String, required: false,default:"-" },
     transforms_to: [{ type: mongoose.Schema.Types.ObjectId }] // Array of Series IDs
 });
 

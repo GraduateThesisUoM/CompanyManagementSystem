@@ -131,6 +131,9 @@ app.use(path_constants.pages.database.url, require(path_constants.pages.database
 //transform doc
 app.use(path_constants.pages.transfrom_doc.url, require(path_constants.pages.transfrom_doc.file));
 
+//transfer
+app.use(path_constants.pages.transfer.url, require(path_constants.pages.transfer.file));
+
 //edit doc
 app.use(path_constants.pages.edit_doc.url, require(path_constants.pages.edit_doc.file));
 

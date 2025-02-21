@@ -44,8 +44,6 @@
     transition: transform 0.3s ease-in-out;
 }
 
-
-
 .table_container table tr:hover {
     transform: scale(1.01);
 }

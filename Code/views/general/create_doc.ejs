@@ -152,7 +152,7 @@
           }
         });
 
-        if ($("#num_of_rows").val() == 0 || $('select[name="customer_id"]').val() == 0 || $('select[name="doc_series"]').val() == 0) {
+        if ($("#num_of_rows").val() == 0 || $('select[name="customer_id"]').val() == 0 || $('select[name="doc_series"]').val() == 0 || $('select[name="warehouse_id"]').val() == 0) {
           $("#submit_btn").prop("disabled", true);
           $(".general_discount").attr("readonly", true);
           $(".general_discount").val(0);

@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 // Define the report schema
 const NodeShema = new mongoose.Schema({
-  company: { type: mongoose.Schema.Types.ObjectId, required: true  },
+  company: { type: mongoose.Schema.Types.ObjectId, required: false  },
   sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   receiver_id: { type: mongoose.Schema.Types.ObjectId, required: false },
   type: {
@@ -24,8 +24,8 @@ const NodeShema = new mongoose.Schema({
 
     //1=hiring,2=firing,3=relationship,4=request,6=node,7=shell,8=buy,9=removed-client
     //31general 32 payroll 33 timetable 34 hire/fire
-    //61=calendar-work,62=calendar-leave
-    // 71=Harassment,72=Pretending to be someone,73=Fraud/Scam/Malpractice,74=ohter,75= licence για αλλαγές στον αριθμό αδειών
+    //61=calendar-work,62=calendar-leave,63=calendar-leave-request
+    // 71=Harassment,72=Pretending to be someone,73=Fraud/Scam/Malpractice,74=technical issue,75= other
     required: true,
     default:6
   },

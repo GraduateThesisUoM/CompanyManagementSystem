@@ -390,6 +390,7 @@ async function create_person(data) {
 
 async function create_doc(data) {
   try {
+    console.log(data)
     var series = await Series.findOne({ _id: data.series });
     series.count = series.count + 1;
 

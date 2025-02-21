@@ -177,6 +177,7 @@
     var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
     const params = new URLSearchParams(window.location.search);
     console.log("selected_items", selected_items);
+    
 
     function doc_line_select(index){
       if($("#doc_line_item_"+index).hasClass('selected')){

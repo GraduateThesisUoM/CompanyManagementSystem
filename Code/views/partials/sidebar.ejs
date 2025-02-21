@@ -48,33 +48,33 @@
         <img src="https://img.icons8.com/pastel-glyph/64/FFFFFF/box--v1.png" alt="warehouse" />
         Warehouse
       </button>
+      <button class="main_side_menubtn" onclick="location.href = '/calendar?id=<%=user.company%>&timetable=month&timetable_user=all'">
+        <img width="50" height="50" src="https://img.icons8.com/ios-filled/50/FFFFFF/overtime.png" alt="overtime"/>
+        Calendar
+      </button>
       <% } %>
     </div>
     <div id="column_two_menu_div">
       <div class="sub_side_menu_div" style="display: none"></div>
       <div class="sub_side_menu_div" style="display: none">
-        <button onclick="location.href = 'list?searchfor=docs&type=2';">View Docs</button>
+        <button onclick="location.href = 'list?searchfor=docs&type=2';">Docs</button>
         <!--button onclick="location.href = '/create-doc?type=2';">Create Docs</button-->
-        <button onclick="location.href = 'list?searchfor=series&type=2';">View Series</button>
+        <button onclick="location.href = 'list?searchfor=series&type=2';">Series</button>
         <!--button onclick="location.href = '/create?create=series&type=2';">Create Series</button-->
-        <button onclick="location.href = 'list?searchfor=persons&type=2';">View Persons</button>
+        <button onclick="location.href = 'list?searchfor=persons&type=2';">Persons</button>
         <!--button onclick="location.href = '/create?create=persons&type=2';">Create Person</button-->
       </div>
       <div class="sub_side_menu_div" style="display: none">
-        <button onclick="location.href = 'list?searchfor=docs&type=1';">View Docs</button>
-        <!--button onclick="location.href = '/create-doc?type=1';">Create Docs</button-->
-        <button onclick="location.href = 'list?searchfor=series&type=1';">View Series</button>
-        <!--button onclick="location.href = '/create?create=series&type=1';">Create Series</button-->
-        <button onclick="location.href = 'list?searchfor=persons&type=1';">View Persons</button>
-        <!--button onclick="location.href = '/create?create=persons&type=1';">Create Person</button-->
+        <button onclick="location.href = 'list?searchfor=docs&type=1';">Docs</button>
+        <button onclick="location.href = 'list?searchfor=series&type=1';">Series</button>
+        <button onclick="location.href = 'list?searchfor=persons&type=1';">Persons</button>
       </div>
       <div class="sub_side_menu_div" style="display: none">
-        <!--button onclick="location.href = '/create?create=Warehouse';">Create Warehouse</button-->
-        <button onclick="location.href = 'list?searchfor=Warehouse';">View Warehouses</button>
-        <!--button onclick="location.href = '/create?create=items&type=2';">Create Item Buy</button>
-                <button onclick="location.href = '/create?create=items&type=1';">Create Item Shell</button-->
-        <button onclick="location.href = 'list?searchfor=items&type=2';">View Items Buy</button>
-        <button onclick="location.href = 'list?searchfor=items&type=1';">View Items Shell</button>
+        <button onclick="location.href = 'list?searchfor=Warehouse';">Warehouses</button>
+        <button onclick="location.href = 'list?searchfor=items&type=2';">Items Buy</button>
+        <button onclick="location.href = 'list?searchfor=items&type=1';">Items Shell</button>
+        <button onclick="location.href = 'transfer';">Transfers</button>
+        <button onclick="location.href = 'list?searchfor=transfers';">Docs</button>
       </div>
     </div>
   </div>

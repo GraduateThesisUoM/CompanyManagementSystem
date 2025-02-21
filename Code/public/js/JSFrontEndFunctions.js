@@ -374,3 +374,10 @@ function go_back(url) {
     }
   }
 
+function message_from_url(url){
+    // Extract query parameters from URL string
+    const queryParams = new URL(url).searchParams;
+    /*const message = queryParams.get('message');
+    return message || '';*/
+}
+

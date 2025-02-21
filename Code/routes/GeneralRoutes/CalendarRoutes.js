@@ -30,7 +30,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       if(req.query.id){
         var company = await Company.findOne({ _id: req.query.id });
         if(company){
-          let nodes = await Node.find({ company: company._id , type: 6, type2: { $in: [61, 62] }, next: "-", status: 2 });
+          let nodes = await Node.find({ company: company._id , type: 6, type2: { $in: [61, 62,63] }, next: "-", status: 2 });
 
             nodes = await Promise.all(
               nodes.map(async (n) => {

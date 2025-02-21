@@ -201,9 +201,10 @@
               <select id="time_table_type_select" style="width: calc(100% - 10px);padding: 5px; border-radius: 5px;" class="my_select">
                 <option value=61>Work</option>
                 <option value=62>Leave</option>
+                <option value=63>Leave Request</option>
               </select>
               <label for="time_table_notes">Notes</label><br />
-              <div id="textarea_conatainer">
+              <div id="textarea_container">
                 <textarea class="dummy" placeholder="Notes..."></textarea>
               </div>
             </div>
@@ -230,6 +231,7 @@
       var calendar_spectrum = "-";
       const users = JSON.parse(`<%- JSON.stringify(users) %>`);
       const nodes = JSON.parse(`<%- JSON.stringify(nodes) %>`);
+      const loged_user = JSON.parse(`<%- JSON.stringify(user) %>`);
 
       if($("#status").val()==1){
         $("#status_label").html("Active")
@@ -401,6 +403,9 @@
                   if(n.type2==62){
                     type = 'leave'
                   }
+                  else if(n.type2==63){
+                    type = 'leave_req'
+                  }
                   var day_div = "<div class='day_line "+type+"' id='" + n._id + "'>" + "<div class=event_id style='display:none'>" + n.user._id + "</div>" + "<div>" + n.user.firstName + " " + n.user.lastName + "</div>" + "<div>" + (n.data.hour_start < 10 ? "0" : "") + n.data.hour_start + " : " + (n.data.minutes_start < 10 ? "0" : "") + n.data.minutes_start + " - " + (n.data.hour_end < 10 ? "0" : "") + n.data.hour_end + " : " + (n.data.minutes_end < 10 ? "0" : "") + n.data.minutes_end + "</div>";
                   if (n.text) {
                     day_div = day_div + "<div> Notes : <br>" + n.text + "</div>";
@@ -432,8 +437,10 @@
       $(".day_line").click(function (event) {
         event.stopPropagation();
         //$("#day_data_users").hide();
-        view_edit_event($(this).attr("id"), nodes, users);
-        $(".dummy").eq(1).hide();
+        if(loged_user.type =='accountant' || loged_user.companyOwner == 1){
+          view_edit_event($(this).attr("id"), nodes, users);
+          $(".dummy").eq(1).hide();
+        }
       });
 
       $("#time_table_hours_end").on("blur", function () {
@@ -540,17 +547,25 @@
 
 
       $(".day.now").click(function (event) {
-        
-        let user_id = $("#user_select").val();
-        $("#day_data_users").show();
+        //if(loged_user.type =='accountant' || loged_user.companyOwner == 1){
+          let user_id = $("#user_select").val();
+          $("#day_data_users").show();
 
-        // Generate the date string
-        let year = $("#selected_year").text();
-        let month = $("#selected_month").text().padStart(2, "0");
-        let day = $(this).attr("id").replace("add_event_for_", "").padStart(2, "0");
-        let date = `${year}-${month}-${day}`;
+          // Generate the date string
+          let year = $("#selected_year").text();
+          let month = $("#selected_month").text().padStart(2, "0");
+          let day = $(this).attr("id").replace("add_event_for_", "").padStart(2, "0");
+          let date = `${year}-${month}-${day}`;
 
-        new_event(date, user_id);
+          new_event(date, user_id);
+          if(loged_user.type == 'user'){
+            if(loged_user.companyOwner == 0){
+                $('#time_table_type_select option[value="61"]').remove();
+                $('#time_table_type_select option[value="62"]').remove();
+                $('#time_table_type_select').val(63);
+                $("#time_table_type").val(63);
+            }
+          }
       });
 
 

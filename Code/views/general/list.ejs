@@ -95,9 +95,9 @@
                                     <% } %>
 
                                     <td class="btn_column">
-                                        <div id="td_button_container">
-                                            <div><button class="btn2" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Delete</button></div>
-                                            <div><button class="btn3" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Disable</button></div>
+                                        <div class="td_button_container">
+                                            <button class="btn2" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Delete</button>
+                                            <button class="btn3" data-id="<%= list_item.data[0] %>" data-index="<%= index %>">Disable</button>
                                         </div>
                                     </td>
 
@@ -199,6 +199,10 @@
                 }
                 else if (searchfor == 'companies'){
                     $(".btn2").hide();
+                }
+                if (searchfor == 'transfers'){
+                    $(".btn3d").remove();
+                    
                 }
                 $("#searchfor").val(searchfor);
 

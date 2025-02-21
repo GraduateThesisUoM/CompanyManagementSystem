@@ -60,54 +60,57 @@
     transform: scale(1.2);
 }
 
-#td_button_container {
-    display: grid;
+.td_button_container {
+    /*display: grid;
     grid-template-columns: auto auto;
-    gap: 10px;
+    gap: 10px;*/
+    display: flex;
+    justify-content: space-around;
+    /*gap: 40px;*/
 }
 
-#td_button_container>div {
+/*.td_button_container>div {
     padding: 10px;
     transition: transform 0.2s;
-    /* Smooth transition for scaling */
-}
+    width: 100%;
+}*/
 
-#td_button_container>div>button {
+.td_button_container>button {
     border: none;
     padding: 5px;
     /* Increase padding for better appearance */
     cursor: pointer;
-    width: 100%;
+    width: 40%;
     /* Ensure buttons take full div width */
     transition: 0.35s;
     border-radius: 10px;
 }
 
-#td_button_container > div > button:not(:disabled):hover {
+.td_button_container  > button:not(:disabled):hover {
     transform: scale(1.1);
     /* Scale up the button on hover */
     box-shadow: 3px 3px 10px black;
 }
 
-#td_button_container>div>.btn2 {
+.td_button_container>.btn2 {
     background-color: rgb(255, 0, 0);
     color: white;
 }
 
-#td_button_container > div > .btn2:disabled {
+.td_button_container  > .btn2:disabled {
 background-color: rgba(255, 0, 0, 0.33);
 }
 
-#td_button_container>div>.btn3 {
+.td_button_container>.btn3 {
     background-color: rgb(71, 71, 71);
     color: white;
 }
-#td_button_container>div>.btn3:disabled {
+.td_button_container>.btn3:disabled {
     background-color: rgba(71, 71, 71, 0.33);
 
 }
 
-#td_button_container>div>.btn1 {
+.td_button_container>.btn1 {
     background-color: rgb(110, 152, 231);
     color: white;
 }

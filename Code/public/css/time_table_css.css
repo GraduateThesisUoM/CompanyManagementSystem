@@ -143,7 +143,7 @@
     outline: none; 
 }
 
-#textarea_conatainer{
+#textarea_container{
     background: rgba(255, 255, 255, 0.61);
     border-radius: 10px;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
@@ -290,6 +290,11 @@
     /*background-color: rgb(199, 199, 199) !important;*/
     background-color: rgba(62, 163, 34, 0.714) !important;
 }
+.day_line.leave_req{
+    /*background-color: rgb(199, 199, 199) !important;*/
+    background-color: rgba(226, 168, 9, 0.714) !important;
+}
+
 
 #filter_div{
     width: fit-content;

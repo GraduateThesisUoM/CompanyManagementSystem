@@ -4,17 +4,17 @@ const mongoose = require('mongoose');
 const DocumentSchema = new mongoose.Schema({
   company: { type: mongoose.Schema.Types.ObjectId, required: true  },
   sender: { type: String, required: true },
-  receiver: { type: String, required: true },
+  receiver: { type: String, required: false },
   type:{
     type: Number,
-    enum: [1,2],
-    //1=sale,2=buy
+    enum: [1,2,3],
+    //1=sale,2=buy,3=warehouse
     required: true
   },
   generalDiscount: { type: Number, required: true },
   series: { type: String, required: true },
   doc_num:{ type: Number, required: true },
-  retail_wholesale : {type: Number,enum: [0,1,2],default:2},
+  retail_wholesale : {type: Number,enum: [0,1,2,3],default:2},
   //0=nothing 1 = retail 2 = wholesale
   warehouse : { type: String , default:"-"},//warehouse ID
   sealed : {type: Number,enum: [0, 1],default: 0},

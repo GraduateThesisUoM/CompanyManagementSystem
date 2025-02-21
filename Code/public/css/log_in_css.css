@@ -15,7 +15,7 @@ input :focus{
     border: none;
 }
 
-.checkbox_conatainer label{
+.checkbox_container label{
     font-size: 1em;
     color: rgb(25, 25, 25);
 }

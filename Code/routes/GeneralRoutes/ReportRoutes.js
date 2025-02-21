@@ -35,25 +35,16 @@ router.post('/', Authentication.checkAuthenticated, async (req,res)=> {
   try{
     console.log("Post ReportRoutes.js")
 
-    var obj = await Node.findOne({company:req.user.company,status:2,next:"-"})
 
-    if(obj){//User
-      /*generalFunctions.createReport(
-        req.user._id,
-        obj.sender_id,
-        req.body.report_reason,
-        req.body.report_textarea);*/
-        generalFunctions.create_node({
-          company : obj.company,
-          sender_id: req.user._id,
-          receiver_id: obj.sender_id,
-          type: 7,//Report
-          type2: 7+req.body.report_reason,//Report
-          text : req.body.report_textarea
-        })
-    }
+    var report = generalFunctions.create_node({
+      company : req.user.company,
+      sender_id: req.user._id,
+      type: 7,//Report
+      type2: req.body.category,//Report
+      text : req.body.report_text
+    })
     
-    res.redirect("/");
+    res.redirect("/?message=report_submitted");
   }
   catch (err) {
     console.error('Error creating report:', err);

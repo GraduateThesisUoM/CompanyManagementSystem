@@ -107,7 +107,16 @@ const pages = {
   report :{
     url : "/report",
     file: routes.general+"ReportRoutes.js",
-    view : ""
+    view : function(type) { {
+      return views_folders.general+"report.ejs"
+    }}
+  },
+  transfer :{
+    url : "/transfer",
+    file: routes.user+"TransferRoutes.js",
+    view : function() { {
+      return views_folders.user+"transfer.ejs"
+    }}
   },
   profile_page :{
     url : "/profile-page",
@@ -175,6 +184,9 @@ const pages = {
         }
         else if (input === 'items') {
           return views_folders.general + "view_item.ejs";
+        }
+        else if (input === 'transfers') {
+          return views_folders.user + "view_transfer.ejs";
         }
       }
       // Fallback to default view

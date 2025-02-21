@@ -3,12 +3,6 @@
     justify-content: flex-start;
 }
 
-.conatainer{
-    margin: 30px;
-    padding: 30px;
-    border-radius: 25px;
-    box-shadow: -5px 5px 15px 0px black;
-}
 
 .create_form> .customer_div > select{
     width: 100px

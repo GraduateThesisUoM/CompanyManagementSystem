@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Transfer</title>
+        <!-- fontawesome for icons -->
+        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+        <link rel="stylesheet" href="my_select_css.css">
+        <link rel="stylesheet" href="buttons_css.css">
+        <link rel="stylesheet" href="table_css.css">
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <%- include('../partials/header'); %>
+    </head>
+    <style>
+        th, td {
+        width: 50%;
+        text-align: left;
+        padding: 8px;
+    }
+    </style>
+    <body>
+        <div class="has_sidebar">
+            <%- include('../partials/sidebar'); %>
+            <div>
+            <div class="asap-condensed-regular">
+                <h1>Transfer</h1>
+                <form action="/view/transfers" method="POST">
+                    <div class="glass_effect_2 container asap-condensed-regular">
+                        <div style="display: grid; grid-template-columns: 49% 49%; gap:2%">
+                            <div>
+                                <label for="from_w_select" class="my_label_1">From</label>
+                                <select id="from_w_select" class="my_select type1" name="from_select">
+                                    <option value="-">-</option>
+                                    <%for(w of locations){%>
+                                        <option value="<%=w._id%>"><%=w.name%></option>
+                                    <%}%>
+                                </select>
+                            </div>
+                            <div>
+                                <label for="to_w_select" class="my_label_1">To</label>
+                                <select id="to_w_select" class="my_select type1" name="to_select">
+                                    <option value="-">-</option>
+                                    <%for(w of locations){%>
+                                        <option value="<%=w._id%>"><%=w.name%></option>
+                                    <%}%>
+
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="table_container" style="margin-left: 40px;width: calc(100% - 40px);">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody id="doc_tbody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <input type="number" id="count" name="count" value="0" style="display: none;">
+                    <button type="submit" style="width: 50%;margin-top: 40px;margin-left: 25%;" class="button_3">Save</button>
+                </form>
+                
+            </div>
+        </div>
+
+    </div>
+</div>
+    </body>
+    <script>
+        var count = 0;
+        var items = JSON.parse(`<%- JSON.stringify(items) %>`);
+        var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
+        
+        $("#from_w_select").val(doc.warehouse);
+        $("#to_w_select").val(doc.receiver);
+
+        for( row of doc.invoiceData){
+            create_row();
+            var index = count;
+            $("#item_select_" + index).val(row.lineItem);
+            $("input[name='item_q_" + index + "']").val(row.quantity);
+        }
+
+        function create_row(){
+            count = count + 1;
+            var options = items.map(item => `<option value="${item._id}">${item.title}</option>`).join('');
+            var row =
+            `<tr class="glass_effect_2" id="row_${count}">
+                <th>
+                    <select id="item_select_${count}" class='item_select' name="item_select_${count}">
+                        <option value="-">-</option>
+                        ${options}
+                    </select>
+                </th>
+                <th>
+                    <input type="number" name="item_q_${count}" value="0" min="0" step="1">
+                </th>
+            </tr>`;
+            $("#doc_tbody").append(row);
+            $("#count").val(count)
+        }
+
+
+        $(document).ready(function(){
+            create_row();
+
+            $(document).on("change", ".item_select", function(){
+                // Αν η επιλογή είναι "-", αφαίρεσε τη σειρά
+                if($(this).val() == "-"){
+                    var index = $(this).attr('id').split('_')[2];
+                    $('#row_' + index).remove();
+                } else {
+                    create_row();
+                }
+            });
+        });
+
+
+    </script>
+
+</html>

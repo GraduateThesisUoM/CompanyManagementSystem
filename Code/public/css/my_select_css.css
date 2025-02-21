@@ -6,7 +6,7 @@
 }
 
 .my_select.type1{
-    width: calc(100%-10px);
+    width: calc(100% - 10px);
     padding: 5px;
     border-radius: 5px;
     font-size: 1.5em;

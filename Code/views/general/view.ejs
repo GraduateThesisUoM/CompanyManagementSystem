@@ -222,7 +222,7 @@
                 <% } %>
                 
               </div>
-            <% }else{ %> <lable class="my_label_1" for="<%= title %>"><%= title %></lable>
+            <% }else{ %> <label class="my_label_1" for="<%= title %>"><%= title %></label>
             <input name="input<%= index %>" id="<%= title %>" class="input_type_1" value="<%= data[index] %>" />
             <% }%>
           </div>
@@ -434,6 +434,7 @@
         $("#btn1").hide();
         $("#btn2").hide();
         $("#btn3").hide();
+        $("#status_div").hide();
       }
       else if (queryParams.type == "reviews") {
         $("#btn1").hide();

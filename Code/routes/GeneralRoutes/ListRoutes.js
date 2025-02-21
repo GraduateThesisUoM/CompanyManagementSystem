@@ -294,6 +294,22 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Rating",
           "Comments"
         ]
+      }else if(req.query.searchfor == "transfers"){
+        var series = await Series.findOne({company:company,type:3});
+        var list_items = await Document.find({company:company,type:3,series:series._id});
+        
+        list_items = list_items.map((doc) => ({
+          data: [
+            doc._id,
+            generalFunctions.formatDate(doc.registrationDate),
+            series.acronym + "-" + doc.doc_num,
+          ],
+        }));
+        column_titles = [
+          "ID",
+          "Date",
+          "Doc",
+        ]
       }
     
 

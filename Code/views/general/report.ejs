@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Report</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="create_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+        <link rel="stylesheet" href="Switch_css.css">
+        <link rel="stylesheet" href="Lock_css.css">
+        <link rel="stylesheet" href="buttons_css.css">
+        <link rel="stylesheet" href="textarea_css.css">
+        <link rel="stylesheet" href="my_select_css.css">
+        
+
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+
+        <!--Header-->
+        <%- include('../partials/header'); %>
+    </head>
+    <body>
+        <div class="has_sidebar ">
+            <%- include('../partials/sidebar'); %>
+            <div>
+                <h1 class="asap-condensed-extralight">Report</h1>
+
+                <form action="/report" method="POST" class="glass_effect_2 container asap-condensed-regular">
+                    <label class="my_label_1">Category</label>
+                    <select class="my_select type1" name="category" style="margin-bottom: 30px;">
+                        <option value="71">Harassment</option>
+                        <option value="72">Imposter</option>
+                        <option value="73">Fraud/Scam/Malpractice</option>
+                        <option value="74">Technical Issue</option>
+                        <option value="75">Other</option>
+                    </select>
+
+                    <label class="my_label_1">Report That :</label>
+                    <div class="textarea_container">
+                        <textarea name="report_text"></textarea>
+                    </div>
+                    <button id="my_submit_btn" class="submit_btn button_4" type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+    </body>
+    <script>
+    $(document).ready(function(){
+        const queryString = new URL(window.location.href).search;
+        const params = new URLSearchParams(queryString);
+
+    });
+    
+    </script>
+</html>

@@ -366,22 +366,20 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             }
           } else if (type == "reports") {
             obj = await Node.findOne({ _id: id });
-            const c = await Company.findOne({_id:obj.company});
+            obj.status = 1;//viewed
+            await obj.save();
             const s = await User.findOne({_id:obj.sender_id})
-            const r = await User.findOne({_id:obj.receiver_id})
-            data.data = [c.name,
-              generalFunctions.formatDate(obj.registrationDate),
+            data.data = [
               s.firstName + " " + s.lastName,
-              r.firstName + " " + r.lastName,
               generalFunctions.get_type2(obj.type2),
               obj.text
 
             ];
             data.titles = [
-              "Company Name","Reg Date", "Sender",
-              "Recever", "Category","Text"
+              "Sender",
+               "Category","Text"
             ];
-            data.type = [0, 0, 0,0,0,9];
+            data.type = [0, 0,9];
 
             secondary_data = {
               nodes: nodes,
@@ -399,6 +397,39 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             data.type = [13,13,13,16,13];
 
           }
+          else if (type == "transfers"){
+            obj = await Document.findOne({ _id: id });
+            var series = await Series.findOne({my_id:'777',status:1})
+
+
+            /*data.data = [comp.name, prsn1.lastName+" "+prsn1.lastName, prsn2.lastName+" "+prsn2.lastName, obj.rating, obj.text];
+            data.titles = ["Company","Reviewer","Reviewed", "Rating", "Text"];
+            data.type = [13,13,13,16,13];*/
+
+            const warehouses = await Warehouse.find({company:req.user.company,status:1});
+            const items = await Item.find({company:req.user.company,status:1});
+            const persons = await Person.find({company:req.user.company,status:1})
+            var location_to = [];
+            for( w of warehouses){
+              location_to.push({
+                _id:w._id,
+                name:w.title
+              });
+            }
+            for( p of persons){
+              location_to.push({
+                _id:p._id,
+                name:p.lastName + " " + p.firstName
+              });
+            }
+            var data = {
+              doc : obj,
+              user : req.user,
+              locations:location_to,
+              items:items,
+            }
+
+          }
           
         } else {
           console.log("ERROR");
@@ -410,6 +441,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       data.secondary_data = secondary_data;
       data.registrationDate = generalFunctions.formatDateTime(obj.registrationDate);
       data.status = obj.status;
+      
       if (type && id) {
         if (type == "docs") {
           data.registrationDate = generalFunctions.formatDate(obj.registrationDate);
@@ -423,6 +455,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         }
         else if (type == "items") {
           res.render(path_constants.pages.view.view('items'), data);
+        }
+        else if (type == "transfers") {
+          res.render(path_constants.pages.view.view('transfers'), data);
         }
         else{
           res.render(path_constants.pages.view.view(), data);
@@ -466,6 +501,16 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       return res.redirect(`/list?searchfor=${obj_type}`);
       //return res.redirect(`/view?type=${obj_type}&id=${obj_id}`);
     }
+
+  } catch (e) {
+    console.error(e);
+    return res.redirect("/error?origin_page=/&error=" + encodeURIComponent(e.message));
+  }
+});
+
+router.post("/transfers", Authentication.checkAuthenticated, async (req, res) => {
+  try {
+    return res.redirect(`/list?searchfor=transfers`);
 
   } catch (e) {
     console.error(e);
