@@ -385,8 +385,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               nodes: nodes,
               users: await Client.find({ company: id, status: 1 }),
             };
-          }
-          else if (type == "reviews"){
+          } else if (type == "reviews"){
             obj = await Review.findOne({ _id: id });
             let comp = await Company.findOne({ _id: obj.company });
             let prsn1 = await User.findOne({ _id: obj.reviewer_id });
@@ -401,10 +400,52 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             obj = await Document.findOne({ _id: id });
             var series = await Series.findOne({my_id:'777',status:1})
 
-
-            /*data.data = [comp.name, prsn1.lastName+" "+prsn1.lastName, prsn2.lastName+" "+prsn2.lastName, obj.rating, obj.text];
-            data.titles = ["Company","Reviewer","Reviewed", "Rating", "Text"];
-            data.type = [13,13,13,16,13];*/
+            var history = [];
+            var d = obj;
+            var p;
+      
+            while(true){
+              p = await Document.findOne({next: d._id})
+              if(p){
+                d = p;
+              }
+              else{
+                break;
+              }
+            }
+            //history.push(d)
+            var s = await Series.findOne({_id: d.series})
+            let u = await User.findOne({_id: d.sender})
+            history.push({
+              _id:d._id,
+              name: s.acronym+"-"+d.doc_num,
+              registrationDate : generalFunctions.formatDateTime(d.registrationDate),
+              user : u.lastName+" "+u.firstName
+            })
+      
+            while(true){
+              if(d.next != '-'){
+                p = await Document.findOne({_id: d.next})
+                if(p){
+                  d=p
+                  //history.push(d)
+                  s = await Series.findOne({_id: d.series})
+                  let u = await User.findOne({_id: d.sender})
+                  history.push({
+                    _id:d._id,
+                    name: s.acronym+"-"+d.doc_num,
+                    registrationDate : generalFunctions.formatDateTime(d.registrationDate),
+                    user : u.lastName+" "+u.firstName
+                  })
+                }
+                else{
+                  break;
+                }
+              }
+              else{
+                break;
+              }              
+            }
 
             const warehouses = await Warehouse.find({company:req.user.company,status:1});
             const items = await Item.find({company:req.user.company,status:1});
@@ -413,7 +454,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             for( w of warehouses){
               location_to.push({
                 _id:w._id,
-                name:w.title
+                name:w.title,
               });
             }
             for( p of persons){
@@ -423,10 +464,14 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               });
             }
             var data = {
+              name : series.acronym+"-"+obj.doc_num,
+              reg_date : generalFunctions.formatDate(obj.registrationDate),
               doc : obj,
               user : req.user,
               locations:location_to,
               items:items,
+              history : history
+
             }
 
           }
@@ -510,7 +555,42 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 
 router.post("/transfers", Authentication.checkAuthenticated, async (req, res) => {
   try {
-    return res.redirect(`/list?searchfor=transfers`);
+
+    console.log("TransferRoutes Post");
+    const lines_of_doc = [];
+    for (let i = 0; i < req.body.count; i++) {
+      if (req.body[`item_select_${i}`] !== undefined) {
+        lines_of_doc.push({ 
+          quantity : req.body[`item_q_${i}`],
+          lineItem : req.body[`item_select_${i}`],
+          tax : 0,
+          discount : 0,
+          price_of_unit : 0  
+        });
+      }
+    }
+    console.log(lines_of_doc);
+    var series = await Series.findOne({my_id:'777',status:1})
+    var doc = await generalFunctions.create_doc( {
+      company: req.user.company,
+      sender: req.user._id,
+      receiver: req.body.to_select,
+      series: series._id,
+      type: 3,
+      retail_wholesale: 3,
+      warehouse: req.body.from_select,
+      generalDiscount: 0,
+      invoiceData: lines_of_doc
+    })
+
+    var original_doc = await Document.findOne({ _id:req.body.id });
+
+    original_doc.next = doc._id;
+    original_doc.edited = 1;
+
+    await original_doc.save();
+    
+    return res.redirect(`/view?type=transfers&id=${doc._id}`);
 
   } catch (e) {
     console.error(e);

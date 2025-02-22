@@ -540,8 +540,42 @@ async function item_get_inventory(data){
     }
   }
 
+
+  get_item_inventory_from_transfers({
+    item_id : data.id,
+    company : data.company
+  })
+
   return item_list[0].count;
 
+}
+
+async function get_item_inventory_from_transfers(data){
+  console.log("get_item_inventory_from_transfers");
+  /*
+    data = item_id,company
+  */
+  var series = await Series.findOne({
+    company:data.company,
+    type: 3,
+    my_id: path_constants.my_constants.transfer_series_my_id,
+  });
+
+  var item = await Item.findOne({_id : data.item_id, company: data.company});
+
+  var docs = await Document.find({series: series._id, company: data.company});
+  var doc_of_interest = [];
+  for( d of docs){
+    for( key in d.invoiceData){
+      if(d.invoiceData[key].lineItem == data.item_id){
+        doc_of_interest.push(d);
+        break;
+      }
+    }
+  }
+  console.log('-------------');
+  console.log(doc_of_interest);
+  console.log('-------------');
 }
 
 async function drop_collection(collection_name) {

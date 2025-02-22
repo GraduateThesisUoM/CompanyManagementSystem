@@ -296,7 +296,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         ]
       }else if(req.query.searchfor == "transfers"){
         var series = await Series.findOne({company:company,type:3});
-        var list_items = await Document.find({company:company,type:3,series:series._id});
+        var list_items = await Document.find({company:company,type:3,series:series._id,edited:0});
         
         list_items = list_items.map((doc) => ({
           data: [

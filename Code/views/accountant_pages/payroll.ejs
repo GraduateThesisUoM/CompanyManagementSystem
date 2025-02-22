@@ -67,7 +67,7 @@
     <body>
         <div class="has_sidebar">
             <%- include('../partials/sidebar'); %>
-            <div>
+            <div class="has_sidebar_main_content">
                 <div class="asap-condensed-regular">
                     <h1>PayRoll</h1>
                     <% if(user.type =='user'){%>
@@ -78,7 +78,7 @@
                         </div>
                         <%}%>
                             
-                    <div class=" container" id="filter_container">
+                    <div class=" " id="filter_container">
                         <div>
                             <div style="display: flex; justify-content:space-between;gap:5%;margin-bottom: 50px;" class="container glass_effect_2">
                                 <div style="width: 100%;" >

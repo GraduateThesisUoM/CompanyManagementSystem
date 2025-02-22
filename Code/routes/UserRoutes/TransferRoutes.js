@@ -45,6 +45,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           name:p.lastName + " " + p.firstName
         });
       }
+
+      
+
       var data = {
         user : req.user,
         locations:location_to,
@@ -77,7 +80,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       }
     }
     console.log(lines_of_doc);
-    var series = await Series.findOne({my_id:'777',status:1})
+    var series = await Series.findOne({my_id:'777',company:req.user.company});
     var doc = await generalFunctions.create_doc( {
       company: req.user.company,
       sender: req.user._id,
@@ -89,18 +92,8 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       generalDiscount: 0,
       invoiceData: lines_of_doc
     })
-    /*
-    company: data.company,
-      sender: data.sender,
-      receiver: data.receiver,
-      series: data.series,
-      type: data.type,
-      doc_num: series.count,
-      retail_wholesale:data.retail_wholesale,
-      warehouse : data.warehouse,
-      generalDiscount: data.generalDiscount,
-      invoiceData: data.invoiceData
-       */
+
+    
     return res.redirect(`/view?type=transfers&id=${doc._id}`);
 
   } catch (e) {

@@ -24,7 +24,7 @@
   <body>
     <div class="has_sidebar asap-condensed-extralight">
       <%- include('../partials/sidebar'); %>
-      <div>
+      <div class="has_sidebar_main_content">
         <h1 id="list_header"><%=doc_name%></h1>
         <form action="/edit-doc" method="POST" id="create_doc_form">
           <input name="doc_id" value="<%=doc._id%>" style="display: none;">

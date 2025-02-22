@@ -9,16 +9,19 @@
         <%- include('../partials/header'); %>
     </head>
     <body>
-        <h1>Διαγραφή Λογαριασμού</h1>
-        <form class="display_block" action="/delete-account" method="POST" >
-            <label for="password">Κωδικός</label>
-            <input type="password" id="password" name="password" placeholder="Κωδικός" required>
-            <label for="confirmPassword">Εμφάνηση Κωδικού</label><input type="checkbox" id="showpasswordcheckbox">
-            <button style="display: none;" id="submit_btn" type="submit"></button>
-        </form>
-        <button id="delete_btn">Διαγραφή</button>
+        <div class="has_sidebar ">
+            <%- include('../partials/sidebar'); %>
+            <div class="has_sidebar_main_content">
+                <h1>Διαγραφή Λογαριασμού</h1>
+                <form class="display_block" action="/delete-account" method="POST" >
+                    <label for="password">Κωδικός</label>
+                    <input type="password" id="password" name="password" placeholder="Κωδικός" required>
+                    <label for="confirmPassword">Εμφάνηση Κωδικού</label><input type="checkbox" id="showpasswordcheckbox">
+                    <button style="display: none;" id="submit_btn" type="submit"></button>
+                </form>
+                <button id="delete_btn">Διαγραφή</button>
+            <div>
     </body>
-    <%- include('../partials/footer'); %>
     <script>
         $(document).ready(function(){
             $("#delete_btn").click(function(){

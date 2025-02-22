@@ -15,52 +15,52 @@
     <div class="has_sidebar">
         <%- include('../partials/sidebar'); %>
 
-        <div>
-        <h1>DataBase</h1>
-        <form style="display: none;" action="/database" method="POST" id="db_form">
-            <input name="db_post_input" id="db_post_input">
-            <input name="selected_companies" id="selected_companies">
-        </form>
-        <div style="width: 100%;display:flex;flex-direction:row;justify-content:space-evenly;">
-            <!--button id="clear_db" class="db_btn">Clear DB</button><br-->
-            <button id="import" class="db_btn button_1" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
-                <img width="100" height="100" src="https://img.icons8.com/carbon-copy/100/FFFFFF/export.png" alt="export"/>
-                Export Data
-            </button>
-            <button id="import" class="db_btn button_3" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
-                <img width="100" height="100" src="https://img.icons8.com/carbon-copy/100/FFFFFF/import.png" alt="import"/>
-                Import Data
-            </button>
-        </div>
-        <div class="glass_effect_2 box_shadow_1" style="margin-right: 20px;margin-top: 20px;display: grid;grid-template-columns: 50% 50%;padding: 10px;border-radius: 15px;">
-            <div style="display: flex;">
-                <div class="switch">
-                    <div class="back_text">
-                      <div></div>
-                      <div></div>
-                    </div>
-                    <div class="slider">
-                      <button class="slider-button active series_transforms_check" id="all"></button>
-                    </div>
-                </div>
-                  <label class="my_label_1">All</label>
+        <div class="has_sidebar_main_content">
+            <h1>DataBase</h1>
+            <form style="display: none;" action="/database" method="POST" id="db_form">
+                <input name="db_post_input" id="db_post_input">
+                <input name="selected_companies" id="selected_companies">
+            </form>
+            <div style="width: 100%;display:flex;flex-direction:row;justify-content:space-evenly;">
+                <!--button id="clear_db" class="db_btn">Clear DB</button><br-->
+                <button id="import" class="db_btn button_1" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                    <img width="100" height="100" src="https://img.icons8.com/carbon-copy/100/FFFFFF/export.png" alt="export"/>
+                    Export Data
+                </button>
+                <button id="import" class="db_btn button_3" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                    <img width="100" height="100" src="https://img.icons8.com/carbon-copy/100/FFFFFF/import.png" alt="import"/>
+                    Import Data
+                </button>
             </div>
-            <%for(c of companies){%>
+            <div class="glass_effect_2 box_shadow_1" style="margin-right: 25px;margin-left: 25px;margin-top: 20px;display: grid;grid-template-columns: 50% 50%;padding: 10px;border-radius: 15px;">
                 <div style="display: flex;">
                     <div class="switch">
                         <div class="back_text">
-                          <div></div>
-                          <div></div>
+                        <div></div>
+                        <div></div>
                         </div>
                         <div class="slider">
-                          <button class="slider-button slider_comp active series_transforms_check" id="<%= c._id%>"></button>
+                        <button class="slider-button active series_transforms_check" id="all"></button>
                         </div>
                     </div>
-                      <label class="my_label_1"><%=c.name%></label>
+                    <label class="my_label_1">All</label>
                 </div>
-            <%}%>
+                <%for(c of companies){%>
+                    <div style="display: flex;">
+                        <div class="switch">
+                            <div class="back_text">
+                            <div></div>
+                            <div></div>
+                            </div>
+                            <div class="slider">
+                            <button class="slider-button slider_comp active series_transforms_check" id="<%= c._id%>"></button>
+                            </div>
+                        </div>
+                        <label class="my_label_1"><%=c.name%></label>
+                    </div>
+                <%}%>
+            </div>
         </div>
-    </div>
 
     </div>
     <script>

@@ -12,6 +12,8 @@
         <link rel="stylesheet" href="my_select_css.css">
         <link rel="stylesheet" href="buttons_css.css">
         <link rel="stylesheet" href="table_css.css">
+        <link rel="stylesheet" href="create_doc_css.css" />
+        <link rel="stylesheet" href="my_scrollbar_css.css" />
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,13 +34,16 @@
     <body>
         <div class="has_sidebar">
             <%- include('../partials/sidebar'); %>
-            <div>
+            <div  class="has_sidebar_main_content">
             <div class="asap-condensed-regular">
                 <h1>Transfer</h1>
                 <form action="/view/transfers" method="POST">
+                    <input type="text" name="id" value="<%=doc._id%>" style="display: none;">
                     <div class="glass_effect_2 container asap-condensed-regular">
                         <div style="display: grid; grid-template-columns: 49% 49%; gap:2%">
                             <div>
+                                <label style="width: 100%;" class="my_label_1">Doc : <%=name%></label><br>
+                                
                                 <label for="from_w_select" class="my_label_1">From</label>
                                 <select id="from_w_select" class="my_select type1" name="from_select">
                                     <option value="-">-</option>
@@ -48,6 +53,8 @@
                                 </select>
                             </div>
                             <div>
+                                <label style="width: 100%;" class="my_label_1">Reg Date : <%=reg_date%></label><br>
+
                                 <label for="to_w_select" class="my_label_1">To</label>
                                 <select id="to_w_select" class="my_select type1" name="to_select">
                                     <option value="-">-</option>
@@ -74,7 +81,17 @@
                     <input type="number" id="count" name="count" value="0" style="display: none;">
                     <button type="submit" style="width: 50%;margin-top: 40px;margin-left: 25%;" class="button_3">Save</button>
                 </form>
-                
+                <div id = history_container class="my_scrollbar">
+                    <% for (h of history){%>
+                      <div class="doc_history_point">
+                        <div class="history_container_reg_date"><%=h.registrationDate%></div>
+                        <div id="<%=h._id%>" class="doc_history_point_doc_data">
+                          <div><%=h.name%></div>
+                          <div><%=h.user%></div>
+                        </div>
+                      </div>
+                    <%}%>
+                  </div>
             </div>
         </div>
 
@@ -85,6 +102,8 @@
         var count = 0;
         var items = JSON.parse(`<%- JSON.stringify(items) %>`);
         var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
+        const params = new URLSearchParams(window.location.search);
+
         
         $("#from_w_select").val(doc.warehouse);
         $("#to_w_select").val(doc.receiver);
@@ -120,7 +139,6 @@
             create_row();
 
             $(document).on("change", ".item_select", function(){
-                // Αν η επιλογή είναι "-", αφαίρεσε τη σειρά
                 if($(this).val() == "-"){
                     var index = $(this).attr('id').split('_')[2];
                     $('#row_' + index).remove();
@@ -128,6 +146,32 @@
                     create_row();
                 }
             });
+
+            $(".doc_history_point_doc_data").each(function () {
+                const parentElement = $(this).parent();
+                // Check if the current element's ID matches the target doc._id
+                if ($(this).attr("id") === doc._id) {
+                // Add the desired class to the parent
+                $(this).addClass("glass_effect_2");
+                parentElement.addClass("current_doc");
+
+                // Scroll to center the current document
+                $("#history_container")[0].scrollTo({
+                    left:
+                    this.offsetLeft -
+                    $("#history_container").width() / 2 +
+                    $(this).outerWidth() / 2,
+                    behavior: "smooth",
+                });
+                } else {
+                    // Add the default class to other parents
+                    $(this).addClass("glass_effect_1");
+                }
+            });
+
+            $('.doc_history_point_doc_data').click(function(event){
+                window.location = '/view?type=transfers&id='+$(this).attr('id')+'&type2=3'
+            })
         });
 
 

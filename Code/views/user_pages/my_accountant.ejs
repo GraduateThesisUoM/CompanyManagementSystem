@@ -1,46 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>My Accountant</title>
-        <!-- fontawesome for icons -->
-        <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
-        <!--ajax-->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-        <!--CSS-->
-        <link rel="stylesheet" href="general_css.css">
-        <link rel="stylesheet" href="my_accountant_css.css">
-        <link rel="stylesheet" href="fonts_css.css">
-        <link rel="stylesheet" href="table_css.css">
-        <link rel="stylesheet" href="buttons_css.css">
-        <link rel="stylesheet" href="textarea_css.css">
 
-        <!--Fonts-->
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+<head>
+    <title>My Accountant</title>
+    <!-- fontawesome for icons -->
+    <script src="https://kit.fontawesome.com/d2c306d566.js" crossorigin="anonymous"></script>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css">
+    <link rel="stylesheet" href="my_accountant_css.css">
+    <link rel="stylesheet" href="fonts_css.css">
+    <link rel="stylesheet" href="table_css.css">
+    <link rel="stylesheet" href="buttons_css.css">
+    <link rel="stylesheet" href="textarea_css.css">
 
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <%- include('../partials/header'); %>
-    </head>
-    <body>
-        <div class="has_sidebar">
-            <%- include('../partials/sidebar'); %>
-            <div>
-            <div class="asap-condensed-regular">
+    <!--Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('../partials/header'); %>
+</head>
+
+<body>
+    <div class="has_sidebar">
+        <%- include('../partials/sidebar'); %>
+        <div class="has_sidebar_main_content">
+            <div class="asap-condensed-regular" style="width:90%">
                 <h1>My Accountant</h1>
                 <div class="glass_effect_2 container" id="my_accountant_main_container">
                     <p>
-                        Accountant : <%= accountant.firstName %> <%= accountant.lastName %><br>
-                        Email : <%= accountant.email %>
+                        Accountant : <%= accountant.firstName %>
+                            <%= accountant.lastName %><br>
+                                Email : <%= accountant.email %>
                     </p>
                     <div>
                         <form class="rating_form" action="/my-accountant-rate" method="POST">
                             <h2>Rating</h2>
                             <div class="my_accountant_form_div">
-                                <%for (var i = 0; i < review.rating; i++) {%>
-                                <button type="button" class="star_btn star_selected"><i class="fa-solid fa-star"></i></button>
-                                <%}for (var i = review.rating; i < 5; i++) {%>
+                                <%for (var i=0; i < review.rating; i++) {%>
+                                    <button type="button" class="star_btn star_selected"><i class="fa-solid fa-star"></i></button>
+                                <%}
+                                for (var i=review.rating; i < 5; i++) {%>
                                     <button type="button" class="star_btn"><i class="fa-solid fa-star"></i></button>
                                 <%}%>
                             </div>
@@ -52,181 +56,195 @@
                             <button type="submit">Submit</button>
                         </form>
                         <form action="/my-accountant-requests" method="POST" id="send_request_form">
-                                <h2>New Request</h2>
-                                <div id="req_data" class="my_accountant_form_div">
-                                    <div id="request_type_div">
-                                        <label for="request_type">Type : </label>
-                                        <select name = 'request_type' id = 'request_type'>
-                                            <option value="31">General</option>
-                                            <option value="32">Payroll</option>
-                                            <option value="33">Τimetable</option>
-                                            <option value="34">Hire/fire</option>
-                                        </select>
-                                    </div>
-                                    <div>
-                                        <label for="request_title">Title : </label>
-                                        <input placeholder="Tilte" id="request_title" name="request_title">
-                                    </div>
-            
-                                    <div>
-                                        <label for="request_due_date">Due Date : </label>
-                                        <input type="date" placeholder="Due Date" id="request_due_date" name="request_due_date">
-                                    </div>
+                            <h2>New Request</h2>
+                            <div id="req_data" class="my_accountant_form_div">
+                                <div id="request_type_div">
+                                    <label for="request_type">Type : </label>
+                                    <select name='request_type' id='request_type'>
+                                        <option value="31">General</option>
+                                        <option value="32">Payroll</option>
+                                        <option value="33">Τimetable</option>
+                                        <option value="34">Hire/fire</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="request_title">Title : </label>
+                                    <input placeholder="Title" id="request_title" name="request_title">
                                 </div>
 
-                                <div class="textarea_container"><textarea class="mytextarea" id='request_text' name='request_text'></textarea></div>
-                                <br>
-                                <button id="submit_from_request_btn" type="button">Submit</button>
+                                <div>
+                                    <label for="request_due_date">Due Date : </label>
+                                    <input type="date" placeholder="Due Date" id="request_due_date"
+                                        name="request_due_date">
+                                </div>
+                            </div>
+
+                            <div class="textarea_container"><textarea class="mytextarea" id='request_text'
+                                    name='request_text'></textarea></div>
+                            <br>
+                            <button id="submit_from_request_btn" type="button">Submit</button>
                         </form>
                     </div>
                 </div>
             </div>
-                
-        <div class ='requests asap-condensed-regular'>
-            <h2>Request</h2>
-            <div id="my_requests_div">
-                <div class="table_container">
-                    <table>
-                        <thead>
-                            <tr> <!-- This is a table row -->
-                                <th>Type</th> <!-- Table header cell -->
-                                <th>Title</th>
-                                <th>Registration Date</th>
-                                <th>Due Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <%for (var i of nodes) {%>
-                                <tr class="glass_effect_2 go_to_list" id="<%=i._id%>">
-                                    <th><%=i.type%></th>
-                                    <th><%=i.title%></th>
-                                    <th><%=i.registrationDate%></th>
-                                    <th><%=i.due_date%></th>
-                                    <th><%=i.status%></th>
+
+            <div class='requests asap-condensed-regular'>
+                <h2>Request</h2>
+                <div id="my_requests_div">
+                    <div class="table_container">
+                        <table>
+                            <thead>
+                                <tr> <!-- This is a table row -->
+                                    <th>Type</th> <!-- Table header cell -->
+                                    <th>Title</th>
+                                    <th>Registration Date</th>
+                                    <th>Due Date</th>
+                                    <th>Status</th>
                                 </tr>
-                            <%}%>
-                            <tr id="more_btn" class="glass_effect_2">
-                                <th>More..</th>
-                                <th> </th>
-                                <th> </th>
-                                <th> </th>
-                                <th> </th>
-                            </tr>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                                <%for (var i of nodes) {%>
+                                    <tr class="glass_effect_2 go_to_list" id="<%=i._id%>">
+                                        <th>
+                                            <%=i.type%>
+                                        </th>
+                                        <th>
+                                            <%=i.title%>
+                                        </th>
+                                        <th>
+                                            <%=i.registrationDate%>
+                                        </th>
+                                        <th>
+                                            <%=i.due_date%>
+                                        </th>
+                                        <th>
+                                            <%=i.status%>
+                                        </th>
+                                    </tr>
+                                    <%}%>
+                                        <tr id="more_btn" class="glass_effect_2">
+                                            <th>More..</th>
+                                            <th> </th>
+                                            <th> </th>
+                                            <th> </th>
+                                            <th> </th>
+                                        </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <form style="display: none;" action="/my-accountant-delete-request" method="POST"
+                        id="delete_request_from">
+                        <input name="request_id" id="request_id">
+                        <button id="submit_from_delete_request_btn" type="submit">Submit</button>
+                    </form>
                 </div>
-                
-                <form style="display: none;" action="/my-accountant-delete-request" method="POST" id="delete_request_from">
-                    <input name="request_id" id="request_id">
-                    <button id="submit_from_delete_request_btn" type="submit">Submit</button>
+            </div>
+
+            <div id="new_accountan_div">
+                <div>
+                    <button type="button" class="button_1" onclick="window.location = '/pick-accountant'">Προβολή
+                        Λογιστών</button>
+                </div>
+
+                <form id="remove_accountant_form" action="/my-accountant" method="POST">
+                    <!--input type="hidden" name="accountant_id" value="<%=accountant._id%>"-->
+                    <!--button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button-->
+                    <button type="button" class="button_2" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
                 </form>
             </div>
-        </div>
-        
-        <div id="new_accountan_div">
-            <div>
-                <button type="button" class="button_1" onclick="window.location = '/pick-accountant'">Προβολή Λογιστών</button>
-            </div>
-            
-            <form id="remove_accountant_form" action="/my-accountant"  method="POST">
-                <!--input type="hidden" name="accountant_id" value="<%=accountant._id%>"-->
-                <!--button type="submit" style="display: none;" id="remove_accountant_sbt">Submit</button-->
-                <button type="button" class="button_2" id="remove_accountant_btn">Αφαίρεση Λογιστή</button>
-            </form>
-        </div>
+
+            <!--/div-->
 
         </div>
-
     </div>
-</div>
-    </body>
-    <script>
-        const visible_request_num = 5;
-        var request_table_expanded = false;
-        const timestamp_options = {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit'
-        };
+</body>
+<script>
+    const visible_request_num = 5;
+    var request_table_expanded = false;
+    const timestamp_options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    };
 
-       $(document).ready(function(){
+    $(document).ready(function () {
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.has('message')) {
-            if(urlParams.get('message')=="rating_submitted_successfully"){
+            if (urlParams.get('message') == "rating_submitted_successfully") {
                 alert("Η αξιολόγηση καταχωρήθηκε με επιτυχία");
             }
 
         }
         if (urlParams.has('refresh')) {
 
-            if(urlParams.get('refresh')=="true"){
+            if (urlParams.get('refresh') == "true") {
                 window.location = "/my-accountant"
             }
         }
 
-        $("#remove_accountant_btn").click(function(){
+        $("#remove_accountant_btn").click(function () {
             if (confirm("Αν απολύσετε τον λογιστή σας όλα τα εκκρεμή αιτήματα θα ακυρωθούν.") == true) {
 
                 $("#remove_accountant_form").submit();
             }
         });
 
-        $(".star_btn").click(function(){
-            if($(this).hasClass("star_selected") && $(this).index() == 0){
+        $(".star_btn").click(function () {
+            if ($(this).hasClass("star_selected") && $(this).index() == 0) {
                 $("#rating_input").val(0);
-                for(let s of $(".star_btn") ){
+                for (let s of $(".star_btn")) {
                     $(s).removeClass("star_selected");
                 }
             }
-            else{
-                $("#rating_input").val($(this).index()+1);
-            
-                for(let s of $(".star_btn") ){
-                    if($(s).index() <= $(this).index()){
+            else {
+                $("#rating_input").val($(this).index() + 1);
+
+                for (let s of $(".star_btn")) {
+                    if ($(s).index() <= $(this).index()) {
                         $(s).addClass("star_selected");
                     }
-                    else{
+                    else {
                         $(s).removeClass("star_selected");
                     }
                 }
             }
         });
 
-            
-        $("#more_btn").click(function(){
+
+        $("#more_btn").click(function () {
             window.location = "/list?searchfor=requests";
         });
-        
 
-        $(".go_to_list").click(function(){
-            
+
+        $(".go_to_list").click(function () {
+
             window.location = '/view?type=nodes&id=' + $(this).attr("id") + '&type2=null';
         });
 
-        $("#submit_from_request_btn").click(function() {
+        $("#submit_from_request_btn").click(function () {
             let today = new Date();
             // Format today's date as DD-MM-YYYY
             today = today.getFullYear() + '-' +
-            (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
-             today.getDate().toString().padStart(2, '0') ;
+                (today.getMonth() + 1).toString().padStart(2, '0') + '-' +
+                today.getDate().toString().padStart(2, '0');
 
-             let dueDate = $("#request_due_date").val();
+            let dueDate = $("#request_due_date").val();
             //let dueDate = new Date(dueDateValue);
 
             // Compare the due date with today
             if (dueDate < today && dueDate != "") {
                 alert("The due date is before today.");
             }
-            else{
+            else {
                 $("#send_request_form").submit();
             }
         });
     });
 
-    </script>
+</script>
 
 </html>

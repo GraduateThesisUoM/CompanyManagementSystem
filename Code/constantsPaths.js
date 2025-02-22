@@ -46,12 +46,15 @@ const url_param = {
   param_2 : 'need_to_pick_client'
 };
 
+const my_constants = {
+  transfer_series_my_id : '777'
+}
+
 const routes_folder = "./routes"
 const views_folder = "./views"
 const generalFunctions_folder = {one:"././GeneralFunctions",two:"../../GeneralFunctions"};
 const clientAccountantFunctions_folder = {one:"././ClientAccountantFunctions",two:"../../ClientAccountantFunctions"};
 const authenticationFunctions_folder = {one:"././AuthenticationFunctions",two:"../../AuthenticationFunctions"};
-
 
 const routes = {
   general : routes_folder+"/GeneralRoutes/",
@@ -309,4 +312,4 @@ const pages = {
 
 module.exports = { folders,pages, routes ,schemas,url_param,
   generalFunctions_folder,clientAccountantFunctions_folder,
-  authenticationFunctions_folder};
+  authenticationFunctions_folder,my_constants};

@@ -14,6 +14,7 @@ body{
     background-size: cover;
     background-repeat: no-repeat;
     background-position: top center;
+    background-attachment: fixed;
 
 }
 
@@ -49,6 +50,12 @@ button{
     height: 100vh;
 }
 
+.has_sidebar > .has_sidebar_main_content {
+    padding-bottom: 50px;
+    overflow: auto; /* Enables scrolling */
+}
+
+
 .star_btn{
     border: none;
     text-align: center;
@@ -72,8 +79,8 @@ button{
 }
 
 #sidebar_div{
-    /*height: 100vh;*/
-    height: 105%;
+    height: 100vh;
+    /*height: 105%;*/
     /*min-height: 80vh;*/
     background-color: rgb(170, 170, 170);
     position: relative;
