@@ -243,7 +243,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           }
         };
       }
-      //console.log(await generalFunctions.warehose_get_inventory({company : company._id}));
+      //console.log(await generalFunctions.warehouse_get_inventory({company : company._id}));
 
       res.render(path_constants.pages.index.view(req.user.type), data);
     } else {

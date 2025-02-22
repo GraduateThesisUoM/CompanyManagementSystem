@@ -421,7 +421,7 @@ async function create_doc(data) {
   }
 }
 
-async function warehose_get_inventory(data){
+async function warehouse_get_inventory(data){
   var series = await Series.find({
     company:data.company,
     type: 2,
@@ -541,10 +541,10 @@ async function item_get_inventory(data){
   }
 
 
-  get_item_inventory_from_transfers({
+  /*get_item_inventory_from_transfers({
     item_id : data.id,
     company : data.company
-  })
+  })*/
 
   return item_list[0].count;
 
@@ -568,14 +568,122 @@ async function get_item_inventory_from_transfers(data){
   for( d of docs){
     for( key in d.invoiceData){
       if(d.invoiceData[key].lineItem == data.item_id){
-        doc_of_interest.push(d);
+        doc_of_interest.push({
+          warehouse : d.warehouse,
+          receiver : d.receiver,
+          quantity : parseInt(d.invoiceData[key].quantity)
+        });
         break;
       }
     }
   }
-  console.log('-------------');
-  console.log(doc_of_interest);
-  console.log('-------------');
+  var inventory = 0;
+  for( d of doc_of_interest){
+    if(d.receiver !== '-'){
+      var receiver = await Warehouse.findOne({_id: d.receiver});
+      if(receiver){
+        //console.log('Warehouse +');
+        inventory = inventory + d.quantity;
+      }
+      else{
+        var receiver = await Person.findOne({_id: d.receiver});
+        if(receiver){
+          //console.log('Person -')
+          inventory = inventory - d.quantity;
+        }
+      }
+    }
+    if(d.warehouse !== '-'){
+      var warehouse = await Warehouse.findOne({_id: d.warehouse});
+      if(warehouse){
+        //console.log('Warehouse -')
+        inventory = inventory - d.quantity;
+      }
+      else{
+        var warehouse = await Person.findOne({_id: d.warehouse});
+        if(warehouse){
+          //console.log('Person +');
+          inventory = inventory + d.quantity;
+        }
+      }
+    }
+  }
+  console.log(inventory)
+}
+
+async function get_item_warehouse_inventory_from_transfers(data){
+  console.log("get_item_warehouse_inventory_from_transfers");
+  console.log(data);
+  /*
+    data = item,company
+  */
+  var series = await Series.findOne({
+    company:data.company,
+    type: 3,
+    my_id: path_constants.my_constants.transfer_series_my_id,
+  });
+
+  var docs = await Document.find({series: series._id, company: data.company,warehouse: data.warehouse});
+  var doc_of_interest = [];
+  for( d of docs){
+    for( key in d.invoiceData){
+      if(d.invoiceData[key].lineItem == data.item){
+        doc_of_interest.push({
+          warehouse : d.warehouse,
+          receiver : d.receiver,
+          quantity : parseInt(d.invoiceData[key].quantity)
+        });
+        break;
+      }
+    }
+  }
+  docs = await Document.find({series: series._id, company: data.company,receiver: data.warehouse});
+  for( d of docs){
+    for( key in d.invoiceData){
+      if(d.invoiceData[key].lineItem == data.item){
+        doc_of_interest.push({
+          warehouse : d.warehouse,
+          receiver : d.receiver,
+          quantity : parseInt(d.invoiceData[key].quantity)
+        });
+        break;
+      }
+    }
+  }
+
+
+  var inventory = 0;
+  for( d of doc_of_interest){
+    if(d.receiver !== '-'){
+      var receiver = await Warehouse.findOne({_id: d.receiver});
+      if(receiver){
+        //console.log('Warehouse +');
+        inventory = inventory + d.quantity;
+      }
+      else{
+        var receiver = await Person.findOne({_id: d.receiver});
+        if(receiver){
+          //console.log('Person -')
+          inventory = inventory - d.quantity;
+        }
+      }
+    }
+    if(d.warehouse !== '-'){
+      var warehouse = await Warehouse.findOne({_id: d.warehouse});
+      if(warehouse){
+        //console.log('Warehouse -')
+        inventory = inventory - d.quantity;
+      }
+      else{
+        var warehouse = await Person.findOne({_id: d.warehouse});
+        if(warehouse){
+          //console.log('Person +');
+          inventory = inventory + d.quantity;
+        }
+      }
+    }
+  }
+  return inventory;
 }
 
 async function drop_collection(collection_name) {
@@ -1386,8 +1494,9 @@ module.exports = {
   get_type,
   get_type2,
   update,
-  warehose_get_inventory,
+  warehouse_get_inventory,
   item_get_inventory,
+  get_item_warehouse_inventory_from_transfers,
   importExport,
   clear_db,
   get_persons_moves,

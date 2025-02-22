@@ -192,7 +192,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
           } else if (type == "Warehouse") {
             obj = await Warehouse.findOne({ _id: id });
-            var inventory = await generalFunctions.warehose_get_inventory({
+            var inventory = await generalFunctions.warehouse_get_inventory({
               company: company,
               id: obj._id,
             });
@@ -234,6 +234,15 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               company: company,
               id: obj._id,
             })
+            var warehouses = await Warehouse.find({ company: company, status: 1 });
+            data.warehouse_list = [];
+            for (w of warehouses) {
+              data.warehouse_list.push({
+                _id: w._id,
+                title: w.title,
+                inventory : await generalFunctions.get_item_warehouse_inventory_from_transfers({company:company,warehouse:w._id,item:obj._id})
+              });
+            }
 
           } else if (type == "users") {
             obj = await User.findOne({ _id: id });

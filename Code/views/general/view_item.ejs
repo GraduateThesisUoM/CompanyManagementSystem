@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="buttons_css.css">
     <link rel="stylesheet" href="textarea_css.css">
     <link rel="stylesheet" href="my_select_css.css">
+    <link rel="stylesheet" href="table_css.css">
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -95,7 +96,28 @@
         </form>
         <!--div id="message_div">Record has been deleted</div-->
         <button class="asap-condensed-regular delete_btn" id="btn1">Delete</button>
-
+        <div id="item_view_company">
+          <div class="table_container" style="width: calc(100% - 50px);margin-left: 20px;">
+            <table>
+              <thead>
+                <tr>
+                  <th>A/A</th>
+                  <th>Title</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody>
+                <%for(let i =0;i<warehouse_list.length;i++){%>
+                <tr>
+                  <td><%=i+1%></td>
+                  <td><%=warehouse_list[i].title%></td>
+                  <td><%=warehouse_list[i].inventory%></td>
+                <tr>
+                  <%}%>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </body>
