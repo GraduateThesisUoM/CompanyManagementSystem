@@ -98,9 +98,6 @@ app.use(path_constants.pages.reset_password.url, require(path_constants.pages.re
 //error
 app.use(path_constants.pages.error.url, require(path_constants.pages.error.file));
 
-//delete_account
-app.use(path_constants.pages.delete_account.url, require(path_constants.pages.delete_account.file));
-
 //logout
 app.use(path_constants.pages.logout.url, require(path_constants.pages.logout.file));
 

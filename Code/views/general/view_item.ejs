@@ -21,6 +21,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+
+
+    <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
     <!--Header-->
     <%- include('../partials/header'); %>
   </head>
@@ -96,7 +99,7 @@
         </form>
         <!--div id="message_div">Record has been deleted</div-->
         <button class="asap-condensed-regular delete_btn" id="btn1">Delete</button>
-        <div id="item_view_company">
+        <div id="item_view_company" class="marging_top_30">
           <div class="table_container" style="width: calc(100% - 50px);margin-left: 20px;">
             <table>
               <thead>
@@ -108,7 +111,7 @@
               </thead>
               <tbody>
                 <%for(let i =0;i<warehouse_list.length;i++){%>
-                <tr>
+                <tr onclick="window.location = '/view?type=Warehouse&id=<%=warehouse_list[i]._id%>'">
                   <td><%=i+1%></td>
                   <td><%=warehouse_list[i].title%></td>
                   <td><%=warehouse_list[i].inventory%></td>
@@ -123,6 +126,8 @@
   </body>
 
   <script>
+    message_from_url(window.location.href);
+
     $(document).ready(function () {
 
       const params = new URLSearchParams(window.location.search);

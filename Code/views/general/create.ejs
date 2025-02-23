@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="textarea_css.css">
         <link rel="stylesheet" href="my_select_css.css">
         
-
+        <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -222,6 +222,8 @@
         </div>
     </body>
     <script>
+    message_from_url(window.location.href);
+
     $(document).ready(function(){
         const queryString = new URL(window.location.href).search;
         const params = new URLSearchParams(queryString);
@@ -248,13 +250,15 @@
                 
 
                 $(".create_menu_btn").removeClass("selected");
-
-                if(params.get('create') != 'Warehouse'){
-                    if(params.get('type')){
-                        $("#obj_type").val(params.get('type'));
-                    }
-                    else{
-                        window.location = '/';
+                
+                if(params.get('create') != 'Warehouse' ){
+                    if(params.get('create') != 'items'){
+                        if(params.get('type')){
+                            $("#obj_type").val(params.get('type'));
+                        }
+                        else{
+                            window.location = '/';
+                        }
                     }
                 }
                 if(params.get('create') == 'series'){

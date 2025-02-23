@@ -6,12 +6,12 @@ const ItemSchema = new mongoose.Schema({
     company: { type: mongoose.Schema.Types.ObjectId, required: true  },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    type:{
+    /*type:{
       type: Number,
       enum: [1,2],
       //1=sale,2=buy
       required: true
-    },
+    },*/
     status: {
       type: Number,
       enum: [0, 1, 2],

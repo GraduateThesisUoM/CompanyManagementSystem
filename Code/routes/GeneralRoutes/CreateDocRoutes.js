@@ -48,7 +48,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       var list_items = await Item.find({
         company: req.user.company,
         status: 1,
-        type: req.query.type
+        //type: req.query.type
       });
 
       var list_series = await Series.find({

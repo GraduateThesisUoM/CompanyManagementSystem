@@ -13,6 +13,8 @@
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+
+        <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
     </head>
     <body style="display: flex;align-items: center;justify-content: center;">
         <div class="glass_effect_2 asap-condensed-regular" style="width: 50vw;margin-top: 15vh;padding: 25px;border-radius: 25px;">
@@ -24,6 +26,8 @@
 
     </body>
     <script>
+        message_from_url(window.location.href);
+        
         $(document).ready(function(){
             // Get the error parameter from the URL
             const urlParams = new URLSearchParams(window.location.search);

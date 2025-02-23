@@ -24,6 +24,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
+
+    <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
+    
     <!--Header-->
     <%- include('../partials/header'); %>
   </head>
@@ -258,7 +261,7 @@
               </table>
           </div>
         </div>
-        <div id="admin_view_company"style="display: none;">
+        <div id="admin_view_company" style="display: none;">
           <div class="table_container" id="req_table" style="margin-left: 2%;width: 90%;">
             <table>
               <thead>
@@ -277,12 +280,28 @@
             </table>
           </div>
         </div>
+        <div id="warehouse_inventory" style="display: none; margin-left: 20px; width:calc(100% - 50px);" class="">
+          <div class="table_container">
+            <table>
+              <thead>
+                <tr>
+                  <th>A/A</th>
+                  <th>Item</th>
+                  <th>Count</th>
+                </tr>
+              </thead>
+              <tbody>
+               
+              </tbody>
+            </table>
+          </div>
+        </div>
     </div>
   </body>
  
-  <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
-
   <script>
+    message_from_url(window.location.href);
+
     function go_to_item(id){
       window.location.href = '/view?type=items&id='+id
     }
@@ -533,6 +552,21 @@
           $("#effects_accounts_switch").show();
           $("#effects_accounts_switch_btn").addClass("active");
           $("#effects_accounts_label").html("Subtracts");
+        }
+      }
+
+
+      if(queryParams.type == "Warehouse"){
+        $("#warehouse_inventory").show();
+        for( i in secondary_data.inventory){
+          console.log(secondary_data.inventory[i]);
+          $("#warehouse_inventory div table tbody").append(`
+            <tr onclick=go_to_item('${secondary_data.inventory[i].id}')>
+              <td>${parseInt(i)+1}</td>
+              <td>${secondary_data.inventory[i].title}</td>
+              <td>${secondary_data.inventory[i].quantity}</td>
+            </tr>
+          `);
         }
       }
 

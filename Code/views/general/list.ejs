@@ -17,6 +17,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+
+    <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
     
     <!--Header-->
     <%- include('../partials/header'); %>
@@ -118,8 +120,9 @@
     <iframe id="print-frame" style="display:none;"></iframe>
 
 </body>
-    <script type = "text/javascript" src="JSFrontEndFunctions.js"></script>
     <script>
+        message_from_url(window.location.href);
+
         $(document).ready(function () {
             var total_doc_rows = '<%=doc_data.doc_line_num%>';
             const queryString = new URL(window.location.href).search;

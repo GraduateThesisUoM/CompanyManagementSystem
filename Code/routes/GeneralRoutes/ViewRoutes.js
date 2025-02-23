@@ -168,7 +168,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
                 person: person,
                 user: req.user,
                 warehouse : await Warehouse.findOne({ _id: obj.warehouse }),
-                items : await Item.find({ company: company, type: obj.type }),
+                //items : await Item.find({ company: company, type: obj.type }),
+                items : await Item.find({ company: company }),
                 transforms_to : transforms_to,
                 history : history
               }
@@ -184,7 +185,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
                 persons: persons,
                 user: req.user,
                 warehouses : await Warehouse.find({ company: company, status: 1 }),
-                items : await Item.find({ company: company, type: obj.type }),
+                //items : await Item.find({ company: company, type: obj.type }),
+                items : await Item.find({ company: company }),
                 transforms_to : transforms_to,
                 history : history
               }
@@ -192,13 +194,26 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
           } else if (type == "Warehouse") {
             obj = await Warehouse.findOne({ _id: id });
+
             var inventory = await generalFunctions.warehouse_get_inventory({
               company: company,
               id: obj._id,
             });
-            data.data = [obj.title, obj.location, inventory];
-            data.titles = ["Title", "location", "Data"];
-            data.type = [1, 1, 8];
+            data.data = [obj.title, obj.location];
+            data.titles = ["Title", "location"];
+            data.type = [1, 1];
+
+
+            var inventory_data = [];
+            for (i of inventory) {
+              if(i.quantity > 0){
+                inventory_data.push(i);
+              }
+            }
+
+            secondary_data = {
+              inventory :inventory_data
+            }
             //1=normal-text,0=text-readonly
             //8 table
           } else if (type == "series") {
@@ -230,18 +245,23 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           } else if (type == "items") {
             obj = await Item.findOne({ _id: id });
             data.item = obj
-            data.inventory = await generalFunctions.item_get_inventory({
-              company: company,
-              id: obj._id,
-            })
+           
             var warehouses = await Warehouse.find({ company: company, status: 1 });
             data.warehouse_list = [];
             for (w of warehouses) {
+              //var inventory_from_transfers = await generalFunctions.get_item_warehouse_inventory_from_transfers({company:company,warehouse:w._id,item:obj._id})
+              var inventory_from_docs = await generalFunctions.get_item_warehouse_inventory({
+                company:company,
+                item:obj._id,
+                warehouse:w._id
+              })
+  
               data.warehouse_list.push({
                 _id: w._id,
                 title: w.title,
-                inventory : await generalFunctions.get_item_warehouse_inventory_from_transfers({company:company,warehouse:w._id,item:obj._id})
+                inventory : inventory_from_docs
               });
+              console.log(data.warehouse_list);
             }
 
           } else if (type == "users") {
@@ -407,7 +427,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           }
           else if (type == "transfers"){
             obj = await Document.findOne({ _id: id });
-            var series = await Series.findOne({my_id:'777',status:1})
+            var series = await Series.findOne({my_id:path_constants.my_constants.transfer_series_my_id,company:req.user.company});
 
             var history = [];
             var d = obj;
@@ -579,7 +599,7 @@ router.post("/transfers", Authentication.checkAuthenticated, async (req, res) =>
       }
     }
     console.log(lines_of_doc);
-    var series = await Series.findOne({my_id:'777',status:1})
+    var series = await Series.findOne({my_id:path_constants.my_constants.transfer_series_my_id,company:req.user.company});
     var doc = await generalFunctions.create_doc( {
       company: req.user.company,
       sender: req.user._id,

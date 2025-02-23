@@ -143,11 +143,6 @@ const pages = {
       return views_folders.general+"error_page.ejs"
     }}
   },
-  delete_account :{
-    url : "/delete-account",
-    file: routes.general+"DeleteAccountRoutes.js",
-    view : ""
-  },
   logout :{
     url : "/logout",
     file: routes.general+"LogOutRoutes.js",

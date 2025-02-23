@@ -78,4 +78,13 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
   }
 });
 
+router.post("/delete-account", Authentication.checkAuthenticated, async (req, res) => {
+  try {
+    res.redirect("/profile-page?message=deleteaccountcopmlete");
+  } catch (err) {
+    console.error("Error updating user data:", err);
+    res.redirect("/error?origin_page=profile-page&error=" + err);
+  }
+});
+
 module.exports = router;

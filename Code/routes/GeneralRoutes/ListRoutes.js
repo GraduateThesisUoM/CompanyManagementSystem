@@ -183,7 +183,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         ];
       } else if (req.query.searchfor == "items") {
         list_items = await Item.find({ company: company
-          ,type: req.query.type
+          //,type: req.query.type
          });
         list_items = list_items.map((item) => ({
           data: [
@@ -295,7 +295,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Comments"
         ]
       }else if(req.query.searchfor == "transfers"){
-        var series = await Series.findOne({company:company,type:3});
+        var series = await Series.findOne({my_id:path_constants.my_constants.transfer_series_my_id,company:req.user.company});
         var list_items = await Document.find({company:company,type:3,series:series._id,edited:0});
         
         list_items = list_items.map((doc) => ({

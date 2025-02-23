@@ -80,7 +80,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
       }
     }
     console.log(lines_of_doc);
-    var series = await Series.findOne({my_id:'777',company:req.user.company});
+    var series = await Series.findOne({my_id:path_constants.my_constants.transfer_series_my_id,company:req.user.company});
     var doc = await generalFunctions.create_doc( {
       company: req.user.company,
       sender: req.user._id,

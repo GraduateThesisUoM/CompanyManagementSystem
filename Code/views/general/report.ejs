@@ -16,7 +16,7 @@
         <link rel="stylesheet" href="textarea_css.css">
         <link rel="stylesheet" href="my_select_css.css">
         
-
+        <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -52,11 +52,13 @@
         </div>
     </body>
     <script>
-    $(document).ready(function(){
-        const queryString = new URL(window.location.href).search;
-        const params = new URLSearchParams(queryString);
+        message_from_url(window.location.href);
 
-    });
+        $(document).ready(function(){
+            const queryString = new URL(window.location.href).search;
+            const params = new URLSearchParams(queryString);
+
+        });
     
     </script>
 </html>

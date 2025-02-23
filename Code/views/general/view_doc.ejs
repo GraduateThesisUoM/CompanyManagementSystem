@@ -18,6 +18,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
 
+    <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
+
     <!--Header-->
     <%- include('../partials/header'); %>
   </head>
@@ -170,6 +172,9 @@
 
   <script type="text/javascript" src="JSDocumentFunctions.js"></script>
   <script>
+    message_from_url(window.location.href);
+
+
     var doc_line_num = 0;
     var general_dis_deviation = 0.0;
     var selected_items = JSON.parse(`<%- JSON.stringify(doc.invoiceData) %>`);

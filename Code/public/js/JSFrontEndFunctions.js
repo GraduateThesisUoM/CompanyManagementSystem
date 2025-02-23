@@ -374,10 +374,15 @@ function go_back(url) {
     }
   }
 
+
+// The original message_from_url function
 function message_from_url(url){
     // Extract query parameters from URL string
     const queryParams = new URL(url).searchParams;
-    /*const message = queryParams.get('message');
-    return message || '';*/
+    const message = queryParams.get('message');
+    if(message){
+        alert(message);
+    }
 }
+
 

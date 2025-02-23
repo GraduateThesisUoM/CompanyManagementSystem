@@ -241,6 +241,21 @@ async function create_company(data) {
     signupcode: data.signupcode,
   });
   await company.save();
+
+  var transfer_series = await createSeries({
+    company: company._id,
+    title: "Transfer",
+    acronym: "TR",
+    type: 3,
+    sealed: 1,
+    effects_warehouse: 0,
+    effects_account: 0,
+    transforms_to : 0
+  });
+
+  transfer_series.my_id = path_constants.my_constants.transfer_series_my_id,
+  await transfer_series.save();
+
   console.log("company " + company.name + " Created");
   return company;
 }
@@ -302,7 +317,7 @@ async function createItem(data) {
     const item = new Item({
       type:data.type,
       company: data.company,
-      type: data.type,
+      //type: data.type,
       title: data.title,
       description: data.description,
       price_r: data.price_r,
@@ -324,7 +339,7 @@ async function createItem(data) {
 
 async function createSeries(data) {
   try {
-    console.log("fffffffffffffffffffffffffffffff")
+    console.log("createSeries")
     console.log(data.transforms_to)
     const series = new Series({
       company: data.company,
@@ -422,16 +437,11 @@ async function create_doc(data) {
 }
 
 async function warehouse_get_inventory(data){
-  var series = await Series.find({
-    company:data.company,
-    type: 2,
-    effects_warehouse: 1,
-    status : 1
-  });
+
+  /*company,warehouse*/
 
   var items = await Item.find({
     company : data.company,
-    type: 2,
     status : 1
   })
 
@@ -441,248 +451,126 @@ async function warehouse_get_inventory(data){
     item_list.push({
       id : i._id.toString(),
       title : i.title,
-      count : 0})
+      quantity :  await get_item_warehouse_inventory({company:data.company, item:i._id,warehouse:data.id})
+    })
   }
 
 
-  var seriesIDs = series.map(s => s._id.toString());
-
-  var docs = await Document.find({
-    company:data.company,
-    type: 2,
-    series : { $in: seriesIDs },
-    warehouse : data.id.toString()
-  });
-
-  var doc_items_map = {};
-
-  // Iterate through docs and collect items and their quantities
-  for (const d of docs) {
-    for (const key in d.invoiceData) {
-      if (d.invoiceData.hasOwnProperty(key)) {
-        const doc_item = d.invoiceData[key];
-        if (doc_item.lineItem) {
-          // Accumulate the quantity for each lineItem
-          if (!doc_items_map[doc_item.lineItem]) {
-            doc_items_map[doc_item.lineItem] = 0;
-          }
-          doc_items_map[doc_item.lineItem] += parseFloat(doc_item.quantity);
-        }
-      }
-    }
-  }
-
-
-
-  for (const item of item_list) {
+  /*for (const item of item_list) {
     const doc_item_quantity = doc_items_map[item.id];
     if (doc_item_quantity) {
       item.count = doc_item_quantity;
     }
-  }
+  }*/
 
   return item_list;
 
 }
 
-async function item_get_inventory(data){
-  var series = await Series.find({
-    company:data.company,
-    type: 2,
-    effects_warehouse: 1,
-    status : 1
-  });
+async function inventory_count(data){
+  console.log("inventory_count");
+  console.log(data);
+  console.log("docs : "+data.docs)
+  console.log("docs ---")
 
-  var items = await Item.find({_id : data.id})
+  var inventory = 0;
 
-  var item_list = []
-
-  for(const i of items){
-    item_list.push({
-      id : i._id.toString(),
-      title : i.title,
-      count : 0})
-  }
-
-
-  var seriesIDs = series.map(s => s._id.toString());
-
-  var docs = await Document.find({
-    company:data.company,
-    type: 2,
-    series : { $in: seriesIDs },
-  });
-
-  var doc_items_map = {};
-
-  // Iterate through docs and collect items and their quantities
-  for (const d of docs) {
-    for (const key in d.invoiceData) {
-      if (d.invoiceData.hasOwnProperty(key)) {
-        const doc_item = d.invoiceData[key];
-        if (doc_item.lineItem) {
-          // Accumulate the quantity for each lineItem
-          if (!doc_items_map[doc_item.lineItem]) {
-            doc_items_map[doc_item.lineItem] = 0;
-          }
-          doc_items_map[doc_item.lineItem] += parseFloat(doc_item.quantity);
-        }
+  for( d of data.docs){
+    for( key in d.invoiceData){
+      if(d.invoiceData[key].lineItem == data.item){
+        inventory = inventory + (data.action*parseInt(d.invoiceData[key].quantity));
       }
     }
   }
 
-
-
-  for (const item of item_list) {
-    const doc_item_quantity = doc_items_map[item.id];
-    if (doc_item_quantity) {
-      item.count = doc_item_quantity;
-    }
-  }
-
-
-  /*get_item_inventory_from_transfers({
-    item_id : data.id,
-    company : data.company
-  })*/
-
-  return item_list[0].count;
-
+  return inventory;
 }
 
-async function get_item_inventory_from_transfers(data){
-  console.log("get_item_inventory_from_transfers");
-  /*
-    data = item_id,company
-  */
-  var series = await Series.findOne({
-    company:data.company,
-    type: 3,
-    my_id: path_constants.my_constants.transfer_series_my_id,
+
+async function get_item_warehouse_inventory(data){
+  console.log(get_item_warehouse_inventory);
+  console.log(data);
+  var inventory = 0;
+
+  var transfers = await get_item_warehouse_inventory_from_transfers({
+    company: data.company,
+    item: data.item,
+    warehouse: data.warehouse
   });
 
-  var item = await Item.findOne({_id : data.item_id, company: data.company});
+  var actions = [1, -1];
+  for (const action of actions) {
+    var series = await Series.find({
+      company: data.company,
+      effects_warehouse: action,
+    })
 
-  var docs = await Document.find({series: series._id, company: data.company});
-  var doc_of_interest = [];
-  for( d of docs){
-    for( key in d.invoiceData){
-      if(d.invoiceData[key].lineItem == data.item_id){
-        doc_of_interest.push({
-          warehouse : d.warehouse,
-          receiver : d.receiver,
-          quantity : parseInt(d.invoiceData[key].quantity)
-        });
-        break;
-      }
-    }
+    var docs = await Document.find({
+      company: data.company,
+      series: { $in: series.map(s => s._id) },
+      warehouse: data.warehouse,
+      edited: 0
+    });
+
+    inventory = inventory + await inventory_count({
+      series: series,
+      company: data.company,
+      warehouse: data.warehouse,
+      item: data.item,
+      docs: docs,
+      action: action
+    })
   }
-  var inventory = 0;
-  for( d of doc_of_interest){
-    if(d.receiver !== '-'){
-      var receiver = await Warehouse.findOne({_id: d.receiver});
-      if(receiver){
-        //console.log('Warehouse +');
-        inventory = inventory + d.quantity;
-      }
-      else{
-        var receiver = await Person.findOne({_id: d.receiver});
-        if(receiver){
-          //console.log('Person -')
-          inventory = inventory - d.quantity;
-        }
-      }
-    }
-    if(d.warehouse !== '-'){
-      var warehouse = await Warehouse.findOne({_id: d.warehouse});
-      if(warehouse){
-        //console.log('Warehouse -')
-        inventory = inventory - d.quantity;
-      }
-      else{
-        var warehouse = await Person.findOne({_id: d.warehouse});
-        if(warehouse){
-          //console.log('Person +');
-          inventory = inventory + d.quantity;
-        }
-      }
-    }
-  }
-  console.log(inventory)
+
+
+  inventory = inventory + transfers;
+ 
+
+  return inventory;
 }
 
 async function get_item_warehouse_inventory_from_transfers(data){
   console.log("get_item_warehouse_inventory_from_transfers");
   console.log(data);
-  /*
-    data = item,company
-  */
+
   var series = await Series.findOne({
     company:data.company,
     type: 3,
     my_id: path_constants.my_constants.transfer_series_my_id,
   });
 
-  var docs = await Document.find({series: series._id, company: data.company,warehouse: data.warehouse});
-  var doc_of_interest = [];
-  for( d of docs){
-    for( key in d.invoiceData){
-      if(d.invoiceData[key].lineItem == data.item){
-        doc_of_interest.push({
-          warehouse : d.warehouse,
-          receiver : d.receiver,
-          quantity : parseInt(d.invoiceData[key].quantity)
-        });
-        break;
-      }
-    }
-  }
-  docs = await Document.find({series: series._id, company: data.company,receiver: data.warehouse});
-  for( d of docs){
-    for( key in d.invoiceData){
-      if(d.invoiceData[key].lineItem == data.item){
-        doc_of_interest.push({
-          warehouse : d.warehouse,
-          receiver : d.receiver,
-          quantity : parseInt(d.invoiceData[key].quantity)
-        });
-        break;
-      }
-    }
-  }
+  var docs = await Document.find({
+    series: series._id, 
+    company: data.company,
+    receiver: data.warehouse,
+    edited: 0
+  });
 
+  var inventory =  await inventory_count({
+    series: series,
+    company: data.company,
+    warehouse: data.warehouse,
+    item: data.item,
+    docs: docs,
+    action: 1
+  })
 
-  var inventory = 0;
-  for( d of doc_of_interest){
-    if(d.receiver !== '-'){
-      var receiver = await Warehouse.findOne({_id: d.receiver});
-      if(receiver){
-        //console.log('Warehouse +');
-        inventory = inventory + d.quantity;
-      }
-      else{
-        var receiver = await Person.findOne({_id: d.receiver});
-        if(receiver){
-          //console.log('Person -')
-          inventory = inventory - d.quantity;
-        }
-      }
-    }
-    if(d.warehouse !== '-'){
-      var warehouse = await Warehouse.findOne({_id: d.warehouse});
-      if(warehouse){
-        //console.log('Warehouse -')
-        inventory = inventory - d.quantity;
-      }
-      else{
-        var warehouse = await Person.findOne({_id: d.warehouse});
-        if(warehouse){
-          //console.log('Person +');
-          inventory = inventory + d.quantity;
-        }
-      }
-    }
-  }
+  var docs = await Document.find({
+    series: series._id, 
+    company: data.company,
+    warehouse: data.warehouse,
+    edited: 0
+  });
+
+  inventory = inventory + await inventory_count({
+    series: series,
+    company: data.company,
+    warehouse: data.warehouse,
+    item: data.item,
+    docs: docs,
+    action: -1
+  })
+
   return inventory;
 }
 
@@ -1495,7 +1383,6 @@ module.exports = {
   get_type2,
   update,
   warehouse_get_inventory,
-  item_get_inventory,
   get_item_warehouse_inventory_from_transfers,
   importExport,
   clear_db,
@@ -1503,5 +1390,6 @@ module.exports = {
   record_scan,
   get_accountant_node,
   calculateDateDifference,
-  get_docs_value
+  get_docs_value,
+  get_item_warehouse_inventory
 };

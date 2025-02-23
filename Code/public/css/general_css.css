@@ -461,3 +461,8 @@ border: 1px solid rgba(121, 121, 121, 0.3);
 #status_mark.desabled{
     background-color: rgb(179, 179, 179);
 }
+
+
+.marging_top_30{
+    margin-top: 30px;
+}
