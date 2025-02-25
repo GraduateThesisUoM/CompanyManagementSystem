@@ -29,13 +29,6 @@ const Authentication = require("../../AuthenticationFunctions");
 
 /*--------   LOG IN */
 router.get("/", Authentication.checkNotAuthenticated, async (req, res) => {
-  //FOR TEST START
-  if (req.query.restartdb === "export") {
-    await generalFunctions.importExport('export');
-  }
-  else if (req.query.restartdb === "import") {
-    await generalFunctions.importExport('import');
-  }
   res.render("." + path_constants.pages.log_in.view());
 });
 router.post(

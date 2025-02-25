@@ -143,7 +143,7 @@ router.post(
   async (req, res) => {
     try {
       console.log("export");
-      generalFunctions.importExport('export',req.user.company);
+      generalFunctions.importExport('export','company',req.user.company);
       res.redirect(
         "/my-company?f=export&message=exported"
       );

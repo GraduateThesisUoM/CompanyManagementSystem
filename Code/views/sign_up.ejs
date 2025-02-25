@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Comic+Neue:ital,wght@0,300;0,400;0,700;1,300;1,400;1,700&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Poiret+One&family=Sofia+Sans:ital,wght@0,1..1000;1,1..1000&family=Work+Sans:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
   </head>
   <body>
-    <div class="glass_container asap-condensed-regular">
+    <div class="glass_container asap-condensed-regular" id="sign_up_container">
       <h1>Sign Up</h1>
       <div class="button_group_1 columns_two">
         <button class="selected" id="user_btn">User</button>
@@ -97,8 +97,13 @@
       <button class="btn_type_2" id="log_in_btn">Log in</button>
     </div>
   </body>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <script>
     $(document).ready(function () {
+      gsap.fromTo("#sign_up_container", 
+          { opacity: 0, y: 20, scale: 0.9, display: "none" }, 
+          { opacity: 1, y: 0, scale: 1, display: "block", duration: 0.5, ease: "power2.out" }
+      );
       const urlParams = new URLSearchParams(window.location.search);
       const isAdmin = urlParams.get("admin") === "true";
 

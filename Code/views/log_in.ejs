@@ -47,8 +47,13 @@
 
         </div>
     </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
         $(document).ready(function() {
+            gsap.fromTo("#log_in_container", 
+                    { opacity: 0, y: 20, scale: 0.9, display: "none" }, 
+                    { opacity: 1, y: 0, scale: 1, display: "block", duration: 0.5, ease: "power2.out" }
+                );
             // Button actions
             $("#sign_up_btn").click(function() {
                 window.location = "sign-up";
@@ -70,8 +75,8 @@
                 alert("Sign up was successful. You can now log in.");
             }
 
-            $("#email").val('nektarios00007@gmail.com');
-            $("#password").val('123')
+            $("#email").val('ad1@ad1');
+            $("#password").val('1')
             
         });
     </script>

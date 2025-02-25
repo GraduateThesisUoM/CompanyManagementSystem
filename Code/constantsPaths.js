@@ -47,7 +47,8 @@ const url_param = {
 };
 
 const my_constants = {
-  transfer_series_my_id : '777'
+  transfer_series_my_id : '777',
+  export_path : "C:\\exports"
 }
 
 const routes_folder = "./routes"

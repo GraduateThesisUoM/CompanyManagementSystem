@@ -39,25 +39,23 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
 router.post("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
-    var action = req.body.db_post_input;
-    /*if(action == 'clear_db'){
-      await generalFunctions.clear_db();
-      return res.redirect(`/database?message=Db is Cleaned`);
-    }
-    else*/ if(req.body.selected_companies == 'all'){
-      await generalFunctions.importExport(action);
-    
-      return res.redirect(`/database?message=${action} Completed`);
-    }
-    else{
-      const selectedCompanies = req.body.selected_companies.split(';');
-      for (const company of selectedCompanies) {
-        if (company) { // Skip empty strings
-          await generalFunctions.importExport(action, company);
+    const [schema, action] = req.body.db_post_input.split('_');
+
+    if(schema == 'company'){
+      if(req.body.selected_companies != 'all'){
+        const selectedCompanies = req.body.selected_companies.split(';');
+        for (const company of selectedCompanies) {
+          if (company) { 
+            await generalFunctions.importExport(action,schema, company);
+          }
         }
       }
-      return res.redirect(`/database?message=${action} Completed`);
     }
+    else{
+      await generalFunctions.importExport(action,schema);
+    }
+
+    return res.redirect(`/database?message=${action} Completed`);
   } catch (e) {
       console.error(e);
       return res.redirect('/error?origin_page=/&error=' + encodeURIComponent(e.message));

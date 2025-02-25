@@ -24,17 +24,38 @@
                 <input name="selected_companies" id="selected_companies">
             </form>
             <div style="width: 100%;display:flex;flex-direction:row;justify-content:space-evenly;">
-                <!--button id="clear_db" class="db_btn">Clear DB</button><br-->
-                <button id="import" class="db_btn button_1" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                <button id="admin" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                    <img width="100" height="100" src="https://img.icons8.com/ios/100/FFFFFF/user-shield.png" alt="user-shield"/>
+                    Admin
+                </button>
+                <button id="accountant" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                    <img width="100" height="100" src="https://img.icons8.com/dotty/100/FFFFFF/administrator-male.png" alt="administrator-male"/>
+                    Accountants
+                </button>
+                <button id="company" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                    <img width="100" height="100" src="https://img.icons8.com/ios-filled/100/FFFFFF/client-company.png" alt="client-company" />
+                    Companies
+                </button>
+                <!--button id="export" class="db_btn button_1" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
                     <img width="100" height="100" src="https://img.icons8.com/carbon-copy/100/FFFFFF/export.png" alt="export"/>
                     Export Data
                 </button>
                 <button id="import" class="db_btn button_3" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
                     <img width="100" height="100" src="https://img.icons8.com/carbon-copy/100/FFFFFF/import.png" alt="import"/>
                     Import Data
+                </button-->
+            </div>
+            <div id="section_1" class="glass_effect_2 box_shadow_1" style="margin-right: 25px;margin-left: 25px;margin-top: 20px;display: flex;justify-content: space-around;padding: 10px;border-radius: 15px;">
+                <button id="export" class="db_btn button_1" style="width:45%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                    <img width="100" height="100" style="transform: scaleX(-1);" src="https://img.icons8.com/carbon-copy/100/FFFFFF/export.png" alt="export"/>
+                    Export Data
+                </button>
+                <button id="import" class="db_btn button_3" style="width: 45%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                    <img width="100" height="100" src="https://img.icons8.com/carbon-copy/100/FFFFFF/import.png" alt="import"/>
+                    Import Data
                 </button>
             </div>
-            <div class="glass_effect_2 box_shadow_1" style="margin-right: 25px;margin-left: 25px;margin-top: 20px;display: grid;grid-template-columns: 50% 50%;padding: 10px;border-radius: 15px;">
+            <div id="section_2" class="glass_effect_2 box_shadow_1" style="margin-right: 25px;margin-left: 25px;margin-top: 20px;display: grid;grid-template-columns: 50% 50%;padding: 10px;border-radius: 15px;">
                 <div style="display: flex;">
                     <div class="switch">
                         <div class="back_text">
@@ -65,11 +86,38 @@
         </div>
 
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script>
+        $("#section_1").hide();
+        $("#section_2").hide();
 
         $(document).ready(function () {
-            $(".db_btn").click(function () {
+            $(".component").css("opacity", 0).hide(); // Κρύβουμε όλα τα κουμπιά αρχικά
+
+            gsap.fromTo(".component", 
+                { opacity: 0, y: 20, scale: 0.9, display: "none" }, 
+                { opacity: 1, y: 0, scale: 1, display: "flex", duration: 0.5, ease: "power2.out" }
+            );
+
+            $(".schema_btn").click(function () {               
+                gsap.fromTo("#section_1", 
+                    { opacity: 0, y: 20, scale: 0.9, display: "none" }, 
+                    { opacity: 1, y: 0, scale: 1, display: "flex", duration: 0.5, ease: "power2.out" }
+                );
+                if($(this).attr("id") == 'company'){
+                    gsap.fromTo("#section_2", 
+                        { opacity: 0, y: 20, scale: 0.9, display: "none" }, 
+                        { opacity: 1, y: 0, scale: 1, display: "grid", duration: 0.5, ease: "power2.out" }
+                    );
+                }
+                else{
+                    $("#section_2").hide();
+                }
+                
                 $('#db_post_input').val($(this).attr("id"));
+            });
+            $(".db_btn").click(function () {
+                $('#db_post_input').val($('#db_post_input').val()+"_"+$(this).attr("id"));
                 $('#db_form').submit();
             });
 

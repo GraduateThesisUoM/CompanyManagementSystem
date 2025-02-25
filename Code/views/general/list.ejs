@@ -29,7 +29,7 @@
     <div class="has_sidebar asap-condensed-regular ">
         <%- include('../partials/sidebar'); %>
             <div class="has_sidebar_main_content has_sidebar_main_content"> 
-                <div id="list_filters" class="glass_effect_1">
+                <div id="list_filters" class="glass_effect_1 component">
                     <div>
                         <h1 id="list_header"></h1>
                         <div class="filter_container"> Status<br>
@@ -58,7 +58,7 @@
                     <input name="list_action" id = "list_action">
                     <input name="list_filters_input" id = "list_filters_input">
                 </form>
-                <div class="table_container">
+                <div class="table_container component">
                     <table>
                         <thead class="glass_effect_1">
                             <tr>
@@ -111,7 +111,7 @@
                     </table>
                 </div>
                 <% if( user.type != 'admin'){%>
-                <button id="go_to_create">
+                <button id="go_to_create component">
                     <img width="50" height="50" src="https://img.icons8.com/ios/50/FFFFFF/plus--v1.png" alt="plus--v1"/>
                 </button>
                 <% }%>
@@ -122,8 +122,18 @@
 </body>
     <script>
         message_from_url(window.location.href);
-
+        
         $(document).ready(function () {
+            $(".component").css("opacity", 0).hide(); // Κρύβουμε όλα τα κουμπιά αρχικά
+
+            $(".component").each(function (index) {
+                gsap.fromTo(
+                this,
+                { opacity: 0, y: 20, scale: 0.9, display: "none" },
+                { opacity: 1, y: 0, scale: 1, display: "block", duration: 0.5, delay: index * 0.2, ease: "power2.out" }
+                );
+            });
+
             var total_doc_rows = '<%=doc_data.doc_line_num%>';
             const queryString = new URL(window.location.href).search;
             var params = new URLSearchParams(queryString);

@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 var mongoose = require("mongoose");
 const { create } = require("./Schemas/Node");
+const { Admin } = require("mongodb");
 
 
 //Models
@@ -864,23 +865,28 @@ const formatDate = (dateString) => {
   return `${year}-${month}-${day}`;
 };
 
-async function importExport(action, company) {
+async function importExport(action,schema, company) {
   try {
-    if (!['export', 'import'].includes(action)) {
+    if (!['export', 'import','export_accountants','export_admins'].includes(action)) {
       throw new Error("Invalid action. Please specify 'export' or 'import'.");
     }
-
-    if (action === 'export') {
-      await exportData(company);
-      //exportAdmins();
-      //exportAccountant();
-    } else if (action === 'import') {
-      //await clear_db();
-      //await importData(company,path);
-      await resetAndImportData(company);
-      //importAdmins();
-      //importAccountants();
+    if(schema == 'company' ){
+      if(action == 'export'){
+        await exportData(company);
+      }
+      else if (action == 'import'){
+        await resetAndImportData(company);
+      }
     }
+    else{
+      if(action == 'export'){
+        await exportUserType(User,schema);//admin or accountant
+      }
+      else if (action == 'import'){
+        await importUserType(User,schema);//admin or accountant
+      }
+    }
+
   } catch (error) {
     console.error("Error in master function:", error);
   }
@@ -889,7 +895,7 @@ async function importExport(action, company) {
 async function exportData(company = null) {
   try {
 
-    const baseDir = "C:\\exports";
+    const baseDir = path_constants.my_constants.export_path;
     
 
     if (!fs.existsSync(baseDir)) {
@@ -998,104 +1004,45 @@ async function resetAndImportData(companyId) {
   }
 }
 
-async function importData(company = null,path_user) {
+async function importUserType(UserSchema, userType) {
   try {
-    if (path_user == null){
-      path_user = "C:\\exports"
-    }
-    const baseDir = path_user;
+    const baseDir = path_constants.my_constants.export_path;
+    const userDir = path.join(baseDir, userType);
+    const userFilePath = path.join(userDir, `${userType}.json`);
+    console.log(userFilePath)
 
-    if (!fs.existsSync(baseDir)) {
-      console.error(`Exports directory not found: ${baseDir}`);
+    if (!fs.existsSync(userFilePath)) {
+      console.error(`No file found to import ${userType} data from.`);
       return;
     }
 
-    let companyDirs = fs
-      .readdirSync(baseDir)
-      .filter((dir) => fs.statSync(path.join(baseDir, dir)).isDirectory());
+    const userData = JSON.parse(fs.readFileSync(userFilePath, 'utf-8'));
 
-    if (companyDirs.length === 0) {
-      console.warn("No company directories found in exports.");
-      return;
-    }
+    /*await UserSchema.insertMany(userData);
+    console.log(`Imported ${userData.length} ${userType}(s) from ${userFilePath}`);*/
 
-    if (company) {
-      // Filter for the specified company ID
-      companyDirs = companyDirs.filter((dir) => dir.startsWith(`${company}-`));
-      if (companyDirs.length === 0) {
-        console.warn(`No export data found for company ID: ${company}`);
-        return;
+    const bulkOps = userData.map(user => ({
+      updateOne: {
+        filter: { _id: user._id }, // Match by _id
+        update: { $set: user }, // Overwrite existing fields
+        upsert: true // Insert if not found
       }
-    }
+    }));
 
-    for (const companyDirName of companyDirs) {
-      const [companyId, ...companyNameParts] = companyDirName.split("-");
-      const companyName = companyNameParts.join("-");
-      const companyDir = path.join(baseDir, companyDirName);
+    // Perform bulkWrite operation
+    const result = await UserSchema.bulkWrite(bulkOps);
 
-      console.log(`Processing company: ID=${companyId}, Name=${companyName}`);
+    console.log(`Imported ${result.upsertedCount} new ${userType}(s) and updated ${result.modifiedCount} existing.`);
 
-      const companyObj = await Company.findOneAndUpdate(
-        { _id: companyId },
-        { _id: companyId, name: companyName },
-        { upsert: true, new: true }
-      );
-
-      const schemaFiles = fs
-        .readdirSync(companyDir)
-        .filter((file) => file.endsWith(".json"));
-
-      if (schemaFiles.length === 0) {
-        console.warn(`No schema files found for company '${companyName}'.`);
-        continue;
-      }
-
-      for (const schemaFile of schemaFiles) {
-        const schemaName = path.basename(schemaFile, ".json");
-        const filePath = path.join(companyDir, schemaFile);
-
-        const model = schemaMap[schemaName];
-        if (!model) {
-          console.warn(`Schema '${schemaName}' not found in schemaMap.`);
-          continue;
-        }
-        if (schemaName === "accountants" || schemaName === "users") {
-          continue;
-        }
-
-        console.log(`Importing data for schema: ${schemaName} from ${filePath}`);
-
-        const fileData = fs.readFileSync(filePath, "utf-8");
-        const records = JSON.parse(fileData);
-
-        if (records.length === 0) {
-          console.warn(`No records found in file for schema '${schemaName}'.`);
-          continue;
-        }
-
-        const enrichedRecords = records.map((record) => ({
-          ...record,
-          company: companyId,
-        }));
-
-        await model.insertMany(enrichedRecords, { ordered: false }).catch((err) => {
-          console.error(`Error importing schema '${schemaName}': ${err.message}`);
-        });
-
-        console.log(`Successfully imported data for schema '${schemaName}'.`);
-      }
-    }
-
-    console.log("Data import completed.");
   } catch (err) {
-    console.error("Error importing data:", err);
+    console.error(`Error importing ${userType} data:`, err);
   }
 }
 
-
+/*
 async function exportAdmins() {
   try {
-    const baseDir = "./exports";
+    const baseDir = path_constants.my_constants.export_path;
 
     // Create the base exports directory if it doesn't exist
     if (!fs.existsSync(baseDir)) {
@@ -1124,10 +1071,10 @@ async function exportAdmins() {
   }
 }
 
-
+/*
 async function exportAccountant() {
   try {
-    const baseDir = "./exports";
+    const baseDir = path_constants.my_constants.export_path;
 
     if (!fs.existsSync(baseDir)) {
       fs.mkdirSync(baseDir);
@@ -1149,7 +1096,34 @@ async function exportAccountant() {
   } catch (err) {
     console.error("Error exporting accountants data:", err);
   }
+}*/
+
+async function exportUserType(UserSchema, userType) {
+  try {
+    const baseDir = path_constants.my_constants.export_path;
+
+    if (!fs.existsSync(baseDir)) {
+      fs.mkdirSync(baseDir, { recursive: true });
+      console.log(`Created exports directory: ${baseDir}`);
+    }
+
+    const userDir = path.join(baseDir, userType );
+    if (!fs.existsSync(userDir)) {
+      fs.mkdirSync(userDir, { recursive: true });
+      console.log(`Created '${userType}s' directory: ${userDir}`);
+    }
+
+    const userData = await UserSchema.find({ type: userType }).lean().exec();
+
+    const userFilePath = path.join(userDir, `${userType}.json`);
+    fs.writeFileSync(userFilePath, JSON.stringify(userData, null, 2), 'utf-8');
+    console.log(`Exported all ${userType} data to ${userFilePath}`);
+
+  } catch (err) {
+    console.error(`Error exporting ${userType} data:`, err);
+  }
 }
+
 
 async function importAdmins() {
   try {
