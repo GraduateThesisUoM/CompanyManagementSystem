@@ -15,13 +15,13 @@ function create_form(data) {
             }
         }
         html, body {
-            height: 100%;
+            
             margin: 0;
         }
         body {
             display: flex;
             flex-direction: column;
-            height: 100%;
+            
             margin: 0;
             padding: 0;
         }
@@ -106,6 +106,10 @@ function create_form(data) {
             text-align: left;
             display: grid;
             grid-template-columns: auto auto auto;
+            height: 100px;
+            position: fixed;
+            bottom: 30px;
+            width: calc(100%-60px);
         }
         .container {
             flex: 1;
@@ -122,7 +126,7 @@ function create_form(data) {
         <title>Title</title>
         ${css}
     </head>
-    <body>${create_form_body(data)}</body></html>
+    <body style='padding:30px'>${create_form_body(data)}</body></html>
     `;
     return form;
 }
@@ -245,7 +249,7 @@ function create_doc_footer(doc) {
 
     return `
     <br>
-    <hr>
+   
     <div class='from_footer'>
         <div>Total Value: ${parseFloat(total_value).toFixed(2)} €</div>
         

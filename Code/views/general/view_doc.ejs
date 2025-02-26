@@ -114,7 +114,7 @@
             <input type="text" id="doc_type" name="doc_type" style="display: none" />
             <input id="num_of_rows" name="num_of_rows" value=0 type="number"  style="display: none;"/>
           </div>
-          <div class="table_container no_scale">
+          <div class="table_container no_scale" style="margin-left: 60px;width: calc(100% - 180px);">
             <table id="doc_table" class="my_table">
               <thead>
                 <tr>
@@ -128,17 +128,18 @@
                   <th>Value</th>
                   <th>Price After Discount</th>
                   <th>Final Price</th>
-                  <th></th>
+                  <th style="color:transparent">.</th>
                 </tr>
               </thead>
               <tbody></tbody>
             </table>
           </div>
         </form>
-        <div style="display: grid;grid-template-columns: 30% 30% 30%;gap:5%;margin-top: 20px;width:80%;margin-left:10%">
-          <button class="button_2">Delete</button>
-          <button id="transforms_btn" class="button_1">Transform</button>
-          <button id="save_btn" class="button_3">Save</button>
+        <div style="display: flex;justify-content: space-around;margin-top: 20px;width:80%;margin-left:10%">
+          <button style="width: 20%;" class="button_2">Delete</button>
+          <button style="width: 20%;" id="transforms_btn" class="button_1">Transform</button>
+          <button style="width: 20%;" id="print_btn" class="button_5">Print</button>
+          <button style="width: 20%;" id="save_btn" class="button_3">Save</button>
         </div>
         <div id="transforms_to_div" class="asap-condensed-regular" style="display: none;">
           <div id="transforms_to_div_header">

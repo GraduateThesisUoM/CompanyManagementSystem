@@ -602,8 +602,10 @@ async function delete_deactivate(data, schema, action) {
       obj.status = 0;
     }
     await obj.save();
+    return 1;
   } catch (e) {
     console.log(e);
+    return 0;
   }
 }
 

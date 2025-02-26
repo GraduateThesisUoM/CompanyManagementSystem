@@ -123,20 +123,3 @@
     transform: scale(1);
 }
 
-
-/*''''''''''''''
-.table-container {
-    max-height: 200px; 
-    overflow-y: auto;
-}
-
-/*thead {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-}*/
-/*
-th, td {
-    padding: 8px;
-    text-align: left;
-}*/

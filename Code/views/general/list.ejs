@@ -111,7 +111,7 @@
                     </table>
                 </div>
                 <% if( user.type != 'admin'){%>
-                <button id="go_to_create component">
+                <button id="go_to_create">
                     <img width="50" height="50" src="https://img.icons8.com/ios/50/FFFFFF/plus--v1.png" alt="plus--v1"/>
                 </button>
                 <% }%>
@@ -192,6 +192,10 @@
 
                         print_form(data);
                     }
+                }
+                else if (searchfor == 'transfers') {
+                    $('.btn3').text('Print');
+                    
                 }
                 else if (searchfor == 'reports' || searchfor == 'requests') {
                     $(".btn_column").hide();

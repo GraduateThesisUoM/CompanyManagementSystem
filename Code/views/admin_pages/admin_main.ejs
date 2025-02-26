@@ -118,7 +118,6 @@
                                 <div>Active :<span id="active_u_total_num"></span></div>
                                 <div>Disabled :<span id="disabled_u_total_num"></span></div>
                                 <div>Deleted :<span id="deleted_u_total_num"></span></div>
-                                <div>Banned :<span id="banned_u_total_num"></span></div>
                             </div>
                         </div>
                         <div>
@@ -187,15 +186,14 @@
             const users = JSON.parse(`<%- JSON.stringify(users) %>`);
             const companies = JSON.parse(`<%- JSON.stringify(companies) %>`);
 
-            const adminCount = users.admins.active.length + users.admins.disabled.length + users.admins.deleted.length + users.admins.banned.length;
-            const accountantCount = users.accountants.active.length + users.accountants.disabled.length + users.accountants.deleted.length + users.accountants.banned.length;
-            const userCount = users.users.active.length + users.users.disabled.length + users.users.deleted.length + users.users.banned.length;
+            const adminCount = users.admins.active.length + users.admins.disabled.length + users.admins.deleted.length ;
+            const accountantCount = users.accountants.active.length + users.accountants.disabled.length + users.accountants.deleted.length ;
+            const userCount = users.users.active.length + users.users.disabled.length + users.users.deleted.length;
 
             $("#admin_total_num").html(
                 users.admins.active.length +
                 users.admins.disabled.length +
-                users.admins.deleted.length +
-                users.admins.banned.length 
+                users.admins.deleted.length
             )
 
             $("#companies_total_num").html(
@@ -206,22 +204,19 @@
             $("#users_total_num").html(
                 users.users.active.length +
                 users.users.disabled.length +
-                users.users.deleted.length +
-                users.users.banned.length 
+                users.users.deleted.length 
             );
 
             $("#accountants_total_num").html(
                 users.accountants.active.length +
                 users.accountants.disabled.length +
-                users.accountants.deleted.length +
-                users.accountants.banned.length 
+                users.accountants.deleted.length 
             )
 
             //Users
             $("#active_u_total_num").html(users.users.active.length);
             $("#disabled_u_total_num").html(users.users.disabled.length);
             $("#deleted_u_total_num").html(users.users.deleted.length);
-            $("#banned_u_total_num").html(users.users.banned.length);
 
             //Companies
             $("#active_c_total_num").html(companies.active.length);
@@ -231,21 +226,20 @@
 
             const roleLabels = ['admins', 'accountants', 'users'];
             const roleNumbers = [
-                users.admins.active.length + users.admins.disabled.length + users.admins.deleted.length + users.admins.banned.length,
-                users.accountants.active.length + users.accountants.disabled.length + users.accountants.deleted.length + users.accountants.banned.length,
-                users.users.active.length + users.users.disabled.length + users.users.deleted.length + users.users.banned.length
+                users.admins.active.length + users.admins.disabled.length + users.admins.deleted.length ,
+                users.accountants.active.length + users.accountants.disabled.length + users.accountants.deleted.length ,
+                users.users.active.length + users.users.disabled.length + users.users.deleted.length 
             ];
 
             var ctx = document.getElementById('myChart1').getContext('2d');
             renderDonutChart(ctx, roleLabels, roleNumbers, generateColors(roleLabels.length));
 
             // Get user status counts dynamically
-            var statusLabels = ['active', 'disabled', 'deleted', 'banned'];
+            var statusLabels = ['active', 'disabled', 'deleted'];
             var statusNumbers = [
                 users.users.active.length,
                 users.users.disabled.length,
-                users.users.deleted.length,
-                users.users.banned.length
+                users.users.deleted.length
             ];
 
             ctx = document.getElementById('myChart2').getContext('2d');

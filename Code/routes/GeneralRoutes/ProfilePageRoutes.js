@@ -80,7 +80,15 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
 
 router.post("/delete-account", Authentication.checkAuthenticated, async (req, res) => {
   try {
-    res.redirect("/profile-page?message=deleteaccountcopmlete");
+    if (req.user.type == "user") {
+      var dlt = await generalFunctions.delete_deactivate(req.user._id, "users",2);
+      if(dlt == 1){
+        res.redirect("/profile-page?message=deleteaccountcopmlete");
+      }
+      else{
+        res.redirect("/error?origin_page=profile-page&error=deleteaccountfailed");
+      }
+    }
   } catch (err) {
     console.error("Error updating user data:", err);
     res.redirect("/error?origin_page=profile-page&error=" + err);
