@@ -83,7 +83,7 @@
                     <input type="number" id="count" name="count" value="0" style="display: none;">
                     <div style="display: flex;justify-content: space-around;margin-top: 40px;">
                         <button type="submit" style="width: 30%;" class="button_3">Save</button>
-                        <button style="width: 30%;" class="button_5">Print</button>
+                        <button style="width: 30%;" id="print_btn" class="button_5">Print</button>
                     </div>
                 </form>
                 <div id = history_container class="my_scrollbar">
@@ -98,6 +98,32 @@
                     <%}%>
                   </div>
             </div>
+
+            <div id="print_doc" style="display: none;">
+                <div  style="width:calc(100%-100px);background-color: white;padding: 50px;">
+                    <div style="display:grid;grid-template-columns: 30% 70%;">
+                        <img id="print_img" height="100px" width="100px" src="">
+                        <div>
+                            <p style="font-weight: bold;font-size: 1.5em;" id="print_company_name"></p>
+                        </div>
+    
+                    </div>
+                    
+                    <p style="text-align: center;"><strong>Transfer Document</strong></p>
+                    <p>Date : <span id="print_date">DD/MM/YYYY</span></p>
+                    <p>From : <span id="print_from"></span></p>
+                    <p>To : <span id="print_to"></span></p>
+                    <p style="text-align: right;">Total Quantity : <span id="print_total_q"></span></p>
+                    <div id="print_data" style="display: grid;grid-template-columns: 5% 85% 10%;">
+                        <div style="border: solid black 1px;text-align:center"><strong>A/A</strong></div>
+                        <div style="border: solid black 1px;text-align:center"><strong>Item</strong></div>
+                        <div style="border: solid black 1px;text-align:center"><strong>Quantity</strong></div>
+                    </div>
+                    
+                </div>
+            </div>
+            <iframe id="printiframe" style="display: none;" >
+            </iframe>
         </div>
 
     </div>
@@ -108,6 +134,25 @@
         var items = JSON.parse(`<%- JSON.stringify(items) %>`);
         var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
         const params = new URLSearchParams(window.location.search);
+
+
+        function print_doc(data){
+            $("#print_img").attr("src", data.company.logo);
+            $("#print_company_name").text(data.company.name);
+            $("#print_date").text(data.date);
+            $("#print_from").text(data.doc_from.title);
+            $("#print_to").text(data.doc_to.title);
+            var print_data = $("#print_data");
+            var total_quantity = 0;
+            for( row of data.doc_lines){
+                print_data.append(`<div style="border: solid black 1px;text-align:center">${data.doc_lines.indexOf(row) + 1}</div>`);
+                print_data.append(`<div style="border: solid black 1px">${row.title}</div>`);
+                print_data.append(`<div style="border: solid black 1px;text-align:center">${row.quantity} ${row.unit_of_measurement}</div>`);
+                total_quantity = total_quantity + parseInt(row.quantity);
+            }
+            
+            $("#print_total_q").text(total_quantity);
+        }
 
         
         $("#from_w_select").val(doc.warehouse);
@@ -142,7 +187,7 @@
 
         $(document).ready(function(){
             create_row();
-
+            print_doc(JSON.parse(`<%- JSON.stringify(secondary_data) %>`));
             $(document).on("change", ".item_select", function(){
                 if($(this).val() == "-"){
                     var index = $(this).attr('id').split('_')[2];
@@ -150,6 +195,16 @@
                 } else {
                     create_row();
                 }
+            });
+
+            $("#print_btn").click(function(event){
+                event.preventDefault();
+                var iframe = $("#printiframe");
+                iframe.attr("srcdoc",$("#print_doc").html() ); // Set srcdoc using jQuery
+                iframe.on("load", function () {
+                    this.contentWindow.focus();
+                    this.contentWindow.print();
+                });
             });
 
             $(".doc_history_point_doc_data").each(function () {

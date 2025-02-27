@@ -158,8 +158,9 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             }
 
 
+
             if(obj.edited == 1 || obj.next !== '-'|| obj.sealed == 1){
-              data = {
+                data = {
                 doc_name : series.acronym+"-"+obj.doc_num,
                 doc : obj,
                 registrationDate : generalFunctions.formatDate(obj.registrationDate),
@@ -171,8 +172,10 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
                 //items : await Item.find({ company: company, type: obj.type }),
                 items : await Item.find({ company: company }),
                 transforms_to : transforms_to,
-                history : history
-              }
+                history : history,
+                company : await Company.findOne({_id:req.user.company}),
+                rows: Object.keys(obj.invoiceData).length // Added number of invoice data rows
+                }
             }
             else{
             
@@ -182,13 +185,18 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
                 registrationDate : generalFunctions.formatDate(obj.registrationDate),
                 series_list : series_list,
                 person_type : person_type,
+                series : series,
                 persons: persons,
+                person: person,
                 user: req.user,
                 warehouses : await Warehouse.find({ company: company, status: 1 }),
                 //items : await Item.find({ company: company, type: obj.type }),
                 items : await Item.find({ company: company }),
                 transforms_to : transforms_to,
-                history : history
+                history : history,
+                company : await Company.findOne({_id:req.user.company}),
+                rows: Object.keys(obj.invoiceData).length // Added number of invoice data rows
+
               }
             }
 
@@ -501,6 +509,28 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               items:items,
               history : history
 
+            }
+            var doc_lines = [];
+            for( i of obj.invoiceData){
+              var item = await Item.findOne({_id:i.lineItem});
+              doc_lines.push({
+                unit_of_measurement:item.unit_of_measurement,
+                title:item.title,
+                quantity:i.quantity
+              })
+            }
+            secondary_data = {
+              company : await Company.findOne({_id:req.user.company}),
+              date : generalFunctions.formatDate(obj.registrationDate),
+              doc_lines : doc_lines,
+              doc_from : {title:'-'},
+              doc_to : {title:'-'},
+            }
+            if(obj.warehouse !='-'){
+              secondary_data.doc_from = await Warehouse.findOne({_id:obj.warehouse});
+            }
+            if(obj.receiver !='-'){
+              secondary_data.doc_to = await Warehouse.findOne({_id:obj.receiver});
             }
 
           }

@@ -1,134 +1,5 @@
 function create_form(data) {
- 
-    const css = `
-    <style>
-        @media print {
-            @page {
-                margin: 0;
-            }
-            body {
-                margin: 0;
-                padding: 0;
-            }
-            #print-frame {
-                display: none;
-            }
-        }
-        html, body {
-            
-            margin: 0;
-        }
-        body {
-            display: flex;
-            flex-direction: column;
-            
-            margin: 0;
-            padding: 0;
-        }
-        .main_body {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            margin: 10px;
-            flex: 1;
-        }
-        #type {
-            background-color: black;
-            width: 100%;
-            text-indent: 20px;
-            font-size: 40px;
-            font-weight: bold;
-            color: white;
-            margin: 0;
-        }
-        #doc_num {
-            text-align: right;
-            display: flex;
-            justify-content: right;
-            align-items: center;
-            margin: 0;
-        }
-        #doc_num > span {
-            margin-right: 20px;
-        }
-        table {
-            border-collapse: collapse;
-            border: 2px solid rgb(140, 140, 140);
-            width: 100%;
-        }
-        th, td {
-            border-collapse: collapse;
-            border: 2px solid rgb(140, 140, 140);
-            text-align: center;
-        }
-        table > tbody > tr > td > div {
-            display: grid;
-            grid-template-columns: 70% 30%;
-        }
-        .doc_header > div {
-            display: grid;
-            grid-template-columns: 40% 60%;
-            margin: 0;
-            padding: 0;
-        }
-        .doc_header > div > div {
-            width: 100%;
-            font-size: 20px;
-            padding: 10px 0;
-        }
-        hr {
-            border: none;
-            height: 1px;
-            background-color: black;
-            margin: 10px 0;
-        }
-        #persons_data {
-            display: grid;
-            grid-template-columns: 49% 49%;
-            gap: 2%;
-            margin-bottom: 20px;
-        }
-        #persons_data > div > div {
-            display: grid;
-            grid-template-columns: 50% 50%;
-        }
-        #company_name {
-            margin: 10px;
-        }
-        #company_logo {
-            height: auto;
-            width: 150px;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-        .from_footer {
-            margin: 10px 0px;
-            text-align: left;
-            display: grid;
-            grid-template-columns: auto auto auto;
-            height: 100px;
-            position: fixed;
-            bottom: 30px;
-            width: calc(100%-60px);
-        }
-        .container {
-            flex: 1;
-        }
-    </style>`;
-
-    const form = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-        <meta http-equiv="cache-control" content="no-cache">
-        <meta http-equiv="Pragma" content="no-cache">
-        <meta http-equiv="Expires" content="-1">
-        <title>Title</title>
-        ${css}
-    </head>
-    <body style='padding:30px'>${create_form_body(data)}</body></html>
-    `;
-    return form;
+    return ``;
 }
 
 function create_form_body(data) {
@@ -142,13 +13,13 @@ function create_form_body(data) {
     while (rows_written < data.doc_lines.length) {
         create_doc_table_var = create_doc_table(data.doc_lines,rows_written);
         body += create_header(data) + `
-        <div class="main_body">
+        <div class="main_body" style="display: flex; flex-direction: column; height: calc(80%-200px); margin: 10px; flex: 1; ">
             <div>${data.date}</div>
-            <div id="persons_data">
+            <div id="persons_data" style="display: grid; grid-template-columns: 49% 49%; gap: 2%; margin-bottom: 20px;">
                 <div>${create_doc_person(true, 'Bill To', 'Customer', data.person1)}</div>
                 <div>${create_doc_person(false, 'Bill From', 'Company', data.company)}</div>
             </div>
-            <div class="container">
+            <div class="container" style="flex: 1;">
                 ${create_doc_table_var.table}
             </div>
             ${create_doc_footer(data.doc)}
@@ -164,17 +35,20 @@ function create_form_body(data) {
 
 function create_header(data) {
     return `
-    <div class='doc_header'>
-        <img id="company_logo" src="https://static.vecteezy.com/system/resources/previews/008/214/517/non_2x/abstract-geometric-logo-or-infinity-line-logo-for-your-company-free-vector.jpg" alt="Company Logo">
-        <div>
-            <div id="type">Invoice</div>
-            <div id="doc_num">No. <span>${data.series}${data.doc.doc_num}</span></div>
+    <div class='doc_header' style='height: calc(20%+50px);padding-top:50px'>
+        <div style="display:flex;justify-content:space-between">
+            <img style="height: auto; width: 150px; object-fit: cover; margin-bottom: 10px;" id="company_logo" src="${data.company.logo}" alt="Company Logo">
+            <p style="text-align:center;font-weight:bold;font-size:1.5em;">Company Name</p>
+        </div>
+        <div style="display: grid; grid-template-columns: 40% 60%; margin: 0; padding: 0";>
+            <div id="type" style='background-color: black !Important;width: 100%;text-indent: 20px;font-size: 40px; font-weight: bold; color: white; margin: 0;'>Invoice</div>
+            <div id="doc_num" style="text-align: right;display: flex;justify-content: right;align-items: center;margin: 0";>No. <span style='margin-right: 20px;'>${data.series}${data.doc.doc_num}</span></div>
         </div>
     </div>`;
 }
 
 function create_doc_table(data,rows_written) {
-    var brake_page = 24 + rows_written;
+    var brake_page = 20 + rows_written;
     console.log("brake_page "+brake_page)
     var table =  `<table>
             <thead>
@@ -187,7 +61,7 @@ function create_doc_table(data,rows_written) {
                     <th>Discount %</th>
                     <th>U/P</th>
                     <th>Value</th>
-                    <th>Price After Discount</th>
+                    <th>Price After Disc.</th>
                     <th>Final Price</th>
                 </tr>
             </thead>
@@ -250,25 +124,29 @@ function create_doc_footer(doc) {
     return `
     <br>
    
-    <div class='from_footer'>
-        <div>Total Value: ${parseFloat(total_value).toFixed(2)} €</div>
+    <div class='from_footer' style="margin: 10px 0px; text-align: left; display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; height: 150px; width: calc(100%-60px);">
+        <div>
+            <div>Total Value: ${parseFloat(total_value).toFixed(2)} €</div>
+            <div>Total Disc.: ${parseFloat(total_d).toFixed(2)} €</div>
+            <div style='font-weight:bold'>Total Cost: ${parseFloat(total_cost).toFixed(2)} €</div>
+        </div>
         
-        <div>Total Price after Discounts: ${parseFloat(total_price_after_d).toFixed(2)} €</div>
+        <div>
+            <div>Total Price after Dis.: ${parseFloat(total_price_after_d).toFixed(2)} €</div>
+            <div>Disc. ON TOP: ${parseFloat(total_d_p).toFixed(1)} %</div>
+        </div>
 
-        <div>Total Price after Tax: ${parseFloat(total_price_after_t).toFixed(2)} €</div>
-        <div>Discount ON TOP: ${parseFloat(total_d_p).toFixed(1)} %</div>
-        <div>Discount Amount ON TOP: ${parseFloat(doc.generalDiscount).toFixed(2)} €</div>
-
-        <div>Total Discounts: ${parseFloat(total_d).toFixed(2)} €</div>
-
-        <div style='font-weight:bold'>Total Cost: ${parseFloat(total_cost).toFixed(2)} €</div>
+        <div>
+            <div>Total Price after Tax: ${parseFloat(total_price_after_t).toFixed(2)} €</div>
+            <div>Disc. Amount ON TOP: ${parseFloat(doc.generalDiscount).toFixed(2)} €</div>
+        </div>
     </div>`;
 }
 
 function create_doc_person(client, header, person_title, data) {
     if (client) {
         return `<div>${header}</div>
-        <div>
+        <div style="display: grid; grid-template-columns: 50% 50%;">
             <div>${person_title} Name</div>
             <div>${data.firstName} ${data.lastName}</div>
             <div>Email:</div>
@@ -280,7 +158,7 @@ function create_doc_person(client, header, person_title, data) {
         </div>`;
     }
     return `<div>${header}</div>
-    <div>
+    <div style="display: grid; grid-template-columns: 50% 50%;">
         <div>${person_title} Name</div>
         <div>${data.name}</div>
         <div>Email:</div>
@@ -293,10 +171,12 @@ function create_doc_person(client, header, person_title, data) {
 }
 
 function print_form(data) {
+    console.log(data)
     var iframe = document.getElementById('print-frame');
     var doc = iframe.contentWindow.document;
 
-    var form = create_form(data);
+    //var form = create_form(data);
+    var form = '<div style="padding:0px 50px;">'+create_form_body(data)+'</div>'
     doc.open();
     doc.write(form);
     doc.close();

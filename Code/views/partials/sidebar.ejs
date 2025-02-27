@@ -74,8 +74,7 @@
         <button onclick="location.href = 'list?searchfor=items';">Items</button>
         <!--button onclick="location.href = 'list?searchfor=items&type=2';">Items Buy</button>
         <button onclick="location.href = 'list?searchfor=items&type=1';">Items Shell</button-->
-        <button onclick="location.href = 'transfer';">Transfers</button>
-        <button onclick="location.href = 'list?searchfor=transfers';">Docs</button>
+        <button onclick="location.href = 'list?searchfor=transfers';">Transfers</button>
       </div>
     </div>
   </div>
@@ -135,53 +134,6 @@
     });
     $("#back_btn").click(function () {
       window.location = go_back(new URL(window.location.href))
-      /*try {
-        const current_url = new URL(window.location.href);
-        var newLocation = "";
-        if(current_url.pathname == "/create"){
-          newLocation = "/list?searchfor="+current_url.searchParams.get("create");
-          if(current_url.searchParams.get("type")){
-            newLocation = newLocation + "&type="+current_url.searchParams.get("type");
-          }
-        }
-        else if(current_url.pathname == "/view"){
-          newLocation = "/list?searchfor="+current_url.searchParams.get("type");
-          if(current_url.searchParams.get("id")){
-            newLocation = newLocation + "&type="+current_url.searchParams.get("type2");
-          }
-        }
-        else{
-          let previousLink = document.referrer;
-
-          // Check if the referrer exists
-          if (previousLink) {
-
-            // Create a new URL object from the previous link
-            const url = new URL(previousLink);
-
-            // Extract the pathname (e.g., /list)
-            const previousPath = url.pathname;
-
-            // Extract the search parameters (query string)
-            const params = url.search; // This will include '?' at the start
-
-            // Combine pathname and parameters if you want to navigate to the full path with parameters
-            newLocation = `${previousPath}${params}`;
-            alert(newLocation);
-
-            // Redirect to the combined pathname and parameters
-            
-          } else {
-            // If no referrer, navigate back
-            window.history.back();
-          }
-        }
-        window.location = newLocation;
-
-      } catch (e) {
-        console.log(e);
-        window.history.back();
-      }*/
     });
 
     $(document).keydown(function (event) {

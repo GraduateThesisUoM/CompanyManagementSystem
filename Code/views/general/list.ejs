@@ -195,7 +195,18 @@
                 }
                 else if (searchfor == 'transfers') {
                     $('.btn3').text('Print');
-                    
+                    /*var data = {
+                            company_name: '<%=doc_data.company.name%>',
+                            date: formatDate(new Date('<%=doc_data.doc.registrationDate%>')),
+                            doc: JSON.parse(`<%- JSON.stringify(doc_data.doc) %>`),
+                            series: '<%=doc_data.series%>',
+                            person1: JSON.parse(`<%- JSON.stringify(doc_data.person1) %>`),
+                            company: JSON.parse(`<%- JSON.stringify(doc_data.company) %>`),
+                            total_doc_rows: total_doc_rows,
+                            doc_lines:JSON.parse(`<%- JSON.stringify(doc_data.doc_lines) %>`),
+                        }
+
+                        print_form(data);*/
                 }
                 else if (searchfor == 'reports' || searchfor == 'requests') {
                     $(".btn_column").hide();
@@ -232,7 +243,11 @@
                     event.stopPropagation();
                     var btn_act = 0;
                     if (searchfor == 'docs') {
-                        var btn_act = 3;
+                        btn_act = 3;
+                    }
+                    if (searchfor == 'transfers') {
+                        alert('transfers');
+                        btn_act = 3;
                     }
                     button_action($(this),btn_act);
                 })
@@ -251,6 +266,10 @@
             }
 
             $("#go_to_create").click(function () {
+                if(searchfor == 'transfers'){
+                    window.location = '/transfer';
+                    return
+                }
                 
                 var destination = '/create?create='+params.get('searchfor')
 
