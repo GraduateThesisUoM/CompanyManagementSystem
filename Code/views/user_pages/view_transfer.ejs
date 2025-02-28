@@ -133,6 +133,8 @@
         var count = 0;
         var items = JSON.parse(`<%- JSON.stringify(items) %>`);
         var doc = JSON.parse(`<%- JSON.stringify(doc) %>`);
+        var secondary_data = JSON.parse(`<%- JSON.stringify(secondary_data) %>`);
+        console.log(secondary_data)
         const params = new URLSearchParams(window.location.search);
 
 
@@ -199,8 +201,19 @@
 
             $("#print_btn").click(function(event){
                 event.preventDefault();
+                var print_document = create_form({
+                    company_name: secondary_data.company.name,
+                    date: secondary_data.date,
+                    doc: doc,
+                    series: secondary_data.acronym,
+                    from: secondary_data.doc_from,
+                    to: secondary_data.doc_to,
+                    company: secondary_data.company,
+                    doc_lines:secondary_data.doc_lines,
+                    type : 2
+                });
                 var iframe = $("#printiframe");
-                iframe.attr("srcdoc",$("#print_doc").html() ); // Set srcdoc using jQuery
+                iframe.attr("srcdoc",print_document ); // Set srcdoc using jQuery
                 iframe.on("load", function () {
                     this.contentWindow.focus();
                     this.contentWindow.print();

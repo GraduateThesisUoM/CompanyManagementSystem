@@ -393,7 +393,7 @@
     });
 
     $('#print_btn').click(function(){
-      var print_document = '<div style="padding:0px 50px;">'+create_form_body({
+      var print_document = create_form_body({
           company_name: JSON.parse(`<%- JSON.stringify(company.name) %>`),
           date: formatDate(new Date(doc.registrationDate)),
           doc: doc,
@@ -404,8 +404,6 @@
           total_doc_rows: JSON.parse(`<%- JSON.stringify(rows)%>`),
           doc_lines: Object.values(doc.invoiceData)
       });
-      +'</div>'
-
         var iframe = $("#print-frame");
         console.log(print_document)
         iframe.attr("srcdoc",print_document ); // Set srcdoc using jQuery

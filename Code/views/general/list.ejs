@@ -178,7 +178,7 @@
                     type = new URLSearchParams(window.location.search).get('type');
                     $("#type").val(type);
                     if (params.has('printdoc')) {
-                       
+                       console.log(JSON.parse(`<%- JSON.stringify(doc_data) %>`),)
                         var data = {
                             company_name: '<%=doc_data.company.name%>',
                             date: formatDate(new Date('<%=doc_data.doc.registrationDate%>')),
@@ -186,27 +186,36 @@
                             series: '<%=doc_data.series%>',
                             person1: JSON.parse(`<%- JSON.stringify(doc_data.person1) %>`),
                             company: JSON.parse(`<%- JSON.stringify(doc_data.company) %>`),
-                            total_doc_rows: total_doc_rows,
+                            //total_doc_rows: total_doc_rows,
                             doc_lines:JSON.parse(`<%- JSON.stringify(doc_data.doc_lines) %>`),
+                            type : 1
                         }
 
                         print_form(data);
                     }
                 }
                 else if (searchfor == 'transfers') {
+                    type = 3;
                     $('.btn3').text('Print');
-                    /*var data = {
-                            company_name: '<%=doc_data.company.name%>',
-                            date: formatDate(new Date('<%=doc_data.doc.registrationDate%>')),
-                            doc: JSON.parse(`<%- JSON.stringify(doc_data.doc) %>`),
-                            series: '<%=doc_data.series%>',
-                            person1: JSON.parse(`<%- JSON.stringify(doc_data.person1) %>`),
-                            company: JSON.parse(`<%- JSON.stringify(doc_data.company) %>`),
-                            total_doc_rows: total_doc_rows,
-                            doc_lines:JSON.parse(`<%- JSON.stringify(doc_data.doc_lines) %>`),
-                        }
 
-                        print_form(data);*/
+                    if (params.has('printdoc')) {
+                       
+                       var data = {
+                           company_name: '<%=doc_data.company.name%>',
+                           date: formatDate(new Date('<%=doc_data.doc.registrationDate%>')),
+                           doc: JSON.parse(`<%- JSON.stringify(doc_data.doc) %>`),
+                           series: '<%=doc_data.series%>',
+                           from: JSON.parse(`<%- JSON.stringify(doc_data.from) %>`),
+                           to: JSON.parse(`<%- JSON.stringify(doc_data.to) %>`),
+                           company: JSON.parse(`<%- JSON.stringify(doc_data.company) %>`),
+                           //total_doc_rows: total_doc_rows,
+                           doc_lines:JSON.parse(`<%- JSON.stringify(doc_data.doc_lines) %>`),
+                           type : 2
+                       }
+                       console.log(data)
+                       print_form(data);
+                   }
+
                 }
                 else if (searchfor == 'reports' || searchfor == 'requests') {
                     $(".btn_column").hide();
@@ -228,10 +237,6 @@
                 else if (searchfor == 'companies'){
                     $(".btn2").hide();
                 }
-                if (searchfor == 'transfers'){
-                    $(".btn3d").remove();
-                    
-                }
                 $("#searchfor").val(searchfor);
 
 
@@ -246,7 +251,6 @@
                         btn_act = 3;
                     }
                     if (searchfor == 'transfers') {
-                        alert('transfers');
                         btn_act = 3;
                     }
                     button_action($(this),btn_act);

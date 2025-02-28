@@ -105,7 +105,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             document.sealed = 1;
             await document.save();
           }
-
+          
           doc_data = {
             company: await Company.findOne({ _id: company }),
             doc: document,
@@ -113,6 +113,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             person1: await Person.findOne({ _id: document.receiver }),
             doc_lines: Object.values(document.invoiceData)
           };
+          console.log(doc_data)
         }
       } else if (req.query.searchfor == "Warehouse") {
         list_items = await Warehouse.find({ company: company });
@@ -295,6 +296,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Comments"
         ]
       }else if(req.query.searchfor == "transfers"){
+        
         var series = await Series.findOne({my_id:path_constants.my_constants.transfer_series_my_id,company:req.user.company});
         var list_items = await Document.find({company:company,type:3,series:series._id,edited:0});
         
@@ -310,8 +312,36 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           "Date",
           "Doc",
         ]
+      
+
+      if (req.query.printdoc) {
+        
+
+        var document = await Document.findOne({ _id: req.query.printdoc });
+        var series = await Series.findOne({ _id: document.series });
+        var company = await Company.findOne({ _id: company })
+
+        console.log('fffffffffffffff')
+        console.log(Object.values(document.invoiceData))
+        console.log('fffffffffffffff')
+
+        doc_data = {
+          company: company,
+          doc: document,
+          series: series.acronym,
+          from : {title :'-'},
+          to : {title :'-'},
+          doc_lines: Object.values(document.invoiceData)
+        };
+
+        if(document.warehouse != '-'){
+          doc_data.from = await Warehouse.findOne({ _id: document.warehouse })
+        }
+        if(document.receiver != '-'){
+          doc_data.from = await Warehouse.findOne({ _id: document.receiver })
+        }
       }
-    
+    }
 
       var data = {
         user: req.user,

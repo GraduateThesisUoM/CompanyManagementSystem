@@ -525,6 +525,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               doc_lines : doc_lines,
               doc_from : {title:'-'},
               doc_to : {title:'-'},
+              series_acronym : series.acronym
             }
             if(obj.warehouse !='-'){
               secondary_data.doc_from = await Warehouse.findOne({_id:obj.warehouse});
