@@ -15,7 +15,7 @@ function create_form_body(data) {
     var create_doc_table_var;
 
     while (rows_written < data.doc_lines.length) {
-        create_doc_table_var = create_doc_table(data.doc_lines,rows_written);
+        create_doc_table_var = create_doc_table(data.doc_lines,rows_written,data.type);
         body += create_header(data) + `
         <div class="main_body" style="display: flex; flex-direction: column; height: calc(80%-200px); margin: 10px; flex: 1; ">
             <div>${data.date}</div>
@@ -59,7 +59,7 @@ function create_form_body_transfer_doc(data) {
     }
 
     while (rows_written < data.doc_lines.length) {
-        create_doc_table_var = create_doc_table(data.doc_lines,rows_written);
+        create_doc_table_var = create_doc_table(data.doc_lines,rows_written,data.type);
         body += create_header(data) + `
         <div class="main_body" style="display: flex; flex-direction: column; height: calc(80%-200px); margin: 10px; flex: 1; ">
             <div>${data.date}</div>
@@ -94,52 +94,83 @@ function create_header(data) {
     </div>`;
 }
 
-function create_doc_table(data,rows_written) {
+function create_doc_table(data,rows_written,type) {
     var brake_page = 20 + rows_written;
     console.log("brake_page "+brake_page)
-    var table =  `<table>
+    var table =  `<table style="border-collapse: collapse;width:100%">
             <thead>
                 <tr>
-                    <th>A/A</th>
-                    <th>Title</th>
-                    <th>Qty</th>
-                    <th>Tax</th>
-                    <th>Discount</th>
-                    <th>Discount %</th>
-                    <th>U/P</th>
-                    <th>Value</th>
-                    <th>Price After Disc.</th>
-                    <th>Final Price</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">A/A</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Title</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Qty</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Tax</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Discount</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Discount %</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">U/P</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Value</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Price After Disc.</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Final Price</th>
                 </tr>
             </thead>
             <tbody>`;
+
+            if(type == 1){
             
-            for (let i = rows_written; i < data.length; i++) {
-                let line = data[i];
+                for (let i = rows_written; i < data.length; i++) {
+                    let line = data[i];
+                    
+                    let value = line.quantity * line.price_of_unit;
+                    let disc_p = ((line.discount * 100) / value).toFixed(2); // Discount percentage rounded to 2 decimals
+                    let p_after_d = value - line.discount;
+                    let final_p = p_after_d + (p_after_d * (line.tax / 100));
                 
-                let value = line.quantity * line.price_of_unit;
-                let disc_p = ((line.discount * 100) / value).toFixed(2); // Discount percentage rounded to 2 decimals
-                let p_after_d = value - line.discount;
-                let final_p = p_after_d + (p_after_d * (line.tax / 100));
-            
-                table += `
-                    <tr>
-                        <td>${i + 1}</td>
-                        <td>Title</td>
-                        <td>${line.quantity}</td>
-                        <td>${line.tax}&nbsp;%</td>
-                        <td>${parseFloat(line.discount).toFixed(2)}&nbsp;€</td>
-                        <td>${disc_p}&nbsp;%</td>
-                        <td>${parseFloat(line.price_of_unit).toFixed(2)}&nbsp;€</td>
-                        <td>${parseFloat(value).toFixed(2)}&nbsp;€</td>
-                        <td>${parseFloat(p_after_d).toFixed(2)}&nbsp;€</td>
-                        <td>${parseFloat(final_p).toFixed(2)}&nbsp;€</td>
-                    </tr>`;
-            
-                rows_written += 1;
-            
-                if (i === brake_page) {
-                    break;
+                    table += `
+                        <tr>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${i + 1}</td>
+                            <td style="border: solid black 1px; padding: 0px;">${line.item.title}</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${line.quantity}</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${line.tax}&nbsp;%</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${parseFloat(line.discount).toFixed(2)}&nbsp;€</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${disc_p}&nbsp;%</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${parseFloat(line.price_of_unit).toFixed(2)}&nbsp;€</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${parseFloat(value).toFixed(2)}&nbsp;€</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${parseFloat(p_after_d).toFixed(2)}&nbsp;€</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${parseFloat(final_p).toFixed(2)}&nbsp;€</td>
+                        </tr>`;
+                
+                    rows_written += 1;
+                
+                    if (i === brake_page) {
+                        break;
+                    }
+                }
+            }
+            else if(type == 2){
+                table =  `<table style="border-collapse: collapse;width:100%">
+            <thead>
+                <tr>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">A/A</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Title</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>`;
+
+                for (let i = rows_written; i < data.length; i++) {
+                    let line = data[i];
+                                    
+                    table += `
+                        <tr>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${i + 1}</td>
+                            <td style="border: solid black 1px; padding: 0px;">${line.item.title}</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${line.quantity}</td>
+                        </tr>`;
+                
+                    rows_written += 1;
+                
+                    if (i === brake_page) {
+                        break;
+                    }
                 }
             }
 

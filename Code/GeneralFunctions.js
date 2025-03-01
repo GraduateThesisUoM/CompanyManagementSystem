@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 var mongoose = require("mongoose");
 const { create } = require("./Schemas/Node");
-const { Admin } = require("mongodb");
+const { Admin, ConnectionClosedEvent } = require("mongodb");
 
 
 //Models
@@ -118,7 +118,6 @@ async function create_user(data) {
 
 async function create_node(data) {
   console.log('create_node')
-  console.log(data)
 
   new_data = {
     company: data.company,
@@ -456,14 +455,6 @@ async function warehouse_get_inventory(data){
     })
   }
 
-
-  /*for (const item of item_list) {
-    const doc_item_quantity = doc_items_map[item.id];
-    if (doc_item_quantity) {
-      item.count = doc_item_quantity;
-    }
-  }*/
-
   return item_list;
 
 }
@@ -489,7 +480,7 @@ async function inventory_count(data){
 
 
 async function get_item_warehouse_inventory(data){
-  console.log(get_item_warehouse_inventory);
+  console.log("get_item_warehouse_inventory");
   console.log(data);
   var inventory = 0;
 
@@ -591,10 +582,18 @@ async function delete_deactivate(data, schema, action) {
     /*if(schema == 'companies'){
       schema = 'Company'
     }*/
-    console.log(schema)
-    var obj = await get_obj_by_id(data, schema);
+    const Model = schemaMap[schema]; // Retrieves an existing model
+        var obj = await get_obj_by_id(data, schema);
     if (action == "delete" || action == 2) {
-      obj.status = 2;
+      if(await check_for_delete({obj:obj,schema:schema})){
+        console.log("--------------------------------------Delete")
+      }
+      else{
+        console.log("---------------------------------No Delete")
+        //obj.status = 2;
+        //await obj.save();
+        //return 2//IS USED IN DOC OR HAS INVENTORY;
+      }
     } else if (action == "activate"|| action == 1 ) {
       obj.status = 1;
     } 
@@ -616,6 +615,53 @@ async function get_obj_by_id(data, schema) {
   }
   return await Model.findOne(data);
 }
+
+async function check_for_delete(data) {
+  console.log("check_for_delete")
+  var results;
+  var count = 0;
+  const Model = schemaMap[data.schema]; // Retrieves an existing model
+    if(Model == Person){
+      results = await Document.find({sender:data.obj._id});
+      count = count + results.length;
+      if(count == 0){
+        results = await Document.find({receiver:data.obj._id});
+        count = count + results.length;
+        if(count == 0){
+          return true;
+        }
+      }
+    }
+    else if(Model == Warehouse){
+      results = await warehouse_get_inventory({
+        company : data.obj.company,
+        id : data.obj._id
+      })
+      count = count + results.length
+    }
+    else if(Model == Item){
+      var warehouses = await Warehouse.find({ company: data.obj.company, status: 1 });
+      for (w of warehouses) {
+        results = await get_item_warehouse_inventory({
+          company:data.obj.company,
+          item:data.obj._id,
+          warehouse:w._id
+        })
+  
+        count = count + results
+      }
+    }
+    else if(Model == Document){
+      results = await Documents.find({next : data.obj._id });
+      count = count + results.length;
+    }
+
+  if(count == 0){
+    return true;
+  }
+  return false;
+}
+
 
 async function update(id, schema , data){
   try {
@@ -1000,7 +1046,7 @@ async function resetAndImportData(companyId) {
       }
     }
 
-    console.log(`✅ Database restored exactly as in the JSON file`);
+    console.log(` Database restored exactly as in the JSON file`);
   } catch (err) {
     console.error("Error restoring data:", err);
   }
@@ -1041,64 +1087,6 @@ async function importUserType(UserSchema, userType) {
   }
 }
 
-/*
-async function exportAdmins() {
-  try {
-    const baseDir = path_constants.my_constants.export_path;
-
-    // Create the base exports directory if it doesn't exist
-    if (!fs.existsSync(baseDir)) {
-      fs.mkdirSync(baseDir);
-      console.log(`Created exports directory: ${baseDir}`);
-    }
-
-    // Create the 'admins' folder inside the exports directory
-    const adminsDir = path.join(baseDir, 'admins');
-    if (!fs.existsSync(adminsDir)) {
-      fs.mkdirSync(adminsDir);
-      console.log(`Created 'admins' directory: ${adminsDir}`);
-    }
-
-    // Fetch all admin data from the Admin model
-
-    const adminData = await User.find({type:'admin'}).exec();
-
-    // Export admin data to a file inside the 'admins' folder
-    const adminFilePath = path.join(adminsDir, 'admins.txt');
-    fs.writeFileSync(adminFilePath, JSON.stringify(adminData, null, 2), 'utf-8');
-    console.log(`Exported all admin data to ${adminFilePath}`);
-
-  } catch (err) {
-    console.error("Error exporting admin data:", err);
-  }
-}
-
-/*
-async function exportAccountant() {
-  try {
-    const baseDir = path_constants.my_constants.export_path;
-
-    if (!fs.existsSync(baseDir)) {
-      fs.mkdirSync(baseDir);
-      console.log(`Created exports directory: ${baseDir}`);
-    }
-
-    const accountantsDir = path.join(baseDir, 'accountants');
-    if (!fs.existsSync(accountantsDir)) {
-      fs.mkdirSync(accountantsDir);
-      console.log(`Created 'accountants' directory: ${accountantsDir}`);
-    }
-
-    const accountantsData = await User.find({type:'accountant'}).exec();
-
-    const accountantsFilePath = path.join(accountantsDir, 'accountants.txt');
-    fs.writeFileSync(accountantsFilePath, JSON.stringify(accountantsData, null, 2), 'utf-8');
-    console.log(`Exported all accountant data to ${accountantsFilePath}`);
-
-  } catch (err) {
-    console.error("Error exporting accountants data:", err);
-  }
-}*/
 
 async function exportUserType(UserSchema, userType) {
   try {
@@ -1283,7 +1271,6 @@ function calculateDateDifference(inputDate) {
 
 async function gets_movements(data) {
   console.log('gets_movements');
-  console.log(data);
 
   let query = { receiver: data.user._id };
 
@@ -1314,10 +1301,8 @@ async function gets_movements(data) {
 
 function get_docs_value(data) {
   var total = 0;
-  console.log('dds')
+  console.log('get_docs_value')
 
-  console.log(data)
-  console.log(Object.values(data.invoiceData).length)
   const g_discount = parseFloat(data.generalDiscount)/Object.values(data.invoiceData).length;
   for(let key in data.invoiceData) {
     const row = data.invoiceData[key];

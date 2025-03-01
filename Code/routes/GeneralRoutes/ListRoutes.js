@@ -105,13 +105,43 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             document.sealed = 1;
             await document.save();
           }
+
+          var doc_lines = [];
+          const invoiceDataArray = Array.isArray(document.invoiceData) 
+            ? document.invoiceData 
+            : Object.values(document.invoiceData || {});
+
+        doc_lines = await Promise.all(invoiceDataArray.map(async (line) => {
+            const item = await Item.findOne({ _id: line.lineItem });
+            return {
+                quantity: line.quantity,
+                item,
+                tax: line.tax,
+                discount: line.discount,
+                disc_p: line.disc_p,
+                price_of_unit: line.price_of_unit,
+            };
+        }));
+        console.log(doc_lines)
+         /*
+          <td>${i + 1}</td>
+          <td>${line.item.title}</td>
+          <td>${line.quantity}</td>
+          <td>${line.tax}&nbsp;%</td>
+          <td>${parseFloat(line.discount).toFixed(2)}&nbsp;€</td>
+          <td>${disc_p}&nbsp;%</td>
+          <td>${parseFloat(line.price_of_unit).toFixed(2)}&nbsp;€</td>
+          <td>${parseFloat(value).toFixed(2)}&nbsp;€</td>
+          <td>${parseFloat(p_after_d).toFixed(2)}&nbsp;€</td>
+          <td>${parseFloat(final_p).toFixed(2)}&nbsp;€</td>
+         */
           
           doc_data = {
             company: await Company.findOne({ _id: company }),
             doc: document,
             series: series.acronym,
             person1: await Person.findOne({ _id: document.receiver }),
-            doc_lines: Object.values(document.invoiceData)
+            doc_lines: doc_lines//Object.values(document.invoiceData)
           };
           console.log(doc_data)
         }
@@ -321,9 +351,13 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         var series = await Series.findOne({ _id: document.series });
         var company = await Company.findOne({ _id: company })
 
-        console.log('fffffffffffffff')
-        console.log(Object.values(document.invoiceData))
-        console.log('fffffffffffffff')
+        var doc_lines = [];
+        for(line of document.invoiceData){
+          doc_lines.push({
+            quantity : line.quantity,
+            item : await Item.findOne({_id:line.lineItem})
+          })
+        }
 
         doc_data = {
           company: company,
@@ -331,7 +365,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
           series: series.acronym,
           from : {title :'-'},
           to : {title :'-'},
-          doc_lines: Object.values(document.invoiceData)
+          doc_lines: doc_lines
         };
 
         if(document.warehouse != '-'){
