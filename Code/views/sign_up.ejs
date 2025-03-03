@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="general_css.css" />
     <link rel="stylesheet" href="sing_up_css.css" />
     <link rel="stylesheet" href="fonts_css.css" />
+    <link rel="stylesheet" href="my_select_css.css" />
     <!--Fonts-->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -67,11 +68,20 @@
               <button class="selected" type="button" id="newCompanybtn">New Company</button>
               <button type="button" id="existingCompanybtn">Existing Company</button>
               <input id="companyNewExisting" name="companyNewExisting" value="0" style="display: none" />
+              
             </div>
             <div class="tab_1">
               <div class="input_container">
                 <input class="input_type_1" type="text" name="companyName" id="companyName" placeholder=" " />
                 <label for="companyName" id="companyName_label">Company Name:</label>
+              </div>
+              <div id="plan_div">
+                <label class="my_label" style="color: #AFAFAA;text-indent: 15px;">Plan</label>
+                <select class="my_select type1" style="border-radius: 15px;padding: 10px;" name="plan">
+                  <option value="1">Basic</option>
+                  <option value="7">Enterprise</option>
+                  <option value="51">Full</option>
+                </select>
               </div>
               <div id="newCompany" class="input_container">
                 <input class="input_type_1" type="text" name="companyLogo" id="companyLogo" placeholder=" " />
@@ -165,6 +175,8 @@
         $("#existingCompanybtn").removeClass("selected");
         $("#companyNewExisting").val("0");
         $("#self_accountant_check_box_container").css("display", "flex");
+        $("#plan_div").show();
+        
       });
       $("#existingCompanybtn").click(function () {
         $("#companyName").css("display", "block");
@@ -174,6 +186,7 @@
         $("#newCompanybtn").removeClass("selected");
         $("#existingCompanybtn").addClass("selected");
         $("#companyNewExisting").val("1");
+        $("#plan_div").hide();
 
         $("#self_accountant_check_box_container").css("display", "none");
         if ($("#self_accountant_check_box").prop("checked")) {

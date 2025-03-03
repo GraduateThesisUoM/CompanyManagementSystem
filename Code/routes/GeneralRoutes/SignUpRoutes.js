@@ -51,7 +51,9 @@ router.post("/", async (req, res) => {
         var data = {
           name: companyName,
           signupcode: 1,
-          /*signupcode : generateRandomCode(length)*/
+          /*signupcode : generateRandomCode(length),*/
+          plan: req.body.plan
+
         };
         if (req.body.companyLogo) {
           data.logo = req.body.companyLogo; // Add `logo` only if it's provided
@@ -61,7 +63,7 @@ router.post("/", async (req, res) => {
         //Existing Company
         company = await Company.findOne({
           name: companyName,
-          signupcode: req.body.companyRegisterCode,
+          signupcode: req.body.companyRegisterCode
         });
       }
 

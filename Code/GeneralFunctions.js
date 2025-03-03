@@ -253,6 +253,13 @@ async function create_company(data) {
     transforms_to : 0
   });
 
+  if(data.plan){
+    company.license.bought = data.plan;
+    await company.save();
+  }
+
+
+
   transfer_series.my_id = path_constants.my_constants.transfer_series_my_id,
   await transfer_series.save();
 

@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Αρχική</title>
+        <title>DeskFlow</title>
         <!--ajax-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
         <!--CSS-->
         <link rel="stylesheet" href="general_css.css">
         <link rel="stylesheet" href="fonts_css.css">
+        <link rel="stylesheet" href="buttons_css.css">
 
         <!--Fonts-->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -42,17 +43,33 @@
         }
         #prices_conatainer .container {
             flex: 1;
-            margin: 0 40px;
+            margin: 0 20px;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.3s ease-in-out;
+            filter: opacity(0.8);
+        }
+        #prices_conatainer .container:hover {
+            box-shadow: -5px 5px 15px 2px black;
+            filter: opacity(1);
         }
 
-        #feature_container{
+        #feature_container {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
             width: 100%;
         }
+
         #feature_container .container {
             flex: 1;
-            margin: 0 40px;
+            margin: 0 20px;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #feature_container .container:hover {
+            flex-grow: 4; /* Increases width on hover */
         }
 
 
@@ -74,14 +91,12 @@
             transition: all 0.3s ease-in-out;
         }
 
-
         /* Default positions */
         #first {
             /*background-image: url("office1.jpg");*/
             z-index: 3;
             position: absolute;
         }
-
 
         /* Second image - smaller height */
         #second {
@@ -131,6 +146,7 @@
             justify-content: flex-end;
         }
 
+
         .plan p{
             text-align: center;
         }
@@ -153,6 +169,9 @@
    
     </style>
     <body class="asap-condensed-regular">
+        <div style="text-align: right;width: calc(100% - 10px);">
+            <a style="text-align: right;width: 100%;all:unset;color:white;cursor: pointer;" href="/log-in">Log In</a>
+        </div>
         <h1 style="font-size: 7em;">Welcome</h1>
         <h2 style="margin: 0px;text-indent: 20px;position: relative;top:-20px" class="color_white asap-condensed-extralight">Let 's elevate your business</h1>
         
@@ -170,8 +189,11 @@
                 <label class="asap-condensed-extralight color_white">Organized</label>
             </div>
         </div>
-        <div class="glass_effect_1" style="border-radius: 0;width: 50%; margin-left: 50%; margin-top: 50px;">
-            <h2 style="text-align: right;;padding-right: 50px;" class="color_white">Our Features</h2>
+        <div style="display: flex;justify-content: flex-end;">
+            <div class="glass_effect_1" style="border-radius: 0;width: 50%; margin: 50px 0px;">
+                <h2 style="text-align: left;padding-left: 20px;margin: 20px 0px 0px 0px;" class="color_white">Our Features</h2>
+                <div  style="color:rgba(180, 180, 180, 0.759);padding-bottom: 20px;padding-left: 20px;">find the one that fits to your needs</div>
+            </div>
         </div>
         
         <div id="feature_container" style="display: flex;justify-content: space-around;">
@@ -181,9 +203,12 @@
             <div class="glass_effect_2 container">Work Schedule</div>
             <div class="glass_effect_2 container">Payroll / Pay Monitor</div>
         </div>
-        <div class="glass_effect_1" style="border-radius: 0;width: 50%; margin-right: 50%; margin: 50px 0px;">
-            <h2 style="text-align: left;padding-left: 20px;margin: 20px 0px 0px 0px;" class="color_white">Our Plans</h2>
-            <div  style="color:rgba(180, 180, 180, 0.759);padding-bottom: 20px;padding-left: 20px;">find the one that fits to your needs</div>
+
+        <div style="display: flex;">
+            <div class="glass_effect_1" style="border-radius: 0;width: 50%; margin: 50px 0px;">
+                <h2 style="text-align: left;padding-left: 20px;margin: 20px 0px 0px 0px;" class="color_white">Our Plans</h2>
+                <div  style="color:rgba(180, 180, 180, 0.759);padding-bottom: 20px;padding-left: 20px;">find the one that fits to your needs</div>
+            </div>
         </div>
         <div id="prices_conatainer" >
             <div class="container glass_effect_2 plan">
@@ -194,7 +219,7 @@
                     <img width="40" height="40" src="https://img.icons8.com/sf-black-filled/40/850101/xbox-x.png" alt="xbox-x"/>
                     <div>0 User Employees</div>
                 </div>
-                <p>350 € / year</p>
+                <button style="width: 60%;margin-top: 20px;" class="button_1" onclick="window.location.href = '/sign-up'">Sign Up</button>
             </div>
             <div class="container glass_effect_2 plan">
                 <p class="plan_title">Enterprise</p>
@@ -204,7 +229,7 @@
                     <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
                     <div>5 Extra Users</div>
                 </div>
-                <p>500 € / year</p>
+                <button style="width: 60%;margin-top: 20px;" class="button_1" onclick="window.location.href = '/sign-up'">Sign Up</button>
             </div>
             <div class="container glass_effect_2 plan">
                 <p class="plan_title">Full</p>
@@ -212,9 +237,9 @@
                     <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
                     <div>1 User Owner</div>
                     <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
-                    <div>Unlimited User Employees</div>
+                    <div>50 User Employees</div>
                 </div>
-                <p>1.000 € / year</p>
+                <button style="width: 60%;margin-top: 20px;" class="button_1" onclick="window.location.href = '/sign-up'">Sign Up</button>
             </div>
         </div>
         <div id="scanner_div" class="glass_effect_2 container display_block"  style="display: none;">
