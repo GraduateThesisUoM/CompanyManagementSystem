@@ -72,6 +72,18 @@
             flex-grow: 4; /* Increases width on hover */
         }
 
+        #feature_container .container h3{
+            all:unset;
+        }
+
+        #feature_container .container .img_container{
+            display: flex;
+            transition: all 0.5s ease-in-out;
+            height: 100px;
+        }
+
+       
+        
 
         .gallery {
             height: 60vh;
@@ -197,8 +209,14 @@
         </div>
         
         <div id="feature_container" style="display: flex;justify-content: space-around;">
-            <div class="glass_effect_2 container">Data Entering</div>
-            <div class="glass_effect_2 container">Complete History</div>
+            <div class="glass_effect_2 container">
+                <h3>Data Entering</h3>
+                <div class="img_container">
+                </div>
+            </div>
+            <div class="glass_effect_2 container">
+                <h3>Complete History</h3>
+            </div>
             <div class="glass_effect_2 container">Work Card Scan</div>
             <div class="glass_effect_2 container">Work Schedule</div>
             <div class="glass_effect_2 container">Payroll / Pay Monitor</div>
@@ -432,8 +450,28 @@
                     $("#second label").text("Increased Proactivity")
                 }
             );
-
             
+            $("#feature_container .container").hover(
+    function () {
+        $("#feature_container .container").not(this).css('margin-bottom', '100px'); // Add margin to others
+        $(this).css({
+            'height': '300px',
+            'background-image': 'url(office1.jpg)',
+            'background-size': 'cover',
+            'background-repeat': 'no-repeat',
+            'background-position': 'top center',
+            'background-attachment': 'fixed'
+        });
+    },
+    function () {
+        $("#feature_container .container").not(this).css('margin-bottom', '0'); // Reset margin on others
+        $(this).css('height', '100px'); // Reset height
+        $("#feature_container .container .img_container img").show();
+    }
+);
+
+
+
         });
     </script>
 </html>
