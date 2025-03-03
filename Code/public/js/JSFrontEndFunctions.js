@@ -364,9 +364,39 @@ function go_back(url) {
 // The original message_from_url function
 function message_from_url(url){
     // Extract query parameters from URL string
+    const fullUrl = new URL(url, window.location.origin);
     const queryParams = new URL(url).searchParams;
     const message = queryParams.get('message');
-    if(message){
+    const action = queryParams.get('action');
+    if(fullUrl.pathname == '/list'){
+        if(message){
+           if(action){
+            if(action == 2){
+                if(message == '1'){//Delete complete
+                    alert('Delete Complete');
+                }
+                else if(message == '2'){//Delete Fail
+                    alert('Delete Failed');
+                }
+               }
+            }
+        }
+    }
+    if(fullUrl.pathname == '/view'){
+        if(message){
+            if(action){
+             if(action == 2){
+                 if(message == '1'){//Delete complete
+                     alert('Delete Complete');
+                 }
+                 else if(message == '2'){//Delete Fail
+                     alert('Delete Failed');
+                 }
+                }
+             }
+         }
+    }
+    else if(message){
         alert(message);
     }
 }

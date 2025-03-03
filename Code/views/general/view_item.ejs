@@ -35,6 +35,13 @@
       <div style="padding-bottom: 30px;" class="has_sidebar_main_content">
         <h1 class="asap-condensed-extralight">View</h1>
         <form action="/view" method="POST" id="view_form" class="glass_effect_2">
+          <%if(status){%>
+            <input type="text" id="status" name="status" value="<%=status%>" style="display: none;"/>
+            <div id="status_div" style="display: flex; flex-direction: row;">
+              <div id="status_mark"></div>
+              <div id="status_label">Active</div>
+            </div>
+            <%}%>
           <div style="display: grid;grid-template-columns: 50% 50%;">
             <div id="type2" style="display: flex;justify-content: left;">
             </div>

@@ -437,9 +437,7 @@ async function create_doc(data) {
 }
 
 async function warehouse_get_inventory(data){
-
-  /*company,warehouse*/
-
+  console.log("warehouse_get_inventory")
   var items = await Item.find({
     company : data.company,
     status : 1
@@ -461,9 +459,6 @@ async function warehouse_get_inventory(data){
 
 async function inventory_count(data){
   console.log("inventory_count");
-  console.log(data);
-  console.log("docs : "+data.docs)
-  console.log("docs ---")
 
   var inventory = 0;
 
@@ -481,7 +476,6 @@ async function inventory_count(data){
 
 async function get_item_warehouse_inventory(data){
   console.log("get_item_warehouse_inventory");
-  console.log(data);
   var inventory = 0;
 
   var transfers = await get_item_warehouse_inventory_from_transfers({
@@ -582,14 +576,18 @@ async function delete_deactivate(data, schema, action) {
     /*if(schema == 'companies'){
       schema = 'Company'
     }*/
+   if(schema=='docs'){
+    schema = 'documents'
+   }
     const Model = schemaMap[schema]; // Retrieves an existing model
         var obj = await get_obj_by_id(data, schema);
     if (action == "delete" || action == 2) {
       if(await check_for_delete({obj:obj,schema:schema})){
-        console.log("--------------------------------------Delete")
+        await Model.deleteOne({ _id: obj._id });
+        return 1;
       }
       else{
-        console.log("---------------------------------No Delete")
+        return 2;
         //obj.status = 2;
         //await obj.save();
         //return 2//IS USED IN DOC OR HAS INVENTORY;
@@ -637,7 +635,12 @@ async function check_for_delete(data) {
         company : data.obj.company,
         id : data.obj._id
       })
-      count = count + results.length
+      results.forEach(item => {
+        count += item.quantity;
+      });
+      console.log(count);
+      console.log(results);
+
     }
     else if(Model == Item){
       var warehouses = await Warehouse.find({ company: data.obj.company, status: 1 });
@@ -652,8 +655,9 @@ async function check_for_delete(data) {
       }
     }
     else if(Model == Document){
-      results = await Documents.find({next : data.obj._id });
-      count = count + results.length;
+      if(data.obj.next !='-' || data.obj.sealed == 1){
+        count = 1;
+      }
     }
 
   if(count == 0){

@@ -455,10 +455,10 @@ border: 1px solid rgba(121, 121, 121, 0.3);
 #status_mark.active{
     background-color: green;
 }
-#status_mark.delleted{
+/*#status_mark.delleted{
     background-color: red;
-}
-#status_mark.desabled{
+}*/
+#status_mark.disabled{
     background-color: rgb(179, 179, 179);
 }
 

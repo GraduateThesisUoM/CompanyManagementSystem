@@ -143,10 +143,6 @@
             const filter_containers = $(".filter_container");
             filter_containers.eq(1).hide(); // Hide the second filter container
 
-            if (params.has('message')) {
-                alert(params.get('message'));
-            }
-
             var status_cells = $(".status");
             var btn2_cells = $(".btn2");
 
@@ -235,6 +231,9 @@
                     $(".glass_effect_2").css('height', '40px');
                 }
                 else if (searchfor == 'companies'){
+                    $(".btn2").hide();
+                }
+                else if (searchfor == 'users'){
                     $(".btn2").hide();
                 }
                 $("#searchfor").val(searchfor);

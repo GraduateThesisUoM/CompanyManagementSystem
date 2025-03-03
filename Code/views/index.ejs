@@ -18,7 +18,7 @@
         <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     </head>
     <style>
-        #scaner_div{
+        #scanner_div{
             width: 60vw;
             margin-left: 20vw;
             margin-top: 50px;
@@ -26,6 +26,7 @@
         h1{
             text-indent: 30px;
             margin: 0px;
+            padding: 0px;
         }
         #message{
             text-align: center;
@@ -33,10 +34,190 @@
             color:rgb(255, 255, 255);
             text-shadow: -2px 2px 5px black;
         }
+
+        #prices_conatainer{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        #prices_conatainer .container {
+            flex: 1;
+            margin: 0 40px;
+        }
+
+        #feature_container{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        #feature_container .container {
+            flex: 1;
+            margin: 0 40px;
+        }
+
+
+        .gallery {
+            height: 60vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+        }
+
+        .image {
+            width: 50vw;
+            height: 100%;
+            transition: all 0.3s ease-in-out;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: top center;
+            position: absolute;
+            transition: all 0.3s ease-in-out;
+        }
+
+
+        /* Default positions */
+        #first {
+            /*background-image: url("office1.jpg");*/
+            z-index: 3;
+            position: absolute;
+        }
+
+
+        /* Second image - smaller height */
+        #second {
+            top: 5%;
+            left: 10%;
+            height: 95%; /* Reduced height */
+            z-index: 2;
+            width: 50vw;
+            filter: brightness(0.6); /* Combined filters */
+
+        }
+
+        #third {
+            top: 10%;
+            left: 20%;
+            z-index: 1;
+            height: 90%; /* Reduced height */
+            filter: brightness(0.4) /* Combined filters */
+        }
+
+        .image img {
+            position: absolute;
+            height: 100%; /* Reduced height */
+            width: 50vw;
+            object-fit: cover;
+            transition: all 0.3s ease-in-out;
+            clip-path: polygon(0% 0%, 90% 0%, 100% 100%, 0% 100%);
+        }
+        .image  {
+            clip-path: polygon(0% 0%, 90% 0%, 100% 100%, 0% 100%);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .image label{
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            z-index: 10;
+            background-color: rgb(12,71,185);
+            width : 90%;
+            padding-right: 10%;
+            height: 10%;
+            font-size: 2em;
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .plan p{
+            text-align: center;
+        }
+
+        .plan .plan_title{
+            font-size: 2em;
+            font-weight: 250px;
+        }
+        .plan .plan_details{
+            display: grid;
+            grid-template-columns: 40px auto;
+            gap: 20px
+        }
+        .plan .plan_details div{
+            display: flex;
+            align-items: center;
+            text-align: left;
+            font-size: 20px;
+        }
+   
     </style>
     <body class="asap-condensed-regular">
-
-        <div id="scaner_div" class="glass_effect_2 container display_block" >
+        <h1 style="font-size: 7em;">Welcome</h1>
+        <h2 style="margin: 0px;text-indent: 20px;position: relative;top:-20px" class="color_white asap-condensed-extralight">Let 's elevate your business</h1>
+        
+        <div class="gallery">
+            <div id="first" class="image">
+                <img  src="office1.jpg">
+                <label class="asap-condensed-extralight color_white">Efficiency</label>
+            </div>
+            <div id="second" class="image">
+                <img  src="business efficiency.jpeg">
+                <label class="asap-condensed-extralight color_white">Increased Proactivity</label>
+            </div>
+            <div id="third" class="image">
+                <img  src="organized2.jpg">
+                <label class="asap-condensed-extralight color_white">Organized</label>
+            </div>
+        </div>
+        <div class="glass_effect_1" style="border-radius: 0;width: 50%; margin-left: 50%; margin-top: 50px;">
+            <h2 style="text-align: right;;padding-right: 50px;" class="color_white">Our Features</h2>
+        </div>
+        
+        <div id="feature_container" style="display: flex;justify-content: space-around;">
+            <div class="glass_effect_2 container">Data Entering</div>
+            <div class="glass_effect_2 container">Complete History</div>
+            <div class="glass_effect_2 container">Work Card Scan</div>
+            <div class="glass_effect_2 container">Work Schedule</div>
+            <div class="glass_effect_2 container">Payroll / Pay Monitor</div>
+        </div>
+        <div class="glass_effect_1" style="border-radius: 0;width: 50%; margin-right: 50%; margin: 50px 0px;">
+            <h2 style="text-align: left;padding-left: 20px;margin: 20px 0px 0px 0px;" class="color_white">Our Plans</h2>
+            <div  style="color:rgba(180, 180, 180, 0.759);padding-bottom: 20px;padding-left: 20px;">find the one that fits to your needs</div>
+        </div>
+        <div id="prices_conatainer" >
+            <div class="container glass_effect_2 plan">
+                <p class="plan_title">Basic</p>
+                <div class="plan_details">
+                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <div>1 User Owner</div>
+                    <img width="40" height="40" src="https://img.icons8.com/sf-black-filled/40/850101/xbox-x.png" alt="xbox-x"/>
+                    <div>0 User Employees</div>
+                </div>
+                <p>350 € / year</p>
+            </div>
+            <div class="container glass_effect_2 plan">
+                <p class="plan_title">Enterprise</p>
+                <div class="plan_details">
+                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <div>1 User Owner</div>
+                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <div>5 Extra Users</div>
+                </div>
+                <p>500 € / year</p>
+            </div>
+            <div class="container glass_effect_2 plan">
+                <p class="plan_title">Full</p>
+                <div class="plan_details">
+                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <div>1 User Owner</div>
+                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <div>Unlimited User Employees</div>
+                </div>
+                <p>1.000 € / year</p>
+            </div>
+        </div>
+        <div id="scanner_div" class="glass_effect_2 container display_block"  style="display: none;">
             <h1>Welcome Please Scan</h1>
             <div id="message"></div>
             <div id="qr_reader" class="box_shadow_1" style="width: 50%; margin-top: 20px;margin-left: 25%; display: none;"></div>
@@ -48,6 +229,13 @@
 
         </div>
     </body>
+    <footer class="glass_effect_1" style="font-size: 1.2em;margin-top: 100px;padding: 50px;border-radius: 0px; display: flex; flex-direction: column; align-items: left;">
+        <span>Contact:</span>
+        <span style="display: flex;align-items: center;"><img width="30" height="30" src="https://img.icons8.com/pastel-glyph/30/FFFFFF/secured-letter--v1.png" alt="secured-letter--v1"/>Email : nektarios00007@gmail.com</span>
+        <span style="display: flex;align-items: center;"><img width="30" height="30" src="https://img.icons8.com/ios/30/FFFFFF/apple-phone.png" alt="apple-phone"/>Phone : 6948422468</span>
+        <span class="color_white" style="text-align: right;text-shadow: -5px 5px 5px black;">This page was created for the graduate thesis of Nektarios Papagalakis.</span>
+    </footer>
+    
     <script>
         $(document).ready(function(){
             // Get the 'message' query parameter from the URL
@@ -71,6 +259,7 @@
                     $("#message").html("Good Bye")
                 } 
             }
+            
 
             $("#log_in_btn").click(function(){
                 window.location = "/";
@@ -111,6 +300,115 @@
                         });
                 }
             }
+            $("#first").hover(
+                function() {
+                    $("#first label").css({
+                        'font-size': '3em',
+                        'height': '15%',
+                    });
+                },
+                function() {
+                    $("#first label").css({
+                        'font-size': '2em',
+                        'height': '10%',
+                    });
+                }
+            );
+            $("#second").hover(
+                function() {
+                    $("#first,#first img").css({
+                        'width': '15vw',
+                        'clip-path': 'polygon(0% 0%, 80% 0%, 100% 100%, 0% 100%)',
+                        'filter': 'brightness(0.6)',
+                    });
+                    $("#second").css({
+                        'filter': 'brightness(1)',
+                        'height': '100%',
+                        'top': '0%'
+                    });
+                    $("#second label").css({
+                        'font-size': '3em',
+                        'height': '15%',
+                    });
+                },
+                function() {
+                    $("#first,#first img").css({
+                        'width': '50vw',
+                        'height': '100%',
+                        'top': '0%', // Keep only one top value
+                        'clip-path': 'polygon(0% 0%, 90% 0%, 100% 100%, 0% 100%)',
+                        'filter': 'brightness(1)',
+                    });
+                    $("#second").css({
+                        'filter': 'brightness(0.6)',
+                        'height': '95%',
+                        'top': '5%'
+                    });
+                    $("#second label").css({
+                        'font-size': '2em',
+                        'height': '10%',
+                    });
+                }
+            );
+            $("#third").hover(
+                function () {
+                    // First, change #first
+                    $("#first, #first img, #second, #second img").css({
+                        'width': '15vw',
+                        'clip-path': 'polygon(0% 0%, 70% 0%, 100% 100%, 0% 100%)',
+                        'height': '100%',
+                        'top': '0%'
+                    });
+                    $("#first").css({
+                        'filter': 'brightness(0.2)',
+                    });
+                    $("#second").css({
+                        'filter': 'brightness(0.4)',
+                        'height': '100%',
+                    });
+                    $("#third").css({
+                        'filter': 'brightness(1)',
+                        'height': '100%',
+                        'top': '0%',
+                    });
+                    $("#third label").css({
+                        'font-size': '3em',
+                        'height': '15%',
+                    });
+                    $("#second label").text("Proactivity")
+                },
+                function () {
+                    // Reset both when not hovering
+                    $("#first, #first img, #second, #second img").css({
+                        'width': '50vw',
+                        'height': '100%',
+                        'top': '0%',
+                        'clip-path': 'polygon(0% 0%, 90% 0%, 100% 100%, 0% 100%)',
+                        
+                    });
+                    $("#first").css({
+                        'filter': 'brightness(1)',
+                    });
+
+                    $("#second").css({
+                        'height': '95%',
+                        'top': '5%',
+                        'filter': 'brightness(0.6)',
+                    });
+                    $("#third").css({
+                        'filter': 'brightness(0.4)',
+                        'height': '90%',
+                        'top': '10%'
+                    });
+                    $("#third label").css({
+                        'font-size': '2em',
+                        'height': '10%',
+                    });
+                    $("#second label").text("Increased Proactivity")
+                }
+            );
+
+            
         });
     </script>
 </html>

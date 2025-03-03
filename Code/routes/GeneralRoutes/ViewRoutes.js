@@ -592,20 +592,38 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     var data = req.body;
     data.user = req.user;
 
-    await generalFunctions.update({ _id: req.body.obj_id }, obj_type, data);   
+    console.log("***************************"+req.body.action)
+    
+    if(req.body.action == 'save'){
+      await generalFunctions.update({ _id: req.body.obj_id }, obj_type, data);
+      if(obj_type == 'nodes'){
+        return res.redirect(`/list?searchfor=clients`);
+      }
+      if(type2){
+        return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);
+        //return res.redirect(`/list?searchfor=${obj_type}&type2=${type2}`);
+      }
+      else{
+        //return res.redirect(`/list?searchfor=${obj_type}`);
+        return res.redirect(`/view?type=${obj_type}&id=${obj_id}`);
+      }
+    }
+    else if(req.body.action == 'delete'){
+      var delete_deactivate = await generalFunctions.delete_deactivate({ _id: obj_id }, obj_type, 'delete');
+      if(delete_deactivate == 1){
+        return res.redirect(`/list?searchfor=${obj_type}&type=${type2}&action=2&message=${delete_deactivate}`);
+      }
+      else{
+        if(type2){
+          return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}&action=2&message=${delete_deactivate}`);
+        }
+        else{
+          return res.redirect(`/view?type=${obj_type}&id=${obj_id}&action=2&message=${delete_deactivate}`);
+        }
+      }
+    }
 
-    if(obj_type == 'nodes'){
-      return res.redirect(`/list?searchfor=clients`);
-    }
-    if(type2){
-      //return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);
-      return res.redirect(`/list?searchfor=${obj_type}&type2=${type2}`);
-
-    }
-    else{
-      return res.redirect(`/list?searchfor=${obj_type}`);
-      //return res.redirect(`/view?type=${obj_type}&id=${obj_id}`);
-    }
+    
 
   } catch (e) {
     console.error(e);

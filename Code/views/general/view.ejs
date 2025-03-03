@@ -40,13 +40,11 @@
           <button id="go_to_calendar" class="button_1" style="width: 50%;">Calendar</button>
         </div>
         <form action="/view" method="POST" id="view_form" class="glass_effect_2">
-          <%if(status){%>
           <input type="text" id="status" name="status" value="<%=status%>" style="display: none;"/>
           <div id="status_div" style="display: flex; flex-direction: row;">
             <div id="status_mark"></div>
             <div id="status_label">Active</div>
           </div>
-          <%}%>
           <input type="text" id="obj_id" name="obj_id" style="display: none" />
           <input type="text" id="obj_type2" name="obj_type2" style="display: none" />
           <input type="text" id="obj_type" name="obj_type" style="display: none" />
@@ -320,6 +318,10 @@
         $("#status_label").html("Active")
         $("#status_mark").addClass('active')
       }
+      else if($("#status").val()==0){
+        $("#status_label").html("Disabled")
+        $("#status_mark").addClass('disabled')
+      }
 
       if ($("#Title").text() == "Title : ") {
         $("#Title").hide();
@@ -352,9 +354,9 @@
       $("#obj_type2").val(queryParams.type2);
       $("#obj_type").val(queryParams.type);
 
-      $("#c_obj_id").val(queryParams.id);
+      /*$("#c_obj_id").val(queryParams.id);
       $("#c_obj_type2").val(queryParams.type2);
-      $("#c_obj_type").val(queryParams.type);
+      $("#c_obj_type").val(queryParams.type);*/
 
       let formAction = "/view";
       if (queryParams.type) {
@@ -460,21 +462,7 @@
         $("#btn2").hide();
         $("#btn3").hide();
       }
-      else if (queryParams.type == 'persons'){
-        $("#client_div").show();
-        var table = $("#move_table tbody");
-        for (let i = 0; i < secondary_data.length; i++) {
-          table.append(`
-            <tr class="glass_effect_2" onclick="go_to_doc('${secondary_data[i]._id}')">
-              <td>${i + 1}</td>
-              <td>${secondary_data[i].registrationDate}</td>
-              <td>${secondary_data[i].doc}</td>
-              <td>${secondary_data[i].credit}</td>
-              <td>${secondary_data[i].debit}</td>
-            </tr>
-          `);
-        }
-      }
+      
       else if (queryParams.type == 'companies'){
         $("#admin_view_company").show();
         
@@ -554,9 +542,22 @@
           $("#effects_accounts_label").html("Subtracts");
         }
       }
-
-
-      if(queryParams.type == "Warehouse"){
+      else if (queryParams.type == 'persons'){
+        $("#client_div").show();
+        var table = $("#move_table tbody");
+        for (let i = 0; i < secondary_data.length; i++) {
+          table.append(`
+            <tr class="glass_effect_2" onclick="go_to_doc('${secondary_data[i]._id}')">
+              <td>${i + 1}</td>
+              <td>${secondary_data[i].registrationDate}</td>
+              <td>${secondary_data[i].doc}</td>
+              <td>${secondary_data[i].credit}</td>
+              <td>${secondary_data[i].debit}</td>
+            </tr>
+          `);
+        }
+      }
+      else if(queryParams.type == "Warehouse"){
         $("#warehouse_inventory").show();
         for( i in secondary_data.inventory){
           console.log(secondary_data.inventory[i]);
@@ -636,7 +637,6 @@
       
 
       $("#effects_accounts_y_n_switch_btn").click(function (event) {
-        event.preventDefault();
         event.preventDefault(); // Prevent the default action
         this.classList.toggle("active"); // Toggle the `active` class
         $("#effects_accounts_switch").toggle();
@@ -676,7 +676,19 @@
         }
       });
 
-      
+      $(".series_transforms_check").click(function(event){
+        event.preventDefault();
+        this.classList.toggle("active");
+        var selected_series = $(".series_transforms_check:not(.active)");
+        $("#series_transforms_list").val("");
+        for (s of selected_series) {
+          if ($("#series_transforms_list").val() == "") {
+            $("#series_transforms_list").val($(s).attr('id'));
+          } else {
+            $("#series_transforms_list").val($("#series_transforms_list").val() + ";" + $(s).attr('id'));
+          }
+        }
+      });
 
       $("#go_to_calendar").click(function(){
         window.location = '/calendar?id='+$("#obj_id").val()+'&timetable=month&timetable_user=all';
