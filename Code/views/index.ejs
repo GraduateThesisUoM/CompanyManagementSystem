@@ -63,19 +63,23 @@
         #feature_container .container {
             flex: 1;
             margin: 0 20px;
+            padding: 0px;
             text-align: center;
-            padding: 20px;
             transition: all 0.3s ease-in-out;
             background-repeat: no-repeat;
             background-size:contain ;
             background-attachment: fixed;
             height: 300px;
-            filter: grayscale(100%);
 
             display: flex;
             justify-content: center;
+            align-items: center;
+            flex-direction: column;
             
+            width: 100%;
+
         }
+
 
         #feature_container .container:nth-child(1) {
             background-image: url('office4.jpg');
@@ -85,7 +89,7 @@
             background-image: url('office8.jpg');
         }
         #feature_container .container:nth-child(3) {
-            background-image: url('office6.png');
+            background-image: url('office6.jpg');
             background-position: center;
         }
         #feature_container .container:nth-child(4) {
@@ -104,13 +108,23 @@
         }
 
         #feature_container .container h3{
-            all:unset;
+            font-size: 2em;
+            padding: 10px 0;
+            color: rgb(5, 84, 175)!important;
+            filter: grayscale(0%);
+            background: rgba(255, 255, 255, 0.50);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(3.9px);
+            -webkit-backdrop-filter: blur(3.9px);
+            border: none;
+            width: 100%;
         }
 
-        #feature_container .container .img_container{
-            display: flex;
-            transition: all 0.5s ease-in-out;
-            height: 200px;
+        #feature_container .container div{
+            padding : 0px 20px;
+            color: white;
+            text-shadow: 2px 2px 2px black;
+            display: none;
         }
 
        
@@ -242,20 +256,28 @@
         <div id="feature_container" style="display: flex;justify-content: space-around;">
             <div class="glass_effect_2 container">
                 <h3>Data Entering</h3>
-                <div class="img_container">
+                <div>
+                    Our ERP platform empowers you to seamlessly manage your inventory, warehouses, suppliers, and clients—all in one place. Track every movement in real time for complete control and efficiency.
                 </div>
+
             </div>
-            <div class="glass_effect_2 container">
-                <h3>Complete History</h3>
+            <div class=" container">
+                <h3 >Complete History</h3>
+                <div>Our ERP platform provides a complete history of all operations, giving you full visibility and control. Monitor everything in real time—from inventory movements, sales, and warehouse operations to employee clock-ins, clock-outs, leaves, and workdays. Stay informed and make data-driven decisions with ease.</div>
             </div>
             <div class="glass_effect_2 container">
                 <h3>Work Card Scan</h3>
+                <div>
+                    We provide a modern QR card system for seamless employee clock-ins and clock-outs. Track workdays, leaves, and attendance effortlessly while maintaining a complete history of all operations, including inventory movements, sales, and warehouse activity. Stay in control with real-time monitoring and data-driven insights.
+                </div>
             </div>
             <div class="glass_effect_2 container">
                 <h3>Work Schedule</h3>
+                <div>Easily manage work schedules with our ERP platform. Assign shifts, track attendance, and monitor employee clock-ins and clock-outs with our modern QR card system. Keep a complete history of workdays, leaves, sales, inventory movements, and warehouse activity—all in real time.</div>
             </div>
             <div class="glass_effect_2 container">
                 <h3>Payroll / Pay Monitor</h3>
+                <div>Our ERP platform features **Pay Monitoring**, allowing you to track all payments, pay-ups, and outstanding balances with real-time insights. Monitor financial transactions alongside employee time in the company, including clock-ins, clock-outs, and overall attendance. Stay in control of both finances and workforce management effortlessly.</div>
             </div>
         </div>
 
@@ -490,24 +512,29 @@
             );
             
             $("#feature_container .container").hover(
-                function () {
-                    $("#feature_container .container").not(this).css('margin-bottom', '100px'); // Add margin to others
-                    $(this).css({
-                        'height': '400px',
-                        'filter': 'grayscale(0%)',
-                        'align-items': 'center'
-                    });
-                },
-                function () {
-                    //$("#feature_container .container").not(this).css('margin-bottom', '0'); // Reset margin on others
-                    $(this).css({
-                        'height': '300px',
-                        'filter': 'grayscale(100%)',
-                        'align-items': 'top'
-                    }); // Reset height
-                    //$("#feature_container .container .img_container img").show();
-                }
-            );
+    function () {
+        $("#feature_container .container").not(this).css('margin-bottom', '100px'); // Add margin to others
+        $(this).css({
+            'height': '400px',
+            'filter': 'grayscale(0%)',
+            'align-items': 'center'
+        });
+
+        // Show only the first div inside the hovered container
+        $(this).children("div:first").fadeIn();
+    },
+    function () {
+        $(this).css({
+            'height': '300px',
+            'filter': 'grayscale(100%)',
+            'align-items': 'top'
+        });
+
+        // Hide only the first div inside the hovered container
+        $(this).children("div:first").fadeOut();
+    }
+);
+
 
 
 
