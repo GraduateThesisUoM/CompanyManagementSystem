@@ -134,6 +134,9 @@ app.use(path_constants.pages.transfer.url, require(path_constants.pages.transfer
 //edit doc
 app.use(path_constants.pages.edit_doc.url, require(path_constants.pages.edit_doc.file));
 
+//scan
+app.use(path_constants.pages.scan.url, require(path_constants.pages.scan.file));
+
 //calendar
 app.use(path_constants.pages.calendar.url, require(path_constants.pages.calendar.file));
 

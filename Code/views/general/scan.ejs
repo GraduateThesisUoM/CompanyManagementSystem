@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>DeskFlow</title>
+        <!--ajax-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <!--CSS-->
+        <link rel="stylesheet" href="general_css.css">
+        <link rel="stylesheet" href="fonts_css.css">
+        <link rel="stylesheet" href="buttons_css.css">
+
+        <!--Fonts-->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="icon" type="image/x-icon" href="logo.svg">
+        <!-- QR Code Scanner Library -->
+        <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    </head>
+    <style>
+        #scanner_div{
+            width: 60vw;
+            margin-left: 20vw;
+            margin-top: 50px;
+        }
+        h1{
+            text-indent: 30px;
+            margin: 0px;
+            padding: 0px;
+        }
+        #message{
+            text-align: center;
+            font-size: 3em;
+            color:rgb(255, 255, 255);
+            text-shadow: -2px 2px 5px black;
+        }
+
+        #prices_conatainer{
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+        #prices_conatainer .container {
+            flex: 1;
+            margin: 0 20px;
+            text-align: center;
+            padding: 20px;
+            transition: all 0.3s ease-in-out;
+            filter: opacity(0.8);
+        }
+        #prices_conatainer .container:hover {
+            box-shadow: -5px 5px 15px 2px black;
+            filter: opacity(1);
+        }
+
+        #feature_container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        #feature_container .container {
+            flex: 1;
+            margin: 0 20px;
+            padding: 0px;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+            background-repeat: no-repeat;
+            background-size:contain ;
+            background-attachment: fixed;
+            height: 300px;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            
+            width: 100%;
+
+        }
+
+
+        #feature_container .container:nth-child(1) {
+            background-image: url('office4.svg');
+           
+        }
+        #feature_container .container:nth-child(2) {
+            background-image: url('office8.jpg');
+        }
+        #feature_container .container:nth-child(3) {
+            background-image: url('office6.jpg');
+            background-position: center;
+        }
+        #feature_container .container:nth-child(4) {
+            background-image: url('office5.jpg');
+            background-position: right;
+        }
+        #feature_container .container:nth-child(5) {
+            background-image: url('office7.jpg');
+            background-position: right;
+        }
+
+        #feature_container .container:hover {
+            flex-grow: 3; /* Increases width on hover */
+        }
+
+        #feature_container .container h3{
+            font-size: 2em;
+            padding: 10px 0;
+            color: rgb(5, 84, 175)!important;
+            filter: grayscale(0%);
+            background: rgba(255, 255, 255, 0.50);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(3.9px);
+            -webkit-backdrop-filter: blur(3.9px);
+            border: none;
+            width: 100%;
+        }
+
+        #feature_container .container div{
+            padding : 0px 20px;
+            color: white;
+            text-shadow: 2px 2px 2px black;
+            display: none;
+            
+        }
+
+       
+        
+
+        .gallery {
+            height: 60vh;
+            width: 100%;
+            position: relative;
+            display: flex;
+        }
+
+        .image {
+            width: 50vw;
+            height: 100%;
+            transition: all 0.3s ease-in-out;
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: top center;
+            position: absolute;
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Default positions */
+        #first {
+            /*background-image: url("office1.jpg");*/
+            z-index: 3;
+            position: absolute;
+        }
+
+        /* Second image - smaller height */
+        #second {
+            top: 5%;
+            left: 10%;
+            height: 95%; /* Reduced height */
+            z-index: 2;
+            filter: brightness(0.6); /* Combined filters */
+
+        }
+
+        #third {
+            top: 10%;
+            left: 20%;
+            z-index: 1;
+            height: 90%; /* Reduced height */
+            filter: brightness(0.4) /* Combined filters */
+        }
+
+        .image img {
+            position: absolute;
+            height: 100%; /* Reduced height */
+            /*width: 50vw;*/
+            width: 100%;
+            object-fit: cover;
+            transition: all 0.3s ease-in-out;
+            clip-path: polygon(0% 0%, 90% 0%, 100% 100%, 0% 100%);
+        }
+        .image  {
+            clip-path: polygon(0% 0%, 90% 0%, 100% 100%, 0% 100%);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .image label{
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            z-index: 10;
+            background-color: rgb(12,71,185);
+            width : 90%;
+            padding-right: 10%;
+            height: 10%;
+            font-size: 2em;
+            transition: all 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        
+
+        .plan p{
+            text-align: center;
+        }
+
+        .plan .plan_title{
+            font-size: 2em;
+            font-weight: 250px;
+        }
+        .plan .plan_details{
+            display: grid;
+            grid-template-columns: 40px auto;
+            gap: 20px
+        }
+        .plan .plan_details img{
+            width:40;
+            height:40;
+        }
+        .plan .plan_details div{
+            display: flex;
+            align-items: center;
+            text-align: left;
+            font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .image {
+                width: 65vw;
+            }
+            #second {
+                top: 5%;
+                left: 15%;
+            }
+            #third {
+                top: 10%;
+                left: 25%;
+            }
+ 
+
+            #feature_container .container:nth-child(1) {
+                background-position: center;
+            
+            }
+            #feature_container .container:nth-child(2) {
+                background-position: center;
+            }
+            #feature_container .container:nth-child(3) {
+                background-image: url('office6.jpg');
+                background-position: center;
+            }
+            #feature_container .container:nth-child(4) {
+                background-position: center;
+            }
+            #feature_container .container:nth-child(5) {
+                background-position: center;
+            }
+
+            #feature_container .container:hover {
+                flex-grow: 1; /* Increases width on hover */
+            }
+
+            #feature_container {
+                display: flex;
+                flex-wrap: nowrap; 
+                overflow-x: auto; 
+                scroll-snap-type: x mandatory; 
+                gap: 10px;
+                padding-bottom: 10px; 
+            }
+
+            #feature_container .container{
+                min-width: 300px;
+                scroll-snap-align: center;
+            }
+
+            /*#feature_container .container {
+                width : calc(100% - 40px);
+                padding: 100px 0px;
+            }*/
+
+            .plan{
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+            
+        }
+   
+    </style>
+    <body class="asap-condensed-regular">
+        <div style="text-align: right;width: calc(100% - 10px);">
+            <a style="text-align: right;width: 100%;all:unset;color:white;cursor: pointer;" href="/log-in">Log In</a>
+        </div>
+        <h1 style="font-size: 7em;display: flex;align-items: center;margin-left: 30px;filter: drop-shadow(-5px 5px 5px black);"><img src="logo.svg" style="height:1em;">Welcome</h1>
+        <h2 style="margin: 0px;text-indent: 180px;position: relative;top:-15px" class="color_white asap-condensed-extralight">Let 's elevate your business</h1>
+
+        
+
+        <div id="scanner_div" class="glass_effect_2 container display_block">
+            <h1>Welcome Please Scan</h1>
+            <div id="message"></div>
+            <div id="qr_reader" class="box_shadow_1" style="width: 50%; margin-top: 20px;margin-left: 25%; display: none;"></div>
+            <form id="scan_form" action="/index" method="POST" style="display: none;">
+                <input type="text" name="scan" id="scan" >
+            </form>
+            <button class="btn_type_1" id="scan_bnt">Scan</button>
+            <button class="btn_type_3" id="log_in_btn">Log in</button>
+
+        </div>
+    </body>
+    
+    <script>
+        $(document).ready(function(){
+            // Get the 'message' query parameter from the URL
+            const urlParams = new URLSearchParams(window.location.search);
+
+             // QR Code Scanner
+             const html5QrCode = new Html5Qrcode("qr_reader");
+
+            let isScanning = false;
+            
+            if(urlParams.get('scan')){
+                show_qr_scaner();
+                $("#scan_bnt").hide();
+            }
+
+            if(urlParams.get('action')){
+                if(urlParams.get('action')==1){
+                    $("#message").html("Welcome")
+                }
+                else if(urlParams.get('action')=="0"){
+                    $("#message").html("Good Bye")
+                } 
+            }
+            
+
+            $("#log_in_btn").click(function(){
+                window.location = "/";
+            });
+
+            $("#scan_bnt").click(function(){
+                window.location = "/index?scan=tue";
+
+            });
+
+            // Start/Stop QR Code Scanner
+            function show_qr_scaner(){
+                if (!isScanning) {
+                    $("#qr_reader").show();
+                    html5QrCode
+                        .start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } },
+                            (decodedText, decodedResult) => {
+                                // Handle successful scan
+                                $("#scan").val(decodedText);
+                                html5QrCode.stop(); // Stop scanner after a successful scan
+                                $("#qr_reader").hide();
+                                isScanning = false;
+                                $("#scan_form").submit();
+                            })
+                        .catch((err) => {
+                            console.error(`Unable to start QR code scanning: ${err}`);
+                            alert("Error starting the QR code scanner.");
+                        });
+                    isScanning = true;
+                } else {
+                    html5QrCode.stop()
+                        .then(() => {
+                            $("#qr_reader").hide();
+                            isScanning = false;
+                        })
+                        .catch((err) => {
+                            console.error(`Error stopping the scanner: ${err}`);
+                        });
+                }
+            }
+
+
+
+        });
+    </script>
+</html>

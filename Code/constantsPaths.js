@@ -156,6 +156,13 @@ const pages = {
       return views_folders.general+"create.ejs"
     }}
   },
+  scan :{
+    url : "/scan",
+    file: routes.general+"ScanRoutes.js",
+    view : function() { {
+      return views_folders.general+"scan.ejs"
+    }}
+  },
   list :{
     url : "/list",
     file: routes.general+"ListRoutes.js",
