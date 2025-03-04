@@ -37,12 +37,15 @@
             text-shadow: -2px 2px 5px black;
         }
 
-        #prices_conatainer{
+        #prices_container{
             display: flex;
-            justify-content: space-between;
+            justify-content: space-around;
+            align-items: center;
             width: 100%;
+            flex-wrap: wrap;
+            gap: 200px;
         }
-        #prices_conatainer .container {
+        #prices_container .container {
             flex: 1;
             margin: 0 20px;
             text-align: center;
@@ -50,7 +53,7 @@
             transition: all 0.3s ease-in-out;
             filter: opacity(0.8);
         }
-        #prices_conatainer .container:hover {
+        #prices_container .container:hover {
             box-shadow: -5px 5px 15px 2px black;
             filter: opacity(1);
         }
@@ -256,7 +259,9 @@
                 top: 10%;
                 left: 25%;
             }
- 
+            #my_header{
+                scale: 0.6;
+            }
 
             #feature_container .container:nth-child(1) {
                 background-position: center;
@@ -294,6 +299,21 @@
                 scroll-snap-align: center;
             }
 
+            #prices_container {
+                display: flex;
+                flex-wrap: nowrap; 
+                overflow-x: auto; 
+                scroll-snap-type: x mandatory; 
+                gap: 10px;
+                padding-bottom: 10px; 
+            }
+
+            #prices_container .container{
+                min-width: 250px;
+                scroll-snap-align: center;
+            }
+
+
             /*#feature_container .container {
                 width : calc(100% - 40px);
                 padding: 100px 0px;
@@ -312,12 +332,15 @@
             <a style="text-align: right;width: 100%;all:unset;color:white;cursor: pointer;margin-right: 20px;" href="/log-in">Log In</a>
             <a style="text-align: right;width: 100%;all:unset;color:white;cursor: pointer;" href="/scan">Scan</a>
         </div>
-        <h1 style="font-size: 7em;display: flex;align-items: center;margin-left: 30px;filter: drop-shadow(-5px 5px 5px black);"><img src="logo.svg" style="height:1em;">Welcome</h1>
-        <h2 style="margin: 0px;text-indent: 180px;position: relative;top:-15px" class="color_white asap-condensed-extralight">Let 's elevate your business</h1>
+        <div id="my_header">
+            <h1 style="font-size: 7em;display: flex;align-items: center;margin-left: 30px;filter: drop-shadow(-5px 5px 5px black);"><img src="logo.svg" style="height:1em;">Welcome</h1>
+            <h2 style="margin: 0px;text-indent: 180px;position: relative;top:-15px" class="color_white asap-condensed-extralight">Let 's elevate your business</h1>
+    
+        </div>
         <div class="gallery">
             <div id="first" class="image">
                 <img  src="office1.svg">
-                <label class="asap-condensed-extralight color_white">Increased Proactivity</label>
+                <label class="asap-condensed-extralight color_white">Boost Proactivity</label>
             </div>
             <div id="second" class="image">
                 <img  src="business efficiency.svg">
@@ -374,7 +397,7 @@
                 <div  style="color:rgba(180, 180, 180, 0.759);padding-bottom: 20px;padding-left: 20px;">find the one that fits to your needs</div>
             </div>
         </div>
-        <div id="prices_conatainer" >
+        <div id="prices_container" >
             <div class="container glass_effect_2 plan">
                 <p class="plan_title">Basic</p>
                 <div class="plan_details">
