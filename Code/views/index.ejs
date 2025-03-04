@@ -66,10 +66,41 @@
             text-align: center;
             padding: 20px;
             transition: all 0.3s ease-in-out;
+            background-repeat: no-repeat;
+            background-size:contain ;
+            background-attachment: fixed;
+            height: 300px;
+            filter: grayscale(100%);
+
+            display: flex;
+            justify-content: center;
+            
         }
 
+        #feature_container .container:nth-child(1) {
+            background-image: url('office4.jpg');
+           
+        }
+        #feature_container .container:nth-child(2) {
+            background-image: url('office8.jpg');
+        }
+        #feature_container .container:nth-child(3) {
+            background-image: url('office6.png');
+            background-position: center;
+        }
+        #feature_container .container:nth-child(4) {
+            background-image: url('office5.jpg');
+            background-position: right;
+        }
+        #feature_container .container:nth-child(5) {
+            background-image: url('office7.jpg');
+            background-position: right;
+        }
+
+
+
         #feature_container .container:hover {
-            flex-grow: 4; /* Increases width on hover */
+            flex-grow: 3; /* Increases width on hover */
         }
 
         #feature_container .container h3{
@@ -79,7 +110,7 @@
         #feature_container .container .img_container{
             display: flex;
             transition: all 0.5s ease-in-out;
-            height: 100px;
+            height: 200px;
         }
 
        
@@ -217,9 +248,15 @@
             <div class="glass_effect_2 container">
                 <h3>Complete History</h3>
             </div>
-            <div class="glass_effect_2 container">Work Card Scan</div>
-            <div class="glass_effect_2 container">Work Schedule</div>
-            <div class="glass_effect_2 container">Payroll / Pay Monitor</div>
+            <div class="glass_effect_2 container">
+                <h3>Work Card Scan</h3>
+            </div>
+            <div class="glass_effect_2 container">
+                <h3>Work Schedule</h3>
+            </div>
+            <div class="glass_effect_2 container">
+                <h3>Payroll / Pay Monitor</h3>
+            </div>
         </div>
 
         <div style="display: flex;">
@@ -357,6 +394,7 @@
                     });
                 }
             );
+
             $("#second").hover(
                 function() {
                     $("#first,#first img").css({
@@ -452,23 +490,24 @@
             );
             
             $("#feature_container .container").hover(
-    function () {
-        $("#feature_container .container").not(this).css('margin-bottom', '100px'); // Add margin to others
-        $(this).css({
-            'height': '300px',
-            'background-image': 'url(office1.jpg)',
-            'background-size': 'cover',
-            'background-repeat': 'no-repeat',
-            'background-position': 'top center',
-            'background-attachment': 'fixed'
-        });
-    },
-    function () {
-        $("#feature_container .container").not(this).css('margin-bottom', '0'); // Reset margin on others
-        $(this).css('height', '100px'); // Reset height
-        $("#feature_container .container .img_container img").show();
-    }
-);
+                function () {
+                    $("#feature_container .container").not(this).css('margin-bottom', '100px'); // Add margin to others
+                    $(this).css({
+                        'height': '400px',
+                        'filter': 'grayscale(0%)',
+                        'align-items': 'center'
+                    });
+                },
+                function () {
+                    //$("#feature_container .container").not(this).css('margin-bottom', '0'); // Reset margin on others
+                    $(this).css({
+                        'height': '300px',
+                        'filter': 'grayscale(100%)',
+                        'align-items': 'top'
+                    }); // Reset height
+                    //$("#feature_container .container .img_container img").show();
+                }
+            );
 
 
 
