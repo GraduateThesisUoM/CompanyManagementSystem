@@ -49,17 +49,27 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         column_titles = ["ID","Name", "Reg Date", "Status"];
       } else if (req.query.searchfor == "users") {
         list_items = await User.find();
-        list_items = list_items.map((item) => ({
+        let transformed_items = [];
+        for (let item of list_items) {
+            let companyName = '-';
+            if (item.type === 'user') {
+          let company = await Company.findOne({_id: item.company});
+          companyName = company ? company.name : '-';
+            }
+            transformed_items.push({
           data: [
-            item._id,
-            item.type,
-            item.firstName,
-            item.lastName,
-            generalFunctions.formatDate(item.registrationDate),
-            generalFunctions.get_status_user(item.status)
-          ],
-        }));
-        column_titles = ["ID","Type", "First Name", "Last Name", "Reg Date", "Status"];
+              item._id,
+              companyName,
+              item.type,
+              item.firstName,
+              item.lastName,
+              generalFunctions.formatDate(item.registrationDate),
+              generalFunctions.get_status_user(item.status)
+          ]
+            });
+        }
+        list_items = transformed_items;
+        column_titles = ["ID","Company","Type", "First Name", "Last Name", "Reg Date", "Status"];
       } else if (req.query.searchfor == "docs") {
         list_items = await Document.find({
           company: company,

@@ -396,9 +396,9 @@ function message_from_url(url){
              }
          }
     }
-    else if(message){
+    /*else if(message){
         alert(message);
-    }
+    }*/
 }
 
 

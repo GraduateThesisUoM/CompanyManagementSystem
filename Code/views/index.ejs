@@ -67,45 +67,64 @@
         #feature_container .container {
             flex: 1;
             margin: 0 20px;
-            padding: 0px;
+            padding: 0;
             text-align: center;
-            transition: all 0.3s ease-in-out;
-            background-repeat: no-repeat;
-            background-size:contain ;
-            background-attachment: fixed;
             height: 300px;
-
             display: flex;
             justify-content: center;
             align-items: center;
             flex-direction: column;
-            
             width: 100%;
-
-        }
-
-
-        #feature_container .container:nth-child(1) {
-            background-image: url('office4.svg');
-           
-        }
-        #feature_container .container:nth-child(2) {
-            background-image: url('office8.jpg');
-        }
-        #feature_container .container:nth-child(3) {
-            background-image: url('office6.jpg');
-            background-position: center;
-        }
-        #feature_container .container:nth-child(4) {
-            background-image: url('office5.jpg');
-            background-position: right;
-        }
-        #feature_container .container:nth-child(5) {
-            background-image: url('office7.jpg');
-            background-position: right;
+            position: relative; /* Προσθήκη για να λειτουργεί σωστά το absolute */
+            overflow: hidden; /* Για να μην "ξεφεύγει" η εικόνα */
+            transition: all 0.3s ease-in-out;
         }
 
         #feature_container .container:hover {
+            flex-grow: 2;
+        }
+
+        #feature_container .container .feature_img {
+            width: 100%;
+            height: 100%;
+            transition: all 0.3s ease-in-out;
+            background-repeat: no-repeat;
+            background-size: cover ; 
+            background-attachment: scroll; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            filter: grayscale(100%);
+            z-index: -1;
+        }
+        #feature_container .container .feature_text{
+            transition: all 0.3s ease-in-out;
+            padding : 20px 20px;
+            color: white;
+            text-shadow: 2px 2px 2px black;
+            display: none;
+            width: 100%;
+        }
+
+
+
+        #feature_container .container .feature_img#f_img_1 {
+            background-image: url('office4.svg');
+        }
+        #feature_container .container .feature_img#f_img_2 {
+            background-image: url('office8.svg');
+        }
+        #feature_container .container .feature_img#f_img_3 {
+            background-image: url('office6.svg');
+        }
+        #feature_container .container .feature_img#f_img_4 {
+            background-image: url('office5.svg');
+        }
+        #feature_container .container .feature_img#f_img_5 {
+            background-image: url('office7.svg');
+        }
+
+        #feature_container .container .feature_img:hover {
             flex-grow: 3; /* Increases width on hover */
         }
 
@@ -120,14 +139,7 @@
             -webkit-backdrop-filter: blur(3.9px);
             border: none;
             width: 100%;
-        }
-
-        #feature_container .container div{
-            padding : 0px 20px;
-            color: white;
-            text-shadow: 2px 2px 2px black;
-            display: none;
-            
+            transition: all 0.3s ease-in-out;
         }
 
        
@@ -305,15 +317,15 @@
         <div class="gallery">
             <div id="first" class="image">
                 <img  src="office1.svg">
-                <label class="asap-condensed-extralight color_white">Efficiency</label>
+                <label class="asap-condensed-extralight color_white">Increased Proactivity</label>
             </div>
             <div id="second" class="image">
                 <img  src="business efficiency.svg">
-                <label class="asap-condensed-extralight color_white">Increased Proactivity</label>
+                <label class="asap-condensed-extralight color_white">Efficiency</label>
             </div>
             <div id="third" class="image">
                 <img  src="organized2.svg">
-                <label class="asap-condensed-extralight color_white">Organized</label>
+                <label class="asap-condensed-extralight color_white">Structure</label>
             </div>
         </div>
         <div style="display: flex;justify-content: flex-end;">
@@ -324,30 +336,35 @@
         </div>
         
         <div id="feature_container">
-            <div class="glass_effect_2 container">
+            <div class="container">
+                <div class="feature_img" id="f_img_1"></div>
                 <h3>Data Entering</h3>
-                <div>
+                <div class="feature_text glass_effect_1">
                     Our ERP platform empowers you to seamlessly manage your inventory, warehouses, suppliers, and clients—all in one place. Track every movement in real time for complete control and efficiency.
                 </div>
 
             </div>
             <div class=" container">
+                <div class="feature_img" id="f_img_2"></div>
                 <h3 >Complete History</h3>
-                <div>Our ERP platform provides a complete history of all operations, giving you full visibility and control. Monitor everything in real time—from inventory movements, sales, and warehouse operations to employee clock-ins, clock-outs, leaves, and workdays. Stay informed and make data-driven decisions with ease.</div>
+                <div class="feature_text glass_effect_1">Our ERP platform provides a complete history of all operations, giving you full visibility and control. Monitor everything in real time—from inventory movements, sales, and warehouse operations to employee clock-ins, clock-outs, leaves, and workdays. Stay informed and make data-driven decisions with ease.</div>
             </div>
-            <div class="glass_effect_2 container">
+            <div class="container">
+                <div class="feature_img" id="f_img_3"></div>
                 <h3>Work Card Scan</h3>
-                <div>
+                <div class="feature_text glass_effect_1">
                     We provide a modern QR card system for seamless employee clock-ins and clock-outs. Track workdays, leaves, and attendance effortlessly while maintaining a complete history of all operations, including inventory movements, sales, and warehouse activity. Stay in control with real-time monitoring and data-driven insights.
                 </div>
             </div>
-            <div class="glass_effect_2 container">
+            <div class="container">
+                <div class="feature_img" id="f_img_4"></div>
                 <h3>Work Schedule</h3>
-                <div>Easily manage work schedules with our ERP platform. Assign shifts, track attendance, and monitor employee clock-ins and clock-outs with our modern QR card system. Keep a complete history of workdays, leaves, sales, inventory movements, and warehouse activity—all in real time.</div>
+                <div class="feature_text glass_effect_1">Easily manage work schedules with our ERP platform. Assign shifts, track attendance, and monitor employee clock-ins and clock-outs with our modern QR card system. Keep a complete history of workdays, leaves, sales, inventory movements, and warehouse activity—all in real time.</div>
             </div>
-            <div class="glass_effect_2 container">
+            <div class="container">
+                <div class="feature_img" id="f_img_5"></div>
                 <h3>Payroll / Pay Monitor</h3>
-                <div>Our ERP platform features **Pay Monitoring**, allowing you to track all payments, pay-ups, and outstanding balances with real-time insights. Monitor financial transactions alongside employee time in the company, including clock-ins, clock-outs, and overall attendance. Stay in control of both finances and workforce management effortlessly.</div>
+                <div class="feature_text glass_effect_1">Our ERP platform features **Pay Monitoring**, allowing you to track all payments, pay-ups, and outstanding balances with real-time insights. Monitor financial transactions alongside employee time in the company, including clock-ins, clock-outs, and overall attendance. Stay in control of both finances and workforce management effortlessly.</div>
             </div>
         </div>
 
@@ -389,17 +406,6 @@
                 <button style="width: 60%;margin-top: 20px;" class="button_1" onclick="window.location.href = '/sign-up'">Sign Up</button>
             </div>
         </div>
-        <div id="scanner_div" class="glass_effect_2 container display_block"  style="display: none;">
-            <h1>Welcome Please Scan</h1>
-            <div id="message"></div>
-            <div id="qr_reader" class="box_shadow_1" style="width: 50%; margin-top: 20px;margin-left: 25%; display: none;"></div>
-            <form id="scan_form" action="/index" method="POST" style="display: none;">
-                <input type="text" name="scan" id="scan" >
-            </form>
-            <button class="btn_type_1" id="scan_bnt">Scan</button>
-            <button class="btn_type_3" id="log_in_btn">Log in</button>
-
-        </div>
     </body>
     <footer class="glass_effect_1" style="font-size: 1.2em;margin-top: 100px;padding: 50px;border-radius: 0px; display: flex; flex-direction: column; align-items: left;">
         <span>Contact:</span>
@@ -413,65 +419,6 @@
             // Get the 'message' query parameter from the URL
             const urlParams = new URLSearchParams(window.location.search);
 
-             // QR Code Scanner
-             const html5QrCode = new Html5Qrcode("qr_reader");
-
-            let isScanning = false;
-            
-            if(urlParams.get('scan')){
-                show_qr_scaner();
-                $("#scan_bnt").hide();
-            }
-
-            if(urlParams.get('action')){
-                if(urlParams.get('action')==1){
-                    $("#message").html("Welcome")
-                }
-                else if(urlParams.get('action')=="0"){
-                    $("#message").html("Good Bye")
-                } 
-            }
-            
-
-            $("#log_in_btn").click(function(){
-                window.location = "/";
-            });
-
-            $("#scan_bnt").click(function(){
-                window.location = "/index?scan=tue";
-
-            });
-
-            // Start/Stop QR Code Scanner
-            function show_qr_scaner(){
-                if (!isScanning) {
-                    $("#qr_reader").show();
-                    html5QrCode
-                        .start({ facingMode: "environment" }, { fps: 10, qrbox: { width: 250, height: 250 } },
-                            (decodedText, decodedResult) => {
-                                // Handle successful scan
-                                $("#scan").val(decodedText);
-                                html5QrCode.stop(); // Stop scanner after a successful scan
-                                $("#qr_reader").hide();
-                                isScanning = false;
-                                $("#scan_form").submit();
-                            })
-                        .catch((err) => {
-                            console.error(`Unable to start QR code scanning: ${err}`);
-                            alert("Error starting the QR code scanner.");
-                        });
-                    isScanning = true;
-                } else {
-                    html5QrCode.stop()
-                        .then(() => {
-                            $("#qr_reader").hide();
-                            isScanning = false;
-                        })
-                        .catch((err) => {
-                            console.error(`Error stopping the scanner: ${err}`);
-                        });
-                }
-            }
             $("#first").hover(
                 function() {
                     $("#first label").css({
@@ -582,32 +529,43 @@
             );
             
             $("#feature_container .container").hover(
-            function () {
-                if (window.innerWidth > 725) {
-                    $("#feature_container .container").not(this).css('margin-bottom', '100px'); // Add margin to others
-                    $(this).css({
-                        'height': '400px',
-                        'filter': 'grayscale(0%)',
-                        'align-items': 'center'
-                    });
+                function () {
+                    if (window.innerWidth > 725) {
+                        $("#feature_container .container").not(this).css('margin-bottom', '100px');
+                        
+                        $(this).css({
+                            'height': '400px',
+                            'align-items': 'center'
+                        });
 
-                    // Show only the first div inside the hovered container
-                    $(this).children("div:first").fadeIn();
-                }
-            },
-            function () {
-                if (window.innerWidth > 725) {
-                    $(this).css({
-                        'height': '300px', 
-                        'filter': 'grayscale(100%)',
-                        'align-items': 'top'
-                    });
+                        // Ενεργοποίηση του χρώματος στη feature_img
+                        $(this).children(".feature_img:first").css({
+                            'filter': 'grayscale(0%)'
+                        })
 
-                    // Hide only the first div inside the hovered container
-                    $(this).children("div:first").fadeOut();
+                        $(this).children(".feature_text").fadeIn();
+                    }
+                },
+                function () {
+                    if (window.innerWidth > 725) {
+                        $("#feature_container .container").not(this).css('margin-bottom', '0px');
+
+                        $(this).css({
+                            'height': '300px', 
+                            'align-items': 'flex-start' // Διόρθωση από 'top'
+                        });
+
+                        // Μετατροπή εικόνας ξανά σε ασπρόμαυρη
+                        $(this).children(".feature_img:first").css({
+                            'filter': 'grayscale(100%)'
+                        });
+
+                        // Επαναφορά του feature_img
+
+                        $(this).children(".feature_text").fadeOut();
+                    }
                 }
-            }
-);
+            );
 
 
 
