@@ -44,6 +44,7 @@
             width: 100%;
             flex-wrap: wrap;
             gap: 200px;
+            
         }
         #prices_container .container {
             flex: 1;
@@ -247,7 +248,29 @@
             font-size: 20px;
         }
 
+        #my_title{
+            font-size: 7em;
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+            filter: drop-shadow(-5px 5px 5px black);
+        }
+        #my_sub_title{
+            margin: 0px;
+            text-indent: 180px;
+            position: relative;
+            top:-15px
+        }
+
+        #my_header{
+            width: 100%;
+        }
+
         @media (max-width: 768px) {
+            #my_title{
+                margin-left: 5px;
+                
+            }
             .image {
                 width: 65vw;
             }
@@ -259,8 +282,21 @@
                 top: 10%;
                 left: 25%;
             }
-            #my_header{
-                scale: 0.6;
+            #my_title{
+                font-size: 4em;
+            }
+            #my_sub_title{
+                width: calc(100% - 20px );
+                margin-right: 20px;
+                text-align: right;
+                font-size: 1.2em;
+                position: relative;
+                top:-10px
+            }
+           
+
+            #my_header {
+                margin-bottom: 30px;
             }
 
             #feature_container .container:nth-child(1) {
@@ -333,9 +369,10 @@
             <a style="text-align: right;width: 100%;all:unset;color:white;cursor: pointer;" href="/scan">Scan</a>
         </div>
         <div id="my_header">
-            <h1 style="font-size: 7em;display: flex;align-items: center;margin-left: 30px;filter: drop-shadow(-5px 5px 5px black);"><img src="logo.svg" style="height:1em;">Welcome</h1>
-            <h2 style="margin: 0px;text-indent: 180px;position: relative;top:-15px" class="color_white asap-condensed-extralight">Let 's elevate your business</h1>
-    
+            <div>
+                <h1 id="my_title"><img src="logo.svg" style="height:1em;">Welcome</h1>
+                <h2 id="my_sub_title" class="color_white asap-condensed-extralight">Let 's elevate your business</h1>    
+            </div>
         </div>
         <div class="gallery">
             <div id="first" class="image">
