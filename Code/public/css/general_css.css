@@ -21,6 +21,7 @@ body {
     body {
         background-image: url('background-mobile.svg');
         background-size: cover;
+        background-position: top right;
     }
 }
 
