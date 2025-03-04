@@ -593,22 +593,9 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     data.user = req.user;
 
     console.log("***************************"+req.body.action)
-    
-    if(req.body.action == 'save'){
-      await generalFunctions.update({ _id: req.body.obj_id }, obj_type, data);
-      if(obj_type == 'nodes'){
-        return res.redirect(`/list?searchfor=clients`);
-      }
-      if(type2){
-        return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);
-        //return res.redirect(`/list?searchfor=${obj_type}&type2=${type2}`);
-      }
-      else{
-        //return res.redirect(`/list?searchfor=${obj_type}`);
-        return res.redirect(`/view?type=${obj_type}&id=${obj_id}`);
-      }
-    }
-    else if(req.body.action == 'delete'){
+
+
+    if(req.body.action == 'delete'){
       var delete_deactivate = await generalFunctions.delete_deactivate({ _id: obj_id }, obj_type, 'delete');
       if(delete_deactivate == 1){
         return res.redirect(`/list?searchfor=${obj_type}&type=${type2}&action=2&message=${delete_deactivate}`);
@@ -622,7 +609,20 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         }
       }
     }
-
+    else{
+      await generalFunctions.update({ _id: req.body.obj_id }, obj_type, data);
+      if(obj_type == 'nodes'){
+        return res.redirect(`/list?searchfor=clients`);
+      }
+      if(type2){
+        return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);
+        //return res.redirect(`/list?searchfor=${obj_type}&type2=${type2}`);
+      }
+      else{
+        //return res.redirect(`/list?searchfor=${obj_type}`);
+        return res.redirect(`/view?type=${obj_type}&id=${obj_id}`);
+      }
+    }
     
 
   } catch (e) {

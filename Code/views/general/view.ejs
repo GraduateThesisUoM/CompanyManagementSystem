@@ -465,7 +465,7 @@
       
       else if (queryParams.type == 'companies'){
         $("#admin_view_company").show();
-        
+        $("#btn1").hide();
         var requestsTable = $("#req_table table tbody");
         for (let i = 0; i < secondary_data.nodes.length; i++) {
           requestsTable.append(`<tr class="glass_effect_2" onclick="window.location='/view?type=nodes&id=${secondary_data.nodes[i]._id}'">
