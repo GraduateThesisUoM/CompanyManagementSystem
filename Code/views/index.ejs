@@ -14,7 +14,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
 
-
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <!-- QR Code Scanner Library -->
         <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     </head>
@@ -57,7 +57,10 @@
         #feature_container {
             display: flex;
             justify-content: space-around;
+            align-items: center;
             width: 100%;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         #feature_container .container {
@@ -82,7 +85,7 @@
 
 
         #feature_container .container:nth-child(1) {
-            background-image: url('office4.jpg');
+            background-image: url('office4.svg');
            
         }
         #feature_container .container:nth-child(2) {
@@ -100,8 +103,6 @@
             background-image: url('office7.jpg');
             background-position: right;
         }
-
-
 
         #feature_container .container:hover {
             flex-grow: 3; /* Increases width on hover */
@@ -125,6 +126,7 @@
             color: white;
             text-shadow: 2px 2px 2px black;
             display: none;
+            
         }
 
        
@@ -161,7 +163,6 @@
             left: 10%;
             height: 95%; /* Reduced height */
             z-index: 2;
-            width: 50vw;
             filter: brightness(0.6); /* Combined filters */
 
         }
@@ -177,7 +178,8 @@
         .image img {
             position: absolute;
             height: 100%; /* Reduced height */
-            width: 50vw;
+            /*width: 50vw;*/
+            width: 100%;
             object-fit: cover;
             transition: all 0.3s ease-in-out;
             clip-path: polygon(0% 0%, 90% 0%, 100% 100%, 0% 100%);
@@ -203,6 +205,7 @@
             justify-content: flex-end;
         }
 
+        
 
         .plan p{
             text-align: center;
@@ -217,11 +220,77 @@
             grid-template-columns: 40px auto;
             gap: 20px
         }
+        .plan .plan_details img{
+            width:40;
+            height:40;
+        }
         .plan .plan_details div{
             display: flex;
             align-items: center;
             text-align: left;
             font-size: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .image {
+                width: 65vw;
+            }
+            #second {
+                top: 5%;
+                left: 15%;
+            }
+            #third {
+                top: 10%;
+                left: 25%;
+            }
+ 
+
+            #feature_container .container:nth-child(1) {
+                background-position: center;
+            
+            }
+            #feature_container .container:nth-child(2) {
+                background-position: center;
+            }
+            #feature_container .container:nth-child(3) {
+                background-image: url('office6.jpg');
+                background-position: center;
+            }
+            #feature_container .container:nth-child(4) {
+                background-position: center;
+            }
+            #feature_container .container:nth-child(5) {
+                background-position: center;
+            }
+
+            #feature_container .container:hover {
+                flex-grow: 1; /* Increases width on hover */
+            }
+            
+            #feature_container {
+                display: flex;
+                flex-wrap: nowrap; 
+                overflow-x: auto; 
+                scroll-snap-type: x mandatory; 
+                gap: 10px;
+                padding-bottom: 10px; 
+            }
+
+            #feature_container .container{
+                min-width: 300px;
+                scroll-snap-align: center;
+            }
+
+            /*#feature_container .container {
+                width : calc(100% - 40px);
+                padding: 100px 0px;
+            }*/
+
+            .plan{
+                padding-left: 10px !important;
+                padding-right: 10px !important;
+            }
+            
         }
    
     </style>
@@ -231,18 +300,17 @@
         </div>
         <h1 style="font-size: 7em;">Welcome</h1>
         <h2 style="margin: 0px;text-indent: 20px;position: relative;top:-20px" class="color_white asap-condensed-extralight">Let 's elevate your business</h1>
-        
         <div class="gallery">
             <div id="first" class="image">
-                <img  src="office1.jpg">
+                <img  src="office1.svg">
                 <label class="asap-condensed-extralight color_white">Efficiency</label>
             </div>
             <div id="second" class="image">
-                <img  src="business efficiency.jpeg">
+                <img  src="business efficiency.svg">
                 <label class="asap-condensed-extralight color_white">Increased Proactivity</label>
             </div>
             <div id="third" class="image">
-                <img  src="organized2.jpg">
+                <img  src="organized2.svg">
                 <label class="asap-condensed-extralight color_white">Organized</label>
             </div>
         </div>
@@ -253,7 +321,7 @@
             </div>
         </div>
         
-        <div id="feature_container" style="display: flex;justify-content: space-around;">
+        <div id="feature_container">
             <div class="glass_effect_2 container">
                 <h3>Data Entering</h3>
                 <div>
@@ -291,9 +359,9 @@
             <div class="container glass_effect_2 plan">
                 <p class="plan_title">Basic</p>
                 <div class="plan_details">
-                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <img src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
                     <div>1 User Owner</div>
-                    <img width="40" height="40" src="https://img.icons8.com/sf-black-filled/40/850101/xbox-x.png" alt="xbox-x"/>
+                    <img src="https://img.icons8.com/sf-black-filled/40/850101/xbox-x.png" alt="xbox-x"/>
                     <div>0 User Employees</div>
                 </div>
                 <button style="width: 60%;margin-top: 20px;" class="button_1" onclick="window.location.href = '/sign-up'">Sign Up</button>
@@ -301,9 +369,9 @@
             <div class="container glass_effect_2 plan">
                 <p class="plan_title">Enterprise</p>
                 <div class="plan_details">
-                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <img src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
                     <div>1 User Owner</div>
-                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <img src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
                     <div>5 Extra Users</div>
                 </div>
                 <button style="width: 60%;margin-top: 20px;" class="button_1" onclick="window.location.href = '/sign-up'">Sign Up</button>
@@ -311,9 +379,9 @@
             <div class="container glass_effect_2 plan">
                 <p class="plan_title">Full</p>
                 <div class="plan_details">
-                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <img src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
                     <div>1 User Owner</div>
-                    <img width="40" height="40" src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
+                    <img src="https://img.icons8.com/ios-glyphs/40/018511/checked--v1.png" alt="checked--v1"/>
                     <div>50 User Employees</div>
                 </div>
                 <button style="width: 60%;margin-top: 20px;" class="button_1" onclick="window.location.href = '/sign-up'">Sign Up</button>
@@ -335,7 +403,7 @@
         <span>Contact:</span>
         <span style="display: flex;align-items: center;"><img width="30" height="30" src="https://img.icons8.com/pastel-glyph/30/FFFFFF/secured-letter--v1.png" alt="secured-letter--v1"/>Email : nektarios00007@gmail.com</span>
         <span style="display: flex;align-items: center;"><img width="30" height="30" src="https://img.icons8.com/ios/30/FFFFFF/apple-phone.png" alt="apple-phone"/>Phone : 6948422468</span>
-        <span class="color_white" style="text-align: right;text-shadow: -5px 5px 5px black;">This page was created for the graduate thesis of Nektarios Papagalakis.</span>
+        <span class="color_white" style="width: 100%;text-align: center;text-shadow: -5px 5px 5px black;margin-top: 20px;">This page was created for the graduate thesis of Nektarios Papagalakis.</span>
     </footer>
     
     <script>
@@ -512,27 +580,31 @@
             );
             
             $("#feature_container .container").hover(
-    function () {
-        $("#feature_container .container").not(this).css('margin-bottom', '100px'); // Add margin to others
-        $(this).css({
-            'height': '400px',
-            'filter': 'grayscale(0%)',
-            'align-items': 'center'
-        });
+            function () {
+                if (window.innerWidth > 725) {
+                    $("#feature_container .container").not(this).css('margin-bottom', '100px'); // Add margin to others
+                    $(this).css({
+                        'height': '400px',
+                        'filter': 'grayscale(0%)',
+                        'align-items': 'center'
+                    });
 
-        // Show only the first div inside the hovered container
-        $(this).children("div:first").fadeIn();
-    },
-    function () {
-        $(this).css({
-            'height': '300px',
-            'filter': 'grayscale(100%)',
-            'align-items': 'top'
-        });
+                    // Show only the first div inside the hovered container
+                    $(this).children("div:first").fadeIn();
+                }
+            },
+            function () {
+                if (window.innerWidth > 725) {
+                    $(this).css({
+                        'height': '300px', 
+                        'filter': 'grayscale(100%)',
+                        'align-items': 'top'
+                    });
 
-        // Hide only the first div inside the hovered container
-        $(this).children("div:first").fadeOut();
-    }
+                    // Hide only the first div inside the hovered container
+                    $(this).children("div:first").fadeOut();
+                }
+            }
 );
 
 

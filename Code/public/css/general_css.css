@@ -7,7 +7,7 @@
     /*background-position: center; /* Center the image */
 /*}*/
 
-body{
+body {
     margin: 0px;
     padding: 0px;
     background-image: url('background.svg');
@@ -15,8 +15,15 @@ body{
     background-repeat: no-repeat;
     background-position: top center;
     background-attachment: fixed;
-
 }
+
+@media (max-width: 768px) {
+    body {
+        background-image: url('background-mobile.svg');
+        background-size: cover;
+    }
+}
+
 
 .my_main_body{
     margin-bottom: 40px;
