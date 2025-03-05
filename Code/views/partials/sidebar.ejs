@@ -2,54 +2,50 @@
   <div>
     <div>
       <button class="main_side_menubtn user sidebar_btn" onclick="window.location='/'">
-        <img src="https://img.icons8.com/glyph-neue/64/FFFFFF/home--v1.png" alt="home" />
+        <img height="100" width="100" src="icons8-home-100.png" alt="home" />
         Home
       </button>
       <% if(user.type == 'admin') { %>
       <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=companies'">
-        <img src="https://img.icons8.com/ios-filled/100/FFFFFF/client-company.png" alt="client-company" />
-        Companys
+        <img height="100" width="100" src="icons8-company-100.png" alt="client-company" />
+        Companies
       </button>
       <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=users'">
-        <img src="https://img.icons8.com/external-basicons-solid-edtgraphics/50/FFFFFF/external-Users-users-basicons-solid-edtgraphics-4.png" alt="users" />
+        <img height="100" width="100" src="icons8-users-100.png" alt="users" />
         Users
       </button>
       <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=reports'">
-        <img src="https://img.icons8.com/wired/64/FFFFFF/siren.png" alt="reports" />
+        <img height="100" width="100" src="icons8-siren-100.png" alt="reports" />
         Reports
       </button>
       <button class="main_side_menubtn" onclick="location.href = '/database'">
-        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/database.png" alt="reports" />
+        <img height="100" width="100" src="icons8-database-100.png" alt="reports" />
         DataBase
       </button>
       <%}else if(user.type == 'accountant') { %>
       <button class="main_side_menubtn" onclick="location.href = '/list?searchfor=clients'">
-        <img src="https://img.icons8.com/ios-filled/50/FFFFFF/client-management.png" alt="client-management" />
+        <img height="100" width="100" src="icons8-client-management-100.png" alt="client-management" />
         Clients
       </button>
       <button class="main_side_menubtn" onclick="location.href = '/payroll'">
-        <img width="100" height="100" src="https://img.icons8.com/external-smashingstocks-mixed-smashing-stocks/100/FFFFFF/external-Payroll-audit-smashingstocks-mixed-smashing-stocks.png" alt="external-Payroll-audit-smashingstocks-mixed-smashing-stocks"/>
+        <img height="100" width="100" width="100" height="100" src="icons8-receipt-euro-100.png" alt="Payroll"/>
         PayRoll
       </button>
-      <!--button class="main_side_menubtn" onclick="location.href = '/list?searchfor=reviews'">
-        <img src="https://img.icons8.com/hatch/100/FFFFFF/features-list.png" alt="features-list"/>
-        Reviews
-      </button-->
       <% } else { %>
       <button class="main_side_menubtn user sidebar_btn">
-        <img src="https://img.icons8.com/ios-filled/100/FFFFFF/buy--v1.png" alt="buying" />
+        <img height="100" width="100" src="icons8-buy-100.png" alt="buying" />
         Buying
       </button>
       <button class="main_side_menubtn user sidebar_btn">
-        <img src="https://img.icons8.com/ios-filled/100/FFFFFF/cash-register.png" alt="sales" />
+        <img height="100" width="100" src="icons8-cash-register-100.png" alt="sales" />
         Sales
       </button>
       <button class="main_side_menubtn user sidebar_btn">
-        <img src="https://img.icons8.com/pastel-glyph/64/FFFFFF/box--v1.png" alt="warehouse" />
+        <img height="100" width="100" src="icons8-box-100.png" alt="warehouse" />
         Warehouse
       </button>
       <button class="main_side_menubtn" onclick="location.href = '/calendar?id=<%=user.company%>&timetable=month&timetable_user=all'">
-        <img width="50" height="50" src="https://img.icons8.com/ios-filled/50/FFFFFF/overtime.png" alt="overtime"/>
+        <img width="50" height="50" src="icons8-timetable-100.png" alt="overtime"/>
         Calendar
       </button>
       <% } %>
@@ -80,7 +76,7 @@
   </div>
   <div>
     <button id="back_btn" class="main_side_menubtn">
-      <img src="https://img.icons8.com/sf-black/64/FFFFFF/back.png" alt="back" />
+      <img src="icons8-back-100.png" alt="back" />
     </button>
   </div>
 </div>

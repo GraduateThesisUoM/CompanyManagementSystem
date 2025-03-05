@@ -16,14 +16,14 @@ body {
     background-position: top center;
     background-attachment: fixed;
 }
-
+/*
 @media (max-width: 768px) {
     body {
         background-image: url('background-mobile.svg');
         background-size: cover;
         background-position: top right;
     }
-}
+}*/
 
 
 .my_main_body{

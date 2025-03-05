@@ -92,7 +92,7 @@ async function fire_accountant(companyId,senderId,accountantId){
             await node.save();
         });
 
-        console.log("Accountant Fired Succesfully");
+        console.log("Accountant Fired Successfully");
     }
     catch(e){
         console.log(e)
