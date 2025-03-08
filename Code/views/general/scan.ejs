@@ -36,103 +36,8 @@
             color:rgb(255, 255, 255);
             text-shadow: -2px 2px 5px black;
         }
-
-        #prices_conatainer{
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-        }
-        #prices_conatainer .container {
-            flex: 1;
-            margin: 0 20px;
-            text-align: center;
-            padding: 20px;
-            transition: all 0.3s ease-in-out;
-            filter: opacity(0.8);
-        }
-        #prices_conatainer .container:hover {
-            box-shadow: -5px 5px 15px 2px black;
-            filter: opacity(1);
-        }
-
-        #feature_container {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            width: 100%;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-
-        #feature_container .container {
-            flex: 1;
-            margin: 0 20px;
-            padding: 0px;
-            text-align: center;
-            transition: all 0.3s ease-in-out;
-            background-repeat: no-repeat;
-            background-size:contain ;
-            background-attachment: fixed;
-            height: 300px;
-
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            
-            width: 100%;
-
-        }
-
-
-        #feature_container .container:nth-child(1) {
-            background-image: url('office4.svg');
-           
-        }
-        #feature_container .container:nth-child(2) {
-            background-image: url('office8.jpg');
-        }
-        #feature_container .container:nth-child(3) {
-            background-image: url('office6.jpg');
-            background-position: center;
-        }
-        #feature_container .container:nth-child(4) {
-            background-image: url('office5.jpg');
-            background-position: right;
-        }
-        #feature_container .container:nth-child(5) {
-            background-image: url('office7.jpg');
-            background-position: right;
-        }
-
-        #feature_container .container:hover {
-            flex-grow: 3; /* Increases width on hover */
-        }
-
-        #feature_container .container h3{
-            font-size: 2em;
-            padding: 10px 0;
-            color: rgb(5, 84, 175)!important;
-            filter: grayscale(0%);
-            background: rgba(255, 255, 255, 0.50);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-            backdrop-filter: blur(3.9px);
-            -webkit-backdrop-filter: blur(3.9px);
-            border: none;
-            width: 100%;
-        }
-
-        #feature_container .container div{
-            padding : 0px 20px;
-            color: white;
-            text-shadow: 2px 2px 2px black;
-            display: none;
-            
-        }
-
        
-        
-
+    
         .gallery {
             height: 60vh;
             width: 100%;
@@ -208,31 +113,13 @@
 
         
 
-        .plan p{
-            text-align: center;
-        }
 
-        .plan .plan_title{
-            font-size: 2em;
-            font-weight: 250px;
-        }
-        .plan .plan_details{
-            display: grid;
-            grid-template-columns: 40px auto;
-            gap: 20px
-        }
-        .plan .plan_details img{
-            width:40;
-            height:40;
-        }
-        .plan .plan_details div{
-            display: flex;
-            align-items: center;
-            text-align: left;
-            font-size: 20px;
-        }
 
         @media (max-width: 768px) {
+            #my_title{
+                margin-left: 5px;
+                
+            }
             .image {
                 width: 65vw;
             }
@@ -244,54 +131,24 @@
                 top: 10%;
                 left: 25%;
             }
+            #my_title{
+                font-size: 4em;
+            }
+            #my_sub_title{
+                width: calc(100% - 20px );
+                margin-right: 20px;
+                text-align: right;
+                font-size: 1.2em;
+                position: relative;
+                top:-10px
+            }
+           
+
+            #my_header {
+                margin-bottom: 30px;
+            }
+
  
-
-            #feature_container .container:nth-child(1) {
-                background-position: center;
-            
-            }
-            #feature_container .container:nth-child(2) {
-                background-position: center;
-            }
-            #feature_container .container:nth-child(3) {
-                background-image: url('office6.jpg');
-                background-position: center;
-            }
-            #feature_container .container:nth-child(4) {
-                background-position: center;
-            }
-            #feature_container .container:nth-child(5) {
-                background-position: center;
-            }
-
-            #feature_container .container:hover {
-                flex-grow: 1; /* Increases width on hover */
-            }
-
-            #feature_container {
-                display: flex;
-                flex-wrap: nowrap; 
-                overflow-x: auto; 
-                scroll-snap-type: x mandatory; 
-                gap: 10px;
-                padding-bottom: 10px; 
-            }
-
-            #feature_container .container{
-                min-width: 300px;
-                scroll-snap-align: center;
-            }
-
-            /*#feature_container .container {
-                width : calc(100% - 40px);
-                padding: 100px 0px;
-            }*/
-
-            .plan{
-                padding-left: 10px !important;
-                padding-right: 10px !important;
-            }
-            
         }
    
     </style>
@@ -308,7 +165,7 @@
             <h1>Welcome Please Scan</h1>
             <div id="message"></div>
             <div id="qr_reader" class="box_shadow_1" style="width: 50%; margin-top: 20px;margin-left: 25%; display: none;"></div>
-            <form id="scan_form" action="/index" method="POST" style="display: none;">
+            <form id="scan_form" action="/scan" method="POST" style="display: none;">
                 <input type="text" name="scan" id="scan" >
             </form>
             <button class="btn_type_1" id="scan_bnt">Scan</button>
@@ -347,7 +204,7 @@
             });
 
             $("#scan_bnt").click(function(){
-                window.location = "/index?scan=tue";
+                window.location = "/scan?scan=tue";
 
             });
 
@@ -363,6 +220,7 @@
                                 html5QrCode.stop(); // Stop scanner after a successful scan
                                 $("#qr_reader").hide();
                                 isScanning = false;
+                                
                                 $("#scan_form").submit();
                             })
                         .catch((err) => {

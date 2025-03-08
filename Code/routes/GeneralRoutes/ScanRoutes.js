@@ -27,7 +27,8 @@ router.post("/", Authentication.checkNotAuthenticated, async (req, res) => {
                 console.log(scan);
                 console.log(new Date())*/
                 //var node = await Node.find
-                res.redirect('/index?scan=true&action='+scan)
+                //res.redirect('/scan?scan=true&action='+scan)
+                res.redirect('/scan?action='+scan);
         }
         catch (err) {
                 console.error("Error :", err);

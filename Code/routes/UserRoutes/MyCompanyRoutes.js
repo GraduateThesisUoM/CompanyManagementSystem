@@ -21,7 +21,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
-      var docs = await Document.find({company: req.user.company});
+      var docs = await Document.find({company: req.user.company,next:'-'});
       var credit = 0;
       var debit = 0;
         for (let d of docs) {
@@ -33,11 +33,13 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               debit += generalFunctions.get_docs_value(d);
             }
         }
+        console.log(credit)
+        console.log(debit)
         const data = {
           user: req.user,
           company: await Company.findOne({ _id: req.user.company }),
-          credit : parseFloat(credit),
-          debit : debit
+          credit: parseFloat(credit).toFixed(2),
+          debit: parseFloat(debit).toFixed(2)
         };
         res.render("user_pages/my_company.ejs", data);
       

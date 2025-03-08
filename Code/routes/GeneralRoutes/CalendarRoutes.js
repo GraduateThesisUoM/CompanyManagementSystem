@@ -44,7 +44,6 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
                 };
               })
             );
-            console.log(nodes)
 
             res.render(path_constants.pages.calendar.view(), {
               user: req.user,
@@ -75,21 +74,29 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     console.log("CalendarRoutes");
     //var obj_type = req.body.obj_type;
     var obj_id = req.body.obj_id;
+    console.log(req.body)
+    console.log("CalendarRoutes");
 
     if(req.body.day_data_input_node_id != ""){
-      node = generalFunctions.node_reply ({
-        target_node : await Node.findOne({ _id: req.body.day_data_input_node_id }),
-        type2: parseInt(req.body.time_table_type),
-        text:  req.body.time_table_notes,
-        user : req.user._id,
-        data: {
-          date: req.body.day_data_input_date,
-          hour_start : req.body.time_table_hours_start,
-          minutes_start : req.body.time_table_minutes_start,
-          hour_end : req.body.time_table_hours_end,
-          minutes_end : req.body.time_table_minutes_end,
-        }
-      });
+      if(req.body.action == 'time_table_delete'){
+        node = await Node.findOneAndDelete({ _id: req.body.day_data_input_node_id });
+      }
+      else{
+        node = generalFunctions.node_reply ({
+          target_node : await Node.findOne({ _id: req.body.day_data_input_node_id }),
+          type2: parseInt(req.body.time_table_type),
+          text:  req.body.time_table_notes,
+          user : req.user._id,
+          data: {
+            date: req.body.day_data_input_date,
+            hour_start : req.body.time_table_hours_start,
+            minutes_start : req.body.time_table_minutes_start,
+            hour_end : req.body.time_table_hours_end,
+            minutes_end : req.body.time_table_minutes_end,
+          }
+        });
+
+      }
     }
     else if(req.body.action == "new"){
       const startDate = new Date(req.body.day_data_input_date);
@@ -121,7 +128,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     }
     
 
-    return res.redirect('/calendar?id='+obj_id+'&timetable='+req.body.calendar_view_selection+'&timetable_user='+req.body.day_data_input_user_filter+'&refresh=1');
+    return res.redirect('/calendar?id='+obj_id+'&timetable='+req.body.calendar_view_selection+'&timetable_user='+req.body.day_data_input_user_filter+'&date='+req.body.page_date+'&refresh=1');
 
   } catch (e) {
     console.error(e);

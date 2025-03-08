@@ -38,11 +38,12 @@
           <div class="container glass_effect_2" style="display: flex;justify-content: space-around;align-items: center;width:50%;margin-left: 25%;">
             <button onclick="window.location.href='/calendar?id=<%=user.company%>&timetable=month&timetable_user=all'" style="width: 80%;" class="button_1">Calendar</button>
             <button onclick="window.location.href='/payroll?comp=<%=user.company%>'" class="button_5">Payroll</button>
-            <button onclick="window.location.href='/pick-accountant'" class="button_5">Accountant</button>
+            <button onclick="window.location.href='/pick-accountant'" class="button_5">Pick Manager</button>
           </div>
           <%}%>
         <form action="/calendar" method="POST" id="view_form" class="glass_effect_2" style="display: none;">
           <input type="text" id="obj_id" name="obj_id" style="display: none" />
+          <input type="text" id="page_date" name="page_date" style="display: none" />
           <input type="text" name="action" id="action" />
           <div >
             <input name="day_data_input_user_id" id="day_data_input_user_id" value="all"/>
@@ -78,7 +79,7 @@
                 <button class="calendar_date_reage_btn" id="tt_day">Day</button>
                 <button class="calendar_date_reage_btn" id="tt_week">Week</button>
                 <button class="calendar_date_reage_btn" id="tt_month">Month</button>
-                <input id="day_picker" type="date" />
+                <input id="day_picker" type="date"/>
                 <select id="user_select" style="width: 200px;">
                   <option value="all">All</option>
                 </select>
@@ -283,10 +284,13 @@
       } else {
         $("#user_select").val("all");
       }
-
       if (queryParams.refresh) {
-        window.location = "/calendar?id=" + queryParams.id + "&timetable=" + queryParams.timetable + "&timetable_user=" + $("#user_select").val();
+        window.location = "/calendar?id=" + queryParams.id + "&timetable=" + queryParams.timetable + "&timetable_user=" + $("#user_select").val()+"&date="+queryParams.date;
       }
+      if (queryParams.date) {
+        selected_date = queryParams.date;
+      }
+
 
       
 
@@ -294,7 +298,9 @@
         $("#tt_" + queryParams.timetable).addClass("selected");
         //day_week_month("month");
         $("#day_picker").val(selected_date);
-        show_calendar(queryParams.timetable);
+        $("#page_date").val(selected_date);
+        //show_calendar(queryParams.timetable);
+        show_calendar();
 
       $(".go_to_btn").click(function () {
         event.preventDefault();
@@ -319,7 +325,8 @@
         window.location = "/calendar?id=" + queryParams.id + "&timetable=" + input + "&timetable_user=" + $("#user_select").val();
       }
 
-      function show_calendar(input) {
+      function show_calendar() {
+        var input = $("#calendar_view_selection").val();
         if (input == "month") {
           $("#day").hide();
           $("#week").hide();
@@ -338,6 +345,7 @@
 
         $("#day_picker").show();
         $("#day_picker").val(selected_date);
+        $("#page_date").val(selected_date);
         calendar_spectrum = input;
         pick_date();
 
@@ -348,6 +356,8 @@
         selected_date = $("#day_picker").val();
         show_selected_month_year(selected_date);
         put_dates(calendar_spectrum, $("#day_picker").val());
+
+        put_data_on_calendar("all");
       }
 
       $("#close_btn").click(function (event) {
@@ -437,6 +447,7 @@
 
       $("#day_picker").change(function () {
         pick_date();
+        $("#page_date").val($("#day_picker").val());
       });
 
       $(".day_line").click(function (event) {

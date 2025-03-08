@@ -38,7 +38,7 @@
     <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
       <div class="my_main_body has_sidebar_main_content">
-        <h1 class="asap-condensed-extralight">View</h1>
+        <h1 id="view_title" class="asap-condensed-extralight">View</h1>
         <div id="clients" style="display: flex;justify-content: center;align-items: center;">
           <button id="go_to_calendar" class="button_1" style="width: 50%;">Calendar</button>
         </div>
@@ -363,6 +363,7 @@
 
       let formAction = "/view";
       if (queryParams.type) {
+        $("#view_title").text("View "+ queryParams.type.charAt(0).toUpperCase() + queryParams.type.slice(1))
         formAction += "?type=" + encodeURIComponent(queryParams.type);
       }
       if (queryParams.id) {
