@@ -108,12 +108,52 @@
                 else{
                     $("#section_2").hide();
                 }
-                
+                alert($(this).attr("id"))
                 $('#db_post_input').val($(this).attr("id"));
             });
-            $(".db_btn").click(function () {
-                $('#db_post_input').val($('#db_post_input').val()+"_"+$(this).attr("id"));
-                $('#db_form').submit();
+            $(".db_btn").click(async function () {
+                //$('#db_post_input').val($('#db_post_input').val()+"_"+$(this).attr("id"));
+                alert($('#db_post_input').val()+"/"+$(this).attr("id"))
+                //$('#db_form').submit();
+                if($(this).attr("id")=="export"){
+                    try {
+                    const userType = $("#db_post_input").val(); // Get the selected user type (admin, accountant, company)
+                    alert(userType)
+                    if (!userType) {
+                        alert("Please select a user type before exporting.");
+                        return;
+                    }
+                    var response;
+                    if($('#db_post_input').val()=='company'){
+                        response = await fetch(`/database?action=export&userType=${userType}&selected_companies=${$("#selected_companies").val()}`);
+                    }
+                    else{
+                        response = await fetch(`/database?action=export&userType=${userType}`);
+                    }
+                    
+                    const data = await response.json();
+
+                    if (!data || data.length === 0) {
+                        alert("No data to export.");
+                        return;
+                    }
+
+                    const jsonString = JSON.stringify(data, null, 2);
+                    const blob = new Blob([jsonString], { type: "application/json" });
+                    const url = URL.createObjectURL(blob);
+
+                    const a = document.createElement("a");
+                    a.href = url;
+                    a.download = `${userType}_export_data.json`; // Name file based on user type
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                } catch (error) {
+                    console.error("Export error:", error);
+                    alert("Failed to export data.");
+                }
+                }
             });
 
             $('#back_up_path').on('change', function(event) {

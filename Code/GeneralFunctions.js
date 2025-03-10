@@ -1098,7 +1098,7 @@ async function importUserType(UserSchema, userType) {
   }
 }
 
-
+/*
 async function exportUserType(UserSchema, userType) {
   try {
     const baseDir = path_constants.my_constants.export_path;
@@ -1123,7 +1123,7 @@ async function exportUserType(UserSchema, userType) {
   } catch (err) {
     console.error(`Error exporting ${userType} data:`, err);
   }
-}
+}*/
 
 
 async function importAdmins() {
@@ -1332,6 +1332,7 @@ function get_docs_value(data) {
 }
 
 module.exports = {
+  schemaMap,
   checkAccessRigts,
   gets_movements,
   createWarehouse,
