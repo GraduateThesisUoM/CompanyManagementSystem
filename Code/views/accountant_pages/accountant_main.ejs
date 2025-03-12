@@ -25,29 +25,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="logo.svg">
 
-
-    <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
-
     <%- include('../partials/header'); %>
   <body>
     <div class="has_sidebar asap-condensed-regular">
       <%- include('../partials/sidebar'); %>
       <div class="has_sidebar_main_content">
-        <h1>Accountant main page</h1>
-        <h2>Welcome <%= user.firstName %> <%= user.lastName %></h2>
+        <h1 class="text_function">Accountant main page</h1>
+        <h2><span class="text_function">Welcome</span> <%= user.firstName %> <%= user.lastName %></h2>
         
         <div>
-          <h2>Pending Requests</h2>
+          <h2 class="text_function">Pending Requests</h2>
           <% if(pending_nodes_list.length > 0 || viewed_nodes_list.length > 0){%>
             <div class="table_container">
               <table>
                 <thead class="glass_effect_1">
                   <tr>
-                    <th class="">Type</th>
-                    <th class="">Title</th>
-                    <th class="">Registration Date</th>
-                    <th class="">Due Date</th>
-                    <th class="">Company</th>
+                    <th class="text_function">Type</th>
+                    <th class="text_function">Title</th>
+                    <th class="text_function">Registration Date</th>
+                    <th class="text_function">Due Date</th>
+                    <th class="text_function">Company</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -73,22 +70,22 @@
               </table>
             </div>
           <%}else{%>
-            <p>You have no pending requests at the moment</p>
+            <p class="text_function">You have no pending requests at the moment</p>
             <%}%>
         </div>
 
         <div>
-          <h2>Executed Requests</h2>
+          <h2 class="text_function">Executed Requests</h2>
           <% if(executed_nodes_list.length > 0){%>
             <div class="table_container">
               <table>
                 <thead class="glass_effect_1">
                   <tr>
-                    <th class="">Type</th>
-                    <th class="">Title</th>
-                    <th class="">Registration Date</th>
-                    <th class="">Due Date</th>
-                    <th class="">Company</th>
+                    <th class="text_function">Type</th>
+                    <th class="text_function">Title</th>
+                    <th class="text_function">Registration Date</th>
+                    <th class="text_function">Due Date</th>
+                    <th class="text_function">Company</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -105,22 +102,22 @@
               </table>
             </div>
           <%}else{%>
-            <p>You have no executed requests at the moment</p>
+            <p class="text_function">You have no executed requests at the moment</p>
             <%}%>
         </div>
 
         <div>
-          <h2>Rejected Requests</h2>
+          <h2 class="text_function">Rejected Requests</h2>
           <% if(rejected_nodes_list.length > 0){%>
             <div class="table_container">
               <table>
                 <thead class="glass_effect_1">
                   <tr>
-                    <th class="">Type</th>
-                    <th class="">Title</th>
-                    <th class="">Registration Date</th>
-                    <th class="">Due Date</th>
-                    <th class="">Company</th>
+                    <th class="text_function">Type</th>
+                    <th class="text_function">Title</th>
+                    <th class="text_function">Registration Date</th>
+                    <th class="text_function">Due Date</th>
+                    <th class="text_function">Company</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -137,7 +134,7 @@
               </table>
             </div>
           <%}else{%>
-            <p>You have no rejected requests at the moment</p>
+            <p class="text_function">You have no rejected requests at the moment</p>
             <%}%>
         </div>
 

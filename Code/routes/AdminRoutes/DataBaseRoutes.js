@@ -5,7 +5,7 @@ const ObjectId = require("mongodb").ObjectId;
 const path_constants = require("../../constantsPaths");
 
 //Models
-const Review = require(path_constants.schemas.two.review);
+const Accountant = require(path_constants.schemas.two.accountant);
 const User = require(path_constants.schemas.two.user);
 const Company = require(path_constants.schemas.two.company);
 const Node = require(path_constants.schemas.two.node);
@@ -75,31 +75,69 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 });
 
 
-/*
-router.post("/", Authentication.checkAuthenticated, async (req, res) => {
+
+const multer = require("multer");
+
+// Configure multer to store file in memory instead of disk
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
+
+router.post("/", Authentication.checkAuthenticated, upload.single("file"), async (req, res) => {
   try {
-    const [schema, action] = req.body.db_post_input.split('_');
+      console.log(req.body); // Log form fields
 
-    if(schema == 'company'){
-      if(req.body.selected_companies != 'all'){
-        const selectedCompanies = req.body.selected_companies.split(';');
-        for (const company of selectedCompanies) {
-          if (company) { 
-            await generalFunctions.importExport(action,schema, company);
-          }
-        }
+      if (!req.file) {
+          return res.status(400).json({ error: "No file uploaded." });
       }
-    }
-    else{
-      await generalFunctions.importExport(action,schema);
-    }
 
-    return res.redirect(`/database?message=${action} Completed`);
-  } catch (e) {
-      console.error(e);
-      return res.redirect('/error?origin_page=/&error=' + encodeURIComponent(e.message));
+      const fileContent = req.file.buffer.toString("utf8");
+      const data = JSON.parse(fileContent);
+      //const overwrite = req.body.overwrite === "1" ? 1 : 0; // Convert string to number
+
+      const overwrite = 1;
+
+      const result = await importDataToMongo('accountant', data, 1);
+
+      if (result.success) {
+          res.json({ message: result.message });
+      } else {
+          res.status(500).json({ error: result.error });
+      }
+  } catch (error) {
+      console.error("Import error:", error);
+      res.status(500).json({ error: "Failed to import data." });
   }
-});*/
+});
+
+const importDataToMongo = async (Schema, data, overwrite) => {
+  try {
+      if (!Array.isArray(data)) throw new Error("Invalid data format (Expected an array)");
+
+      for (const record of data) {
+          if (!record._id) continue; // Ensure the record has a unique MongoDB _id
+
+          const existingRecord = await Accountant.findOne({ _id: record._id });
+
+          if (existingRecord) {
+              if (overwrite === 1) {
+                  await Accountant.updateOne({ _id: record._id }, record);
+                  console.log(`Updated: ${record._id}`);
+              } else {
+                  console.log(`Skipped existing record: ${record._id}`);
+              }
+          } else {
+              await Accountant.create({ ...record, _id: record._id }); // Keep the same _id
+              console.log(`Inserted new record: ${record._id}`);
+          }
+      }
+
+      return { success: true, message: "Import completed successfully." };
+  } catch (error) {
+      console.error("Import error:", error.message);
+      return { success: false, error: error.message };
+  }
+};
+
 
 
 module.exports = router;

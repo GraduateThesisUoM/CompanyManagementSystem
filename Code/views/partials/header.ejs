@@ -1,108 +1,108 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-   <!--ajax-->
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-   <!--CSS-->
-   <link rel="stylesheet" href="general_css.css">
-   <link rel="stylesheet" href="fonts_css.css">
+    <head>
+    <!--ajax-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <!--CSS-->
+    <link rel="stylesheet" href="general_css.css">
+    <link rel="stylesheet" href="fonts_css.css">
 
-   <!--Fonts-->
-   <link rel="preconnect" href="https://fonts.googleapis.com">
-   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-   <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
-</head>
-<style>
-    #header{
-        position: relative;
-        z-index: 100;
-    }
-    #header_menu_img{
-        margin-left: calc(100% - 150px);
-        /*margin-right: 75px;*/
-        cursor: pointer;
-        transition: 0.5s;
-        position: fixed; /* Use fixed for consistency across scrolling */
-        top: 10px;
-        width: 50px;
-    }
+    <!--Fonts-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    </head>
+    <style>
+        #header{
+            position: relative;
+            z-index: 100;
+        }
+        #header_menu_img{
+            margin-left: calc(100% - 150px);
+            /*margin-right: 75px;*/
+            cursor: pointer;
+            transition: 0.5s;
+            position: fixed; /* Use fixed for consistency across scrolling */
+            top: 10px;
+            width: 50px;
+        }
 
-    #header_menu_img:hover{
-        transform: scale(1.1);
-        filter:drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
-    }
-    #header_menu{
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 10px 0px;
-        border-radius: 10px;
-        width: 200px;
-        margin-left: calc(100% - 225px);
-        margin-right: 25px;
-        margin-top: 5px;
-        position: fixed; /* Use fixed for consistency across scrolling */
-        top: 50px;
-        box-shadow: -5px 5px 10px 5px rgba(0, 0, 0, 0.7);
+        #header_menu_img:hover{
+            transform: scale(1.1);
+            filter:drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.8));
+        }
+        #header_menu{
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 0px;
+            border-radius: 10px;
+            width: 200px;
+            margin-left: calc(100% - 225px);
+            margin-right: 25px;
+            margin-top: 5px;
+            position: fixed; /* Use fixed for consistency across scrolling */
+            top: 50px;
+            box-shadow: -5px 5px 10px 5px rgba(0, 0, 0, 0.7);
 
-        display: none;
-    }
-    #header_menu a{
-        font-size: 1.5em;
-        text-decoration: none;
-        width: 100%;
-        text-align: center;
-        padding: 5px 0px;
-        transition: 0.3s;
-    }
-    #header_menu a:hover{
-        font-weight: 450;
-        text-shadow: -2px 2px 4px rgba(0, 0, 0, 0.8);  
-        background-color: rgba(255, 255, 255, 0.396);
-    }
+            display: none;
+        }
+        #header_menu a{
+            font-size: 1.5em;
+            text-decoration: none;
+            width: 100%;
+            text-align: center;
+            padding: 5px 0px;
+            transition: 0.3s;
+        }
+        #header_menu a:hover{
+            font-weight: 450;
+            text-shadow: -2px 2px 4px rgba(0, 0, 0, 0.8);  
+            background-color: rgba(255, 255, 255, 0.396);
+        }
 
-    .color_black:hover{
-        color:white
-    }
-    .color_red:hover{
-        color: rgb(231, 31, 31);
-    }
+        .color_black:hover{
+            color:white
+        }
+        .color_red:hover{
+            color: rgb(231, 31, 31);
+        }
 
-</style>
-<header id="header" name="header" class=" asap-condensed-regular">
-    <!--a href="profile-page">Profile</a-->
-    <img style="backdrop-filter: blur(10px);background: rgba(255, 255, 255, 0.1);border-radius: 50%;" id="header_menu_img" src="icons8-test-account-100.png" alt="test-account"/>
-    <div id="header_menu" class="glass_effect_1 border-radius">
-        <div></div>
-        <div></div><a class="color_black" href="/profile-page">Profile</a>
-        <% if(user.type != 'admin') { %>
-        
-        <% if(user.type == 'user') { %>
-        <div></div><a class="color_black" href="/my-company">Company</a>
-        <% } %>
-        <!--div></div><a href="/my-qr-code">QR Code</a-->
-        
-        <div></div><a class="color_black" href="/list?searchfor=reviews">Reviews</a>
-        <div></div><a class="color_black" href="/report">Report</a>
+    </style>
+    <header id="header" name="header" class=" asap-condensed-regular">
+        <!--a href="profile-page">Profile</a-->
+        <img style="backdrop-filter: blur(10px);background: rgba(255, 255, 255, 0.1);border-radius: 50%;" id="header_menu_img" src="icons8-test-account-100.png" alt="test-account"/>
+        <div id="header_menu" class="glass_effect_1 border-radius">
+            <div></div>
+            <div></div><a class="color_black text_function" href="/profile-page">Profile</a>
+            <% if(user.type != 'admin') { %>
+            
+            <% if(user.type == 'user') { %>
+            <div></div><a class="color_black text_function" href="/my-company">Company</a>
+            <% } %>
+            <!--div></div><a href="/my-qr-code">QR Code</a-->
+            
+            <div></div><a class="color_black text_function" href="/list?searchfor=reviews">Reviews</a>
+            <div></div><a class="color_black text_function" href="/report">Report</a>
 
-        <% } %>
-        <div></div><a class="color_red" href="/logout">Log Out</a>
-    </div>
-</header>
-<script>
-            $(document).ready(function(){
-                $("#header_menu").hide();
-                $("#header_menu_img").click(function(){
-                    if ($("#header_menu").css("display") === "flex") {
-                        $("#header_menu").css("display", "none");
-                    } else {
-                        $("#header_menu").css("display", "flex");
-                    }
-                });
+            <% } %>
+            <div></div><a class="color_red text_function" href="/logout">Log Out</a>
+        </div>
+    </header>
+    <script>
+        $(document).ready(function(){
+            $("#header_menu").hide();
+            $("#header_menu_img").click(function(){
+                if ($("#header_menu").css("display") === "flex") {
+                    $("#header_menu").css("display", "none");
+                } else {
+                    $("#header_menu").css("display", "flex");
+                }
             });
-
-
-
-      
-</script>
+            translateTextElements();
+            /*$(".text_function").each(function () {
+                $(this).text(get_word({lang:"EN",key:$(this).text().toLowerCase()}))
+            });*/
+        });
+    </script>
 </html>

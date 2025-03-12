@@ -924,26 +924,16 @@ const formatDate = (dateString) => {
   return `${year}-${month}-${day}`;
 };
 
-async function importExport(action,schema, company) {
+async function importExport(action,schema, company,path) {
   try {
     if (!['export', 'import','export_accountants','export_admins'].includes(action)) {
       throw new Error("Invalid action. Please specify 'export' or 'import'.");
     }
     if(schema == 'company' ){
-      if(action == 'export'){
-        await exportData(company);
-      }
-      else if (action == 'import'){
-        await resetAndImportData(company);
-      }
+      await resetAndImportData(company,path);
     }
     else{
-      if(action == 'export'){
-        await exportUserType(User,schema);//admin or accountant
-      }
-      else if (action == 'import'){
-        await importUserType(User,schema);//admin or accountant
-      }
+      await importUserType(User,schema,path);//admin or accountant
     }
 
   } catch (error) {
@@ -1017,7 +1007,7 @@ async function exportData(company = null) {
     console.error("Error exporting data:", err);
   }
 }
-
+/*
 async function resetAndImportData(companyId) {
   try {
 
@@ -1062,12 +1052,67 @@ async function resetAndImportData(companyId) {
     console.error("Error restoring data:", err);
   }
 }
-
-async function importUserType(UserSchema, userType) {
+  */
+async function resetAndImportData(companyId) {
   try {
-    const baseDir = path_constants.my_constants.export_path;
-    const userDir = path.join(baseDir, userType);
-    const userFilePath = path.join(userDir, `${userType}.json`);
+    const filePath = `C:\\exports\\${companyId}\\exported_data.json`;
+
+    if (!fs.existsSync(filePath)) {
+      console.warn(`No export file found for company '${companyId}' at ${filePath}`);
+      return;
+    }
+
+    const rawData = fs.readFileSync(filePath, "utf-8");
+    const allData = JSON.parse(rawData);
+
+    if (!allData[companyId] || !allData[companyId].data) {
+      console.warn(`Invalid JSON structure. No data found for company '${companyId}'.`);
+      return;
+    }
+
+    const companyData = allData[companyId].data;
+
+    // Step 1: Delete existing data for the company
+    for (const schema of Object.keys(companyData)) {
+      const model = schemaMap[schema];
+      if (!model) {
+        console.warn(`Schema '${schema}' not found.`);
+        continue;
+      }
+
+      const idsToDelete = companyData[schema].map(doc => doc._id);
+      if (idsToDelete.length > 0) {
+        await model.deleteMany({ _id: { $in: idsToDelete } });
+        console.log(`Deleted existing records in '${schema}' for company '${companyId}'`);
+      }
+    }
+
+    // Step 2: Insert all data exactly as it is
+    for (const schema of Object.keys(companyData)) {
+      const model = schemaMap[schema];
+      if (!model) {
+        console.warn(`Schema '${schema}' not found.`);
+        continue;
+      }
+
+      if (companyData[schema].length > 0) {
+        await model.insertMany(companyData[schema], { ordered: false });
+        console.log(`Inserted records into '${schema}' as they were in the JSON`);
+      }
+    }
+
+    console.log(`Database restored exactly as in the JSON file`);
+  } catch (err) {
+    console.error("Error restoring data:", err);
+  }
+}
+
+async function importUserType(UserSchema, userType,path) {
+  try {
+    //const baseDir = path_constants.my_constants.export_path;
+    //const userDir = path.join(baseDir, userType);
+    //const userFilePath = path.join(userDir, `${userType}.json`);
+    const userFilePath = path
     console.log(userFilePath)
 
     if (!fs.existsSync(userFilePath)) {

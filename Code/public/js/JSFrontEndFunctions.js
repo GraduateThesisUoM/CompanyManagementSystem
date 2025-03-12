@@ -350,16 +350,77 @@ function get_item_from_list(list,id){
 }
 
 function go_back(url) {
-    //alert(url)
-    const path = new URL(url).pathname; // Extract the path (e.g., "/view")
-  
-  if (path.includes('view')) {
-      return '/list';
-    } else {
-        return  '/';
-    }
-  }
+//alert(url)
+const path = new URL(url).pathname; // Extract the path (e.g., "/view")
 
+if (path.includes('view')) {
+    return '/list';
+} else {
+    return  '/';
+}
+}
+
+const dictionary = {
+    EN :{
+        home : "Home-",
+        companies : "Companies-",
+        users : "Users-",
+        reports : "Reports-",
+        database : "DataBase-",
+        client : "Client-",
+        clients : "Clients-",
+        payroll : "PayRoll-",
+        buying : "Buying-",
+        sales : "Sales-",
+        warehouse : "Warehouse-",
+        calendar : "Calendar-",
+        person : "Person-",
+        persons : "Persons-",
+        submit : "Submit-",
+        save : "Save-",
+        manager :"Manager-",
+        view : "View-",
+        list : "List-",
+        series : "Series-",
+        items : "Items-",
+        docs :"Docs-",
+        transfers : "Transfers-",
+        profile : "Profile-",
+        company : "Company-",
+        welcome : "Welcome",
+        reviews : "Reviews-",
+        report : "Report-",
+        logout : "Log Out-",
+        management : "Management-",
+        accountantmainpage : "Accountant main page-",
+        pending : "Pending-",
+        Requests : "Requests-",
+        pendingrequests : "Pending Requests-",
+        type : "Type-",
+        title : "Title-",
+        registrationdate : "Registration Date-",
+        duedate : "Due Date-",
+        executedrequests : "Executed Requests-",
+        youhavenopendingrequestsatthemoment : "You have no pending requests at the moment-",
+        youhavenoexecutedrequestsatthemoment : "You have no executed requests at the moment-",
+        rejectedrequests : "Rejected Requests-",
+        youhavenorejectedrequestsatthemoment : 'You have no rejected requests at the moment-',
+        pickmanager : "Pick Manager",
+        year : "Year"
+    }
+}
+
+function get_word(data) {
+    return dictionary[data.lang]?.[data.key] || data.key+"***";
+}
+
+function translateTextElements() {
+    $(".text_function").each(function () {
+        let key = $(this).text().trim().toLowerCase().replace(/\s+/g, ""); // Remove spaces
+        let translatedText = get_word({ lang: "EN", key: key });
+        $(this).text(translatedText); // Replace text
+    });
+}
 
 // The original message_from_url function
 function message_from_url(url){

@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="Switch_css.css" />
     <link rel="stylesheet" href="buttons_css.css">
 
-    <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
 
     <%- include('../partials/header'); %>
 </head>
@@ -21,10 +20,11 @@
         <%- include('../partials/sidebar'); %>
 
         <div class="has_sidebar_main_content">
-            <h1>DataBase</h1>
-            <form style="display: none;" action="/database" method="POST" id="db_form">
+            <h1 class="text_function">DataBase</h1>
+            <form  action="/database" method="POST" id="db_form">
                 <input name="db_post_input" id="db_post_input">
                 <input name="selected_companies" id="selected_companies">
+                <input name="file_path" id="file_path" type="file" accept=".json" >
             </form>
             <div style="width: 100%;display:flex;flex-direction:row;justify-content:space-evenly;">
                 <button id="admin" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
@@ -108,17 +108,14 @@
                 else{
                     $("#section_2").hide();
                 }
-                alert($(this).attr("id"))
                 $('#db_post_input').val($(this).attr("id"));
             });
             $(".db_btn").click(async function () {
-                //$('#db_post_input').val($('#db_post_input').val()+"_"+$(this).attr("id"));
-                alert($('#db_post_input').val()+"/"+$(this).attr("id"))
+                $('#db_post_input').val($('#db_post_input').val()+"_"+$(this).attr("id"));
                 //$('#db_form').submit();
                 if($(this).attr("id")=="export"){
                     try {
                     const userType = $("#db_post_input").val(); // Get the selected user type (admin, accountant, company)
-                    alert(userType)
                     if (!userType) {
                         alert("Please select a user type before exporting.");
                         return;
@@ -154,7 +151,36 @@
                     alert("Failed to export data.");
                 }
                 }
+                else if($(this).attr("id")=="import"){
+                    $("#file_path").click();
+                } 
             });
+
+            $("#file_path").change(async function (event) {
+                const file = event.target.files[0]; // Get the selected file
+                if (!file) {
+                    alert("No file selected.");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("file", file);
+                formData.append("userType", $("#db_post_input").val()); // Include user type
+
+                try {
+                    const response = await fetch("/database?action=import", {
+                        method: "POST",
+                        body: formData,
+                    });
+
+                    const result = await response.json();
+                    alert(result.message || "File uploaded successfully!");
+                } catch (error) {
+                    console.error("Import error:", error);
+                    alert("Failed to import data.");
+                }
+            });
+
 
             $('#back_up_path').on('change', function(event) {
                 const fileList = event.target.files;

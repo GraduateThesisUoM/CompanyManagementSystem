@@ -1,0 +1,26 @@
+[
+  {
+    "_id": "6744ccdb8aa03131f1a824ff",
+    "registrationDate": "2024-11-25T19:15:39.999Z",
+    "last_log_out": "2025-03-09T17:55:20.684Z",
+    "firstName": "ad12333333333333",
+    "lastName": "ad1",
+    "email": "ad1@ad1",
+    "password": "$2b$10$92cI9jeRO1/vgnr8Mg/k/u8NhZFbE8cfHlpr1XiloKAH5sjFSLEea",
+    "status": 1,
+    "type": "admin",
+    "__v": 0
+  },
+  {
+    "_id": "6744ccdb8aa03131f1a824f5",
+    "registrationDate": "2024-11-25T19:15:39.999Z",
+    "last_log_out": "2025-02-25T20:47:41.604Z",
+    "firstName": "ad12333333333333",
+    "lastName": "ad1",
+    "email": "ad1@ad1",
+    "password": "$2b$10$92cI9jeRO1/vgnr8Mg/k/u8NhZFbE8cfHlpr1XiloKAH5sjFSLEea",
+    "status": 1,
+    "type": "admin",
+    "__v": 0
+  }
+]

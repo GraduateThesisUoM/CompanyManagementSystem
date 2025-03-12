@@ -27,7 +27,6 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/0.7.0/chartjs-plugin-datalabels.min.js"></script>
         <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-        <script type="text/javascript" src="JSFrontEndFunctions.js"></script>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <%- include('../partials/header'); %>
@@ -73,12 +72,12 @@
             <%- include('../partials/sidebar'); %>
             <div class="has_sidebar_main_content">
                 <div class="asap-condensed-regular">
-                    <h1>PayRoll</h1>
+                    <h1 class="text_function">PayRoll</h1>
                     <% if(user.type =='user'){%>
                         <div class="container glass_effect_2" style="display: flex;justify-content: space-around;align-items: center;width:50%;margin-left: 25%;">
                           <button onclick="window.location.href='/calendar?id=<%=user.company%>&timetable=month&timetable_user=all'" style="width: 80%;" class="button_1">Calendar</button>
-                          <button onclick="window.location.href='/payroll?comp=<%=user.company%>'" class="button_5">Payroll</button>
-                          <button onclick="window.location.href='/pick-accountant'" class="button_5">Pick Manager</button>
+                          <button onclick="window.location.href='/payroll?comp=<%=user.company%>'" class="button_5 text_function">Payroll</button>
+                          <button onclick="window.location.href='/pick-accountant'" class="button_5 text_function">Pick Manager</button>
                         </div>
                         <%}%>
                             
@@ -86,7 +85,7 @@
                         <div>
                             <div style="display: flex; justify-content:space-between;gap:5%;margin-bottom: 50px;" class="container glass_effect_2">
                                 <div style="width: 100%;" >
-                                    <label for="client_select">Client</label>
+                                    <label for="client_select" class="text_function">Client</label>
                                     <select class="my_select top_select" id="client_select" name="client_select">
                                         <option value="-"></option>
 
@@ -97,7 +96,7 @@
                                     </select>
                                 </div>
                                 <div id="person_select_container" style="width: 100%;display: none;">
-                                    <label for="person_select">Person</label>
+                                    <label for="person_select" class="text_function">Person</label>
                                     <select class="my_select top_select" id="person_select" name="person_select">
                                         <% for(c of clients_users){%>
                                             <option class="<%=c.c.company%> user" value="<%= c.u._id%>"><%= c.u.firstName %> <%= c.u.lastName %></option>
@@ -105,7 +104,7 @@
                                     </select>
                                 </div>
                                 <div style="width: 100%;display: none;"  id="year_select_container">
-                                    <label for="person_select " >Year</label>
+                                    <label for="person_select " class="text_function">Year</label>
                                     <select id="year_select" class="my_select top_select">
                                     </select>
                                 </div>
