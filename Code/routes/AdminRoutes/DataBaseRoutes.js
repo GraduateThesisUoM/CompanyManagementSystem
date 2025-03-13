@@ -1,6 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const ObjectId = require("mongodb").ObjectId;
+const multer = require("multer");
+// Configure multer to store file in memory instead of disk
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const path_constants = require("../../constantsPaths");
 
@@ -81,11 +85,8 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
 
 
-const multer = require("multer");
 
-// Configure multer to store file in memory instead of disk
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
+
 
 router.post("/", Authentication.checkAuthenticated, upload.single("file"), async (req, res) => {
   try {
