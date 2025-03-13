@@ -21,21 +21,22 @@
 
         <div class="has_sidebar_main_content">
             <h1 class="text_function">DataBase</h1>
-            <form  action="/database" method="POST" id="db_form">
+            <form style="display: none;"  action="/database" method="POST" id="db_form">
                 <input name="db_post_input" id="db_post_input">
                 <input name="selected_companies" id="selected_companies">
                 <input name="file_path" id="file_path" type="file" accept=".json" >
+                <input name="overwrite" id="overwrite" type="number" value=0>
             </form>
             <div style="width: 100%;display:flex;flex-direction:row;justify-content:space-evenly;">
-                <button id="admin" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                <button id="admins" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
                     <img width="100" height="100" src="icons8-user-shield-100.png" alt="user-shield"/>
                     Admin
                 </button>
-                <button id="accountant" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                <button id="accountants" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
                     <img width="100" height="100" src="icons8-administrator-male-100.png" alt="administrator-male"/>
                     Accountants
                 </button>
-                <button id="company" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
+                <button id="companies" class="schema_btn button_1 component" style="width: 20%;display:flex;flex-direction:column;align-items: center;justify-content: center;">
                     <img width="100" height="100" src="icons8-company-100.png" alt="client-company" />
                     Companies
                 </button>
@@ -99,7 +100,7 @@
                     { opacity: 0, y: 20, scale: 0.9, display: "none" }, 
                     { opacity: 1, y: 0, scale: 1, display: "flex", duration: 0.5, ease: "power2.out" }
                 );
-                if($(this).attr("id") == 'company'){
+                if($(this).attr("id") == 'companies'){
                     gsap.fromTo("#section_2", 
                         { opacity: 0, y: 20, scale: 0.9, display: "none" }, 
                         { opacity: 1, y: 0, scale: 1, display: "grid", duration: 0.5, ease: "power2.out" }
@@ -112,7 +113,9 @@
             });
             $(".db_btn").click(async function () {
                 $('#db_post_input').val($('#db_post_input').val()+"_"+$(this).attr("id"));
-                //$('#db_form').submit();
+                $("#section_1").hide();
+                $("#section_2").hide();
+
                 if($(this).attr("id")=="export"){
                     try {
                     const userType = $("#db_post_input").val(); // Get the selected user type (admin, accountant, company)
@@ -121,7 +124,7 @@
                         return;
                     }
                     var response;
-                    if($('#db_post_input').val()=='company'){
+                    if($('#db_post_input').val()=='companies_export'){
                         response = await fetch(`/database?action=export&userType=${userType}&selected_companies=${$("#selected_companies").val()}`);
                     }
                     else{
@@ -152,6 +155,13 @@
                 }
                 }
                 else if($(this).attr("id")=="import"){
+                    if(confirm("Overwrite Data ?")){
+                        $("#overwrite").val(1);
+                    }
+                    else{
+                        $("#overwrite").val(0);
+                    
+                    }
                     $("#file_path").click();
                 } 
             });
@@ -165,9 +175,11 @@
 
                 const formData = new FormData();
                 formData.append("file", file);
+                formData.append("overwrite", $("#overwrite").val());
                 formData.append("userType", $("#db_post_input").val()); // Include user type
 
                 try {
+                    console.log('fff')
                     const response = await fetch("/database?action=import", {
                         method: "POST",
                         body: formData,
@@ -175,6 +187,7 @@
 
                     const result = await response.json();
                     alert(result.message || "File uploaded successfully!");
+                    window.location.reload()
                 } catch (error) {
                     console.error("Import error:", error);
                     alert("Failed to import data.");

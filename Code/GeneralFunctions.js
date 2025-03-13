@@ -27,7 +27,7 @@ const schemaMap = {
   clients: Client,
   series: Series,
   items: Item,
-  Warehouse: Warehouse,
+  warehouse: Warehouse,
   persons: Person,
   accountants: Accountant,
   nodes: Node,
