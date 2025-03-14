@@ -21,6 +21,22 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     const access = generalFunctions.checkAccessRigts(req, res);
     if (access.response) {
+      if (req.query.action === "export") {
+        const companyData = {  
+          companyId: req.user.company,
+          data: {}  
+        };
+        for (const key in generalFunctions.schemaMap) {
+          if (Object.prototype.hasOwnProperty.call(generalFunctions.schemaMap, key)) {
+            companyData.data[key] = await generalFunctions.schemaMap[key]
+              .find({ company: req.user.company })
+              .lean()
+              .exec();
+          }
+        }
+      
+        return res.json(companyData);
+      }
       var docs = await Document.find({company: req.user.company,next:'-'});
       var credit = 0;
       var debit = 0;

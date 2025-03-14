@@ -18,12 +18,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Asap+Condensed:wght@400;700&display=swap" rel="stylesheet" />
-
+    <!--QRCode.js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode/1.4.4/qrcode.js" integrity="sha512-oxrVyBhqnzQ0BzuM0A/6dEIk0alz0p4SpDRaWvtuUoarIc8rnL5lVniHG5Dp21MRFojcQcmKHjaskNXhSaUPPw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <%- include('../partials/header'); %>
   </head>
   <body>
-    <div class="has_sidebar asap-condensed-regular">
+    <div class="my_card asap-condensed-regular" >
+        <div style="display: flex;justify-content: center; width: 100%;flex-direction: column;">
+          <div style="display: flex;justify-content: center;">
+            <h1 id="my_title" style="display: flex;justify-content: center;"><img src="logo.svg" style="height:1em;">Desk-Flow</h1>
+          </div>
+          <div style="display: flex;justify-content: center;width: 100%;">
+              <input type="text" id="user_id" value="<%=user._id%>" style="display: none;">
+              <img id="user_qr_code" style="cursor: pointer;" width="50%">
+          </div>
+          <div class="color_white" style="text-align: center;text-shadow: 5px 5px 5px black;margin-top: 20px;">Desk-Flow is not yet compatible with screes with this size</div>
+        </div>
+    </div>
+    <div class="has_sidebar asap-condensed-regular" id="main_div">
       <%- include('../partials/sidebar'); %>
       <div  class="has_sidebar_main_content">
         <h1 class="text_function">Welcome</h1>
@@ -33,6 +46,16 @@
   </body>
   <script>
     $(document).ready(function () {
+      async function generateQRCode() {
+        try {
+          const dataurl = await QRCode.toDataURL($('#user_id').val());
+          $('#user_qr_code').attr('src', dataurl);
+        } catch (error) {
+          console.error("QR Code generation error:", error);
+        }
+      }
+
+      generateQRCode();
       $("#my_accountant").click(function () {
         if ("<%= user.companyOwner %>" == "0") {
           alert("You do not have an accountant elevated rights to hire an accountant");

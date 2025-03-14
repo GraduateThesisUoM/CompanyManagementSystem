@@ -84,7 +84,15 @@
 
     <%- include('../partials/header'); %>
     <body>
-        <div class="has_sidebar">
+        <div class="my_card asap-condensed-regular" >
+            <div style="display: flex;justify-content: center; width: 100%;flex-direction: column;">
+              <div style="display: flex;justify-content: center;">
+                <h1 id="my_title" style="display: flex;justify-content: center;"><img src="logo.svg" style="height:1em;">Desk-Flow</h1>
+              </div>
+              <div class="color_white" style="text-align: center;text-shadow: 5px 5px 5px black;margin-top: 20px;">Desk-Flow is not yet compatible with screes with this size</div>
+            </div>
+        </div>
+          <div class="has_sidebar asap-condensed-regular" id="main_div">
             <%- include('../partials/sidebar'); %>
 
             <div class="asap-condensed-regular has_sidebar_main_content">

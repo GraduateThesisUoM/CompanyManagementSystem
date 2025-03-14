@@ -16,14 +16,21 @@ body {
     background-position: top center;
     background-attachment: fixed;
 }
-/*
+
+.my_card {
+    display: none;
+}
+
 @media (max-width: 768px) {
-    body {
-        background-image: url('background-mobile.svg');
-        background-size: cover;
-        background-position: top right;
+    #main_div{
+        display: none;
     }
-}*/
+    .my_card{
+        display: block;
+    }
+}
+
+
 
 
 .my_main_body{
