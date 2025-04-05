@@ -10,8 +10,8 @@ router.get('/', async (req, res) => {
   try{
     console.log("LOG OUT");
     const user = await User.findOne({_id:req.user.id});
-    user.last_log_out = new Date().toISOString();
-    user.save()
+    /*user.last_log_out = new Date().toISOString();
+    user.save()*/
     req.logout(() => {
       res.redirect('/log-in');
     });

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 // Define the user schema
 const UserSchema = new mongoose.Schema({
   registrationDate: { type: Date, default: Date.now , required: true},
-  last_log_out: { type: Date, default: Date.now , required: true},
+  //last_log_out: { type: Date, default: Date.now , required: true},
   firstName: { type: String, required: true },
   lastName: { type: String, required: true },
   email: { type: String, required: true },
@@ -21,15 +21,13 @@ const UserSchema = new mongoose.Schema({
 
   afm: { type: String, required: false },
   mydatakey: { type: String, required: false },
-  /*companyName: { type: String, required: false },
-  companyLogo: { type: String, required: false },*/
 
   resetPasswordToken: { type: String, required: false},
   resetPasswordExpires: { type: Date, required: false}, 
 
   type: {
     type: String,
-    enum: ['user', 'accountant', 'admin','scanner'],
+    enum: ['user', 'accountant', 'admin'],
     required: true,
   }
 

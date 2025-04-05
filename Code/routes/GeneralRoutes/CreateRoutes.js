@@ -58,8 +58,6 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     } else {
       company = req.user.company;
     }
-    console.log(company)
-    console.log(req.body.create_type);
 
     var created_obj;//Declare Variable
 
@@ -115,16 +113,13 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         country: req.body.person_country,
         zip: req.body.person_zip
       };
-      console.log('dddd')
       created_obj = await generalFunctions.create_person(data);
     }
     else{
       console.log("Type not found CreateRoutes.js")
     }
-    //res.redirect("/list?searchfor="+req.body.create_type+"&message="+req.body.create_type+" created successfully");
     res.redirect("/view?type="+req.body.create_type+"&id="+created_obj._id+"&message="+req.body.create_type+" created successfully");
   } catch (e) {
-    console.error("** " + e + " **");
     res.redirect("/error?origin_page=create&error=" + e);
   }
 });

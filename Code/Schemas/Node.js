@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 // Define the report schema
-const NodeShema = new mongoose.Schema({
+const NodeSchema = new mongoose.Schema({
   company: { type: mongoose.Schema.Types.ObjectId, required: false  },
   sender_id: { type: mongoose.Schema.Types.ObjectId, required: true },
   receiver_id: { type: mongoose.Schema.Types.ObjectId, required: false },
@@ -10,11 +10,8 @@ const NodeShema = new mongoose.Schema({
     /*1=relationship,
       3=request,
       4=node,
-      5=warehouse,
       6 =time table
       7 = report
-      8 = enter
-      9 = leave
       */
     required: true,
     default:4
@@ -45,4 +42,4 @@ const NodeShema = new mongoose.Schema({
 });
 
 
-module.exports = mongoose.model("Node", NodeShema)
+module.exports = mongoose.model("Node", NodeSchema)

@@ -1,5 +1,3 @@
-// Schemas/Accountant.js
-
 const mongoose = require('mongoose');
 
 // Define the additional properties for the accountant schema

@@ -290,11 +290,6 @@ const pages = {
     file: routes.admin+"UserProfileAdminRoutes.js",
     view : ""
   },
-  change_ban_status :{
-    url : "/change-ban-status",
-    file: routes.admin+"BanStatusRoutes.js",
-    view : ""
-  },
   remove_review :{
     url : "/remove-review",
     file: routes.admin+"RemoveReviewAdmin.js",

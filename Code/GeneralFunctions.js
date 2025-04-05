@@ -1007,52 +1007,7 @@ async function exportData(company = null) {
     console.error("Error exporting data:", err);
   }
 }
-/*
-async function resetAndImportData(companyId) {
-  try {
 
-    const filePath = "C:\\exports\\"+companyId+"\\exported_data.json";
-
-    if (!fs.existsSync(filePath)) {
-      console.warn(`No export file found for company '${companyId}' at ${filePath}`);
-      return;
-    }
-
-    const rawData = fs.readFileSync(filePath, "utf-8");
-    const allData = JSON.parse(rawData);
-
-    // Step 1: Delete existing data for the company
-    for (const schema of Object.keys(allData)) {
-      const model = schemaMap[schema];
-      if (!model) {
-        console.warn(`Schema '${schema}' not found.`);
-        continue;
-      }
-
-      await model.deleteMany({ _id: { $in: allData[schema].map(doc => doc._id) } });
-      console.log(`Deleted existing records in '${schema}' for company '${companyId}'`);
-    }
-
-    // Step 2: Insert all data exactly as it is
-    for (const schema of Object.keys(allData)) {
-      const model = schemaMap[schema];
-      if (!model) {
-        console.warn(`Schema '${schema}' not found.`);
-        continue;
-      }
-
-      if (allData[schema].length > 0) {
-        await model.insertMany(allData[schema], { ordered: false });
-        console.log(`Inserted records into '${schema}' as they were in the JSON`);
-      }
-    }
-
-    console.log(` Database restored exactly as in the JSON file`);
-  } catch (err) {
-    console.error("Error restoring data:", err);
-  }
-}
-  */
 async function resetAndImportData(companyId) {
   try {
     const filePath = `C:\\exports\\${companyId}\\exported_data.json`;
@@ -1143,32 +1098,6 @@ async function importUserType(UserSchema, userType,path) {
   }
 }
 
-/*
-async function exportUserType(UserSchema, userType) {
-  try {
-    const baseDir = path_constants.my_constants.export_path;
-
-    if (!fs.existsSync(baseDir)) {
-      fs.mkdirSync(baseDir, { recursive: true });
-      console.log(`Created exports directory: ${baseDir}`);
-    }
-
-    const userDir = path.join(baseDir, userType );
-    if (!fs.existsSync(userDir)) {
-      fs.mkdirSync(userDir, { recursive: true });
-      console.log(`Created '${userType}s' directory: ${userDir}`);
-    }
-
-    const userData = await UserSchema.find({ type: userType }).lean().exec();
-
-    const userFilePath = path.join(userDir, `${userType}.json`);
-    fs.writeFileSync(userFilePath, JSON.stringify(userData, null, 2), 'utf-8');
-    console.log(`Exported all ${userType} data to ${userFilePath}`);
-
-  } catch (err) {
-    console.error(`Error exporting ${userType} data:`, err);
-  }
-}*/
 
 
 async function importAdmins() {
