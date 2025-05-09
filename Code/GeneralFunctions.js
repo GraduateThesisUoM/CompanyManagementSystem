@@ -37,7 +37,6 @@ const schemaMap = {
 const disabled_company_accesable_pages = ["/","/my-company"];
 const company_owner_accesable_pages = ["/my-company"];
 
-//function checkAccessRights(req, data ,res){
 function checkAccessRigts(req) {
   console.log("checkAccessRigts");
   try {
@@ -45,8 +44,6 @@ function checkAccessRigts(req) {
     if(req.baseUrl == ''){
       page_url = '/';
     }
-    /*console.log(page_url)
-    console.log(disabled_company_accesable_pages.includes(page_url));*/
     
     if (req.user.type == "user") {
       if (req.session.company.status != 1 && disabled_company_accesable_pages.includes(page_url) == false) {
@@ -594,6 +591,9 @@ async function delete_deactivate(data, schema, action) {
         return 1;
       }
       else{
+        obj.status = 0;
+        await obj.save();
+
         return 2;
         //obj.status = 2;
         //await obj.save();

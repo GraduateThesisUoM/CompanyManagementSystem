@@ -52,9 +52,6 @@ app.use(path_constants.pages.get_data.url, require(path_constants.pages.get_data
 //user-profile
 app.use(path_constants.pages.user_profile.url, require(path_constants.pages.user_profile.file));
 
-//change-ban-status
-app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));
-
 //remove-review
 app.use(path_constants.pages.remove_review.url, require(path_constants.pages.remove_review.file));
 
@@ -102,9 +99,6 @@ app.use(path_constants.pages.logout.url, require(path_constants.pages.logout.fil
 
 //self_accountant
 app.use(path_constants.pages.self_accountant.url, require(path_constants.pages.self_accountant.file));
-
-//change_ban_status
-app.use(path_constants.pages.change_ban_status.url, require(path_constants.pages.change_ban_status.file));
 
 //payroll
 app.use(path_constants.pages.payroll.url, require(path_constants.pages.payroll.file));
