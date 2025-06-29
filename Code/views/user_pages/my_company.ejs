@@ -39,7 +39,11 @@
                         <label for="new_company_name">Company Name :</label>
                         <input type="text" value="<%= company.name %>" name="new_company_name" class="input_type_1">
                         <br>
+                        <label >Logo</label>
                         <input type="text" value="<%= company.logo %>" name="new_company_logo" class="input_type_1">
+                        <br>
+                        <label >Sign Up Code :</label>
+                        <input type="text" value="<%= company.signupcode %>" class="input_type_1" readonly>
 
                         <button type="submit"  class="btn_type_1">Submit</button>
                     </form>

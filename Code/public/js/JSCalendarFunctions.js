@@ -1,4 +1,6 @@
 function new_event(selected_date,user_id){ 
+    console.log("🚀 ~ new_event ~ selected_date:", selected_date)
+    
     $('#action').val('new')
   
     const dummys = $('.dummy');

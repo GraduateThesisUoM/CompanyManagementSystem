@@ -61,5 +61,10 @@ router.post('/', Authentication.checkAuthenticated, async (req, res) => {
     }
   });
 
+  router.post("/delete-doc", Authentication.checkAuthenticated, async (req, res) => {
+      var delete_deactivate = await generalFunctions.delete_deactivate({ _id: req.body.doc_id }, 'docs', "delete");
+      return res.redirect(`/list?searchfor=docs&action=2&type=${req.body.doc_type}&message=${delete_deactivate}`);
+});
+
 
   module.exports = router;

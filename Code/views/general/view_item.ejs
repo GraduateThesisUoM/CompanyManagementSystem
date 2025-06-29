@@ -37,7 +37,7 @@
       <div style="padding-bottom: 30px;" class="has_sidebar_main_content">
         <h1 class="asap-condensed-extralight">View</h1>
         <form action="/view" method="POST" id="view_form" class="glass_effect_2">
-          <%if(status){%>
+          <%if(status!=null){%>
             <input type="text" id="status" name="status" value="<%=status%>" style="display: none;"/>
             <div id="status_div" style="display: flex; flex-direction: row;">
               <div id="status_mark"></div>
@@ -49,7 +49,6 @@
             </div>
             <div style="display: flex;justify-content: right;"><%=registrationDate%></div>
           </div>
-          <input type="text" id="status" name="status" value="<%=status%>" style="display: none;" >
           <input type="text" id="obj_id" name="obj_id" style="display: none;" >
           <input type="text" id="obj_type2" name="obj_type2" style="display: none;" >
           <input type="text" name="obj_type" style="display: none;"  value="items">
@@ -88,7 +87,7 @@
             
                 <label class="my_label_1 center_1">Tax € : </label>
                 <input type="number" id="items_tax_r" name="items_tax_r" min="0" max = "100" class="required items input_type_1" value="<%= item.tax_r%>">
-                <input type="number" id="items_tax_w" name="items_tax_w" min="0" max = "100" class="required items input_type_1" value="<%= item.discount_w%>">
+                <input type="number" id="items_tax_w" name="items_tax_w" min="0" max = "100" class="required items input_type_1" value="<%= item.tax_w%>">
 
                 <label class="my_label_1 center_1">Tottal € : </label>
                 <label class="my_label_1 center_1" id="tottal_r">0,00</label>
@@ -138,6 +137,15 @@
     message_from_url(window.location.href);
 
     $(document).ready(function () {
+
+      if($("#status").val()==1){
+        $("#status_label").html("Active")
+        $("#status_mark").addClass('active')
+      }
+      else if($("#status").val()==0){
+        $("#status_label").html("Disabled")
+        $("#status_mark").addClass('disabled')
+      }
 
       const params = new URLSearchParams(window.location.search);
       var queryParams = {};
@@ -206,16 +214,16 @@
         });
 
         $("#items_price_r").on('input', function(event) {
-          var p = $("#items_price_r").val();
-          var d = $("#items_price_r_disc").val();
+          var p = parseFloat($("#items_price_r").val());
+          var d = parseFloat($("#items_price_r_disc").val());
           $("#items_price_r_disc_p").val((d*100)/p); 
 
           var t = $("#items_tax_r").val();
           $("#tottal_r").html((p+t)-d);
         })
         $("#items_price_w").on('input', function(event) {
-          var p = $("#items_price_w").val();
-          var d = $("#items_price_w_disc").val();
+          var p = parseFloat($("#items_price_w").val());
+          var d = parseFloat($("#items_price_w_disc").val());
           $("#items_price_w_disc_p").val((d*100)/p);
           
           var t = $("#items_tax_w").val();
@@ -223,39 +231,52 @@
         })
 
         $("#items_price_r_disc").on('input', function(event) {
-          var p = $("#items_price_r").val();
-          var d = $("#items_price_r_disc").val();
+          var p = parseFloat($("#items_price_r").val());
+          var d = parseFloat($("#items_price_r_disc").val());
           $("#items_price_r_disc_p").val((d*100)/p);  
           
           var t = $("#items_tax_r").val();
           $("#tottal_r").html((p+t)-d);
           
         })
-        $("#items_price_w_disc").on('input', function(event) {
-          var p = $("#items_price_w").val();
-          var d = $("#items_price_w_disc").val();
-          $("#items_price_w_disc_p").val((d*100)/p); 
-          
-          var t = $("#items_tax_w").val();
-          $("#tottal_w").html((p+t)-d);
-          
-        })
+        $("#items_price_w_disc").on('input', function () {
+    // Get base price
+    var p = parseFloat($("#items_price_w").val()) || 0;
+    // Get discounted price
+    var d = parseFloat($("#items_price_w_disc").val()) || 0;
+
+    // Calculate and display the discount percentage
+    if (p > 0) {
+        var discountPercent = (d * 100) / p;
+        $("#items_price_w_disc_p").val(discountPercent.toFixed(2));
+    } else {
+        $("#items_price_w_disc_p").val("0.00");
+    }
+
+    // Get tax
+    var t = parseFloat($("#items_tax_w").val()) || 0;
+
+    // Calculate and display the total price with tax minus discount
+    var total = (p + t) - d;
+    $("#tottal_w").html(total.toFixed(2));
+});
+
 
         $("#items_price_r_disc_p").on('input', function(event) {
-          var p = $("#items_price_r").val();
-          var d = $("#items_price_r_disc_p").val();
+          var p = parseFloat($("#items_price_r").val());
+          var d = parseFloat($("#items_price_r_disc_p").val());
           $("#items_price_r_disc").val(p*(d/100));
           
-          var t = $("#items_tax_r").val();
+          var t = parseFloat($("#items_tax_r").val());
           $("#tottal_r").html((p+t)-((p+t)*(d/100)));
           
         })
         $("#items_price_w_disc_p").on('input', function(event) {
-          var p = $("#items_price_w").val();
-          var d = $("#items_price_w_disc_p").val();
+          var p = parseFloat($("#items_price_w").val());
+          var d = parseFloat($("#items_price_w_disc_p").val());
           $("#items_price_w_disc").val(p*(d/100)); 
           
-          var t = $("#items_tax_w").val();
+          var t = parseFloat($("#items_tax_w").val());
 
           $("#tottal_w").html((p+t)-((p+t)*(d/100)));
         })

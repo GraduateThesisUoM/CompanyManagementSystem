@@ -5,7 +5,7 @@ const ItemSchema = new mongoose.Schema({
     registrationDate: { type: Date, default: Date.now , required: true},
     company: { type: mongoose.Schema.Types.ObjectId, required: true  },
     title: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String, required: false },
     /*type:{
       type: Number,
       enum: [1,2],

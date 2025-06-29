@@ -89,12 +89,12 @@
                 <span>Total Discounts : </span>
                 <span><span id="doc_total_disc">0.00</span><span>€</span></span>
               </div>
-              <div>
+              <!--div>
                 <span>Total Cost : </span>
                 <span><span id="doc_total_cost">0.00</span><span>€</span></span>
-              </div>
+              </div-->
               <div>
-                <span>Total Price after Tax : </span>
+                <span>Total Cost : </span>
                 <span><span id="doc_total_after_tax">0.00</span><span>€</span></span>
               </div>
             </div>
@@ -201,6 +201,7 @@
       $("#warehouse_id").val(doc.warehouse);
       $("#general_discount_amount").val(doc.generalDiscount);
 
+
       //----------------------------------------
 
       $("#back_btn").click(function () {
@@ -275,44 +276,47 @@
       calculate_row_prices(index);
     }
 
-    function calculate_row_prices(index){
-      var quantity = $('#quantity_'+index).val();
-      var price_of_unit = parseFloat($('#price_of_unit_'+index).val()).toFixed(2)
-      var tax =  parseFloat($('#tax_'+index).val()).toFixed(2)
-      
-      var num_of_rows = $(".doc_line_select");
-      num_of_rows = $(".doc_line_select").filter(function() {
-        return $(this).val() !== "-";
-      }).length;
-      //alert(num_of_rows)
-      var g_disc = 0.0;
-      if($('#general_discount_amount').val() != null && num_of_rows >0){
-        g_disc = parseFloat($('#general_discount_amount').val())/num_of_rows;
-      }
+ function calculate_row_prices(index) {
+    var quantity = $('#quantity_' + index).val();
+    var price_of_unit = parseFloat($('#price_of_unit_' + index).val()).toFixed(2)
+    var tax = parseFloat($('#tax_' + index).val()).toFixed(2)
 
-      var discount = parseFloat($('#discount_'+index).val()).toFixed(2)*quantity;
-      discount =discount + g_disc - parseFloat(general_dis_deviation);
+    var num_of_rows = $(".doc_line_select");
+    num_of_rows = $(".doc_line_select").filter(function () {
+      return $(this).val() !== "-";
+    }).length;
+    /*var g_disc = 0.0;
+    if ($('#general_discount_amount').val() != null && num_of_rows > 0) {
+      g_disc = parseFloat($('#general_discount_amount').val()) / num_of_rows;
+    }*/
 
-      var total = (quantity*parseFloat(price_of_unit).toFixed(2));
-      if(total){
-        $('#total_price_of_line_'+index).html(parseFloat(total).toFixed(2));
-      }
-      
+    var discount = parseFloat($('#discount_' + index).val()).toFixed(2)// * quantity;
+    //discount = parseFloat(discount + g_disc - parseFloat(general_dis_deviation)).toFixed(2);
+    
 
-      total = (parseFloat(total) -  parseFloat(discount));
-      if(total){
-        $('#total_price_of_line_after_disc_'+index).html(parseFloat(total).toFixed(2));
-      }
+    var total = (quantity * parseFloat(price_of_unit).toFixed(2));
+    console.log("🚀 ~ calculate_row_prices ~ total:", total)
 
-      total = parseFloat(total) +  parseFloat(total*(tax/100));
-      if(total){
-        $('#final_price_of_line_'+index).html(parseFloat(total).toFixed(2));
-      }
-
-      calculate_total_cost();
+    if (total > 0) {
+      $('#total_price_of_line_' + index).html(parseFloat(total).toFixed(2));
     }
 
-    function get_num_of_rows(){
+    console.log("🚀 ~ calculate_row_prices ~ discount:", discount)
+    if(discount > 0){
+    total = (parseFloat(total) - parseFloat(discount));
+    }
+    if (total) {
+      $('#total_price_of_line_after_disc_' + index).html(parseFloat(total).toFixed(2));
+    }
+    //$('#total_price_of_line_after_disc_' + index).html("2");
+
+    total = parseFloat(total) + parseFloat(total * (tax / 100));
+    if (total) {
+      $('#final_price_of_line_' + index).html(parseFloat(total).toFixed(2));
+    }
+
+    calculate_total_cost();
+  }    function get_num_of_rows(){
       return parseInt($(".doc_line_select.selected").length);
     }
 
@@ -385,7 +389,9 @@
       $(".doc_line_select").each(function() {
         if ($(this).val() != "-") {
           let i = $(this).attr('id').replace('doc_line_item_','');
-          total_value += parseFloat($("#total_price_of_line_" + i).text() || 0);
+          //total_value += parseFloat($("#total_price_of_line_" + i).text() || 0);
+          total_value += parseFloat($("#final_price_of_line_" + i).text() || 0);
+
         }
       });
 
@@ -406,19 +412,20 @@
       });
       total_disc = total_disc + parseFloat($("#general_discount_amount").val() || 0);
       
-      var total_price_after_tax = 0.0;
+      /*var total_price_after_tax = 0.0;
       $(".doc_line_select").each(function() {
         if ($(this).val() != "-") {
           let i = $(this).attr('id').replace('doc_line_item_','');
           total_price_after_tax += parseFloat($("#final_price_of_line_" + i).text() || 0);
         }
-      });
+      });*/
 
       $('#doc_total_value').text(total_value.toFixed(2));
-      $('#doc_total_cost').text(total_price_of_line_after_disc.toFixed(2));
+      //  $('#doc_total_cost').text(total_price_of_line_after_disc.toFixed(2));
       
       $('#doc_total_disc').text(total_disc.toFixed(2));
-      $('#doc_total_after_tax').text(total_price_after_tax.toFixed(2));
+      //$('#doc_total_after_tax').text(total_price_after_tax.toFixed(2));
+    $('#doc_total_after_tax').text((total_value.toFixed(2) - parseFloat($("#general_discount_amount").val())).toFixed(2));
 
       $("#transforms_btn").click(function(event){
         $("body").css("overflow", "hidden");
@@ -444,6 +451,11 @@
         removeRow($("#num_of_rows").val()-1);
         $('#create_doc_form').submit();
       })
+
+      let disc_p = ($("#general_discount_amount").val()/total_value) * 100;
+    disc_p = parseFloat(disc_p.toFixed(2));
+
+    $("#general_discount").val(disc_p)
     }
 
     });

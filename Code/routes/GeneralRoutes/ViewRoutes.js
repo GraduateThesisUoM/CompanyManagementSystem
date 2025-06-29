@@ -22,7 +22,7 @@ const Series = require(path_constants.schemas.two.series);
 const Warehouse = require(path_constants.schemas.two.warehouse);
 const Client = require(path_constants.schemas.two.client);
 const Accountant = require(path_constants.schemas.two.accountant);
-const Review= require(path_constants.schemas.two.review);
+const Review = require(path_constants.schemas.two.review);
 
 
 /*
@@ -67,63 +67,63 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       const id = req.query.id;
 
       if (!isParamsEmpty) {
-        
+
         console.log(type);
         if (type && id) {
-          
+
           if (type == "docs") {
             obj = await Document.findOne({ _id: id });
             console.log(obj);
             var series = await Series.findOne({ _id: obj.series });
-            var series_list = await Series.find({ company: obj.company, status:1, type:req.query.type2 });
+            var series_list = await Series.find({ company: obj.company, status: 1, type: req.query.type2 });
             var series_to = await Series.find({ company: company, status: 1, type: obj.type, _id: { $in: series.transforms_to } });
             var person = await Person.findOne({ _id: obj.receiver });
-            
+
             var history = [];
             var d = obj;
             var p;
 
-            while(true){
-              p = await Document.findOne({next: d._id})
-              if(p){
+            while (true) {
+              p = await Document.findOne({ next: d._id })
+              if (p) {
                 d = p;
               }
-              else{
+              else {
                 break;
               }
             }
             //history.push(d)
-            var s = await Series.findOne({_id: d.series})
-            let u = await User.findOne({_id: d.sender})
+            var s = await Series.findOne({ _id: d.series })
+            let u = await User.findOne({ _id: d.sender })
             history.push({
-              _id:d._id,
-              name: s.acronym+"-"+d.doc_num,
-              registrationDate : generalFunctions.formatDateTime(d.registrationDate),
-              user : u.lastName+" "+u.firstName
+              _id: d._id,
+              name: s.acronym + "-" + d.doc_num,
+              registrationDate: generalFunctions.formatDateTime(d.registrationDate),
+              user: u.lastName + " " + u.firstName
             })
 
-            while(true){
-              if(d.next != '-'){
-                p = await Document.findOne({_id: d.next})
-                if(p){
-                  d=p
+            while (true) {
+              if (d.next != '-') {
+                p = await Document.findOne({ _id: d.next })
+                if (p) {
+                  d = p
                   //history.push(d)
-                  s = await Series.findOne({_id: d.series})
-                  let u = await User.findOne({_id: d.sender})
+                  s = await Series.findOne({ _id: d.series })
+                  let u = await User.findOne({ _id: d.sender })
                   history.push({
-                    _id:d._id,
-                    name: s.acronym+"-"+d.doc_num,
-                    registrationDate : generalFunctions.formatDateTime(d.registrationDate),
-                    user : u.lastName+" "+u.firstName
+                    _id: d._id,
+                    name: s.acronym + "-" + d.doc_num,
+                    registrationDate: generalFunctions.formatDateTime(d.registrationDate),
+                    user: u.lastName + " " + u.firstName
                   })
                 }
-                else{
+                else {
                   break;
                 }
               }
-              else{
+              else {
                 break;
-              }              
+              }
             }
 
             series_to = series_to.map(s => ({
@@ -131,23 +131,23 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               acronym: s.acronym,
               _id: s._id
             }));
-            
+
             var transforms_to = []
-            for(s of series.transforms_to){
-              transforms_to.push(await Series.findOne({_id:s}))
+            for (s of series.transforms_to) {
+              transforms_to.push(await Series.findOne({ _id: s }))
             }
             transforms_to = transforms_to.map(s => ({
               _id: s._id,
-              name: s.acronym+"-"+s.title
+              name: s.acronym + "-" + s.title
             }));
 
             var person_type = "Customer";
             if (person.type == 1) {
               person_type = "Supplier";
             }
-            var persons = await Person.find({ company: obj.company, status:1, type:req.query.type2 })
+            var persons = await Person.find({ company: obj.company, status: 1, type: req.query.type2 })
             persons = persons.map(p => ({
-              name: p.lastName+" "+p.firstName,
+              name: p.lastName + " " + p.firstName,
               _id: p._id
             }));
             console.log('obj.invoiceData[i]');
@@ -157,44 +157,61 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
               items_id_list.push(obj.invoiceData[i].lineItem); // Add the lineItem ID to the list
             }
 
+            var doc_lines = [];
+            const invoiceDataArray = Array.isArray(obj.invoiceData)
+              ? obj.invoiceData
+              : Object.values(obj.invoiceData || {});
 
+            doc_lines = await Promise.all(invoiceDataArray.map(async (line) => {
+              const item = await Item.findOne({ _id: line.lineItem });
+              return {
+                quantity: line.quantity,
+                item,
+                tax: line.tax,
+                discount: line.discount,
+                disc_p: line.disc_p,
+                price_of_unit: line.price_of_unit,
+              };
+            }));
 
-            if(obj.edited == 1 || obj.next !== '-'|| obj.sealed == 1){
-                data = {
-                doc_name : series.acronym+"-"+obj.doc_num,
-                doc : obj,
-                registrationDate : generalFunctions.formatDate(obj.registrationDate),
-                series : series,
-                person_type : person_type,
+            if (obj.edited == 1 || obj.next !== '-' || obj.sealed == 1) {
+              data = {
+                doc_name: series.acronym + "-" + obj.doc_num,
+                doc: obj,
+                doc_lines : doc_lines,
+                registrationDate: generalFunctions.formatDate(obj.registrationDate),
+                series: series,
+                person_type: person_type,
                 person: person,
                 user: req.user,
-                warehouse : await Warehouse.findOne({ _id: obj.warehouse }),
+                warehouse: await Warehouse.findOne({ _id: obj.warehouse }),
                 //items : await Item.find({ company: company, type: obj.type }),
-                items : await Item.find({ company: company }),
-                transforms_to : transforms_to,
-                history : history,
-                company : await Company.findOne({_id:req.user.company}),
+                items: await Item.find({ company: company }),
+                transforms_to: transforms_to,
+                history: history,
+                company: await Company.findOne({ _id: req.user.company }),
                 rows: Object.keys(obj.invoiceData).length // Added number of invoice data rows
-                }
+              }
             }
-            else{
-            
+            else {
+
               data = {
-                doc_name : series.acronym+"-"+obj.doc_num,
-                doc : obj,
-                registrationDate : generalFunctions.formatDate(obj.registrationDate),
-                series_list : series_list,
-                person_type : person_type,
-                series : series,
+                doc_name: series.acronym + "-" + obj.doc_num,
+                doc: obj,
+                doc_lines : doc_lines,
+                registrationDate: generalFunctions.formatDate(obj.registrationDate),
+                series_list: series_list,
+                person_type: person_type,
+                series: series,
                 persons: persons,
                 person: person,
                 user: req.user,
-                warehouses : await Warehouse.find({ company: company, status: 1 }),
+                warehouses: await Warehouse.find({ company: company, status: 1 }),
                 //items : await Item.find({ company: company, type: obj.type }),
-                items : await Item.find({ company: company }),
-                transforms_to : transforms_to,
-                history : history,
-                company : await Company.findOne({_id:req.user.company}),
+                items: await Item.find({ company: company }),
+                transforms_to: transforms_to,
+                history: history,
+                company: await Company.findOne({ _id: req.user.company }),
                 rows: Object.keys(obj.invoiceData).length // Added number of invoice data rows
 
               }
@@ -214,60 +231,59 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
 
             var inventory_data = [];
             for (i of inventory) {
-              if(i.quantity > 0){
+              if (i.quantity > 0) {
                 inventory_data.push(i);
               }
             }
 
             secondary_data = {
-              inventory :inventory_data
+              inventory: inventory_data
             }
             //1=normal-text,0=text-readonly
             //8 table
           } else if (type == "series") {
             obj = await Series.findOne({ _id: id });
-            var series = await Series.find({company:company, status:1,type:obj.type,_id: { $ne: obj._id } /* Exclude the document with the same _id as `obj`*/})
+            var series = await Series.find({ company: company, status: 1, type: obj.type, _id: { $ne: obj._id } /* Exclude the document with the same _id as `obj`*/ })
 
-            data.data = [obj.title, obj.acronym, obj.count, {sealed : obj.sealed, effects_warehouse : obj.effects_warehouse, effects_account :obj.effects_account},series];
-            data.titles = ["Title", "Acronym", "Count", "Sealed","Series"];
-            data.type = [1, 1, 0, 15,12];
+            data.data = [obj.title, obj.acronym, obj.count, { sealed: obj.sealed, effects_warehouse: obj.effects_warehouse, effects_account: obj.effects_account }, series];
+            data.titles = ["Title", "Acronym", "Count", "Sealed", "Series"];
+            data.type = [1, 1, 0, 15, 12];
 
             secondary_data = {
-              selected_series :obj.transforms_to
+              selected_series: obj.transforms_to
             }
             //1=normal-text,0=text-readonly, 5 checkbox,12 series
           } else if (type == "persons") {
             obj = await Person.findOne({ _id: id });
-            data.data = [ obj.firstName, obj.lastName, obj.email, obj.phone, obj.afm, obj.status, 
-              generalFunctions.formatDate(obj.registrationDate),
-              obj.address,obj.district,obj.city,obj.country,obj.zip
+            data.data = [obj.firstName, obj.lastName, obj.email, obj.phone, obj.afm,
+            obj.address, obj.district, obj.city, obj.country, obj.zip
             ];
-            data.titles = ["FirstName", "LastName", "email", "phone", "afm", "Status",  "Address","District", "City","Country", "ZIP"
+            data.titles = ["FirstName", "LastName", "email", "phone", "afm", "Address", "District", "City", "Country", "ZIP"
             ];
-            data.type = [1, 1, 1, 1, 1, 1,1,1,1,1
+            data.type = [1, 1, 1, 1, 1, 1, 1, 1, 1,1
             ];
 
-            secondary_data = await generalFunctions.gets_movements({user:obj,from : req.query.from_date,to : req.query.to_date});
-            
+            secondary_data = await generalFunctions.gets_movements({ user: obj, from: req.query.from_date, to: req.query.to_date });
+
             //1=normal-text,0=text-readonly
           } else if (type == "items") {
             obj = await Item.findOne({ _id: id });
             data.item = obj
-           
+
             var warehouses = await Warehouse.find({ company: company, status: 1 });
             data.warehouse_list = [];
             for (w of warehouses) {
               //var inventory_from_transfers = await generalFunctions.get_item_warehouse_inventory_from_transfers({company:company,warehouse:w._id,item:obj._id})
               var inventory_from_docs = await generalFunctions.get_item_warehouse_inventory({
-                company:company,
-                item:obj._id,
-                warehouse:w._id
+                company: company,
+                item: obj._id,
+                warehouse: w._id
               })
-  
+
               data.warehouse_list.push({
                 _id: w._id,
                 title: w.title,
-                inventory : inventory_from_docs
+                inventory: inventory_from_docs
               });
               console.log(data.warehouse_list);
             }
@@ -276,20 +292,20 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             obj = await User.findOne({ _id: id });
             data.data = [obj.firstName, obj.lastName, obj.email, obj.status, generalFunctions.formatDate(obj.registrationDate)];
             data.titles = ["FirstName", "LastName", "email"];
-            data.type = [1, 1, 1, ];
-            
+            data.type = [1, 1, 1,];
+
           } else if (type == "nodes") {
             obj = await Node.findOne({ _id: id });
-            if(obj.receiver_id){
-              if (obj.status == 3 && obj.receiver_id.equals( req.user._id)) {//pending and user is the receiver
+            if (obj.receiver_id) {
+              if (obj.status == 3 && obj.receiver_id.equals(req.user._id)) {//pending and user is the receiver
                 obj.status = 1;//viewed
                 await obj.save();
               }
             }
-            else{
+            else {
               console.log("Admin View")
             }
-            
+
             var nodes = [];
             nodes.push(obj);
             var node = obj;
@@ -320,12 +336,12 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             }
             node_data.reverse();
 
-            data.data = [generalFunctions.get_type2(obj.type2), obj.title, company.name,generalFunctions.formatDateTime(obj.due_date), node_data, ""];
-            data.titles = ["Type", "Title", "Company", "Data","Due Date", "Reply"];
-            data.type = [13, 13, 13,13, 10, 9];
+            data.data = [generalFunctions.get_type2(obj.type2), obj.title, company.name, generalFunctions.formatDateTime(obj.due_date), node_data, ""];
+            data.titles = ["Type", "Title", "Company", "Data", "Due Date", "Reply"];
+            data.type = [13, 13, 13, 13, 10, 9];
 
 
-            
+
           } else if (type == "clients") {
             console.log('clients')
             obj = await Company.findOne({ _id: id });
@@ -353,50 +369,50 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             };
           } else if (type == "companies") {
             obj = await Company.findOne({ _id: id });
-            const users = await User.find({company: obj._id})
+            const users = await User.find({ company: obj._id })
             //const ac_node = await Node.findOne({company:obj._id, status:2,next:'-'})
             const ac_node = await generalFunctions.get_accountant_node(obj._id)
             var accountant = "Not assigned"
-            if(ac_node){
-              const accountant_obj = await Accountant.findOne({_id:ac_node.receiver_id})
+            if (ac_node) {
+              const accountant_obj = await Accountant.findOne({ _id: ac_node.receiver_id })
               accountant = accountant_obj ? accountant_obj.firstName + " " + accountant_obj.lastName : "Not assigned"
             }
-            data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate),users.length, accountant,obj.status,obj.license.used,obj.license.bought,obj.license.requested];
-            data.titles = ["Name", "Logo", "Reg Date","Number of Users","Accountant","Status","Used licenses","Bought licenses","Requested licenses"];
-            data.type = [0, 11, 0,0,0,0,0,0,0];
+            data.data = [obj.name, obj.logo, generalFunctions.formatDate(obj.registrationDate), users.length, accountant, obj.status, obj.license.used, obj.license.bought, obj.license.requested];
+            data.titles = ["Name", "Logo", "Reg Date", "Number of Users", "Accountant", "Status", "Used licenses", "Bought licenses", "Requested licenses"];
+            data.type = [0, 11, 0, 0, 0, 0, 0, 0, 0];
 
             let nodes = await Node.find({
               company: id,
-              type: { $in: [1,3,4] },
+              type: { $in: [1, 3, 4] },
               //type: 3,
               //type2: { $in:[33]},
               //status : 3, //pending
-              next:'-'
+              next: '-'
             })
             nodes_list = [];
-            for( n of nodes){
-                const sender = await User.findOne({_id:n.sender_id}) || { firstName: "-", lastName: "-" };
-                var receiver = await User.findOne({_id:n.receiver_id});
-                
-                if(!receiver){
-                  receiver = await Company.findOne({_id:n.receiver_id});
-                  receiver = receiver.name
-                }
-                else{
-                  receiver = receiver.firstName + " "+ receiver.lastName
-                }
-                nodes_list.push({
-                  _id: n._id,
-                  sender: sender,
-                  receiver: receiver,
-                  type: generalFunctions.get_type(n.type) === 'Clients' ? 'Relationship' : generalFunctions.get_type(n.type),
-                  title: n.title || "",
-                  registrationDate: generalFunctions.formatDateTime(n.registrationDate),
-                  status: generalFunctions.get_status(n.status)
-                })
+            for (n of nodes) {
+              const sender = await User.findOne({ _id: n.sender_id }) || { firstName: "-", lastName: "-" };
+              var receiver = await User.findOne({ _id: n.receiver_id });
+
+              if (!receiver) {
+                receiver = await Company.findOne({ _id: n.receiver_id });
+                receiver = receiver.name
+              }
+              else {
+                receiver = receiver.firstName + " " + receiver.lastName
+              }
+              nodes_list.push({
+                _id: n._id,
+                sender: sender,
+                receiver: receiver,
+                type: generalFunctions.get_type(n.type) === 'Clients' ? 'Relationship' : generalFunctions.get_type(n.type),
+                title: n.title || "",
+                registrationDate: generalFunctions.formatDateTime(n.registrationDate),
+                status: generalFunctions.get_status(n.status)
+              })
             }
 
-            console.log('ffff'+nodes)
+            console.log('ffff' + nodes)
             console.log('ffff')
             secondary_data = {
               nodes: nodes_list
@@ -405,7 +421,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             obj = await Node.findOne({ _id: id });
             obj.status = 1;//viewed
             await obj.save();
-            const s = await User.findOne({_id:obj.sender_id})
+            const s = await User.findOne({ _id: obj.sender_id })
             data.data = [
               s.firstName + " " + s.lastName,
               generalFunctions.get_type2(obj.type2),
@@ -414,128 +430,128 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             ];
             data.titles = [
               "Sender",
-               "Category","Text"
+              "Category", "Text"
             ];
-            data.type = [0, 0,9];
+            data.type = [0, 0, 9];
 
             secondary_data = {
               nodes: nodes,
               users: await Client.find({ company: id, status: 1 }),
             };
-          } else if (type == "reviews"){
+          } else if (type == "reviews") {
             obj = await Review.findOne({ _id: id });
             let comp = await Company.findOne({ _id: obj.company });
             let prsn1 = await User.findOne({ _id: obj.reviewer_id });
             let prsn2 = await User.findOne({ _id: obj.reviewed_id });
 
-            data.data = [comp.name, prsn1.lastName+" "+prsn1.lastName, prsn2.lastName+" "+prsn2.lastName, obj.rating, obj.text];
-            data.titles = ["Company","Reviewer","Reviewed", "Rating", "Text"];
-            data.type = [13,13,13,16,13];
+            data.data = [comp.name, prsn1.lastName + " " + prsn1.lastName, prsn2.lastName + " " + prsn2.lastName, obj.rating, obj.text];
+            data.titles = ["Company", "Reviewer", "Reviewed", "Rating", "Text"];
+            data.type = [13, 13, 13, 16, 13];
 
           }
-          else if (type == "transfers"){
+          else if (type == "transfers") {
             obj = await Document.findOne({ _id: id });
-            var series = await Series.findOne({my_id:path_constants.my_constants.transfer_series_my_id,company:req.user.company});
+            var series = await Series.findOne({ my_id: path_constants.my_constants.transfer_series_my_id, company: req.user.company });
 
             var history = [];
             var d = obj;
             var p;
-      
-            while(true){
-              p = await Document.findOne({next: d._id})
-              if(p){
+
+            while (true) {
+              p = await Document.findOne({ next: d._id })
+              if (p) {
                 d = p;
               }
-              else{
+              else {
                 break;
               }
             }
             //history.push(d)
-            var s = await Series.findOne({_id: d.series})
-            let u = await User.findOne({_id: d.sender})
+            var s = await Series.findOne({ _id: d.series })
+            let u = await User.findOne({ _id: d.sender })
             history.push({
-              _id:d._id,
-              name: s.acronym+"-"+d.doc_num,
-              registrationDate : generalFunctions.formatDateTime(d.registrationDate),
-              user : u.lastName+" "+u.firstName
+              _id: d._id,
+              name: s.acronym + "-" + d.doc_num,
+              registrationDate: generalFunctions.formatDateTime(d.registrationDate),
+              user: u.lastName + " " + u.firstName
             })
-      
-            while(true){
-              if(d.next != '-'){
-                p = await Document.findOne({_id: d.next})
-                if(p){
-                  d=p
+
+            while (true) {
+              if (d.next != '-') {
+                p = await Document.findOne({ _id: d.next })
+                if (p) {
+                  d = p
                   //history.push(d)
-                  s = await Series.findOne({_id: d.series})
-                  let u = await User.findOne({_id: d.sender})
+                  s = await Series.findOne({ _id: d.series })
+                  let u = await User.findOne({ _id: d.sender })
                   history.push({
-                    _id:d._id,
-                    name: s.acronym+"-"+d.doc_num,
-                    registrationDate : generalFunctions.formatDateTime(d.registrationDate),
-                    user : u.lastName+" "+u.firstName
+                    _id: d._id,
+                    name: s.acronym + "-" + d.doc_num,
+                    registrationDate: generalFunctions.formatDateTime(d.registrationDate),
+                    user: u.lastName + " " + u.firstName
                   })
                 }
-                else{
+                else {
                   break;
                 }
               }
-              else{
+              else {
                 break;
-              }              
+              }
             }
 
-            const warehouses = await Warehouse.find({company:req.user.company,status:1});
-            const items = await Item.find({company:req.user.company,status:1});
-            const persons = await Person.find({company:req.user.company,status:1})
+            const warehouses = await Warehouse.find({ company: req.user.company, status: 1 });
+            const items = await Item.find({ company: req.user.company, status: 1 });
+            const persons = await Person.find({ company: req.user.company, status: 1 })
             var location_to = [];
-            for( w of warehouses){
+            for (w of warehouses) {
               location_to.push({
-                _id:w._id,
-                name:w.title,
+                _id: w._id,
+                name: w.title,
               });
             }
-            for( p of persons){
+            for (p of persons) {
               location_to.push({
-                _id:p._id,
-                name:p.lastName + " " + p.firstName
+                _id: p._id,
+                name: p.lastName + " " + p.firstName
               });
             }
             var data = {
-              name : series.acronym+"-"+obj.doc_num,
-              reg_date : generalFunctions.formatDate(obj.registrationDate),
-              doc : obj,
-              user : req.user,
-              locations:location_to,
-              items:items,
-              history : history
+              name: series.acronym + "-" + obj.doc_num,
+              reg_date: generalFunctions.formatDate(obj.registrationDate),
+              doc: obj,
+              user: req.user,
+              locations: location_to,
+              items: items,
+              history: history
 
             }
             var doc_lines = [];
-            for( i of obj.invoiceData){
-              var item = await Item.findOne({_id:i.lineItem});
+            for (i of obj.invoiceData) {
+              var item = await Item.findOne({ _id: i.lineItem });
               doc_lines.push({
-                unit_of_measurement:item.unit_of_measurement,
-                title:item.title,
-                quantity:i.quantity
+                unit_of_measurement: item.unit_of_measurement,
+                title: item.title,
+                quantity: i.quantity
               })
             }
             secondary_data = {
-              company : await Company.findOne({_id:req.user.company}),
-              date : generalFunctions.formatDate(obj.registrationDate),
-              doc_lines : doc_lines,
-              doc_from : {title:'-'},
-              doc_to : {title:'-'},
-              series_acronym : series.acronym
+              company: await Company.findOne({ _id: req.user.company }),
+              date: generalFunctions.formatDate(obj.registrationDate),
+              doc_lines: doc_lines,
+              doc_from: { title: '-' },
+              doc_to: { title: '-' },
+              series_acronym: series.acronym
             }
-            if(obj.warehouse !='-'){
-              secondary_data.doc_from = await Warehouse.findOne({_id:obj.warehouse});
+            if (obj.warehouse != '-') {
+              secondary_data.doc_from = await Warehouse.findOne({ _id: obj.warehouse });
             }
-            if(obj.receiver !='-'){
-              secondary_data.doc_to = await Warehouse.findOne({_id:obj.receiver});
+            if (obj.receiver != '-') {
+              secondary_data.doc_to = await Warehouse.findOne({ _id: obj.receiver });
             }
 
           }
-          
+
         } else {
           console.log("ERROR");
         }
@@ -546,17 +562,17 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
       data.secondary_data = secondary_data;
       data.registrationDate = generalFunctions.formatDateTime(obj.registrationDate);
       data.status = obj.status;
-      
+
       if (type && id) {
         if (type == "docs") {
           data.registrationDate = generalFunctions.formatDate(obj.registrationDate);
-          if(obj.edited == 1 || obj.next !== '-'|| obj.sealed == 1){
+          if (obj.edited == 1 || obj.next !== '-' || obj.sealed == 1) {
             res.render(path_constants.pages.view.view('doc-locked'), data);
           }
-          else{
+          else {
             res.render(path_constants.pages.view.view('doc'), data);
           }
-          
+
         }
         else if (type == "items") {
           res.render(path_constants.pages.view.view('items'), data);
@@ -564,11 +580,11 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
         else if (type == "transfers") {
           res.render(path_constants.pages.view.view('transfers'), data);
         }
-        else{
+        else {
           res.render(path_constants.pages.view.view(), data);
         }
       }
-      else{
+      else {
         res.render(path_constants.pages.view.view(), data);
       }
     } else {
@@ -584,7 +600,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
   try {
     var data = {};
     console.log("ViewRoutes1");
-    
+
     var obj_type = req.body.obj_type;
     var obj_id = req.body.obj_id;
     var type2 = req.body.obj_type2;
@@ -592,38 +608,38 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
     var data = req.body;
     data.user = req.user;
 
-    console.log("***************************"+req.body.action)
+    console.log("***************************" + req.body.action)
 
 
-    if(req.body.action == 'delete'){
+    if (req.body.action == 'delete') {
       var delete_deactivate = await generalFunctions.delete_deactivate({ _id: obj_id }, obj_type, 'delete');
-      if(delete_deactivate == 1){
+      if (delete_deactivate == 1) {
         return res.redirect(`/list?searchfor=${obj_type}&type=${type2}&action=2&message=${delete_deactivate}`);
       }
-      else{
-        if(type2){
+      else {
+        if (type2) {
           return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}&action=2&message=${delete_deactivate}`);
         }
-        else{
+        else {
           return res.redirect(`/view?type=${obj_type}&id=${obj_id}&action=2&message=${delete_deactivate}`);
         }
       }
     }
-    else{
+    else {
       await generalFunctions.update({ _id: req.body.obj_id }, obj_type, data);
-      if(obj_type == 'nodes'){
+      if (obj_type == 'nodes') {
         return res.redirect(`/list?searchfor=clients`);
       }
-      if(type2){
+      if (type2) {
         return res.redirect(`/view?type=${obj_type}&id=${obj_id}&type2=${type2}`);
         //return res.redirect(`/list?searchfor=${obj_type}&type2=${type2}`);
       }
-      else{
+      else {
         //return res.redirect(`/list?searchfor=${obj_type}`);
         return res.redirect(`/view?type=${obj_type}&id=${obj_id}`);
       }
     }
-    
+
 
   } catch (e) {
     console.error(e);
@@ -638,18 +654,18 @@ router.post("/transfers", Authentication.checkAuthenticated, async (req, res) =>
     const lines_of_doc = [];
     for (let i = 0; i < req.body.count; i++) {
       if (req.body[`item_select_${i}`] !== undefined) {
-        lines_of_doc.push({ 
-          quantity : req.body[`item_q_${i}`],
-          lineItem : req.body[`item_select_${i}`],
-          tax : 0,
-          discount : 0,
-          price_of_unit : 0  
+        lines_of_doc.push({
+          quantity: req.body[`item_q_${i}`],
+          lineItem: req.body[`item_select_${i}`],
+          tax: 0,
+          discount: 0,
+          price_of_unit: 0
         });
       }
     }
     console.log(lines_of_doc);
-    var series = await Series.findOne({my_id:path_constants.my_constants.transfer_series_my_id,company:req.user.company});
-    var doc = await generalFunctions.create_doc( {
+    var series = await Series.findOne({ my_id: path_constants.my_constants.transfer_series_my_id, company: req.user.company });
+    var doc = await generalFunctions.create_doc({
       company: req.user.company,
       sender: req.user._id,
       receiver: req.body.to_select,
@@ -661,13 +677,13 @@ router.post("/transfers", Authentication.checkAuthenticated, async (req, res) =>
       invoiceData: lines_of_doc
     })
 
-    var original_doc = await Document.findOne({ _id:req.body.id });
+    var original_doc = await Document.findOne({ _id: req.body.id });
 
     original_doc.next = doc._id;
     original_doc.edited = 1;
 
     await original_doc.save();
-    
+
     return res.redirect(`/view?type=transfers&id=${doc._id}`);
 
   } catch (e) {
@@ -676,5 +692,11 @@ router.post("/transfers", Authentication.checkAuthenticated, async (req, res) =>
   }
 });
 
+router.post("/transfers", Authentication.checkAuthenticated, async (req, res) => {
+      /*var delete_deactivate = await generalFunctions.delete_deactivate({ _id: req.body.list_id }, req.query.searchfor, req.body.list_action);
+      return res.redirect(`/list?searchfor=${req.query.searchfor}${has_type}&action=${req.body.list_action}&message=${delete_deactivate}`);
+*/
+console.log("Deleteee")
+});
 
 module.exports = router;

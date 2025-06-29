@@ -1,22 +1,25 @@
 function create_form(data) {
-    
-    if(data.type == 1){
-        return '<div style="padding:0px 50px;">'+create_form_body(data)+'</div>'
+    console.log("create_form_body")
+    console.log(data.type)
+    if (data.type == 1) {
+        return '<div style="padding:0px 50px;">' + create_form_body(data) + '</div>'
     }
-    else if(data.type == 2){
-        
-        return '<div style="padding:0px 50px;">'+create_form_body_transfer_doc(data)+'</div>'
+    else if (data.type == 2) {
+
+        return '<div style="padding:0px 50px;">' + create_form_body_transfer_doc(data) + '</div>'
     }
 }
 
 function create_form_body(data) {
     let body = '';
+    console.log("create_form_body")
+    console.log(data.type)
     let rows_written = 0;
     var create_doc_table_var;
-
+    console.log(data.doc_lines.length)
     while (rows_written < data.doc_lines.length) {
-        create_doc_table_var = create_doc_table(data.doc_lines,rows_written,data.type);
-        body += create_header(data) + `
+        create_doc_table_var = create_doc_table(data.doc_lines, rows_written, data.type);
+        body = body + create_header(data) + `
         <div class="main_body" style="display: flex; flex-direction: column; height: calc(80%-200px); margin: 10px; flex: 1; ">
             <div>${data.date}</div>
             <div id="persons_data" style="display: grid; grid-template-columns: 49% 49%; gap: 2%; margin-bottom: 20px;">
@@ -26,7 +29,7 @@ function create_form_body(data) {
             <div class="container" style="flex: 1;">
                 ${create_doc_table_var.table}
             </div>
-            ${create_doc_footer(data.doc,data.type)}
+            ${create_doc_footer(data.doc, data.type)}
         </div>`;
 
         rows_written = create_doc_table_var.rows_written;
@@ -43,23 +46,23 @@ function create_form_body_transfer_doc(data) {
     let rows_written = 0;
     var create_doc_table_var;
     var person_data = ``;
-    if(data.type == 1){
-    person_data =
-    `<div id="persons_data" style="display: grid; grid-template-columns: 49% 49%; gap: 2%; margin-bottom: 20px;">
+    if (data.type == 1) {
+        person_data =
+            `<div id="persons_data" style="display: grid; grid-template-columns: 49% 49%; gap: 2%; margin-bottom: 20px;">
                 <div>${create_doc_person(true, 'Bill To', 'Customer', data.person1)}</div>
                 <div>${create_doc_person(false, 'Bill From', 'Company', data.company)}</div>
             </div>`
     }
-    else if(data.type == 2){//Transfer Doc
+    else if (data.type == 2) {//Transfer Doc
         person_data =
-    `<div id="persons_data" style="display: grid; grid-template-columns: 49% 49%; gap: 2%; margin-bottom: 20px;">
+            `<div id="persons_data" style="display: grid; grid-template-columns: 49% 49%; gap: 2%; margin-bottom: 20px;">
         <div>FROM : ${data.from.title}</div>
         <div>TO : ${data.to.title}</div>
     </div>`
     }
 
     while (rows_written < data.doc_lines.length) {
-        create_doc_table_var = create_doc_table(data.doc_lines,rows_written,data.type);
+        create_doc_table_var = create_doc_table(data.doc_lines, rows_written, data.type);
         body += create_header(data) + `
         <div class="main_body" style="display: flex; flex-direction: column; height: calc(80%-200px); margin: 10px; flex: 1; ">
             <div>${data.date}</div>
@@ -67,7 +70,7 @@ function create_form_body_transfer_doc(data) {
             <div class="container" style="flex: 1;">
                 ${create_doc_table_var.table}
             </div>
-            ${create_doc_footer(data.doc,data.type)}
+            ${create_doc_footer(data.doc, data.type)}
         </div>`;
 
         rows_written = create_doc_table_var.rows_written;
@@ -94,10 +97,12 @@ function create_header(data) {
     </div>`;
 }
 
-function create_doc_table(data,rows_written,type) {
+function create_doc_table(data, rows_written, type) {
     var brake_page = 20 + rows_written;
-    console.log("brake_page "+brake_page)
-    var table =  `<table style="border-collapse: collapse;width:100%">
+    console.log("brake_page " + brake_page)
+    console.log("type " + type)
+    console.log(data)
+    var table = `<table style="border-collapse: collapse;width:100%">
             <thead>
                 <tr>
                     <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">A/A</th>
@@ -113,18 +118,45 @@ function create_doc_table(data,rows_written,type) {
                 </tr>
             </thead>
             <tbody>`;
+            if (type == 2) {
+        table = `<table style="border-collapse: collapse;width:100%">
+            <thead>
+                <tr>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">A/A</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Title</th>
+                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Quantity</th>
+                </tr>
+            </thead>
+            <tbody>`;
 
-            if(type == 1){
-            
-                for (let i = rows_written; i < data.length; i++) {
-                    let line = data[i];
-                    
-                    let value = line.quantity * line.price_of_unit;
-                    let disc_p = ((line.discount * 100) / value).toFixed(2); // Discount percentage rounded to 2 decimals
-                    let p_after_d = value - line.discount;
-                    let final_p = p_after_d + (p_after_d * (line.tax / 100));
-                
-                    table += `
+        for (let i = rows_written; i < data.length; i++) {
+            let line = data[i];
+
+            table += `
+                        <tr>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${i + 1}</td>
+                            <td style="border: solid black 1px; padding: 0px;">${line.item.title}</td>
+                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${line.quantity}</td>
+                        </tr>`;
+
+            rows_written += 1;
+
+            if (i === brake_page) {
+                break;
+            }
+        }
+    }
+    else {
+
+        for (let i = rows_written; i < data.length; i++) {
+            let line = data[i];
+
+            let value = line.quantity * line.price_of_unit;
+            let disc_p = ((line.discount * 100) / value).toFixed(2); // Discount percentage rounded to 2 decimals
+            let p_after_d = value - line.discount;
+            let final_p = p_after_d + (p_after_d * (line.tax / 100));
+
+            table += `
                         <tr>
                             <td style="border: solid black 1px; padding: 0px; text-align: center;">${i + 1}</td>
                             <td style="border: solid black 1px; padding: 0px;">${line.item.title}</td>
@@ -137,49 +169,22 @@ function create_doc_table(data,rows_written,type) {
                             <td style="border: solid black 1px; padding: 0px; text-align: center;">${parseFloat(p_after_d).toFixed(2)}&nbsp;€</td>
                             <td style="border: solid black 1px; padding: 0px; text-align: center;">${parseFloat(final_p).toFixed(2)}&nbsp;€</td>
                         </tr>`;
-                
-                    rows_written += 1;
-                
-                    if (i === brake_page) {
-                        break;
-                    }
-                }
-            }
-            else if(type == 2){
-                table =  `<table style="border-collapse: collapse;width:100%">
-            <thead>
-                <tr>
-                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">A/A</th>
-                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Title</th>
-                    <th style="border:solid black 1px;margin:0px;padding:0px; text-align: center;">Quantity</th>
-                </tr>
-            </thead>
-            <tbody>`;
 
-                for (let i = rows_written; i < data.length; i++) {
-                    let line = data[i];
-                                    
-                    table += `
-                        <tr>
-                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${i + 1}</td>
-                            <td style="border: solid black 1px; padding: 0px;">${line.item.title}</td>
-                            <td style="border: solid black 1px; padding: 0px; text-align: center;">${line.quantity}</td>
-                        </tr>`;
-                
-                    rows_written += 1;
-                
-                    if (i === brake_page) {
-                        break;
-                    }
-                }
-            }
+            rows_written += 1;
 
-        table = table + `</tbody></table>`;
-    return {table : table,rows_written : rows_written};
+            if (i === brake_page) {
+                break;
+            }
+        }
+    }
+
+
+    table = table + `</tbody></table>`;
+    return { table: table, rows_written: rows_written };
 }
 
-function create_doc_footer(doc,type) {
-    if(type == 1){
+function create_doc_footer(doc, type) {
+    if (type == 1) {
         let total_cost = 0;
         let total_value = 0;
         let total_d = 0;
@@ -221,7 +226,7 @@ function create_doc_footer(doc,type) {
             </div>
         </div>`;
     }
-    else if (type == 2){
+    else if (type == 2) {
         return `
         <br>
     
@@ -340,9 +345,9 @@ function getFirstDayOfWeek(dateString) {
     return firstDayOfWeek.getDate();
 }
 
-function get_item_from_list(list,id){
-    for(l of list){
-        if(l._id == id){
+function get_item_from_list(list, id) {
+    for (l of list) {
+        if (l._id == id) {
             return l;
         }
     }
@@ -350,68 +355,69 @@ function get_item_from_list(list,id){
 }
 
 function go_back(url) {
-//alert(url)
-const path = new URL(url).pathname; // Extract the path (e.g., "/view")
+    //alert(url)
+    const path = new URL(url).pathname; // Extract the path (e.g., "/view")
 
-if (path.includes('view')) {
-    return '/list';
-} else {
-    return  '/';
-}
+    if (path.includes('view')) {
+        return '/list';
+    } else {
+        return '/';
+    }
 }
 
 const dictionary = {
-    EN :{
-        home : "Home",
-        companies : "Companies",
-        users : "Users",
-        reports : "Reports",
-        database : "DataBase",
-        client : "Client",
-        clients : "Clients",
-        payroll : "PayRoll",
-        buying : "Buying",
-        sales : "Sales",
-        warehouse : "Warehouse",
-        calendar : "Calendar",
-        person : "Person-",
-        persons : "Persons",
-        submit : "Submit",
-        save : "Save",
-        manager :"Manager",
-        view : "View",
-        list : "List",
-        series : "Series",
-        items : "Items",
-        docs :"Docs",
-        transfers : "Transfers",
-        profile : "Profile",
-        company : "Company",
-        welcome : "Welcome",
-        reviews : "Reviews",
-        report : "Report",
-        logout : "Log Out",
-        management : "Management",
-        accountantmainpage : "Accountant main page",
-        pending : "Pending",
-        Requests : "Requests",
-        pendingrequests : "Pending Requests",
-        type : "Type",
-        title : "Title",
-        registrationdate : "Registration Date",
-        duedate : "Due Date",
-        executedrequests : "Executed Requests",
-        youhavenopendingrequestsatthemoment : "You have no pending requests at the moment",
-        youhavenoexecutedrequestsatthemoment : "You have no executed requests at the moment",
-        rejectedrequests : "Rejected Requests-",
-        youhavenorejectedrequestsatthemoment : 'You have no rejected requests at the moment',
-        pickmanager : "Pick Manager",
-        year : "Year"
+    EN: {
+        home: "Home",
+        companies: "Companies",
+        users: "Users",
+        reports: "Reports",
+        database: "DataBase",
+        client: "Client",
+        clients: "Clients",
+        payroll: "PayRoll",
+        buying: "Buying",
+        sales: "Sales",
+        warehouse: "Warehouse",
+        calendar: "Calendar",
+        person: "Person",
+        persons: "Persons",
+        submit: "Submit",
+        save: "Save",
+        manager: "Manager",
+        view: "View",
+        list: "List",
+        series: "Series",
+        items: "Items",
+        docs: "Docs",
+        transfers: "Transfers",
+        profile: "Profile",
+        company: "Company",
+        welcome: "Welcome",
+        reviews: "Reviews",
+        report: "Report",
+        logout: "Log Out",
+        management: "Management",
+        accountantmainpage: "Accountant main page",
+        pending: "Pending",
+        Requests: "Requests",
+        pendingrequests: "Pending Requests",
+        type: "Type",
+        title: "Title",
+        registrationdate: "Registration Date",
+        duedate: "Due Date",
+        executedrequests: "Executed Requests",
+        youhavenopendingrequestsatthemoment: "You have no pending requests at the moment",
+        youhavenoexecutedrequestsatthemoment: "You have no executed requests at the moment",
+        rejectedrequests: "Rejected Requests-",
+        youhavenorejectedrequestsatthemoment: 'You have no rejected requests at the moment',
+        pickmanager: "Pick Manager",
+        year: "Year",
+        warehouses: "Warehouses"
     }
 }
 
 function get_word(data) {
-    return dictionary[data.lang]?.[data.key] || data.key+"***";
+    return dictionary[data.lang]?.[data.key] || data.key;
 }
 
 function translateTextElements() {
@@ -423,39 +429,39 @@ function translateTextElements() {
 }
 
 // The original message_from_url function
-function message_from_url(url){
+function message_from_url(url) {
     // Extract query parameters from URL string
     const fullUrl = new URL(url, window.location.origin);
     const queryParams = new URL(url).searchParams;
     const message = queryParams.get('message');
     const action = queryParams.get('action');
-    if(fullUrl.pathname == '/list'){
-        if(message){
-           if(action){
-            if(action == 2){
-                if(message == '1'){//Delete complete
-                    alert('Delete Complete');
+    if (fullUrl.pathname == '/list') {
+        if (message) {
+            if (action) {
+                if (action == 2) {
+                    if (message == '1') {//Delete complete
+                        alert('Delete Complete');
+                    }
+                    else if (message == '2') {//Delete Fail
+                        alert('Delete Failed');
+                    }
                 }
-                else if(message == '2'){//Delete Fail
-                    alert('Delete Failed');
-                }
-               }
             }
         }
     }
-    if(fullUrl.pathname == '/view'){
-        if(message){
-            if(action){
-             if(action == 2){
-                 if(message == '1'){//Delete complete
-                     alert('Delete Complete');
-                 }
-                 else if(message == '2'){//Delete Fail
-                     alert('Delete Failed');
-                 }
+    if (fullUrl.pathname == '/view') {
+        if (message) {
+            if (action) {
+                if (action == 2) {
+                    if (message == '1') {//Delete complete
+                        alert('Delete Complete');
+                    }
+                    else if (message == '2') {//Delete Fail
+                        alert('Delete Failed');
+                    }
                 }
-             }
-         }
+            }
+        }
     }
     /*else if(message){
         alert(message);

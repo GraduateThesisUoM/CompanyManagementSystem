@@ -80,7 +80,7 @@ router.post("/", Authentication.checkAuthenticated, async (req, res) => {
         price_w: req.body.items_price_w,
         discount_r: req.body.items_price_r_disc,
         discount_w: req.body.items_price_w_disc,
-        tax_r: req.body.items_tax_w,
+        tax_r: req.body.items_tax_r,
         tax_w: req.body.items_tax_w,
       };
       created_obj = await generalFunctions.createItem(data);

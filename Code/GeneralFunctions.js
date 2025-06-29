@@ -318,6 +318,11 @@ async function createWarehouse(data) {
 
 async function createItem(data) {
   try {
+
+    const tax_r = parseFloat(Number(data.tax_r).toFixed(2));
+    const tax_w = parseFloat(Number(data.tax_w).toFixed(2));
+
+
     const item = new Item({
       type:data.type,
       company: data.company,
@@ -328,8 +333,8 @@ async function createItem(data) {
       price_w: data.price_w,
       discount_r: data.discount_r,
       discount_w: data.discount_w,
-      tax_r: data.tax_r,
-      tax_w: data.tax_w,
+      tax_r: tax_r,
+      tax_w: tax_w,
     });
 
     console.log("item " + item.title + " created");
@@ -1095,77 +1100,6 @@ async function importUserType(UserSchema, userType,path) {
 
   } catch (err) {
     console.error(`Error importing ${userType} data:`, err);
-  }
-}
-
-
-
-async function importAdmins() {
-  try {
-    const baseDir = "./exports";
-    const adminsDir = path.join(baseDir, 'admins');
-    const adminsFilePath = path.join(adminsDir, 'admins.txt');
-
-    // Check if the file exists
-    if (!fs.existsSync(adminsFilePath)) {
-      console.error(`No file found at ${adminsFilePath}`);
-      return;
-    }
-
-    // Read the accountants data from the file
-    const adminsData = fs.readFileSync(adminsFilePath, 'utf-8');
-
-    // Parse the data
-    const admins = JSON.parse(adminsData);
-
-    if (admins && admins.length > 0) {
-      for (let admin of admins) {
-        // Assuming you are using Mongoose and the User model has necessary fields for accountant
-        const NewAdmin = new User(admin);
-        await NewAdmin.save();
-      }
-      console.log(`Imported ${admins.length} admins into the database.`);
-    } else {
-      console.log('No admins data found in the file.');
-    }
-
-  } catch (err) {
-    console.error("Error importing admins data:", err);
-  }
-}
-
-async function importAccountants() {
-  try {
-    const baseDir = "./exports";
-    const accountantsDir = path.join(baseDir, 'accountants');
-    const accountantsFilePath = path.join(accountantsDir, 'accountants.txt');
-
-    // Check if the file exists
-    if (!fs.existsSync(accountantsFilePath)) {
-      console.error(`No file found at ${accountantsFilePath}`);
-      return;
-    }
-
-    // Read the accountants data from the file
-    const accountantsData = fs.readFileSync(accountantsFilePath, 'utf-8');
-
-    // Parse the data
-    const accountants = JSON.parse(accountantsData);
-
-    // Insert accountants data into the database
-    if (accountants && accountants.length > 0) {
-      for (let accountant of accountants) {
-        // Assuming you are using Mongoose and the User model has necessary fields for accountant
-        const newAccountant = new User(accountant);
-        await newAccountant.save();
-      }
-      console.log(`Imported ${accountants.length} accountants into the database.`);
-    } else {
-      console.log('No accountants data found in the file.');
-    }
-
-  } catch (err) {
-    console.error("Error importing accountants data:", err);
   }
 }
 

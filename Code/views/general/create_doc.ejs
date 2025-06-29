@@ -283,6 +283,7 @@
 
       $(".general_discount").on("blur", function () {
 
+
         $(".doc_line_select").each(function() {
             if ($(this).val() != "-") {
                 calculate_row_prices($(this).attr('id').replace('doc_line_item_',''));
@@ -300,6 +301,33 @@
         calculate_row_prices(get_num_of_rows()-1);
         general_dis_deviation = 0.0
       });
+
+$(document).on("input", "#general_discount", function () {
+  let discount = parseFloat($(this).val()) || 0; // Λήψη της έκπτωσης από το πεδίο
+  let totalv = parseFloat($("#doc_total_value").html()) || 0;
+
+  // Υπολογισμός της αξίας έκπτωσης
+  let discountAmount = (totalv * (discount / 100)).toFixed(2);
+
+  // Ενημέρωση του πεδίου με το ποσό έκπτωσης
+  $("#general_discount_amount").val(discountAmount);
+});
+
+
+$(document).on("input", "#general_discount_amount", function () {
+  let discountAmount = parseFloat($(this).val()) || 0;
+  let totalv = parseFloat($("#doc_total_value").html()) || 0;
+
+  if (totalv === 0) {
+    $("#general_discount").val(0);
+    return;
+  }
+
+  // Υπολογισμός ποσοστού έκπτωσης
+  let discountPercent = ((discountAmount / totalv) * 100).toFixed(2);
+  $("#general_discount").val(discountPercent);
+});
+
 
 
       $(document).on("input", ".general_discount", function () {

@@ -183,7 +183,7 @@ router.get("/", Authentication.checkAuthenticated, async (req, res) => {
             item.count,
             item.sealed,
             generalFunctions.formatDate(item.registrationDate),
-            item.status,
+            generalFunctions.get_status_user( item.status),
           ],
         }));
         column_titles = [

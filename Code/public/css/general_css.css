@@ -465,6 +465,7 @@ border: 1px solid rgba(121, 121, 121, 0.3);
     width: 15px;
     height: 15px;
     border-radius: 50%;
+    margin-right: 5px;
 }
 
 #status_mark.active{
@@ -474,7 +475,7 @@ border: 1px solid rgba(121, 121, 121, 0.3);
     background-color: red;
 }*/
 #status_mark.disabled{
-    background-color: rgb(179, 179, 179);
+    background-color: rgb(138, 32, 32);
 }
 
 

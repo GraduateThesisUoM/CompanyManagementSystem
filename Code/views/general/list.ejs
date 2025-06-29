@@ -424,7 +424,10 @@
                 $(".glass_effect_2").click(function(){
                     var index = $(this).index();
                     var id = $(this).find('td').eq(0).text();
-                    window.location = "/view?type="+searchfor+"&id="+$(this).data('id')+"&type2="+type;
+                    if(id != '-'){
+                        window.location = "/view?type="+searchfor+"&id="+$(this).data('id')+"&type2="+type;
+                    }
+                    //window.location = "/view?type="+searchfor+"&id="+$(this).data('id')+"&type2="+type;
                 });
             });
         
