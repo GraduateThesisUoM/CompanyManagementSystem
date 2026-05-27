@@ -1,4 +1,4 @@
-# desk-flow
+# Desk-flow
 
 **desk-flow** is an ERP system designed for managing companies, users, schedules, and payrolls. This system streamlines administrative tasks and enables efficient management of employee data, schedules, and payroll operations.
 
